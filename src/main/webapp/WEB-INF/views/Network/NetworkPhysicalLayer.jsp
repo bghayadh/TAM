@@ -42,7 +42,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/mapOperation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/findNearest.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/findNearestMulty.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/DBCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/DBCreation.js"></script>
 <style>
 .close {
   float: right;
