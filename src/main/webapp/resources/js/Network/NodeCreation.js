@@ -70,13 +70,13 @@ function createNode(nodeList){
 			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/MSANNodeIcon.png'> "+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
 			$("#Entreprise_MSAN__CurrentPhysicalLayer").append(str);
 			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
-			 NodeActiveCheckFilter(nodeList[i][0],markerClusterMSANNodes);
+			NodeActiveCheckFilter(nodeList[i][0],markerClusterMSANNodes);
 		}
 		else if(nodeList[i][8]=='SWITCH') {
 			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/EntSwitchNodeIcon.png'> "+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";
 			$("#Entreprise_SWITCH__CurrentPhysicalLayer").append(str);
 			create_Node_Marker_Click(nodeList[i][0],nodeList[i][1],nodeList[i][5],nodeList[i][6],markersNodeActive,markerClusterEntSwitchNodes,"","");				
-			 NodeActiveCheckFilter(nodeList[i][0],markerClusterEntSwitchNodes);
+			NodeActiveCheckFilter(nodeList[i][0],markerClusterEntSwitchNodes);
 		}
 		else if(nodeList[i][8]=='DWDM') {
 			str="<ul><li id='"+nodeList[i][0]+"'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='"+getContext()+"/resources/NetworkImages/DWDMNodeIcon.png'>"+ nodeList[i][1]+"/"+nodeList[i][7] +" </span></li></ul>";

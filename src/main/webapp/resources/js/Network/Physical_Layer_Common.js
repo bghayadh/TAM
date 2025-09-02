@@ -909,13 +909,20 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
  IdSelectedTemp="";
  IdSelectedTempHandhole="";	
  
+ showDBflag=[];
 
 //funtion to show DB for fiber,tube and strands from conectx menu	
 	function showDB(selectedContext,target,name){
 		 $("#DB").empty();// clear div
-		 markerClusterBackboneDistBoard.clearMarkers(); // clear map
+		 if(DBFlag == 0){
+		 				showDBflag=[selectedContext,target,name];	
+						getDB("","","","",showDBflag);	
+		 		}		
+		 				
+	     markerClusterBackboneDistBoard.clearMarkers(); // clear map
 		 markerClusterMetroDistBoard.clearMarkers(); // clear map
-		 markerClusterAccessDistBoard.clearMarkers(); // clear map
+		 markerClusterAccessDistBoard.clearMarkers();
+		  // clear map
 		 opentab(event, 'DB');
 		 $("#distributionBoardBtn").removeClass("tablinks").addClass("tablinks active");
 			$.ajax({
@@ -938,12 +945,19 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
 					$("#DB").append(stringDiv); 
 					 
 					if(distributionBoardList!=null){
+						
+						
+						
+						
 						//console.log("entered if "+ distributionBoardList);
 						$("#distBoardCheckAllBoq").prop("checked",true);
 						MouseHoveringSpans("#DistributionBoard_f_showDB .TreeSpan");
 						tree_prop_selection("#DistributionBoard_f_showDB .TreeSpan");
 						treeCollapseFolder("#DistributionBoard_f_showDB .Parentfolder",null,".Parentfolder");
 								for(i=0;i<distributionBoardList.length;i++){
+									
+									$("#"+distributionBoardList[i][0]).children(':checkbox').prop( "checked", true );
+										
 									stringDiv="<ul style='list-style-type:none;cursor: pointer;'><li id='"+distributionBoardList[i][0]+"_showDB' style='display:none;' class='DistributionBoard'><input type='checkbox' class='DistBoard checkFilter' checked name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px;margin-left:10px;'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distributionBoardList[i][3]+" / "+distributionBoardList[i][0]+" </span></li></ul>";
 									$("#DistributionBoard_f_showDB").append(stringDiv);
 									
@@ -2451,13 +2465,15 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 
 // Checkbox event for All Distribution Board (All DBs, Backbone, Metro and Access)
 function AllDistributionBoardCheckFilter(Id,clssName) {
-		
+			
 	$("#"+Id).children('input').bind("change",function() {
+		markerClusterController.clearMarkers();
+	
 		if(clssName=="") {			
 			markerClusterAccessDistBoard.clearMarkers();
 			markerClusterMetroDistBoard.clearMarkers();
 			markerClusterBackboneDistBoard.clearMarkers();
-		}
+					}
 		else {
 			clssName.clearMarkers();	
 		}		
@@ -2469,18 +2485,24 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 							
 					
 			 if($(this).parent().hasClass('DistributionBoard')){
+			
 					dbID=$(this).parent().attr('id');
 					if(markersDistBoard[dbID]){	
 					 // if(markersDistBoard[dbID].getMap()==null){	
 						
 						if(window[""+dbID][8]=="backbone") {
 							className=markerClusterBackboneDistBoard;
+							controllerLayerCheckAll("backbone");
+							
 						}
 						else if(window[""+dbID][8]=="metro") {
 							className=markerClusterMetroDistBoard;
+							controllerLayerCheckAll("metro");
 						}
 						else if(window[""+dbID][8]=="access") {
 							className=markerClusterAccessDistBoard;
+							controllerLayerCheckAll("access");
+							
 						}
 						className.removeMarker(markersDistBoard[dbID]);	
 						markersDistBoard[dbID].setMap(map);	
@@ -2493,7 +2515,8 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 		}// end check  case 
 		
 		// uncheck case 
-			else{									
+			else{			
+										
 				$(this).parent().find('input:checkbox').each(function(){
 				$(this).prop('checked', false);
 			 if($(this).parent().hasClass('DistributionBoard')){
@@ -2501,13 +2524,23 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 					if(markersDistBoard[dbID]){	
 						
 						if(window[""+dbID][8]=="backbone") {
+							
+							
 							className=markerClusterBackboneDistBoard;
+							controllerLayerUnCheckAll("backbone");
+							
 						}
 						else if(window[""+dbID][8]=="metro") {
 							className=markerClusterMetroDistBoard;
+							controllerLayerUnCheckAll("metro");
+												
+							
 						}
 						else if(window[""+dbID][8]=="access") {
+					
 							className=markerClusterAccessDistBoard;
+							controllerLayerUnCheckAll("access");
+							
 						}
 						
 						//className.removeMarker(markersDistBoard[dbID]);	
@@ -3945,71 +3978,19 @@ function boqCheckFilter(){
 
 
 		$("#distBoardCheckAllBoq").bind("change",function(){
-		if ($(this).is(':checked')){
-			$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",true);	
-			$("#BackboneDB__CurrentPhysicalLayer").prop("checked",true);	
-			$("#MetroDB__CurrentPhysicalLayer").prop("checked",true);	
-			$("#AccessDB__CurrentPhysicalLayer").prop("checked",true);	
 			
-			$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li > ul >li ').each(function(){		
-			
-				var distBoardId=$(this).attr('id');
-				$("#"+distBoardId).children(':checkbox').prop( "checked", true );
+			if(DBFlag === 0){
 				
-				if(markersDistBoard[distBoardId].getMap()==null){						
-					markersDistBoard[distBoardId].setMap(map);	
-					if(window[""+distBoardId][8]=="backbone") {
-						markerClusterBackboneDistBoard.addMarker(markersDistBoard[distBoardId]);
-					}
-					else if(window[""+distBoardId][8]=="metro") {
-						markerClusterMetroDistBoard.addMarker(markersDistBoard[distBoardId]);
-					}
-					else if(window[""+distBoardId][8]=="access") {
-						markerClusterAccessDistBoard.addMarker(markersDistBoard[distBoardId]);
-					}		
-					$("#"+distBoardId).children(':checkbox').prop( "checked", true );
-				}
-					
-				});
+				getDB();
+				return;
+			}
+			
+		if ($(this).is(':checked')){
+			DBLayerCheckAll();
 			}
 			else{
-				$("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked",false);	
-				$("#BackboneDB__CurrentPhysicalLayer").prop("checked",false);	
-				$("#MetroDB__CurrentPhysicalLayer").prop("checked",false);	
-				$("#AccessDB__CurrentPhysicalLayer").prop("checked",false);		
-					
-					markerClusterBackboneDistBoard.clearMarkers();
-					markerClusterMetroDistBoard.clearMarkers();
-					markerClusterAccessDistBoard.clearMarkers();
-					
-				var distBoardId="";
-				$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function(){			
-				
-				 distBoardId=$(this).attr('id');
-				$("#"+distBoardId).children(':checkbox').prop( "checked", false );
-				
-				markersDistBoard[distBoardId].setMap(null);	
-				$("#"+distBoardId).children(':checkbox').prop( "checked", false );
-				});
-		  		
-		  		$("#network_tree").find(".DistBoard:checked" ).each(function(){
-
-					id=$(this).parent().attr('id');
-					
-					if(markersDistBoard[id].getMap()==null){
-						markersDistBoard[id].setMap(map);
-						if(window[""+distBoardId][8]=="backbone") {
-							markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
-						}
-						else if(window[""+distBoardId][8]=="metro") {
-							markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
-						}
-						else if(window[""+distBoardId][8]=="access") {
-							markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
-						}				
-					}		
-				});							
-			}
+				DBLayerUnCheckAll();
+				}
 	});
 	
 	
@@ -13642,7 +13623,12 @@ c=$("#RanModal");}
 else if ($("#MoveModal").is(':visible')){
 c=$("#MoveModal");}
 else if ($("#DeleteProjectModal").is(':visible')){
-c=$("#DeleteProjectModal");}
+c=$("#DeleteProjectModal");
+}
+else if ($("#controllerModal").is(':visible')){
+c=$("#controllerModal");
+
+}
 
 var result= confirm('are you sure you want to close?')
 	if (result== false){

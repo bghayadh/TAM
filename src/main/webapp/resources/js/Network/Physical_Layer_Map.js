@@ -30,6 +30,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			placeMarkers=[];
 			markersJunction=[];
 			markersSite=[];
+			markersController=[];
 
 
 	//		map.setZoom(6);
@@ -39,7 +40,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterHandhole = new MarkerClusterer();
 			markerClusterHandhole.setMap(map);// to be checked !!!!
 			
-		
+	/*	
 			markerClusterBackboneDistBoard = new MarkerClusterer();
 			markerClusterBackboneDistBoard.setMap(map);
 			
@@ -49,7 +50,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterAccessDistBoard = new MarkerClusterer();
 			markerClusterAccessDistBoard.setMap(map);
 			
-			/*markerClusterMSANNodes = new MarkerClusterer();
+			markerClusterMSANNodes = new MarkerClusterer();
 			markerClusterMSANNodes.setMap(map);
 			
 			markerClusterDWDMNodes = new MarkerClusterer();
@@ -156,7 +157,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 			// Manholes cluster Calculator
 			
-			markerClusterManhole.setOptions( {					  					
+	/*		markerClusterManhole.setOptions( {					  					
 				minimumClusterSize: 2,
 				styles: [
 				         {
@@ -240,7 +241,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}                   
 			});
 			
-	/*	markerClusterMSANNodes.setOptions({								
+		markerClusterMSANNodes.setOptions({								
 				minimumClusterSize: 2,
 				styles: [
 				         {
@@ -310,9 +311,11 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				google.maps.event.addListenerOnce(map, 'idle', function() {
 						markerClusterManhole.repaint();
 						markerClusterHandhole.repaint();
+						if(	DBFlag == 1){
 						markerClusterBackboneDistBoard.repaint();	
 						markerClusterMetroDistBoard.repaint();	
 						markerClusterAccessDistBoard.repaint();	
+						}
 						if(nodeFlag == 1){
 							markerClusterMSANNodes.repaint();
 							markerClusterSDHNodes.repaint();
@@ -331,7 +334,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 					//Junction exists
 					if(ListManhole[i][5]>0){	
 						create_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"Junction","");				
-						//createManhole_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"Junction");				
+						//createManhole_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"Junction");	
+							
 						ManholeCheckFilter(ListManhole[i][0]);						
 					}
 					else {
@@ -363,7 +367,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 				}		
 				//AllHandholeCheckFilter();
 			}
-			if(distribBoardList!=null){
+			/*if(distribBoardList!=null){
 				for(i=0;i<distribBoardList.length;i++){		
 					if(distribBoardList[i][8]=="backbone"){
 						clusterName = markerClusterBackboneDistBoard;
@@ -389,7 +393,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 		
 			
-		/*	if(NodeList != null){
+			if(NodeList != null){
 			   for(i=0;i<NodeList.length;i++){
 			     if(NodeList[i][8]=='MSAN'){
 			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				

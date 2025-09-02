@@ -14,6 +14,7 @@ var actionManholeJct ="";
 var actionHandholeJct ="";
 var checkManholeFilter;
 var checkHandholeFilter;
+var networkLayer= "";
 var seqCount =0; 
 let location_number = 0;
 var checkActionFiber="";
@@ -269,6 +270,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 	allTubes=[];
 	allStrands=[];
 	allDB = [];
+	allCont = [];
 	allNodes = [];
 	allJunctionsID = [];	
 	allSiteID = [];
@@ -280,6 +282,7 @@ function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList
 			console.log("Entered Filter");
 			flag = 1;
 			nodeFlag = 1;
+			DBFlag = 1;
 			junctionFlag = 1;
 			siteFlag = 1;
 			$('#removeS').show();
@@ -329,14 +332,26 @@ else if(readHandhole === '0' & (treeExceptionHand === '1' || writeExceptionHand 
 if(readDB === '1'){
 		str="<ul><li id='DistributionBoard_f_CurrentPhysicalLayer' style='display:none;' class='DistributionBoard_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
 		$("#initial_ul_CurrentPhysicalLayer").append(str);
+		
         str="<ul><li id ='DistributionBoard_backbone__CurrentPhysicalLayer' style='display:none;' class='backboneDBFolder'> <input type='checkbox' class='BackboneDB checkFilter' id ='BackboneDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Backbone </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
+		str="<ul><li id ='DistributionBoard_backboneController__CurrentPhysicalLayer' style='display:none;' class='backboneControllerDBFolder'> <input type='checkbox' class='BackboneControllerDB checkFilter' id ='BackboneControllerDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Controllers </span></li></ul></li></ul>";
+		$("#DistributionBoard_backbone__CurrentPhysicalLayer").append(str);
 		
 		str="<ul><li id ='DistributionBoard_metro__CurrentPhysicalLayer' style='display:none;' class='metroDBFolder'> <input type='checkbox' class='MetroDB checkFilter' id ='MetroDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Metro </span></li></ul></li></ul>";
 		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);
+		str="<ul><li id ='DistributionBoard_metroController__CurrentPhysicalLayer' style='display:none;' class='metroControllerDBFolder'> <input type='checkbox' class='metroControllerDB checkFilter' id ='metroControllerDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Controllers </span></li></ul></li></ul>";
+		$("#DistributionBoard_metro__CurrentPhysicalLayer").append(str);
+				
+		
+		
 		
 		str="<ul><li id ='DistributionBoard_access__CurrentPhysicalLayer' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
-		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);		
+		$("#DistributionBoard_f_CurrentPhysicalLayer").append(str);	
+		str="<ul><li id ='DistributionBoard_accessController__CurrentPhysicalLayer' style='display:none;' class='accessControllerDBFolder'> <input type='checkbox' class='accessControllerDB checkFilter' id ='accessControllerDB__CurrentPhysicalLayer' unchecked name='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Controllers </span></li></ul></li></ul>";
+		$("#DistributionBoard_access__CurrentPhysicalLayer").append(str);
+		
+			
 }
 else if(readDB === '0' & (treeExceptionDB === '1' || writeExceptionDB === '1')){
 		str="<ul><li id='DistributionBoard_f_CurrentPhysicalLayer' style='display:none;' class='DistributionBoard_f_CurrentPhysicalLayer'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='Parentfolder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
@@ -1003,6 +1018,22 @@ else if(readDB === '0' & (treeExceptionDB === '1' || writeExceptionDB === '1')){
 	
 	/////////////*********************	Distribution Boards creation in tree	***********************///////////////
 	
+	
+	if(filterFlag==1 || filterFlag==2){ // filterFlag = 1 ---> Filter 
+				 createDB(distribBoardList);
+			}
+			else{
+				//console.log(" //////////passed else");	
+				$("#DistributionBoard_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
+					if ($(this).is(':checked')){
+						getDB("","");
+						
+					}
+				});
+			}
+	
+		
+	/*
 		if(distribBoardList!=null){
 			for(i=0;i<distribBoardList.length;i++){
 			    allDB.push(distribBoardList[i][0]);
@@ -3066,7 +3097,8 @@ singleSite = new ContextMenu({
 	}	
 },
 
-{'icon': 'braille', 'name': 'Show DB', action: () => {			
+{'icon': 'braille', 'name': 'Show DB', action: () => {
+			
 	 showDB(selectedSiteIdContext,"Site",selectedSiteName);
 	
   }
@@ -3182,6 +3214,47 @@ singleSite = new ContextMenu({
 			  }
 ];
 
+
+let Controller = [
+	{
+	        'icon': 'folder-plus',
+	        'name': 'Create New Controller',
+	        action: () => {
+	            $("#controllerHeader").text("Controller: ");
+	            $("#controllerModal").modal('show');
+	            $('#controllerModal').find('input:text').val('');
+	            document.getElementById("site_ControllerAutoComplete").checked = true;
+	            $('#site_ControllerAutoComplete').val('1');
+	            siteControllerChanged("#site_ControllerAutoComplete");
+
+	             
+	            $('#controllerModal').find('input:text').val('');
+	            actiondistControllerContext = "Insert";
+
+	            let select = document.getElementById("networkLayer");
+	            let targetText = networkLayer;
+
+	            for (let i = 0; i < select.options.length; i++) {
+	                if (select.options[i].text === targetText) {
+	                    select.selectedIndex = i;
+	                    break;
+	                }
+	            }
+	            dbContNtLevel = document.getElementById("DBnetlevel");
+	        }
+	    }
+];
+
+menuController = new ContextMenu({
+    'theme': 'default',
+    'items': Controller
+});
+
+
+
+
+
+
 // Conditionally add 'Create New Manhole' item based on addManhole variable
 if (addDB === '1') {
     menuDBs.unshift({'icon': 'folder-plus', 'name': 'Create New Board', action: () => {
@@ -3191,6 +3264,9 @@ if (addDB === '1') {
 					$('#distributionBoardModal').find('input:text').val('');
 					$("#DbMappingTable > tbody").empty();
 					document.querySelector("#DBMappingFlag").value = "new DB";
+					document.getElementById("distController").style.display = "none";
+					document.getElementById("distControllerName").style.display = "none";
+									
 					document.getElementById("site_DBAutoComplete").checked = true;
 					$('#site_DBAutoComplete').val('1');
 					document.getElementById("customer_DBAutoComplete").checked = false;
@@ -3201,6 +3277,7 @@ if (addDB === '1') {
 					document.getElementById("BDWarehouse").style.display = "block";
 					document.getElementById("DBSite").style.display = "block";
 					document.getElementById("DBSiteName").style.display = "block";
+					document.getElementById("DBType").value = "passive";
 					actiondistBoardContext="Insert";
 	
 					}
@@ -7896,6 +7973,7 @@ singleHandhole = new ContextMenu({
 							 document.getElementById("projectNameDB").style.display = "none";
 							 document.querySelector("#DBMappingFlag").value = "not_opened"
 							 var dbNtLevel = document.getElementById("DBnetlevel");
+							 						
 							 $("#distributionBoardModal").modal('show');
 							 $.ajax({
 									type: "GET",
@@ -8006,6 +8084,23 @@ singleHandhole = new ContextMenu({
 											$("#boardCity").val(""+data.DistBoardDetails[0][9]);
 										}
 										
+										if(data.DistBoardDetails[0][18]!=null || data.DistBoardDetails[0][18]!= ""){
+											$("#DBType").val(""+data.DistBoardDetails[0][18]);
+																				}
+																				
+								
+																				
+
+										if(data.DistBoardDetails[0][19]!=null || data.DistBoardDetails[0][19]!= ""){
+												$("#DBSerialNum").val(""+data.DistBoardDetails[0][19]);
+											}
+											if(data.DistBoardDetails[0][20]!=null || data.DistBoardDetails[0][20]!=""){
+											$("#DBController").val(""+data.DistBoardDetails[0][20]);
+																						}
+										
+													if(data.DistBoardDetails[0][21]!=null || data.DistBoardDetails[0][21]!=""){
+															$("#DBControllerName").val(""+data.DistBoardDetails[0][21]);
+																									}
 										if(data.DistBoardDetails[0][10]!=null){ 
 											if(data.DistBoardDetails[0][1] !=null){
 												if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
@@ -8057,6 +8152,15 @@ singleHandhole = new ContextMenu({
 										if(data.DistBoardDetails[0][17]!=null){
 											$("#DBAdaptorPanelType").val(data.DistBoardDetails[0][17]);
 										}
+										
+										if (data.DistBoardDetails[0][18] === "passive") {
+										    $("#distController").hide();
+										    $("#distControllerName").hide();
+										} else {
+										    $("#distController").show();
+										    $("#distControllerName").show();
+										}
+
 										$("#DistributionBoardName").on("input",function(){
 
 										$("#DistributionBoardheader").text("Distribution Board: "+$(this).val());
@@ -8725,6 +8829,7 @@ if (addDB === '1') {
 						$("#DbMappingTable > tbody").empty();
 						document.querySelector("#DBMappingFlag").value = "new DB";
 						//
+										
 						document.getElementById("site_DBAutoComplete").checked = true;
 						$('#site_DBAutoComplete').val('1');
 						document.getElementById("customer_DBAutoComplete").checked = false;
@@ -8737,7 +8842,7 @@ if (addDB === '1') {
 						document.getElementById("DBSiteName").style.display = "block";
 						selectedDistBoardContext = "";
 					    actiondistBoardContext="Insert";
-	
+						document.getElementById("DBType").value = "passive";
 						}
 						
 	
@@ -8853,7 +8958,7 @@ singleDistBoard = new ContextMenu({
 										$("#handholeCheckAllBoq").prop("checked",true);
 									}							   
 							}
-							else if(prevVal.split("_")[0] =="DB") {
+					/*		else if(prevVal.split("_")[0] =="DB") {
 									var Id = prevVal.split(":")[0];
 									markersDistBoard[Id].setMap(null);		
 									if(window[""+Id][8]=="backbone") {
@@ -8872,7 +8977,7 @@ singleDistBoard = new ContextMenu({
 									else{
 										$("#distBoardCheckAllBoq").prop("checked",true);
 									}							    
-						  }
+						  } */
 						}
 				});
 				
@@ -9634,7 +9739,8 @@ if (delFiber === '1') {
 }
 
 if(readDB === '1'){
-	menuFiber.push({ 'icon': 'braille', 'name': 'Show DB', action: () => {			
+	menuFiber.push({ 'icon': 'braille', 'name': 'Show DB', action: () => {	
+				
 					 showDB(selectedFiberContext,"Fiber",window[""+selectedFiberContext][13]);
 					
 				   }
@@ -9909,7 +10015,8 @@ if (delFiber === '1') {
 }
 
 if(readDB === '1'){
-	menuStrand.push({ 'icon': 'braille', 'name': 'Show DB', action: () => {			
+	menuStrand.push({ 'icon': 'braille', 'name': 'Show DB', action: () => {		
+		
 				 showDB(selectedStrand,"Strand", window[""+selectedStrand][13]);
 				}
 			   });
@@ -10403,6 +10510,7 @@ if (delFiber === '1') {
 
 if(readDB ==='1'){
 	menuTube.push( { 'icon': 'braille', 'name': 'Show DB', action: () => {	
+
 				showDB(selectedTube,"Tube",window[""+selectedTube][13]);
 			   }
 			 });
@@ -10431,6 +10539,7 @@ singleTube = new ContextMenu({
 			menuName=currentPhysicalmenu;
 			if($(this).parent().attr('id') == "initial_ul_CurrentPhysicalLayer"){
 				IdNodeSelectedTemp = "CurrentPhysicalLayer";
+				console.log(IdNodeSelectedTemp);
 			   }
 			   else {
 				   IdNodeSelectedTemp = $(this).parent().attr('id').split("initial_ul_")[1];
@@ -10542,13 +10651,51 @@ singleTube = new ContextMenu({
 	     $(".DistributionBoard_f_CurrentPhysicalLayer > .TreeSpan, .DistributionBoard_f_projects > .TreeSpan").contextmenu(function(){
 	 	   // checking the DistributionBoard project id  
 			IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_f_")[1];
-						   
+			 
 	 	   	menuName=menuDistribBoard;			
 	 	   	openContext("","",menuDistribBoard,event);
 	 	    document.getElementById("projectIdDB").style.display = "none";
 		 	document.getElementById("projectNameDB").style.display = "none";
 																	 
 	 	   });
+		   
+		   $("#DistributionBoard_backboneController__CurrentPhysicalLayer > .TreeSpan , .DistributionBoard_f_projects > .TreeSpan ").contextmenu(function(){
+		
+		    	   // checking the DistributionBoard project id  
+		   		IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_f_")[1];
+		   			networkLayer = "Backbone";		   
+		    	   	menuName=menuController;			
+		    	   	openContext("","",menuName,event);
+		    																	 
+		    	   });
+		   
+				   $("#DistributionBoard_metroController__CurrentPhysicalLayer > .TreeSpan , .DistributionBoard_f_projects > .TreeSpan ").contextmenu(function(){
+
+				       	   // checking the DistributionBoard project id  
+				      		IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_f_")[1];
+							networkLayer = "Metro";	
+				       	   	menuName=menuController;			
+				       	   	openContext("","",menuName,event);
+				       																	 
+				       	   });
+						   $("#DistributionBoard_accessController__CurrentPhysicalLayer > .TreeSpan , .DistributionBoard_f_projects > .TreeSpan ").contextmenu(function(){
+
+						       	   // checking the DistributionBoard project id  
+						      		IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_f_")[1];
+									networkLayer = "Access";			   
+						       	   	menuName=menuController;			
+						       	   	openContext("","",menuName,event);
+						       																	 
+						       	   });
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
+		   
 	 	   
 	 	   $(".backboneDBFolder > .TreeSpan, .backboneDBFolder> .TreeSpan").contextmenu(function(){
 	           IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_backbone__")[1];
@@ -12509,8 +12656,12 @@ $("#saveHandhole").click(function () {
 					boardCity = document.getElementById("boardCity").value;
 					dbNetLevel = document.getElementById("DBnetlevel").value;
 					boardCreatedDate = document.getElementById("boardCreationDate").value;
-					distBoardMappingFlag = document.querySelector("#DBMappingFlag ").value
-
+					distBoardMappingFlag = document.querySelector("#DBMappingFlag ").value;
+					distBoardType= document.getElementById("DBType").value;
+					distboardControllerId= document.getElementById("DBController").value;
+					distboardControllerName= document.getElementById("DBControllerName").value;
+					distboardSerialNum= document.getElementById("DBSerialNum").value;				
+					
 					if($("#projectIdDB").is(":visible") && $("#projectNameDB").is(":visible")){
 						if($("#DBProjectId").val()==""){
 							IdNodeSelectedTemp="CurrentPhysicalLayer";
@@ -12579,16 +12730,22 @@ $("#saveHandhole").click(function () {
 									"dictParameter":dict,
 									 "ProjectId": IdNodeSelectedTemp,
 									  "updateModfUser" : updateModfUser,
+									  "type" : distBoardType,
+									  "controllerId": distboardControllerId,
+									  "controllerName" : distboardControllerName,
+									  "serialNum" : distboardSerialNum
 									   
 							},
 							dataType: "json",
 							success: function (data) {
 								
 								if(data!=null){
+									console.log(distBoardType);
 									window[""+data.distributionBoardId]=[];
 									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel,DBEngineerName,DBInstaller,DBDeploymentType,DBAdaptorPanelType];
 												
 									if(actiondistBoardContext=="Insert"){
+										if (distBoardType == "passive"){
 										if(dbNetLevel=="backbone") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
@@ -12598,9 +12755,32 @@ $("#saveHandhole").click(function () {
 										else if(dbNetLevel=="access") {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
-									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);									 
+									 $("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);	
+									 
+									 }
+									 
+									 else if (distBoardType == "active"){
+									 										console.log(distboardControllerId);
+									 										if(dbNetLevel=="backbone") {
+									 																str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";
+									 																$("#"+distboardControllerId).append(str);
+									 																						}
+									 																
+									 																else  if(dbNetLevel=="metro") {
+									 																	str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";
+									 																	$("#"+distboardControllerId).append(str);
+									 																	}							
+									 																else  if(dbNetLevel=="access") {
+									 																str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";
+									 																$("#"+distboardControllerId).append(str);
+									 															  
+									 										
+									 										
+									 									}
+																		}									 
 									}
 									else if(actiondistBoardContext=="Update"){
+									
 										console.log("DBoldNtwLevel and dbNetLevel are" +DBoldNtwLevel + " " + dbNetLevel);
 									  if(DBoldNtwLevel != dbNetLevel){
 										  console.log("Different DB Network Level");
@@ -12615,7 +12795,10 @@ $("#saveHandhole").click(function () {
 											str="<ul><li id='"+data.distributionBoardId+"'  class='DistributionBoard' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li></ul>";								
 										}
 										$("#DistributionBoard_"+dbNetLevel+"__"+IdNodeSelectedTemp).append(str);									
-									}		
+									}
+									
+									
+										
 									else{
 										if(dbNetLevel=="backbone") {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
@@ -12627,7 +12810,8 @@ $("#saveHandhole").click(function () {
 											$("#"+data.distributionBoardId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+DistributionBoardName+"/"+data.distributionBoardId+" </span></li>");
 										}
 									 }
-									}
+									 }
+									
 								 $("#"+data.distributionBoardId).children(':checkbox').prop( "checked", true );
 	
 									$("#"+data.distributionBoardId).contextmenu(function(){
@@ -20404,18 +20588,33 @@ function tree_prop_general(ManholeId){
 }
 
 function treeCollapseFolder(selector,type,clss){
+console.log("uf");
 	if(selector == null) {
 		selector= " .folder";
 	}				
 	$(selector).bind('click',function (e) {
 		var id = $(this).parent().attr('id');
+		console.log(id);
+		console.log("id:", id);
+	
+		console.log("Are all '> ul > li' elements hidden?:", $(this).parent().find(' > ul > li').is(":hidden"));
+
 		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
 			//console.log("passed treeCollapseFolder");
 			getFiberPath();
 		}else if(id == "NodeActive_f_CurrentPhysicalLayer" && nodeFlag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
 			//console.log("passed treeCollapseFolder");
 			getNode();
-		}else if(id == "Junction_f_CurrentPhysicalLayer" && junctionFlag == 0 ){
+		}
+		
+		else if(id == "DistributionBoard_f_CurrentPhysicalLayer" && DBFlag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
+					console.log("passed treeCollapseFolder");
+					getDB("","");
+				}
+		//zeina
+		
+		
+		else if(id == "Junction_f_CurrentPhysicalLayer" && junctionFlag == 0 ){
 			//console.log("passed treeCollapseFolder");
 			getJunction();
 		}else if(id == "Site_f_CurrentPhysicalLayer" && siteFlag == 0 ){
@@ -20427,15 +20626,32 @@ function treeCollapseFolder(selector,type,clss){
 			getProject(id);
 		}
 		var children = $(this).parent().find(' > ul > li');
-		if (children.is(":visible")) {
-			children.hide(type);
-			$(this).parent('').children(clss).find('> svg').addClass('fa-folder').removeClass('fa-folder-open');
 
+		if (children.length > 0) {
+		    // Has children: toggle their visibility
+		    if (children.is(":visible")) {
+		        children.hide(type);
+		        $(this).parent().children(clss).find('> svg')
+		            .addClass('fa-folder')
+		            .removeClass('fa-folder-open');
+		    } else {
+		        children.show(type);
+		        $(this).parent().children(clss).find('> svg')
+		            .addClass('fa-folder-open')
+		            .removeClass('fa-folder');
+		    }
 		} else {
-			children.show(type);
-			$(this).parent('').children(clss).find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
+		    // No children: just toggle the folder icon
+		    var icon = $(this).parent().children(clss).find('> svg');
+		    if (icon.hasClass('fa-folder-open')) {
+		        icon.removeClass('fa-folder-open').addClass('fa-folder');
+		    } else {
+		        icon.removeClass('fa-folder').addClass('fa-folder-open');
+		    }
 		}
-		e.stopPropagation(i);
+
+		e.stopPropagation();
+
 	});
 }
 
@@ -23638,3 +23854,5 @@ function appendAttachmentRow(attachmentID,jctAttachmentIndex,attachmentName,atta
 	var myDiv = document.getElementById(""+tableID);
 	myDiv.scrollTop = myDiv.scrollHeight;
 }
+
+
