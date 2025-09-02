@@ -60,6 +60,7 @@ import com.aliat.alm.models.Duct;
 import com.aliat.alm.models.DuctAuxPoints;
 import com.aliat.alm.models.FiberAuxPoints;
 import com.aliat.alm.models.FiberCable;
+import com.aliat.alm.models.ControllerPanel;
 import com.aliat.alm.models.FiberCableSurvey;
 import com.aliat.alm.models.FiberStrands;
 import com.aliat.alm.models.FiberStrandsSurvey;
@@ -516,7 +517,7 @@ public class PhysicalLayerController {
 						}
 
 						if ("1".equals(readDB)) {
-
+//get db
 							distribBoardList = session.createNativeQuery(
 									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD where DB_ID LIKE '%"
 											+ request.getParameter("FilteredDistribution_Board")
@@ -524,6 +525,7 @@ public class PhysicalLayerController {
 											+ request.getParameter("FilteredDistribution_Board")
 											+ "%' and PROJECT_ID LIKE '%" + request.getParameter("Checked") + "%' ")
 									.getResultList();
+							System.out.println("ud"+distribBoardList);
 						}
 
 						else if (("0".equals(readDB) & "1".equals(writeDB)
@@ -2656,9 +2658,10 @@ public class PhysicalLayerController {
 						}
 						if ("1".equals(readDB)) {
 
-							distribBoardList = session.createNativeQuery(
+						/*	distribBoardList = session.createNativeQuery(
 									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='CurrentPhysicalLayer'")
-									.getResultList();
+									.getResultList();*/
+							
 						} else if (("0".equals(readDB) & "1".equals(writeDB)
 								& ("1".equals(readExceptionDB) || "1".equals(writeExceptionDB)))
 								|| ("0".equals(readDB) & "0".equals(writeDB)
@@ -3066,7 +3069,7 @@ public class PhysicalLayerController {
 								+ selectedDistBoardContext
 								+ "'),(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS='Active' AND B.DB_ID='"
 								+ selectedDistBoardContext
-								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
+								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE,TYPE,SERIAL_NUMB,CONTROLLER_ID,CONTROLLER_NAME  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
 				/*
@@ -3078,7 +3081,7 @@ public class PhysicalLayerController {
 						.createNativeQuery("SELECT DISTINCT DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  WHERE DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
-
+System.out.println(mapper.writeValueAsString(DistBoardDetails));
 				rtn.put("DistBoardDetails", DistBoardDetails);
 				rtn.put("DBnetLevel", DBnetLevel);
 				session.flush();
@@ -3102,6 +3105,152 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findControllerDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findControllerDetails(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedControllerContext = request.getParameter("selectedControllerContext");
+			System.out.println(selectedControllerContext);
+			try {
+				List<Object[]> controllerDetails = session.createNativeQuery(
+					    "SELECT DISTINCT " +
+					    "A.CONTROLLER_ID, " +
+					    "A.CONTROLLER_NAME, " +
+					    "A.SERIAL_NUMB, " +
+					    "A.MAC_ADDRESS, " +
+					    "A.IP_ADDRESS, " +
+					    "A.SUBNET_MASK, " +
+					    "A.DEFAULT_GATEWAY, " +
+					    "A.USER_NAME, " +
+					    "A.PASSWORD, " +
+					    "A.SITE, " +
+					    "A.SITE_NAME, " +
+					    "A.WAREHOUSE, " +
+					    "A.NUMB_OF_PANNELS, " +
+					    "A.NUMB_OF_PORTS, " +
+					    "A.NETWORK_LAYER, " +
+					    "A.LONGITUDE, " +
+					    "A.LATITUDE,"
+					    + "A.CITY, " +
+					    "TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'), " +
+					    "TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM') " +
+					    "FROM CONTROLLER A " +
+					    "WHERE A.CONTROLLER_ID = '" + selectedControllerContext + "'"
+					).getResultList();
+
+				/*
+				 * List<Object[]> DistBoardMappingPts = session.createNativeQuery(
+				 * "SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+				 * + selectedDistBoardContext + "' ") .getResultList();
+				 */
+				List<Object[]> DBnetLevel = session
+						.createNativeQuery("SELECT DISTINCT NETWORK_LAYER FROM CONTROLLER  WHERE CONTROLLER_ID='"
+								+ selectedControllerContext + "' ")
+						.getResultList();
+
+				rtn.put("ControllerDetails", controllerDetails);
+				rtn.put("DBnetLevel", DBnetLevel);
+				session.flush();
+				session.clear();
+				tx.commit();
+
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findControllerDetails due to \n " + exceptionAsString);
+				logger.info("Error in findControllerDetails due to \n " + exceptionAsString);
+				rtn.put("DistBoardDetails", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/getControllerLocation", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getControllerLocation(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedControllerId = request.getParameter("selectedControllerId");
+			System.out.println(selectedControllerId);
+			try {
+				List<Object[]> controllerLocation = session.createNativeQuery(
+					    "SELECT DISTINCT " +
+					    "A.LONGITUDE, " +
+					    "A.LATITUDE, " +
+					    "A.SITE, " +
+					    "A.SITE_NAME, " +
+					    "A.WAREHOUSE, " +
+					    "A.CITY " +
+					     "FROM CONTROLLER A " +
+					    "WHERE A.CONTROLLER_ID = '" + selectedControllerId + "'"
+					).getResultList();
+
+				/*
+				 * List<Object[]> DistBoardMappingPts = session.createNativeQuery(
+				 * "SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+				 * + selectedDistBoardContext + "' ") .getResultList();
+				 */
+				
+				rtn.put("ControllerLocation", controllerLocation);
+				session.flush();
+				session.clear();
+				tx.commit();
+
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findControllerDetails due to \n " + exceptionAsString);
+				logger.info("Error in findControllerDetails due to \n " + exceptionAsString);
+				rtn.put("DistBoardDetails", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findDistBoardMappingData", method = RequestMethod.GET)
 	@ResponseBody
@@ -5799,7 +5948,151 @@ public class PhysicalLayerController {
 			return rtn;
 		}
 	}
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/saveController",  method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveController(HttpServletRequest request, HttpServletResponse response) {
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+	    session = AlmDbSession.getInstance().getSession();
 
+	    if ("redirect:/".equals(LoginServices.checkSession(request, response))) {
+	        rtn.put("Login", "redirect:/");
+	        return rtn;
+	    }
+
+	    Transaction tx = null;
+
+	    try {
+	        tx = session.beginTransaction();
+
+	        String controllerId = request.getParameter("controllerId");
+	        Timestamp now = new Timestamp(System.currentTimeMillis());
+
+	        ControllerPanel controller = new ControllerPanel();
+
+	        boolean isNew = (controllerId == null || controllerId.trim().isEmpty());
+
+	        if (isNew) {
+	            int year = Calendar.getInstance().get(Calendar.YEAR);
+	            int nextSeq = Integer.parseInt(
+	                session.createNativeQuery("SELECT CONTROLLER FROM SEQ_TABLE").uniqueResult().toString()
+	            );
+
+	            controllerId = "Controller_" + year + "_" + nextSeq;
+	            session.createNativeQuery("UPDATE SEQ_TABLE SET CONTROLLER = CONTROLLER + 1").executeUpdate();
+
+	         
+	            controller.setControllerId(controllerId);
+	            controller.setCreationDate(now);
+	        } else {
+	            controller = session.get(ControllerPanel.class, controllerId);
+	            if (controller == null) {
+	                rtn.put("error", "Controller not found.");
+	                return rtn;
+	            }
+	        }
+
+	        // Set/update fields
+	        controller.setControllerName(request.getParameter("controllerName"));
+	        controller.setSerialNumber(request.getParameter("serialNumber"));
+	        controller.setMacAddress(request.getParameter("macAddress"));
+	        controller.setIpAddress(request.getParameter("ipAddress"));
+	        controller.setSubnetMask(request.getParameter("subnetMask"));
+	        controller.setDefaultGateway(request.getParameter("gateWay"));
+	        controller.setUserName(request.getParameter("userName"));
+	        controller.setPassword(request.getParameter("password"));
+	        controller.setNumberOfPanels(request.getParameter("numberOfPanels"));
+	        controller.setNumberOfPorts(request.getParameter("numberOfPorts"));
+	        controller.setNetworkLayer(request.getParameter("networkLayer"));
+	        controller.setLongitude(request.getParameter("longitude"));
+	        controller.setLatitude(request.getParameter("latitude"));
+	        controller.setControllerCity(request.getParameter("city"));
+		       
+	        controller.setSite(request.getParameter("ControllerSite"));
+	        controller.setSiteName(request.getParameter("ControllerSiteName"));
+	        controller.setWarehouse(request.getParameter("ControllerWarehouse"));
+
+	        
+	        String createDateStr = request.getParameter("createDate");
+	        if (createDateStr != null && !createDateStr.trim().isEmpty()) {
+	            try {
+	                DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+	                controller.setCreationDate(new Timestamp(formatter.parse(createDateStr).getTime()));
+	            } catch (ParseException e) {
+	                controller.setCreationDate(now);
+	            }
+	        }
+
+	        controller.setLastModifiedDate(now);
+	        session.saveOrUpdate(controller);
+	        session.flush(); 
+	        
+	        Object countObj = session.createNativeQuery(
+	        	    "SELECT COUNT(DB.DB_ID) AS DB_COUNT " +
+	        	    "FROM DISTRIBUTION_BOARD DB " +
+	        	    "WHERE DB.CONTROLLER_ID = :param1"
+	        	)
+	        	.setParameter("param1", controllerId)
+	        	.getSingleResult();
+
+	        	String dbCountStr = String.valueOf(countObj);
+	        	rtn.put("controllerDBCount", dbCountStr);
+
+	        	List<Object[]> distribBoardList = new ArrayList<Object[]>();
+				distribBoardList = session.createNativeQuery(
+						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,TYPE,CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE (PROJECT_ID='CurrentPhysicalLayer') AND CONTROLLER_ID =:param1")
+						.setParameter("param1", controllerId).getResultList();
+		
+				rtn.put("DBList", distribBoardList);
+				
+				// assume controllerId is provided as a method parameter
+				String hql = "SELECT C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER, " +
+				             "COUNT(DB.DB_ID) AS DB_COUNT " +
+				             "FROM CONTROLLER C " +
+				             "LEFT JOIN DISTRIBUTION_BOARD DB ON C.CONTROLLER_ID = DB.CONTROLLER_ID " +
+				             "WHERE C.CONTROLLER_ID = :controllerId " +
+				             "GROUP BY C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER";
+
+				List<Object[]> controllerList = session.createNativeQuery(hql)
+				                                       .setParameter("controllerId", controllerId)
+				                                       .getResultList();
+
+				// put the single controller object in the return map
+				rtn.put("ControllerList", controllerList);
+
+	        	
+	        	
+	        	
+	        	
+	        // Save or update
+	      
+	        
+	       
+	        rtn.put("controllerId", controllerId);
+	        rtn.put("controllerName", request.getParameter("controllerName"));
+	        rtn.put("networkLayer", request.getParameter("networkLayer"));
+	        rtn.put("lng", request.getParameter("longitude"));
+	        rtn.put("lat", request.getParameter("latitude"));
+	        rtn.put("actiondistControllerContext", request.getParameter("actiondistControllerContext"));
+	        session.clear();
+	        tx.commit();
+
+	    } catch (Exception e) {
+	        if (tx != null) tx.rollback();
+	        e.printStackTrace();
+	        rtn.put("controllerId", null);
+	        rtn.put("controllerName", null);
+	    } finally {
+	        if (session != null && session.isOpen()) {
+	            session.close();
+	        }
+	    }
+
+	    return rtn;
+	}
+
+	
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/saveManhole", method = RequestMethod.GET)
 	@ResponseBody
@@ -6016,6 +6309,23 @@ public class PhysicalLayerController {
 		}
 
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/saveHandhole", method = RequestMethod.GET)
@@ -8541,10 +8851,22 @@ public class PhysicalLayerController {
 				distributionBoard.setDistributionBoardLat(request.getParameter("DistributionBoardLat"));
 				distributionBoard.setDistributionBoardLong(request.getParameter("DistributionBoardLong"));
 				distributionBoard.setDBInstaller(request.getParameter("DBInstaller"));
+				distributionBoard.setDistributionBoardType(request.getParameter("type"));
 				distributionBoard.setDBEngineerName(request.getParameter("DBEngineerName"));
+				
+				distributionBoard.setDistributionBoardControllerId(request.getParameter("controllerId"));
+				distributionBoard.setDistributionBoardControllerName(request.getParameter("controllerName"));
+				distributionBoard.setDistributionBoardSerialNum(request.getParameter("serialNum"));
+				
 				distributionBoard.setDBDeploymentType(request.getParameter("DBDeploymentType"));
 				distributionBoard.setDBAdaptorPanelType(request.getParameter("DBAdaptorPanelType"));
-				distributionBoard.setDistributionBoardProjectId(request.getParameter("ProjectId"));
+				String projectId= request.getParameter("ProjectId");
+				if(projectId == null || projectId == "SC") {
+					
+					projectId="CurrentPhysicalLayer";
+				
+				}
+				distributionBoard.setDistributionBoardProjectId(projectId);
 				distributionBoard.setDistributionBoardRowsNum(
 						Float.parseFloat(request.getParameter("DistributionBoardRowsNum") != ""
 								? request.getParameter("DistributionBoardRowsNum")
@@ -9484,6 +9806,64 @@ public class PhysicalLayerController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in getFiberPath due to \n " + exceptionAsString);
 				logger.info("Error in getFiberPath due to \n " + exceptionAsString);
+				rtn.put("searchResult", "Failed");
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+
+				}
+			}
+		}
+
+		return rtn;
+
+	}
+
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/getDB", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getDB(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println("Passes here getDB");
+		Map<String, Object> rtn = new LinkedHashMap<String, Object>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				List<Object[]> distribBoardList = new ArrayList<Object[]>();
+				distribBoardList = session.createNativeQuery(
+						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,TYPE,CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE (PROJECT_ID='CurrentPhysicalLayer')")
+						.getResultList();
+		
+				rtn.put("DBList", distribBoardList);
+				
+				List<Object[]> controllerList = session.createNativeQuery(
+					    "SELECT C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER, " +
+					    "COUNT(DB.DB_ID) AS DB_COUNT " +
+					    "FROM CONTROLLER C " +
+					    "LEFT JOIN DISTRIBUTION_BOARD DB ON C.CONTROLLER_ID = DB.CONTROLLER_ID " +
+					    "GROUP BY C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER"
+					).getResultList();
+				
+						rtn.put("ControllerList", controllerList);
+
+
+			} catch (Exception e) {
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in getDB due to \n " + exceptionAsString);
+				logger.info("Error in get due to \n " + exceptionAsString);
 				rtn.put("searchResult", "Failed");
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -14335,7 +14715,7 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
-
+	
 	@RequestMapping(value = "/getDbData", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getDbData(Locale locale, Model model, HttpServletRequest request,
