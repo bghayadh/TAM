@@ -16,8 +16,21 @@ public class DistributionBoard {
 	@Column(name = "DB_NAME")
 	private String distributionBoardName;
 	
+	@Column(name = "TYPE")
+	private String distributionBoardType;
+	
+	
 	@Column(name = "DB_LONGITUDE")
 	private String distributionBoardLong;
+	
+	@Column(name = "SERIAL_NUMB")
+	private String distributionBoardSerialNum;
+	
+	@Column(name = "CONTROLLER_ID")
+	private String distributionBoardControllerId;
+	
+	@Column(name = "CONTROLLER_NAME")
+	private String distributionBoardControllerName;
 	
 	@Column(name = "DB_LATITUDE")
 	private String distributionBoardLat;
@@ -88,17 +101,20 @@ public class DistributionBoard {
 			Float distributionBoardRowsNum, Float distributionBoardColsNum, Float distributionBoardFront,
 			Float distributionBoardBack, String distributionBoardProjectId, Timestamp boardCreationDate,
 			Timestamp boardLastModifiedDate, String dbNetLevel, String dBEngineerName, String dBInstaller,
-			String dBDeploymentType, String dBAdaptorPanelType) {
+			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName, String distributionBoardControllerId) {
 		super();
 		DistributionBoardId = distributionBoardId;
 		this.distributionBoardName = distributionBoardName;
 		this.distributionBoardLong = distributionBoardLong;
 		this.distributionBoardLat = distributionBoardLat;
+		this.distributionBoardSerialNum=distributionBoardSerialNum;
 		this.distributionBoardCity = distributionBoardCity;
 		this.distributionBoardSite = distributionBoardSite;
 		this.distributionBoardSiteName = distributionBoardSiteName;
 		this.distributionBoardWarehouse = distributionBoardWarehouse;
 		DistributionBoardCapacity = distributionBoardCapacity;
+		this.distributionBoardControllerName=distributionBoardControllerName;
+		this.distributionBoardControllerId=distributionBoardControllerId;
 		this.distributionBoardRowsNum = distributionBoardRowsNum;
 		this.distributionBoardColsNum = distributionBoardColsNum;
 		this.distributionBoardFront = distributionBoardFront;
@@ -107,10 +123,59 @@ public class DistributionBoard {
 		BoardCreationDate = boardCreationDate;
 		BoardLastModifiedDate = boardLastModifiedDate;
 		this.dbNetLevel = dbNetLevel;
+		this.distributionBoardType=distributionBoardType;
 		DBEngineerName = dBEngineerName;
 		DBInstaller = dBInstaller;
 		DBDeploymentType = dBDeploymentType;
 		DBAdaptorPanelType = dBAdaptorPanelType;
+	}
+
+
+
+	public String getDistributionBoardSerialNum() {
+		return distributionBoardSerialNum;
+	}
+
+
+
+	public void setDistributionBoardSerialNum(String distributionBoardSerialNum) {
+		this.distributionBoardSerialNum = distributionBoardSerialNum;
+	}
+
+
+
+	public String getDistributionBoardControllerId() {
+		return distributionBoardControllerId;
+	}
+
+
+
+	public void setDistributionBoardControllerId(String distributionBoardControllerId) {
+		this.distributionBoardControllerId = distributionBoardControllerId;
+	}
+
+
+
+	public String getDistributionBoardControllerName() {
+		return distributionBoardControllerName;
+	}
+
+
+
+	public void setDistributionBoardControllerName(String distributionBoardControllerName) {
+		this.distributionBoardControllerName = distributionBoardControllerName;
+	}
+
+
+
+	public String getDistributionBoardType() {
+		return distributionBoardType;
+	}
+
+
+
+	public void setDistributionBoardType(String distributionBoardType) {
+		this.distributionBoardType = distributionBoardType;
 	}
 
 
