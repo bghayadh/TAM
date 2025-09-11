@@ -151,6 +151,92 @@ public class CommScopeService {
 						+ ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
+				rtn.put("message", ex.getMessage());
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Map<String, Object> newTokenAPI(String ipAddress, String oldToken) {
+
+		System.out.println("ipAddress is " + ipAddress + " token is " + oldToken);
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
+				.build();
+
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
+		RestTemplate restTemplate = new RestTemplate(factory);
+
+		// same error handler
+		restTemplate.setErrorHandler(new ResponseErrorHandler() {
+			@Override
+			public boolean hasError(ClientHttpResponse response) throws IOException {
+				return false;
+			}
+
+			@Override
+			public void handleError(ClientHttpResponse response) throws IOException {
+			}
+		});
+
+		String url = "http://" + ipAddress + "/api/v1/users/token";
+		session = AlmDbSession.getInstance().getSession();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(oldToken);
+		HttpEntity<Map<String, Object>> request = new HttpEntity<>(headers);
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try (Socket socket = new Socket(ipAddress, 80)) {
+				System.out.println("Port is opened.");
+				logger.info("Port is opened.");
+			} catch (IOException e) {
+				System.out.println("Port is closed.");
+				logger.info("Port is closed.");
+				rtn.put("status", "Failed");
+				rtn.put("reason", "Port is closed");
+				System.out.println("Port is closed.");
+				return rtn;
+			}
+			try {
+				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
+				System.out.println("response status code is " + response.getStatusCode());
+				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+					Map<String, Object> body = response.getBody();
+					String token = (String) body.get("accessToken");
+					logger.info("Getting new toke is succeeded. Token: {}", token);
+					System.out.println("Token: " + token);
+					rtn.put("responseBody", body);
+					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
+					rtn.put("status", "Success");
+				} else {
+					System.out.println("Getting new token failed: " + response.getStatusCode());
+					logger.warn("Getting new token failed: {}", response.getStatusCode());
+					rtn.put("status", "Failed");
+					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
+				}
+				tx.commit();
+			} catch (HttpClientErrorException ex) {
+				if (tx != null)
+					tx.rollback();
+				logger.error("Error during CommScope getting new token", ex);
+				logger.info("Error on the level of CommScope getting new token API request with a message : " + ex
+						+ "\n" + ex.getMessage());
+				rtn.put("status", "Error");
+				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -217,6 +303,7 @@ public class CommScopeService {
 					rtn.put("responseBody", body);
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 				} else {
 					System.out.println("Getting controllers information failed: " + response.getStatusCode());
@@ -234,6 +321,7 @@ public class CommScopeService {
 						+ ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -296,6 +384,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Getting panels information successfully executed.");
 				} else {
@@ -303,6 +392,7 @@ public class CommScopeService {
 					logger.warn("Getting panels information failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -313,6 +403,7 @@ public class CommScopeService {
 						+ "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -375,6 +466,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Getting patches information successfully executed.");
 				} else {
@@ -382,6 +474,7 @@ public class CommScopeService {
 					logger.warn("Getting patches information failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -392,6 +485,7 @@ public class CommScopeService {
 						+ "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -454,6 +548,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Getting incomplete patches information successfully executed.");
 				} else {
@@ -461,6 +556,7 @@ public class CommScopeService {
 					logger.warn("Getting incomplete patches information failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -472,6 +568,7 @@ public class CommScopeService {
 								+ ex + "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -534,6 +631,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Getting network intefrace information successfully executed.");
 				} else {
@@ -541,6 +639,7 @@ public class CommScopeService {
 					logger.warn("Getting network interface information failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -552,6 +651,7 @@ public class CommScopeService {
 								+ ex + "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -617,6 +717,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Getting port status information successfully executed.");
 				} else {
@@ -624,6 +725,7 @@ public class CommScopeService {
 					logger.warn("Getting port status information failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -634,6 +736,7 @@ public class CommScopeService {
 						+ "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -697,6 +800,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Getting event notifications successfully executed.");
 				} else {
@@ -704,6 +808,7 @@ public class CommScopeService {
 					logger.warn("Getting event notification failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -714,6 +819,7 @@ public class CommScopeService {
 						+ "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -780,6 +886,7 @@ public class CommScopeService {
 					rtn.put("controllerTime", dateTime);
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Controller time successfully updated to {}", dateTime);
 				} else {
@@ -787,6 +894,7 @@ public class CommScopeService {
 					logger.warn("Setting Controller Date Time failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -797,6 +905,7 @@ public class CommScopeService {
 						+ "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -865,6 +974,7 @@ public class CommScopeService {
 					rtn.put("controllerTime", controllerTime);
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Controller time successfully updated to {}", controllerTime);
 				} else {
@@ -872,6 +982,7 @@ public class CommScopeService {
 					logger.warn("Setting Controller to Current Date Time failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -883,6 +994,7 @@ public class CommScopeService {
 								+ ex + "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -950,6 +1062,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Generating Work Order at Controller X successfully done");
 				} else {
@@ -958,6 +1071,7 @@ public class CommScopeService {
 					logger.warn("Generating Work Order at ControllerX failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -968,6 +1082,7 @@ public class CommScopeService {
 						"Error on the level of CommScope API Generating Work Order: " + ex + "\n" + ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -1113,6 +1228,7 @@ public class CommScopeService {
 					rtn.put("responseBody", response.getBody());
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("List Work Orders successfully executed.");
 				} else {
@@ -1120,6 +1236,7 @@ public class CommScopeService {
 					logger.warn("List Work Orders failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -1130,6 +1247,7 @@ public class CommScopeService {
 						+ ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -1192,6 +1310,7 @@ public class CommScopeService {
 				if (response.getStatusCode() == HttpStatus.OK) {
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Work Order deleted successfully.");
 				} else {
@@ -1199,6 +1318,7 @@ public class CommScopeService {
 					logger.warn("Work Order deleting failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -1209,6 +1329,7 @@ public class CommScopeService {
 						+ ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {
@@ -1270,6 +1391,7 @@ public class CommScopeService {
 				if (response.getStatusCode() == HttpStatus.OK) {
 					rtn.put("accessToken", token);
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 					rtn.put("status", "Success");
 					logger.info("Work Orders deleted successfully.");
 				} else {
@@ -1277,6 +1399,7 @@ public class CommScopeService {
 					logger.warn("Work Orders deleting failed: ", response.getStatusCode());
 					rtn.put("status", "Failed");
 					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
 				}
 				tx.commit();
 			} catch (HttpClientErrorException ex) {
@@ -1287,6 +1410,7 @@ public class CommScopeService {
 						+ ex.getMessage());
 				rtn.put("status", "Error");
 				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
 				rtn.put("message", ex.getMessage());
 
 			} finally {

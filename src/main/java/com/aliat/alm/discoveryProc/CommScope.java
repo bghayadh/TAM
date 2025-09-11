@@ -46,6 +46,41 @@ public class CommScope {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommScope.class);
 
+	@RequestMapping(value = "/CommScopeNewToken", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> CommScopeNewToken(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("Welcomg to New Token Request.");
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		String token = request.getParameter("token");
+		String ipAddress = request.getParameter("ipAddress");
+
+		System.out.println("ipAddress is " + ipAddress + " and token is " +token);
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				System.out.println("Just before calling loginAPI");
+				rtn = commScopeService.newTokenAPI(ipAddress, token);
+				System.out.println("rtn returned from newTokenAPI is " + mapper.writeValueAsString(rtn));
+			} catch (Exception e) {
+				logger.info(
+						"Error on the level of CommScope New Token request with a message : " + e + "\n" + e.getMessage());
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
 	@RequestMapping(value = "/CommScopeLogin", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> CommScopeLogin(Locale locale, Model model, HttpServletRequest request,
@@ -81,6 +116,7 @@ public class CommScope {
 		}
 		return rtn;
 	}
+	
 
 	@RequestMapping(value = "/CommScopeControllerX", method = RequestMethod.GET)
 	@ResponseBody

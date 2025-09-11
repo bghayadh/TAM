@@ -285,7 +285,7 @@
   						<button type="button" id="loginButton" class="btn btn-primary BtnActive mb-2" onclick="login()">
 						<i class="fas fa-sign-in-alt"></i> Login
 						</button>
-  						<button type="button" id="tokenButton" class="btn btn-primary BtnActive mb-2" onclick="token()">
+  						<button type="button" id="tokenButton" class="btn btn-primary BtnActive mb-2" onclick="newToken()">
   						<i class="fas fa-hashtag"></i> Token
 						</button>
   						<button type="button" id="tokenButton" class="btn btn-primary BtnActive mb-2" onclick="rack()">
@@ -622,38 +622,7 @@ function login() {
     if (!validation()) {
         return;  // exit login() immediately
     }
-/*	
-	var fields = {"#ipAddress": "IP Address", "#username": "Username", "#password": "Password"};
-	for (var id in fields) {
-		if ($(id).val().trim().length === 0) {
-			alert(fields[id] + " is required!");
-			$(id).focus();  // optional: focus the empty field
-			return;         // stop execution
-		}
-	}
-*/	
-/*
-
-	var fieldsName = {"#ipAddress": "IP Address"}
-	const fields = ["#ipAddress", "#username", "#password"];
-	$.each(fields, function (index, fieldId) {
-		if ($(fieldId).val().trim.length === 0)) {
-		}
-	});
-	if ($("#username").val().trim.length ===0) {
-		alert("Please enter username");
-		return;
-	}
-	if ($("#password").val().trim.length ===0) {
-		alert("Please enter password");
-		return;
-	}
-	if ($("#ipAddress").val().trim.length ===0) {
-		alert("Please enter IP Address");
-		return;
-	}
-	 	 */
-	
+    	
 	$.ajax({
         type: "GET",
         contentType: "application/json; charset=utf-8",
@@ -670,16 +639,24 @@ function login() {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.responseBody.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);            	
             }
             else {
             	$("#responseBody").val("");
             	$("#token").val("");
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
-                else if (data.hasOwnProperty("responseCode"))
+                else if (data.hasOwnProperty("responseCode")) {
                 	$("#responseStatusCode").val(data.responseCode);
-                else if (data.hasOwnProperty("message"))
+        			$("#responseStatusCodeValue").val(data.reason);
+            		$("#responseStatus").val(data.status);
+                }            	
+                else if (data.hasOwnProperty("message")) {
                 	$("#responseStatusCode").val(data.message);
+	        		$("#responseStatusCodeValue").val(data.reason);
+    	        	$("#responseStatus").val(data.status);
+                }
             }
         },		
         error: function(result) {
@@ -688,9 +665,52 @@ function login() {
     });
 }
 
-function token() {
 
-	console.log("Welcome");	
+function newToken() {
+	console.log("Welcome to get new token method");	
+    if (!validation()) {
+        return;  // exit login() immediately
+    }
+    	
+	$.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        url: '${pageContext.request.contextPath}/CommScopeNewToken',
+        data: {            
+			"token" : $("#token").val(),
+			"ipAddress": $("#ipAddress").val(),
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data.status == "Success") {
+            	$("#responseBody").val(JSON.stringify(data.responseBody, null, 4));            	
+            	$("#responseStatusCode").val(data.responseCode);
+            	console.log("responseCode is " ,data.responseCode);
+            	$("#token").val(data.responseBody.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);            	
+            }
+            else {
+            	$("#responseBody").val("");
+            	$("#token").val("");
+                if (data.hasOwnProperty("reason"))
+            		$("#responseStatusCode").val(data.reason);
+                else if (data.hasOwnProperty("responseCode")) {
+                	$("#responseStatusCode").val(data.responseCode);
+        			$("#responseStatusCodeValue").val(data.reason);
+            		$("#responseStatus").val(data.status);
+                }            	
+                else if (data.hasOwnProperty("message")) {
+                	$("#responseStatusCode").val(data.message);
+	        		$("#responseStatusCodeValue").val(data.reason);
+    	        	$("#responseStatus").val(data.status);
+                }
+            }
+        },		
+        error: function(result) {
+            alert("New Token ajax failed, there is error: ", result);            
+        }
+    });
 }
 
 function controller () {
@@ -739,6 +759,8 @@ function controller () {
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
             	$("#rackID").val(data.responseBody.networkManagerId);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -747,12 +769,21 @@ function controller () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
-                else if (data.hasOwnProperty("responseCode"))
+                else if (data.hasOwnProperty("responseCode")) {
                 	$("#responseStatusCode").val(data.responseCode);
-                else if (data.hasOwnProperty("message"))
+	        		$("#responseStatusCodeValue").val(data.reason);
+    	        	$("#responseStatus").val(data.status);
+                }
+                else if (data.hasOwnProperty("message")) {
                 	$("#responseStatusCode").val(data.message);
+	        		$("#responseStatusCodeValue").val(data.reason);
+    	        	$("#responseStatus").val(data.status);
+                }
+*/
             }
         },
         error: function(result) {
@@ -786,6 +817,8 @@ function getPanel () {
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
             	$("#rackID").val(data.responseBody.rackId);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -794,12 +827,21 @@ function getPanel () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
-                else if (data.hasOwnProperty("responseCode"))
+                else if (data.hasOwnProperty("responseCode")) {
                 	$("#responseStatusCode").val(data.responseCode);
-                else if (data.hasOwnProperty("message"))
+	            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+    	        	$("#responseStatus").val(data.status);
+                }
+                else if (data.hasOwnProperty("message")) {
                 	$("#responseStatusCode").val(data.message);
+            		$("#responseStatusCodeValue").val(data.responseCodeValue);
+            		$("#responseStatus").val(data.status);
+                }
+*/
             }
         },
         error: function(result) {
@@ -834,6 +876,8 @@ function patches () {
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
             	$("#rackID").val(data.responseBody.rackId);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -842,12 +886,21 @@ function patches () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
-                else if (data.hasOwnProperty("responseCode"))
+                else if (data.hasOwnProperty("responseCode")) {
                 	$("#responseStatusCode").val(data.responseCode);
-                else if (data.hasOwnProperty("message"))
+            		$("#responseStatusCodeValue").val(data.responseCodeValue);
+            		$("#responseStatus").val(data.status);
+                }
+                else if (data.hasOwnProperty("message")) {
                 	$("#responseStatusCode").val(data.message);
+            		$("#responseStatusCodeValue").val(data.responseCodeValue);
+            		$("#responseStatus").val(data.status);                	
+                }
+*/                
             }
         },
         error: function(result) {
@@ -882,6 +935,8 @@ function incompletePatches () {
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
             	$("#rackID").val(data.responseBody.rackId);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -890,12 +945,21 @@ function incompletePatches () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
-                else if (data.hasOwnProperty("responseCode"))
+                else if (data.hasOwnProperty("responseCode")) {
                 	$("#responseStatusCode").val(data.responseCode);
-                else if (data.hasOwnProperty("message"))
+            		$("#responseStatusCodeValue").val(data.responseCodeValue);
+            		$("#responseStatus").val(data.status);
+                }
+                else if (data.hasOwnProperty("message")) {
                 	$("#responseStatusCode").val(data.message);
+            		$("#responseStatusCodeValue").val(data.responseCodeValue);
+            		$("#responseStatus").val(data.status);
+                }
+*/                
             }
         },
         error: function(result) {
@@ -928,6 +992,8 @@ function getNetworkInterface () {
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
             	$("#rackID").val(data.responseBody.networkManagerId);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -936,12 +1002,22 @@ function getNetworkInterface () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+        		
+            	responseFailed(data);
+/*
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
-                else if (data.hasOwnProperty("responseCode"))
+                else if (data.hasOwnProperty("responseCode")) {
                 	$("#responseStatusCode").val(data.responseCode);
-                else if (data.hasOwnProperty("message"))
+	        		$("#responseStatusCodeValue").val(data.responseCodeValue);
+    	    		$("#responseStatus").val(data.status);
+                }
+                else if (data.hasOwnProperty("message")) {
                 	$("#responseStatusCode").val(data.message);
+	        		$("#responseStatusCodeValue").val(data.responseCodeValue);
+    	    		$("#responseStatus").val(data.status);
+                }
+*/                
             }
         },
         error: function(result) {
@@ -979,6 +1055,8 @@ function portStatus () {
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
             	$("#rackID").val(data.responseBody.rackId);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -987,12 +1065,21 @@ function portStatus () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
-                else if (data.hasOwnProperty("responseCode"))
+                else if (data.hasOwnProperty("responseCode")) {
                 	$("#responseStatusCode").val(data.responseCode);
-                else if (data.hasOwnProperty("message"))
+	        		$("#responseStatusCodeValue").val(data.responseCodeValue);
+    	    		$("#responseStatus").val(data.status);
+                }
+                else if (data.hasOwnProperty("message")) {
                 	$("#responseStatusCode").val(data.message);
+	        		$("#responseStatusCodeValue").val(data.responseCodeValue);
+    	    		$("#responseStatus").val(data.status);
+                }
+*/                
             }
         },
         error: function(result) {
@@ -1027,6 +1114,8 @@ function eventNote () {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -1035,12 +1124,15 @@ function eventNote () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	        		
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
                 else if (data.hasOwnProperty("responseCode"))
                 	$("#responseStatusCode").val(data.responseCode);
                 else if (data.hasOwnProperty("message"))
                 	$("#responseStatusCode").val(data.message);
+*/            	
             }
         },
         error: function(result) {
@@ -1074,6 +1166,8 @@ function setCurrentDateTime () {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -1082,12 +1176,15 @@ function setCurrentDateTime () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
                 else if (data.hasOwnProperty("responseCode"))
                 	$("#responseStatusCode").val(data.responseCode);
                 else if (data.hasOwnProperty("message"))
                 	$("#responseStatusCode").val(data.message);
+*/            	
             }
         },
         error: function(result) {
@@ -1125,6 +1222,8 @@ function setDateTime () {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -1133,12 +1232,15 @@ function setDateTime () {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
                 else if (data.hasOwnProperty("responseCode"))
                 	$("#responseStatusCode").val(data.responseCode);
                 else if (data.hasOwnProperty("message"))
                 	$("#responseStatusCode").val(data.message);
+*/            	
             }
         },
         error: function(result) {
@@ -1209,6 +1311,8 @@ function generateWO() {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);            	
             }
             else {
             	$("#responseBody").val("");
@@ -1217,12 +1321,15 @@ function generateWO() {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	        		
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
                 else if (data.hasOwnProperty("responseCode"))
                 	$("#responseStatusCode").val(data.responseCode);
                 else if (data.hasOwnProperty("message"))
                 	$("#responseStatusCode").val(data.message);
+*/            	
             }
         },
         error: function(result) {
@@ -1277,6 +1384,8 @@ function getWO() {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason")) {
             		$("#responseStatusCode").val(data.reason);
             		$("#responseStatusCodeValue").val(data.reason);
@@ -1292,6 +1401,7 @@ function getWO() {
             		$("#responseStatusCodeValue").val(data.responseCodeValue);
             		$("#responseStatus").val(data.status);
                 }
+*/                
             }
         },
         error: function(result) {
@@ -1323,6 +1433,8 @@ function listWO() {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -1331,12 +1443,15 @@ function listWO() {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
                 else if (data.hasOwnProperty("responseCode"))
                 	$("#responseStatusCode").val(data.responseCode);
                 else if (data.hasOwnProperty("message"))
                 	$("#responseStatusCode").val(data.message);
+*/            	
             }
         },
         error: function(result) {
@@ -1369,12 +1484,16 @@ function delWO() {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
             	$("#rackID").val("");
             	if (data.hasOwnProperty("accessToken"))
             		$("#token").val(data.accessToken);
+            	responseFailed(data);
+/*            	
             	else
             		$("#token").val("");
                 if (data.hasOwnProperty("reason"))
@@ -1383,6 +1502,7 @@ function delWO() {
                 	$("#responseStatusCode").val(data.responseCode);
                 else if (data.hasOwnProperty("message"))
                 	$("#responseStatusCode").val(data.message);
+*/            	
             }
         },
         error: function(result) {
@@ -1414,6 +1534,8 @@ function delAllWO() {
             	$("#responseStatusCode").val(data.responseCode);
             	console.log("responseCode is " ,data.responseCode);
             	$("#token").val(data.accessToken);
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
             }
             else {
             	$("#responseBody").val("");
@@ -1422,18 +1544,36 @@ function delAllWO() {
             		$("#token").val(data.accessToken);
             	else
             		$("#token").val("");
+            	responseFailed(data);
+/*            	
                 if (data.hasOwnProperty("reason"))
             		$("#responseStatusCode").val(data.reason);
                 else if (data.hasOwnProperty("responseCode"))
                 	$("#responseStatusCode").val(data.responseCode);
                 else if (data.hasOwnProperty("message"))
                 	$("#responseStatusCode").val(data.message);
+*/
             }
         },
         error: function(result) {
             alert("Delete All Work Orders ajax failed, there is error: ", result);            
         }
     });
+}
+
+function responseFailed(data) {
+    if (data.hasOwnProperty("reason"))
+		$("#responseStatusCode").val(data.reason);
+    else if (data.hasOwnProperty("responseCode")) {
+    	$("#responseStatusCode").val(data.responseCode);
+		$("#responseStatusCodeValue").val(data.responseCodeValue);
+		$("#responseStatus").val(data.status);
+    }
+    else if (data.hasOwnProperty("message")) {
+    	$("#responseStatusCode").val(data.message);
+		$("#responseStatusCodeValue").val(data.responseCodeValue);
+		$("#responseStatus").val(data.status);
+    }	
 }
 /*
 if('${SelectedIndex}' != "addNew"){
