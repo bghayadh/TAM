@@ -125,32 +125,4 @@ public class DiscoveryProcessing {
 		}
 		return linkName;
 	}
-
-	@RequestMapping(value = "/CommScope", method = RequestMethod.GET)
-	public String CommScope(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
-		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
-			String originalUrl = request.getRequestURL().toString();
-			System.out.println("originalUrl is " + originalUrl);
-			System.out.println("originalUrl with ID is " + originalUrl + "?ID=" + request.getParameter("ID"));
-			model.addAttribute("redirectUrl", originalUrl + "?ID=" + request.getParameter("ID"));
-			return "Login";
-		}
-		System.out.println("Welcome To CommScope");
-		session = AlmDbSession.getInstance().getSession();
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			notifications.headerNotifications(session, model);
-			try {
-			} catch (Exception e) {
-				logger.info("Error on the level of CommScope Discovery Processing with a message : " + e + "\n"
-						+ e.getMessage());
-			} finally {
-				if (session != null && session.isOpen()) {
-					tx.commit();
-					session.close();
-				}
-			}
-		}
-		return "CommScope";
-	}
 }
