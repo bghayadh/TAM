@@ -746,8 +746,7 @@ function getRack() {
                 }
             	else {
             		$("#rackID").val("");
-                }
-            	
+                }            	
             	$("#responseStatusCodeValue").val(data.responseCodeValue);
             	$("#responseStatus").val(data.status);
             }
