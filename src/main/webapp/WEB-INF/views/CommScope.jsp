@@ -288,7 +288,7 @@
   						<button type="button" id="tokenButton" class="btn btn-primary BtnActive mb-2" onclick="newToken()">
   						<i class="fas fa-hashtag"></i> Token
 						</button>
-  						<button type="button" id="tokenButton" class="btn btn-primary BtnActive mb-2" onclick="rack()">
+  						<button type="button" id="tokenButton" class="btn btn-primary BtnActive mb-2" onclick="getRack()">
 						<i class="fas fa-layer-group"></i> Rack
 						</button>
 						<button type="button" id="controllerButton" class="btn btn-primary BtnActive mb-2" onclick="controller()">
@@ -713,34 +713,68 @@ function newToken() {
     });
 }
 
-function controller () {
+function getRack() {
+	console.log("Welcome to getRack method");
+	
+    if (!validation()) {
+        return;  // exit controller() immediately
+    }
+	
+	$.ajax({
+        type: "GET",
+        contentType: "application/json; charset=utf-8",
+        url: '${pageContext.request.contextPath}/CommScopeGetRack',
+        data: {            
+			"username" : $("#username").val(),
+			"password" : $("#password").val(),
+			"ipAddress": $("#ipAddress").val(),			
+        },
+        dataType: "json",
+        success: function (data) {
+            if (data.status == "Success") {
+            	$("#responseBody").val(JSON.stringify(data.responseBody, null, 4));            	
+            	$("#responseStatusCode").val(data.responseCode);
+            	console.log("responseCode is " ,data.responseCode);
+            	$("#token").val(data.accessToken);
+            	if (data.responseBody.hasOwnProperty("rackList")) {
+            		if (data.responseBody.rackList.length > 0)
+            			$("#rackID").val(data.responseBody.rackList[0].id);
+            	}
+            	else if (data.responseBody.hasOwnProperty("controllerList")) {
+            		if (data.responseBody.controllerList.length > 0)
+            			$("#rackID").val(data.responseBody.controllerList[0].id);
+                }
+            	else {
+            		$("#rackID").val("");
+                }
+            	
+            	$("#responseStatusCodeValue").val(data.responseCodeValue);
+            	$("#responseStatus").val(data.status);
+            }
+            else {
+            	$("#responseBody").val("");
+            	$("#rackID").val("");
+            	if (data.hasOwnProperty("accessToken"))
+            		$("#token").val(data.accessToken);
+            	else
+            		$("#token").val("");
+            	responseFailed(data);
+            }
+        },
+        error: function(result) {
+            alert("Get Rack ajax failed, there is error: ", result);            
+        }
+    });
+}
+
+
+
+function controller() {
 	console.log("Welcome to controller method");
 	
     if (!validation()) {
         return;  // exit controller() immediately
     }
-
-/*
-
-	var fieldsName = {"#ipAddress": "IP Address"}
-	const fields = ["#ipAddress", "#username", "#password"];
-	$.each(fields, function (index, fieldId) {
-		if ($(fieldId).val().trim.length === 0)) {
-		}
-	});
-	if ($("#username").val().trim.length ===0) {
-		alert("Please enter username");
-		return;
-	}
-	if ($("#password").val().trim.length ===0) {
-		alert("Please enter password");
-		return;
-	}
-	if ($("#ipAddress").val().trim.length ===0) {
-		alert("Please enter IP Address");
-		return;
-	}
-	 	 */
 	
 	$.ajax({
         type: "GET",

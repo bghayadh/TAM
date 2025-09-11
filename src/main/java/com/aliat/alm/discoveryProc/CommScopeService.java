@@ -249,6 +249,89 @@ public class CommScopeService {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Map<String, Object> getRackAPI(String token, String ipAddress) {
+
+		System.out.println("token is " + token + " IP Address is " + ipAddress);
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
+				.build();
+
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
+		RestTemplate restTemplate = new RestTemplate(factory);
+
+		// same error handler
+		restTemplate.setErrorHandler(new ResponseErrorHandler() {
+			@Override
+			public boolean hasError(ClientHttpResponse response) throws IOException {
+				return false;
+			}
+
+			@Override
+			public void handleError(ClientHttpResponse response) throws IOException {
+			}
+		});
+
+		String url = "http://" + ipAddress + "/api/v1/racks";
+		session = AlmDbSession.getInstance().getSession();
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		headers.setBearerAuth(token);
+		HttpEntity<String> request = new HttpEntity<>(headers);
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try (Socket socket = new Socket(ipAddress, 80)) {
+				System.out.println("Port is opened.");
+				logger.info("Port is opened.");
+			} catch (IOException e) {
+				System.out.println("Port is closed.");
+				logger.info("Port is closed.");
+				rtn.put("status", "Failed");
+				rtn.put("reason", "Port is closed");
+				System.out.println("Port is closed.");
+				return rtn;
+			}
+			try {
+				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
+				System.out.println("response status code is " + response.getStatusCode());
+				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+					Map<String, Object> body = response.getBody();
+					logger.info("Getting rack information successfully executed.");
+					rtn.put("responseBody", body);
+					rtn.put("accessToken", token);
+					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
+					rtn.put("status", "Success");
+				} else {
+					System.out.println("Getting rack information failed: " + response.getStatusCode());
+					logger.warn("Getting rack information failed: ", response.getStatusCode());
+					rtn.put("status", "Failed");
+					rtn.put("responseCode", response.getStatusCode());
+					rtn.put("responseCodeValue", response.getStatusCodeValue());
+				}
+				tx.commit();
+			} catch (HttpClientErrorException ex) {
+				if (tx != null)
+					tx.rollback();
+				logger.error("Error during CommScope getting rack information", ex);
+				logger.info("Error on the level of CommScope getting rack API request with a message : " + ex + "\n"
+						+ ex.getMessage());
+				rtn.put("status", "Error");
+				rtn.put("responseCode", ex.getStatusCode());
+				rtn.put("responseCodeValue", ex.getRawStatusCode());
+				rtn.put("message", ex.getMessage());
+
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Map<String, Object> controllerxAPI(String token, String ipAddress) {
 
 		System.out.println("token is " + token + " IP Address is " + ipAddress);

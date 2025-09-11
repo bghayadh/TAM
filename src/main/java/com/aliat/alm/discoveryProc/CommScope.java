@@ -116,7 +116,46 @@ public class CommScope {
 		}
 		return rtn;
 	}
-	
+		
+	@RequestMapping(value = "/CommScopeGetRack", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> CommScopeGetRack(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("Welcomg to GetRack Request.");
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String ipAddress = request.getParameter("ipAddress");
+
+		System.out.println("username is " + username + " password is " + password + " ipAddress is " + ipAddress);
+		session = AlmDbSession.getInstance().getSession();
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				System.out.println("Just before calling loginAPI");
+				rtn = commScopeService.loginAPI(ipAddress, username, password, 900);
+				System.out.println("rtn returned from loginAPI is " + mapper.writeValueAsString(rtn));
+				if (rtn.containsKey("accessToken") && "Success".equals(rtn.get("status"))) {
+					rtn = commScopeService.controllerxAPI((String) rtn.get("accessToken"), ipAddress);
+					System.out.println("rtn returned from getRackAPI is " + mapper.writeValueAsString(rtn));
+				}
+			} catch (Exception e) {
+				logger.info("Error on the level of CommScope getRack request with a message : " + e + "\n"
+						+ e.getMessage());
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
 
 	@RequestMapping(value = "/CommScopeControllerX", method = RequestMethod.GET)
 	@ResponseBody
