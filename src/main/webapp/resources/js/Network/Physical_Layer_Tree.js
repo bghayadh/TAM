@@ -1377,13 +1377,17 @@ if (readHandhole === '1') {
     }
     tr+= "<td> " +(readFiber === '1' ? data.allPhysicalNodesCount[1][1] : "") + "</td></tr>"
     if (readDB === '1') {
-    	 tr+= "<tr>" + "<th># Distribution Boards: </th> <td> " + data.allPhysicalNodesCount[0][1] + "</td></tr>";}
+    	 tr+= "<tr>" + "<th># Distribution Boards: </th> <td> " + data.allPhysicalNodesCount[0][1] + "</td></tr> <tr>" + "<th># Controllers: </th> <td> " + data.allPhysicalNodesCount[16][1] + "</td></tr>"
+
+		 
+		 }
    tr += "<tr>" + "<th># Trenches: </th> <td> " + data.allPhysicalNodesCount[5][1] + "</td></tr>"
+  + "<tr>" + "<th># Ducts: </th> <td> " + data.allPhysicalNodesCount[17][1] + "</td></tr>"
     + "<tr>" + "<th># Junctions: </th> <td> " + data.allPhysicalNodesCount[3][1] + "</td></tr>"
     + "<tr>" + "<th># Nodes: </th> <td> " + data.allPhysicalNodesCount[14][1] + "</td></tr>"
     + "<tr>" + "<th># Sites: </th> <td> " + data.allPhysicalNodesCount[15][1] + "</td></tr>"
-    if (readFiber === '1') {
-    + "<tr>" + "<th># Total path length (Geo): </th> <td> " + data.allPhysicalNodesCount[6][1].toFixed(2) + " km</td></tr>"
+  if (readFiber === '1') {
+    tr+=  "<tr>" + "<th># Total path length (Geo): </th> <td> " + data.allPhysicalNodesCount[6][1].toFixed(2) + " km</td></tr>"
     + "<tr>" + "<th># Total path length (Line of site ): </th> <td> " + data.allPhysicalNodesCount[7][1].toFixed(2) + " km</td></tr>"
     + "<tr>" + "<th># Total Strand length (Geo): </th> <td> " + (data.allPhysicalNodesCount[11][1] + data.allPhysicalNodesCount[8][1] + data.allPhysicalNodesCount[10][1]).toFixed(2) + " km</td></tr>"
     + "<tr>" + "<th># Total Strand length (Line of site): </th> <td> " + (data.allPhysicalNodesCount[9][1] + data.allPhysicalNodesCount[12][1] + data.allPhysicalNodesCount[13][1]).toFixed(2) + " km</td></tr>";
@@ -2686,13 +2690,17 @@ menuBackboneDB = new ContextMenu({
       success: function (data) {
 
           if(data !=null){
-              var tr ="<tr>"+"<td><b>Backbone Count: </b>"+data.totalDBCount+"</td></tr>"	
+              var tr ="<tr>"+"<td><b>DB Backbone Count: </b>"+data.totalDBCount+"</td></tr>"	
+			  +"<tr>"+"<td><b>Total Bacbone Controllers: </b>"+data.controllerCount+"</td></tr>"						
+			  +"<tr>"+"<td><b>Total Active DB: </b>"+data.activeDB+"</td></tr>"						
+			  +"<tr>"+"<td><b>Total Passive DB: </b>"+data.passiveDB+"</td></tr>"						
+			  		                  
                  	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
                     +"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"	
-                    +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
-					+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
-                    +"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
-                    +"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Connected Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+					+"<tr>"+"<td><b>Total Not Connected Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Connected Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Not Connected Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
 
 			 showBoq();
              $("#boq_table").append(tr);
@@ -2728,13 +2736,17 @@ menuBackboneDB = new ContextMenu({
       success: function (data) {
 
           if(data!=null){
-				var tr ="<tr>"+"<td><b>Metro Count: </b>"+data.totalDBCount+"</td></tr>"	
+				var tr ="<tr>"+"<td><b>DB Metro Count: </b>"+data.totalDBCount+"</td></tr>"	
+				+"<tr>"+"<td><b>Total Metro Controllers: </b>"+data.controllerCount+"</td></tr>"						
+						  +"<tr>"+"<td><b>Total Active DB: </b>"+data.activeDB+"</td></tr>"						
+						  +"<tr>"+"<td><b>Total Passive DB: </b>"+data.passiveDB+"</td></tr>"						
+						
                  	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
         			+"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"	
-                    +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
-					+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
-                    +"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
-                    +"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Connected Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+					+"<tr>"+"<td><b>Total Not Connected Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Connected Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Not Connected Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
 
                  showBoq();
                  $("#boq_table").append(tr);
@@ -2772,13 +2784,17 @@ menuAccessDB = new ContextMenu({
       success: function (data) {
           if(data!=null){
 
- 				var tr ="<tr>"+"<td><b>Access Count: </b>"+data.totalDBCount+"</td></tr>"	
+ 				var tr ="<tr>"+"<td><b>DB Access Count: </b>"+data.totalDBCount+"</td></tr>"	
+				+"<tr>"+"<td><b>Total Access Controllers: </b>"+data.controllerCount+"</td></tr>"						
+						  +"<tr>"+"<td><b>Total Active DB: </b>"+data.activeDB+"</td></tr>"						
+						  +"<tr>"+"<td><b>Total Passive DB: </b>"+data.passiveDB+"</td></tr>"						
+						
                  	+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.totalDBMappingCount+"</td></tr>"						
         			+"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"	
-                    +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
-					+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
-                    +"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
-                    +"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Connected Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+					+"<tr>"+"<td><b>Total Not Connected Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Connected Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+                    +"<tr>"+"<td><b>Total Not Connected Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
 						
                 showBoq();
                 $("#boq_table").append(tr);
@@ -3191,15 +3207,22 @@ singleSite = new ContextMenu({
 						   success: function (data) {
 							   if(data!=null){
 								   CountDistBoard= window["distributionBoardCount_"+nodeFileId] = data.CountDistBoard;
-								   
+								   console.log(data);
 								   
 								 var tr ="<tr>"+"<td><b>Distribution Boards Count: </b>"+data.CountDistBoard+"</td></tr>"	
-			                 		+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.CountDistBoardMapping+"</td></tr>"	
-			    			        +"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"											
-			    			        +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
-			                 		+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
-									+"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
-			                 		+"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
+								 +"<tr>"+"<td><b>DB Backbone Count: </b>"+data.DbBackbone+"</td></tr>"	
+								 +"<tr>"+"<td><b>DB Metro Count: </b>"+data.DbMetro+"</td></tr>"	
+								 +"<tr>"+"<td><b>DB Access Count: </b>"+data.DbAccess+"</td></tr>"	
+								 									
+			                 		+"<tr>"+"<td><b>Controllers Count: </b>"+data.CountController+"</td></tr>"	
+									+"<tr>"+"<td><b>Total Active DB: </b>"+data.CountActiveDB+"</td></tr>"	
+									+"<tr>"+"<td><b>Total Passive DB: </b>"+data.CountPassiveDB+"</td></tr>"	
+									+"<tr>"+"<td><b>Total DB Mapping: </b>"+data.CountDistBoardMapping+"</td></tr>"	
+								    +"<tr>"+"<td><b>Total Ports: </b>"+data.countAllPorts+"</td></tr>"											
+			    			        +"<tr>"+"<td><b>Total Connected Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"						
+			                 		+"<tr>"+"<td><b>Total Not Connected Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"						
+									+"<tr>"+"<td><b>Total Connected Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"						
+			                 		+"<tr>"+"<td><b>Total Not Connected Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"						
 
 							   showBoq();
 							   $("#boq_table").append(tr);
@@ -3255,7 +3278,7 @@ menuController = new ContextMenu({
 
 
 
-// Conditionally add 'Create New Manhole' item based on addManhole variable
+// Conditionally add 'Create New board' item based on addDB variable
 if (addDB === '1') {
     menuDBs.unshift({'icon': 'folder-plus', 'name': 'Create New Board', action: () => {
 	
@@ -3279,6 +3302,7 @@ if (addDB === '1') {
 					document.getElementById("DBSiteName").style.display = "block";
 					document.getElementById("DBType").value = "passive";
 					actiondistBoardContext="Insert";
+		
 	
 					}
 					
@@ -8000,7 +8024,7 @@ singleHandhole = new ContextMenu({
 									        IdNodeSelectedTemp = $("#"+selectedDistBoardContext).parents().eq(1).attr('id').split("DistributionBoard_access__")[1];
 									    }
 									    									
-										console.log(IdNodeSelectedTemp);
+									
 										$("#distributionBoardModal").find("input").val('').end();
 										
 										$("#DistributionBoardheader").text("Distribution Board: "+data.DistBoardDetails[0][0]);
@@ -8096,7 +8120,11 @@ singleHandhole = new ContextMenu({
 											}
 											if(data.DistBoardDetails[0][20]!=null || data.DistBoardDetails[0][20]!=""){
 											$("#DBController").val(""+data.DistBoardDetails[0][20]);
-																						}
+																						//console.log("yee");
+									
+										
+										}
+										
 										
 													if(data.DistBoardDetails[0][21]!=null || data.DistBoardDetails[0][21]!=""){
 															$("#DBControllerName").val(""+data.DistBoardDetails[0][21]);
@@ -8160,6 +8188,15 @@ singleHandhole = new ContextMenu({
 										    $("#distController").show();
 										    $("#distControllerName").show();
 										}
+										var dbTypeValue = $("#DBType").val();
+										console.log("Selected DBType value: " + dbTypeValue); // Log the value to see what it is
+										if (dbTypeValue === "active") {
+										    console.log("DBType is active, disabling DBnetlevel...");
+											$("#DBnetlevel").prop('disabled', true);
+										} else {
+										    console.log("DBType is not active, DBnetlevel remains enabled.");
+											$("#DBnetlevel").prop('disabled', false);
+	}
 
 										$("#DistributionBoardName").on("input",function(){
 
@@ -8280,6 +8317,9 @@ singleHandhole = new ContextMenu({
 											setAllDBFieldsReadonly();
 
 										   }
+										   
+										   // Get the value of the DBType dropdown
+								
 }
 										
 		
@@ -8728,10 +8768,10 @@ singleHandhole = new ContextMenu({
 									+"<tr>"+"<td><b>Num of Columnns: </b>"+data.countConnections[0][1]+"</td></tr>"
 									+"<tr>"+"<td><b>Num of Front Connected: </b>"+data.countConnections[0][2]+"</td></tr>"
 									+"<tr>"+"<td><b>Num of Back Connected: </b>"+data.countConnections[0][3]+"</td></tr>"
-			    			        +"<tr>"+"<td><b>Total Active Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"
-			                 		+"<tr>"+"<td><b>Total Inactive Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"
-									+"<tr>"+"<td><b>Total Active Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"
-			                 		+"<tr>"+"<td><b>Total Inactive Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"
+			    			        +"<tr>"+"<td><b>Total Connected Front Ports: </b>"+data.countDbActiveFP+"</td></tr>"
+			                 		+"<tr>"+"<td><b>Total Not Connected Front Ports: </b>"+data.countDbInactiveFP+"</td></tr>"
+									+"<tr>"+"<td><b>Total Connected Back Ports: </b>"+data.countDbActiveBP+"</td></tr>"
+			                 		+"<tr>"+"<td><b>Total Not Connected Back Ports: </b>"+data.countDbInactiveBP+"</td></tr>"
 
 									$("#boq_table").append(tr);
 									
@@ -10539,7 +10579,7 @@ singleTube = new ContextMenu({
 			menuName=currentPhysicalmenu;
 			if($(this).parent().attr('id') == "initial_ul_CurrentPhysicalLayer"){
 				IdNodeSelectedTemp = "CurrentPhysicalLayer";
-				console.log(IdNodeSelectedTemp);
+	
 			   }
 			   else {
 				   IdNodeSelectedTemp = $(this).parent().attr('id').split("initial_ul_")[1];
@@ -12557,6 +12597,8 @@ $("#saveHandhole").click(function () {
 
 
 		$("#saveDistBoard").click(function () {
+			
+
 			var dbAlertType="";
 			var dbRowsTotalNum = document.getElementById("DistributionBoardRowsNum").value;
 			var dbColsTotalNum = document.getElementById("DistributionBoardColsNum").value;
@@ -12744,6 +12786,7 @@ $("#saveHandhole").click(function () {
 									window[""+data.distributionBoardId]=[];
 									window[""+data.distributionBoardId]=[data.distributionBoardId,DistributionBoardLong,DistributionBoardLat,DistributionBoardName,DistributionBoardCapacity,locationId, IdNodeSelectedTemp,boardCity,dbNetLevel,DBEngineerName,DBInstaller,DBDeploymentType,DBAdaptorPanelType];
 												
+									
 									if(actiondistBoardContext=="Insert"){
 										if (distBoardType == "passive"){
 										if(dbNetLevel=="backbone") {
@@ -12824,23 +12867,30 @@ $("#saveHandhole").click(function () {
 
 									tree_prop_selection("#"+data.distributionBoardId+" .TreeSpan");								 
 									if(dbNetLevel=="backbone"){
-									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterBackboneDistBoard,"",boardCity);
+										create_DB_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterBackboneDistBoard,"","");				
+														
+									  //  create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterBackboneDistBoard,"",boardCity);
 										markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
 										clusterName=markerClusterBackboneDistBoard;
 									}
 									else if(dbNetLevel=="metro"){
-									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterMetroDistBoard,"",boardCity);
+										create_DB_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterMetroDistBoard,"","");				
+															
+									//    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterMetroDistBoard,"",boardCity);
 										markerClusterMetroDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
 										clusterName=markerClusterMetroDistBoard;
 									}
 									else {
-									    create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterAccessDistBoard,"",boardCity);
+										
+										create_DB_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterAccessDistBoard,"","");				
+															
+									   // create_Marker_Click(data.distributionBoardId,DistributionBoardName,DistributionBoardLong,DistributionBoardLat,markersDistBoard,markerClusterAccessDistBoard,"",boardCity);
 										markerClusterAccessDistBoard.addMarker(markersDistBoard[""+data.distributionBoardId]);
 										clusterName=markerClusterAccessDistBoard;
 									}
 														 
-									    DistributionBoardCheckFilter(data.distributionBoardId,"",clusterName);
-									
+									DBCheckFilter(data.distributionBoardId,clusterName);
+														
 										if(data.countConnections.length>0){
 											countCablesFront=data.countConnections[0][2];
 											countCablesBack=data.countConnections[0][3];
@@ -12852,9 +12902,7 @@ $("#saveHandhole").click(function () {
 											markersDistBoard[data.distributionBoardId].setLabel({text: DistributionBoardName, className:"marker-position-dB",color:"#5665F9"});
 										}
 										panTo(DistributionBoardLat, DistributionBoardLong);
-										if(typeof infowindow!=='undefined'){
-											infowindow.close();
-										}
+									
 										$("#"+data.distributionBoardId+" > .TreeSpan").css("display", "inline");
 											  
 										// remove the selection of previous item if exist and add it to the new one
@@ -12903,10 +12951,7 @@ $("#saveHandhole").click(function () {
 									alert("Error");
 									}
 								}); 									
-								if(typeof infowindow!== 'undefined'){		
-									infowindow.close();								
-								}
-								
+							
 								$("#"+data.distributionBoardId+" > .TreeSpan").css("display", "inline");
 
 								$("#distributionBoardModal").modal('hide');

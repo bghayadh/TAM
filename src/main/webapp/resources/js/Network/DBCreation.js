@@ -38,7 +38,15 @@ function getDB(type,url,id,tr,showDBflag){
     				}
     				$("#loading").remove();	
 					if(showDBflag != null){
+						console.log(showDBflag.length)
+						if(showDBflag.length==3){
 					showDB(showDBflag[0],showDBflag[1],showDBflag[2]);
+					}
+					
+					else{
+						showHideRealPoints(showDBflag[0],showDBflag[1],showDBflag[2]);
+						
+					}
 					}
     			}
     		},
@@ -171,50 +179,12 @@ function DBLayerUnCheckAll(){
 
 
 function createDB(distribBoardList, transfer){
-	if (transfer != "1"){
-	markersDistBoard=[];
-
-	markerClusterMetroDistBoard.setMap(map);
-
-	markerClusterBackboneDistBoard.setMap(map);
-
-	markerClusterAccessDistBoard.setMap(map);
-}
 
 
 
-	for(i=0;i<distribBoardList.length;i++){
-		
-		if(transfer =="1"){
-			
-			if(distribBoardList[i][8]=="backbone"){
-				
-				
-				markersDistBoard[distribBoardList[i][0]].setMap(null);
-				markerClusterBackboneDistBoard.removeMarker(markersDistBoard[distribBoardList[i][0]]);
-				          	     
-
-				
-			}
-			else if (distribBoardList[i][8]=="metro"){
-	
-				markersDistBoard[distribBoardList[i][0]].setMap(null);
-							markerClusterMetroDistBoard.removeMarker(markersDistBoard[distribBoardList[i][0]]);
-						
-			}
-			
-			else {		markersDistBoard[distribBoardList[i][0]].setMap(null);
-							markerClusterAccessDistBoard.removeMarker(markersDistBoard[distribBoardList[i][0]]);
-						
-				
-				
-			}
-		}
-	    allDB.push(distribBoardList[i][0]);
-		window[""+distribBoardList[i][0]]=[];
-		window[""+distribBoardList[i][0]]=distribBoardList[i];
 
 
+	 
 		if(distribBoardList!=null){
 					for(i=0;i<distribBoardList.length;i++){
 						
@@ -248,6 +218,7 @@ function createDB(distribBoardList, transfer){
 						
 						else if (distribBoardList[i][9] == "active"){
 							if(distribBoardList[i][8]=="backbone") {
+								console.log("y");
 							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 							$("#"+distribBoardList[i][10]).append(str);
 							create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
@@ -273,16 +244,17 @@ function createDB(distribBoardList, transfer){
 							menuName=singleDistBoard;
 							IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
 							selectedDistBoardContext=$(this).parents().attr('id');
-							
+							console.log("uo");
 							selectedDistBoardName=$(this).text();
 							openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
 												
 						});	
 						
 					}
-				}
+				
 		$(".DistBoard  > .TreeSpan").contextmenu(function(){
 			menuName=singleDistBoard;
+			console.log("uo");
 			selectedDistBoardContext=$(this).attr('id');
 												selectedDistBoardName=$(this).text();
 												openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);							
@@ -301,7 +273,7 @@ function createDB(distribBoardList, transfer){
 
 function create_DB_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,city) {
 
-
+console.log("uuuuuuu");
 	const pos = new google.maps.LatLng(Lat,Long);
 	var data="<div>" +Name+ "</div>"; 
 	var mapIcon;
@@ -384,10 +356,10 @@ function create_DB_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,cit
     }
 	
 	 
-	 
+	
 
 	 if(!markers[Id]){
-		
+		console.log("ywwww");
 		 Mapmarker = new google.maps.Marker({
 			position: pos,
 			data: data,
@@ -410,7 +382,9 @@ function create_DB_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,cit
 				var childrenInitial=$("#initial_ul_"+dbFileId+"").find(' > ul > li');
    			var children =  $("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li');
      
-			var networkLevelFolder =  $("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > ul > li > ul > li');
+			var networkLevelFolder =  $("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > ul > li ');
+			var networkControllerFolders =  $("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > ul > li ul > li');
+			var networkController =  $("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > ul > li ul > li ul > li');
 
 			
 			if(IdSelected!=IdSelectedTemp){	
@@ -425,20 +399,24 @@ function create_DB_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,cit
 				children.show();
 			}
 			networkLevelFolder.show(); 
+			networkControllerFolders.show(); 
+			networkController.show(); 
 			
 			$("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
 			$("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
 
 			$("#initial_ul_"+dbFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			$("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			$("#DistributionBoard_backboneController_"+dbFileId+"> .Parentfolder >svg" ).removeClass('fa fa-folder').addClass('fa-folder-open');
+			//$("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 				
 			$("#"+dbFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
 			$("#"+markerType+"_f_"+dbFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 
 			$("#"+markerType+"_f_"+dbFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 			$("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-		
+			$("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+			$("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > ul > li  > ul > li > .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+			$("#"+markerType+"_f_"+dbFileId+"").find(' > ul > li > ul > li  > ul > li > ul > li>  .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+								
 			offset=$("#"+IdSelected).offset().top;
 			projectOffset=$("#initial_ul_"+dbFileId).offset().top;
 			offsetTotal=(offset-projectOffset);
@@ -465,14 +443,9 @@ function create_DB_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,cit
 		markers[Id].data=data;
 	}
 	 
-	$("#" + Id + " .TreeSpan").not($("#" + Id + "_f" + " .TreeSpan"))   
-	    .off('click')  // Ensure any previous event handler is removed first
-	    .on('click', function (e) {
-	        e.preventDefault();  // Prevent default action
-	        e.stopPropagation(); // Stop bubbling
-			if (typeof infowindow !== 'undefined') {
-			       infowindow.close();
-			   }
+	$("#" + Id + " .TreeSpan").on('click', function (e) {
+	    e.preventDefault();
+	    e.stopPropagation();
 	        // Now pan to the marker
 	        panTo(markers[Id].getPosition().lat(), markers[Id].getPosition().lng());
 	        map.setZoom(11);
@@ -483,7 +456,7 @@ function create_DB_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,cit
 	        } else {
 	            infowindow = new google.maps.InfoWindow();
 	        }
-
+console.log("yal");
 	        infowindow.setContent(Id);
 	        infowindow.open(map, markers[Id]);
 	    });
@@ -814,14 +787,7 @@ function controllerLayerUnCheckAll(layer) {
 
 	            $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
 
-	            if (draw === true) {
-	                createPathh(e);
-	            }
-
-	            if (deleting === true) {
-	                deleteAuxPath(e);
-	                MarkerArrayId.push(Id);
-	            }
+	           
 	        });
 
 	    } else {
@@ -848,7 +814,7 @@ function controllerLayerUnCheckAll(layer) {
 	            }
 
 	            infowindow.setContent(Id);
-	            infowindow.open(map, marker);
+	            infowindow.open(map, marker); 
 	        });
 	}
 

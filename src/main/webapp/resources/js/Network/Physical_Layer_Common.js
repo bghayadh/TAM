@@ -283,6 +283,7 @@ searchConnectedButtonEvents();
 	$("#DistributionBoardLat").val(""+getCoords().split(" ")[0]);
 		$("#DistributionBoardLong").val(""+getCoords().split(" ")[1]);
 		$("#boardCity").val(city.split(", ")[0]);
+		$("#DBType").val("passive");
 		
 	});
 		$(".tab-pane").removeClass('active');
@@ -917,6 +918,7 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
 		 if(DBFlag == 0){
 		 				showDBflag=[selectedContext,target,name];	
 						getDB("","","","",showDBflag);	
+						return
 		 		}		
 		 				
 	     markerClusterBackboneDistBoard.clearMarkers(); // clear map
@@ -7665,6 +7667,12 @@ function showHideManHandHolesWithJct(pathID) {
 function showHideRealPoints(pathID,checkSeqWindowID,action) {
 	showHidePointsArray=[];
 	if(window["mapPointsNames_"+pathID] != undefined) {
+		
+		if(DBFlag == 0){
+			var showHideRealPoints= [pathID, checkSeqWindowID, action, "realPoints"];
+			getDB("","","","", showHideRealPoints);		
+			return;						
+			 		}	
 
 		if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {	
 if(readManhole === '1'){
@@ -7713,7 +7721,7 @@ if(readManhole === '1'){
 		else {
 			showHidePointsArray = window["mapPointsNames_"+pathID];
 		}
-	if(action=="Show") {
+		if(action=="Show") {
 		for(var x=0;x<showHidePointsArray.length;x++) {
 			
 			if (x==0) {
@@ -7725,6 +7733,8 @@ if(readManhole === '1'){
 			else {
 				var type =String(x);
 			}
+			
+			console.log(showHidePointsArray[x]);
 			
 			if(showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
@@ -7919,6 +7929,7 @@ if(readManhole === '1'){
 			}
 			// Case of null auxiliary point
 			else if(showHidePointsArray[x] ==null || showHidePointsArray[x] =="null"){
+				console.log(x);
 				var AuxId = "null".concat("_"+type+"_"+pathID);
 				if(siteCltSrcMarkers[AuxId]) {
 			    	siteCltSrcMarkers[AuxId].setMap(null);

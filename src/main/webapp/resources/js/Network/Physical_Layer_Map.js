@@ -157,7 +157,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 			// Manholes cluster Calculator
 			
-	/*		markerClusterManhole.setOptions( {					  					
+		markerClusterManhole.setOptions( {					  					
 				minimumClusterSize: 2,
 				styles: [
 				         {
@@ -191,7 +191,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			
 			
 			
-			
+	/*		
 			// Backbone Distribution Boards cluster Calculator
 			markerClusterBackboneDistBoard.setOptions({								
 				minimumClusterSize: 2,
