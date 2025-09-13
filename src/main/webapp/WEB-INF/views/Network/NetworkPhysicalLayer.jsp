@@ -7806,8 +7806,7 @@ $("#saveController").click(function () {
             dataType: "json",
             success: function (data) {
                 if (data != null) {
-                		console.log(data);
-                    // Handle Insert
+           
                     if (data.actiondistControllerContext == "Insert") {
                         allCont.push(data.controllerId);
                 		window[""+data.controllerId]=[];
@@ -7857,6 +7856,22 @@ $("#saveController").click(function () {
                 				    
 
             			}
+                		createControllerMarkerClick(
+    							data.controllerId,
+    							data.controllerName,
+    						    data.lng, 
+    						    data.lat, 
+    						    markersController,
+    					        markerClusterController
+    							
+    						);
+    					controllerCheckFilter(
+    							data.controllerId,
+    							markerClusterController
+    							); 
+    				
+    					markerClusterController.addMarker(markersController[data.controllerId]);
+    			    
             					
                     }
                     // Handle Update
@@ -7869,15 +7884,57 @@ $("#saveController").click(function () {
                 	     // loop over your list and collect all <li> from each target
                 	   
                 	       	if (networkLayer != dbContNtLevel){
+                    	       	if(data.DBList){
+                	            var distribBoardList=data.DBList;
+    	                       	for(i=0;i<distribBoardList.length;i++){
+    	                    		
+    	                       		$("#"+distribBoardList[i][0]).remove();
+    	                    			
+    	                    			if (data.oldNetworkLevel == "backbone") {
+    	                    			    console.log("deleting backbone:", distribBoardList[i][0]);
+
+    	                    			    if (markersDistBoard[distribBoardList[i][0]]) {
+    	                    			        let marker = markersDistBoard[distribBoardList[i][0]];
+    	                    			        markerClusterBackboneDistBoard.removeMarker(marker);
+    	                    			        marker.setMap(null);
+    	                    			        delete markersDistBoard[distribBoardList[i][0]];
+    	                    			        markerClusterBackboneDistBoard.repaint(); // 🔥 force refresh
+    	                    			    }
+    	                    			}
+    	                    			else if (data.oldNetworkLevel == "metro") {
+    	                    			    console.log("deleting metro:", distribBoardList[i][0]);
+
+    	                    			    if (markersDistBoard[distribBoardList[i][0]]) {
+    	                    			        let marker = markersDistBoard[distribBoardList[i][0]];
+    	                    			        markerClusterMetroDistBoard.removeMarker(marker);
+    	                    			        marker.setMap(null);
+    	                    			        delete markersDistBoard[distribBoardList[i][0]];
+    	                    			        markerClusterMetroDistBoard.repaint(); // 
+    	                    			    }
+    	                    			}
+    	                    			else {
+    	                    			    console.log("deleting access:", distribBoardList[i][0]);
+
+    	                    			    if (markersDistBoard[distribBoardList[i][0]]) {
+    	                    			        let marker = markersDistBoard[distribBoardList[i][0]];
+    	                    			        markerClusterAccessDistBoard.removeMarker(marker);
+    	                    			        marker.setMap(null);
+    	                    			        delete markersDistBoard[distribBoardList[i][0]];
+    	                    			        markerClusterAccessDistBoard.repaint(); // 
+    	                    			    }
+    	                    			}
+    	                    }
+                    	       	}
                     		$("#"+data.controllerId).remove();
 
                 
                     		if(markersController[data.controllerId]){
-
+                    			
                     			   markersController[data.controllerId].setMap(null);
 
                     	            markerClusterController.removeMarker(markersController[data.controllerId]);
-                    	        
+                    	        	delete markersController[data.controllerId];       
+                            		
                         		}
 
                         	if (data.controllerDBCount != "0"){
@@ -7956,10 +8013,26 @@ $("#saveController").click(function () {
 		
                     			}	
                    			
-	                           createDB(data.DBList, "1");
-
-	                        
-
+	                   
+	                           createControllerMarkerClick(
+	       							data.controllerId,
+	       							data.controllerName,
+	       						    data.lng, 
+	       						    data.lat, 
+	       						    markersController,
+	       					        markerClusterController
+	       							
+	       						);
+	       					controllerCheckFilter(
+	       							data.controllerId,
+	       							markerClusterController
+	       							); 
+	       				
+	       					markerClusterController.addMarker(markersController[data.controllerId]);
+	       			    
+	                    
+	                          
+	                       createDB(data.DBList);
 
 
                             	}
@@ -8007,7 +8080,22 @@ $("#saveController").click(function () {
                     					    
 
                     			}
-
+                            	createControllerMarkerClick(
+            							data.controllerId,
+            							data.controllerName,
+            						    data.lng, 
+            						    data.lat, 
+            						    markersController,
+            					        markerClusterController
+            							
+            						);
+            					controllerCheckFilter(
+            							data.controllerId,
+            							markerClusterController
+            							); 
+            				
+            					markerClusterController.addMarker(markersController[data.controllerId]);
+            			    
 
                             	}
 
@@ -8048,22 +8136,7 @@ $("#saveController").click(function () {
 					 $("#"+data.controllerId).children(':checkbox').prop( "checked", true );
 						
 				    
-					createControllerMarkerClick(
-							data.controllerId,
-							data.controllerName,
-						    data.lng, 
-						    data.lat, 
-						    markersController,
-					        markerClusterController
-							
-						);
-					controllerCheckFilter(
-							data.controllerId,
-							markerClusterController
-							); 
-				
-					markerClusterController.addMarker(markersController[data.controllerId]);
-			           
+					       
 			
                     $("#initial_ul_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 					$("#initial_ul_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
@@ -8095,9 +8168,7 @@ $("#saveController").click(function () {
 
                     map.setZoom(11);
                     panTo(data.lat, data.lng);
-                    if(typeof infowindow!== 'undefined'){
-            			infowindow.close();
-            		}
+                   
             				
                     $("#" + data.controllerId + " > .TreeSpan").css("display", "inline");
 
@@ -8367,6 +8438,7 @@ if (addDB === '1') {
             modal.querySelectorAll('input').forEach(input => input.value = '');
             document.querySelector("#DbMappingTable > tbody").innerHTML = '';
             document.getElementById("DBMappingFlag").value = "new DB";
+            document.getElementById('DBnetlevel').disabled = true;
 
             // Checkboxes setup
             const siteDB = document.getElementById("site_DBAutoComplete");
@@ -8452,6 +8524,11 @@ if (addDB === '1') {
 
                     // City
                     document.getElementById("boardCity").value = data.ControllerLocation[0][5];
+        			
+                    document.getElementById("boardCity").value = data.ControllerLocation[0][5];
+
+                    let select = document.getElementById("DBnetlevel");
+                    select.value = data.ControllerLocation[0][6];  
                 },
                 error: function () {
                     alert("Error while fetching ControllerLocation");
@@ -8557,7 +8634,7 @@ function scrollToDistributionBoard(id) {
     let offsettot = (offset - offset2);
     $("#network_tree").animate({ scrollTop: offsettot }, "slow");
 }
- // End of saveDistBoard
+
 function scrollToController(id) {
     let offset = $("#" + id).offset().top;
     let offset2 = $("#initial_ul_CurrentPhysicalLayer").offset().top;
