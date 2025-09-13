@@ -3207,7 +3207,7 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 					    "A.SITE, " +
 					    "A.SITE_NAME, " +
 					    "A.WAREHOUSE, " +
-					    "A.CITY " +
+					    "A.CITY, A.NETWORK_LAYER " +
 					     "FROM CONTROLLER A " +
 					    "WHERE A.CONTROLLER_ID = '" + selectedControllerId + "'"
 					).getResultList();
@@ -6025,7 +6025,28 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 
 	        controller.setLastModifiedDate(now);
 	        session.saveOrUpdate(controller);
-	        session.flush(); 
+	        session.flush();
+	        List<String> results = session.createNativeQuery(
+	                "SELECT DISTINCT DB_NETWORK_LEVEL " +
+	                "FROM DISTRIBUTION_BOARD " +
+	                "WHERE CONTROLLER_ID = :controllerId")
+	            .setParameter("controllerId", controllerId)
+	            .getResultList();
+
+	        String oldNetworkLevel = results.isEmpty() ? null : results.get(0);
+
+	        System.out.println("Old Network Level = " + oldNetworkLevel);
+	        rtn.put("oldNetworkLevel", oldNetworkLevel);
+	        // put into response map
+	        rtn.put("oldNetworkLevel", oldNetworkLevel);
+
+	        int updatedRows = session.createNativeQuery(
+	                "UPDATE DISTRIBUTION_BOARD " +
+	                "SET DB_NETWORK_LEVEL = :networkLevel " +
+	                "WHERE CONTROLLER_ID = :controllerId")
+	            .setParameter("networkLevel", request.getParameter("networkLayer"))
+	            .setParameter("controllerId", controllerId)
+	            .executeUpdate();
 	        
 	        Object countObj = session.createNativeQuery(
 	        	    "SELECT COUNT(DB.DB_ID) AS DB_COUNT " +
@@ -6575,6 +6596,8 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 							+ "union select 'zzzzzyNODES', count (*) from NODE_ACTIVE "
 							+ "WHERE domain IN ('Enterprise' , 'Transmission') AND SUB_DOMAIN_TYPE IN ('DWDM','SDH','GPON','MSAN','SWITCH') AND ACTIVE_RECORD =1 "
 							+ "union select 'zzzzzzSITES', count (*) from WAREHOUSE "
+							+ "union select 'zzzzzzzCONTROLLER', count (*) from CONTROLLER "
+							+"union select 'zzzzzzzzDUCTS', count (*) from DUCTS "
 
 			).getResultList();
 
@@ -10783,6 +10806,25 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 						.uniqueResult();
 				rtn.put("totalDBCount", totalDBCount);
 
+				
+				
+				Object controllerCount = session.createNativeQuery(
+						"SELECT count(*) FROM CONTROLLER WHERE  NETWORK_LAYER = '" + request.getParameter("networkLevel") + "'   ")
+						.uniqueResult();
+				rtn.put("controllerCount", controllerCount);
+
+				Object activeDB = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE TYPE='active' AND PROJECT_ID='" + request.getParameter("ProjectId")
+								+ "' AND DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "'   ")
+						.uniqueResult();
+				rtn.put("activeDB", activeDB);
+				
+				Object passiveDB = session.createNativeQuery(
+						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE TYPE='passive' AND PROJECT_ID='" + request.getParameter("ProjectId")
+								+ "' AND DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "'   ")
+						.uniqueResult();
+				rtn.put("passiveDB", passiveDB);
+				
 				Object totalDBMappingCount = session.createNativeQuery(
 						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING A LEFT JOIN distribution_board B ON A.DB_ID = B.DB_ID WHERE "
 								+ " B.DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "'   ")
@@ -10922,7 +10964,50 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 
 				rtn.put("CountDistBoard", CountDistBoard);
 
-				Object CountDistBoardMapping = session
+				Object CountController = session
+						.createNativeQuery("SELECT count(*) FROM CONTROLLER")
+						.uniqueResult();
+
+				rtn.put("CountController", CountController);
+
+				Object CountActiveDB = session
+					    .createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" 
+					        + request.getParameter("ProjectId") + "' AND TYPE='active'")
+					    .uniqueResult();
+
+					rtn.put("CountActiveDB", CountActiveDB);
+
+					Object CountPassiveDB = session
+					    .createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" 
+					        + request.getParameter("ProjectId") + "' AND TYPE='passive'")
+					    .uniqueResult();
+
+					rtn.put("CountPassiveDB", CountPassiveDB);
+				
+					Object DbBackbone = session
+						    .createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" 
+						        + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL='backbone'")
+						    .uniqueResult();
+
+						rtn.put("DbBackbone", DbBackbone);
+					
+						Object DbMetro = session
+							    .createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" 
+							        + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL='metro'")
+							    .uniqueResult();
+
+							rtn.put("DbMetro", DbMetro);
+							
+							
+							Object DbAccess = session
+								    .createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" 
+								        + request.getParameter("ProjectId") + "' AND DB_NETWORK_LEVEL='access'")
+								    .uniqueResult();
+
+								rtn.put("DbAccess", DbAccess);
+					
+					
+					Object CountDistBoardMapping = session
 						.createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING ").uniqueResult();
 
 				rtn.put("CountDistBoardMapping", CountDistBoardMapping);
