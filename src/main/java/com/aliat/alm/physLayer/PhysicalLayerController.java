@@ -5742,11 +5742,11 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 								+ "from JUNCTION_MAPPING b left join DISTRIBUTION_BOARD c on b.LOCATION_ID_SIDE_B =c.DB_ID "
 								+ "where c.WAREHOUSE='" + dataSel + "' ) ")
 						.getResultList();
-
+								
+				connectedSiteData.remove(dataSel);
 				query = session.createNativeQuery(
 						"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1)");
 				query.setParameter("param1", connectedSiteData);
-
 				rtn.put("SiteData", query.getResultList());
 
 			} catch (Exception e) {
