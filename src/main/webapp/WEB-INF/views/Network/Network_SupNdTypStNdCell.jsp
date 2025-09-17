@@ -387,7 +387,6 @@ function showMarkerSingleSite(id) {
 
 function PanTreeSites(id){
 	var selectedItem = id.id.split('_').slice(0, 3).join('_');
-		//Site_Boq(selectedItem);
 			if(selectedItem!=markersSite)
 				{
 				var selMarker="";		
@@ -397,8 +396,6 @@ function PanTreeSites(id){
 				var lngSitee = selMarker.getPosition().lng();
 				position=selMarker.getPosition();							
 				panTo(latSitee, lngSitee);
-				//infowindow.setContent(selMarker.data);
-				//infowindow.open(map,selMarker);					
 				if(markersSite!="")
 					{	
 					var otherMarkers=markersSites[markersSite];			
@@ -406,92 +403,58 @@ function PanTreeSites(id){
 				markersSite="";	
 				markersSite=selectedItem;		
 				map.setZoom(15);
-				//console.log("PANNED");
 			}	
 	}
 
 function Create_Sites(id){
-	//var sitesNCreated=[];
-	//tree_prop_general();
-	//console.log("id.....",id);
 	
 	var splitArray = id.id.split("_");
 	var selectedItem = splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
 	var selectedNodeType = splitArray[3];
-	
-	//var parentLi = $("#" + id.id).closest("li.Supplier");		  
+			  
 	var selectedSupp = $("#" + id.id).closest("li.Supplier").attr("id");
-
-	//tree_prop_general();
-	//tree_Prop("#"+selectedId+ "> span");
-	//tree_Prop("#"+selectedId+ "_f > span"); 
-	/*
-	$("#"+selectedId+ "> span").on('click',function () {
-			var res=$(this ).parents().map(function() {
-				return this.id;
-				})
-				.get()
-				.join( "," );	
-			parents=res.split(",,");
-			var selectedSupp=parents[4];
-			parents2=selectedId.split("_");
-			var SelectedNodeType=parents2[3];
-			parents2=parents[0].split("_"+SelectedNodeType);
-			var selectedItem=parents2[0];
-		*/
-		//Site_Boq(selectedItem);		
-
-		//if(!sitesNCreated.includes(selectedItem))
-			//{
-			 //sitesNCreated.push(selectedItem);
-		var siteChildren=$("#"+selectedItem+"_"+selectedNodeType+"_f") .find(' > ul > li').length;
-		if(siteChildren == 0){	
-			
-			  if(arrayParam[0]==1){
-					var paramEnterprise = true;
-				}else{
-					var paramEnterprise = false;
-				}
-
-				if(arrayParam[1]==1){
-					var paramTransmission = true;
-				}else{
-					var paramTransmission = false;
-				}
-					
-				if(arrayParam[2]==1){
-					var paramRAN = true;
-				}else{
-					var paramRAN = false;
-				}
-
-				if(arrayParam[3]==1){
-					var paramCore = true;
-				}else{
-					var paramCore = false;
-				}
-				
-			 $.ajax({
-				  type: "GET",
-				  contentType: "application/json; charset=utf-8",
-				  url: getContext()+'/FindOnClick_SuppNdTSiteNodeCell',
-				  data: {
-			                "selectedItem":selectedItem,
-							"selectedSupp":selectedSupp,
-							"SelectedNodeType":selectedNodeType,
-							"paramEnterprise": paramEnterprise,
-							"paramTransmission":paramTransmission,
-						    "paramRAN":paramRAN,
-							"paramCore":paramCore,
-							"date":date,
-				 },
-				 dataType: "json",
-				 success: function (data) {			        	
+	var siteChildren=$("#"+selectedItem+"_"+selectedNodeType+"_f") .find(' > ul > li').length;
+	if(siteChildren == 0){			
+		if(arrayParam[0]==1){
+			var paramEnterprise = true;
+		}else{
+			var paramEnterprise = false;
+		}
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+		if(arrayParam[2]==1){
+			var paramRAN = true;
+		}else{
+			var paramRAN = false;
+		}
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/FindOnClick_SuppNdTSiteNodeCell',
+			data: {
+				"selectedItem":selectedItem,
+				"selectedSupp":selectedSupp,
+				"SelectedNodeType":selectedNodeType,
+				"paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+				"paramRAN":paramRAN,
+				"paramCore":paramCore,
+				"date":date,
+			},
+			dataType: "json",
+			success: function (data) {			        	
 				     if (data != null) {
 						var listSuppNodes=data.listSuppNodes;
 						var listCells=data.listCells;
-						if(siteChildren<listSuppNodes.length){	
-							//Create_TreeNode_Cell(listSuppNodes,"FindOnClick_SuppNdTSiteNodeCell",siteChildren,true,true,2,"Sup",4,"Sup",selectedItem);	
+						if(siteChildren<listSuppNodes.length){		
 							Create_TreeNode_CellGeneral(listSuppNodes,listCells,siteChildren, true,selectedItem);
 							Tree_PropagationAppendedNodes(selectedItem+"_"+selectedNodeType+"_f  .Node");
 			            	tree_prop_selection("#" + selectedItem+"_"+selectedNodeType+"_f .Node .TreeSpan");
@@ -502,17 +465,15 @@ function Create_Sites(id){
 				  error: function(result) {
 				     alert("Error");
 							         }
-						     });
-				//}   
+						     });   
 		}
-		//});
 } 
 ///////////////////////////////////////////////
 /* End of Supp NodeType Site NodeType Node Cell Tree Method */ 
 //////////////////////////////////////////////
 
 </script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/maplabel.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/maplabel-compiled.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/maplabel.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/maplabel-compiled.js"></script>
 
