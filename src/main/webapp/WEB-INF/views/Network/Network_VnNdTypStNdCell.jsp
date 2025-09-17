@@ -78,175 +78,13 @@ function initMap() {
 });
 
 map.setOptions({ minZoom: 3, maxZoom: 28});
-	
-//new AutocompleteDirectionsHandler(map);
-//directionsDisplay.setMap(map);
-
-	//-----> Create the DIV to hold the control and call the CenterControl()
-//-----> constructor passing in this DIV.
 
 const centerControlDiv = document.createElement("div");
 CenterControl(centerControlDiv, map);
 map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
 
-		   /*
-		    const locationButton = document.createElement("button");
-		    locationButton.textContent = "Pan to Current Location";
-
-		    locationButton.style.backgroundColor = "#fff";
-		    locationButton.style.border = "2px solid #fff";
-		    locationButton.style.borderRadius = "3px";
-		    locationButton.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
-		    locationButton.style.cursor = "pointer";
-		    
-		    locationButton.style.textAlign = "center";
-		    locationButton.style.lineHeight = "35px";
-		    locationButton.style.paddingLeft = "5px";
-		    locationButton.style.paddingRight = "5px";
-		    locationButton.style.marginLeft = "10px";
-		    locationButton.style.marginTop = "10px";
-		    locationButton.style.fontSize="16px";
-		    locationButton.classList.add("custom-map-control-button");
-
-		    
-		    map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
-		    locationButton.addEventListener("click", () => {
-		    	 var infowindow = new google.maps.InfoWindow();
-		      /// Try HTML5 geolocation.
-		      if (navigator.geolocation) {
-		        navigator.geolocation.getCurrentPosition(
-		          (position) => {
-		            const pos = {
-		              lat: position.coords.latitude,
-		              lng: position.coords.longitude,
-		            };
-		            infowindow.setPosition(pos);
-		            infowindow.setContent("<h6><u>Your Location</u><br><br>"+pos.lat+" , "+pos.lng+"</h6>");
-		            infowindow.open(map);
-		            map.setCenter(pos);
-
-		            var icon = {
-		            	    url:"http://maps.google.com/mapfiles/ms/icons/blue.png", // url
-		            	    scaledSize: new google.maps.Size(50, 50), // scaled size
-
-		            	};
-	            	
-		            const myLocation = new google.maps.Marker({
-		  	          	position: pos,
-		  	         	map:map,
-		  	       		animation: google.maps.Animation.DROP,
-		  	          	icon: icon,
-		  	          
-		  	        });
-		            
-		          },
-		          () => {
-		            handleLocationError(true, infowindow, map.getCenter());
-		          }
-		        );
-		      } else {
-		        // Browser doesn't support Geolocation
-		        handleLocationError(false, infowindow, map.getCenter());
-		      }
-		    });
-*/
-		    /*
-		    const input = document.getElementById("pac-input");
-	        const searchBox = new google.maps.places.SearchBox(input);
-	        // Bias the SearchBox results towards current map's viewport.
-	        map.addListener("bounds_changed", () => {
-	          searchBox.setBounds(map.getBounds());
-	        });
-	        let markerss = [];
-	        // Listen for the event fired when the user selects a prediction and retrieve
-	        // more details for that place.
-	        searchBox.addListener("places_changed", () => {
-	          const places = searchBox.getPlaces();
-
-	          if (places.length == 0) {
-		        alert("Not found!!");
-	            return;
-	          }
-	          // Clear out the old markers.
-	          markerss.forEach((marker) => {
-	            marker.setMap(null);
-	          });
-	          markerss = [];
-	          // For each place, get the icon, name and location.
-	          const bounds = new google.maps.LatLngBounds();
-	          places.forEach((place) => {
-	            if (!place.geometry) {
-	              console.log("Returned place contains no geometry");
-	              return;
-	            }
-	            const icon = {
-	              url: place.icon,
-	              size: new google.maps.Size(71, 71),
-	              origin: new google.maps.Point(0, 0),
-	              anchor: new google.maps.Point(17, 34),
-	              scaledSize: new google.maps.Size(50, 50),
-	            };
-	            // Create a marker for each place.
-	            markerss.push(
-	              new google.maps.Marker({
-	                map,
-	                icon,
-	                title: place.name,
-	                position: place.geometry.location,
-	              })
-	            );
-
-	            if (place.geometry.viewport) {
-	              // Only geocodes have viewport.
-	              bounds.union(place.geometry.viewport);
-	            } else {
-	              bounds.extend(place.geometry.location);
-	            }
-	          });
-	          map.fitBounds(bounds);
-	        });
-
-
-
-
-	var markerId;
-	var icon='https://img.icons8.com/ultraviolet/48/000000/google-maps-new.png';           	
-	var icon1='https://img.icons8.com/color/48/000000/gps-device.png';	   
-	var icon2 = {
-			url:"http://maps.google.com/mapfiles/ms/icons/blue.png", // url
-			scaledSize: new google.maps.Size(50, 50), // scaled size
-
-		};
-	*/
-
 	if(!(lst==null || lst=="")){
-		/*
-		map = new google.maps.Map(document.getElementById("mapContainer"), {
-				mapTypeControl: false,
-				center: { lat: -33.8688, lng: 151.2195 },
-						mapTypeControl: true,						 		
-							mapTypeControlOptions: {
-								style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-								position: google.maps.ControlPosition.TOP_CENTER,
-							},
-							zoomControl: true,
-							zoomControlOptions: {
-								position: google.maps.ControlPosition.LEFT_CENTER,
-							},
-							scaleControl: true,
-							streetViewControl: true,
-							streetViewControlOptions: {
-								position: google.maps.ControlPosition.LEFT_TOP,
-							},
-
-							style: 'mapbox://styles/mapbox/streets-v11',
-							fullscreenControl: true,
-							
-				});
-*/
-			map.setOptions({ minZoom: 3, maxZoom: 28});	
-	//CreateMap_StNdCell(lst,map);
-	//CreateMap(lst,map);
+	map.setOptions({ minZoom: 3, maxZoom: 28});	
 	CreateMap(lst,map,arrayParam,date);	
 	CreateTree_VnNdTpStNdCell(listVen,map);
 	
@@ -332,43 +170,34 @@ function AllSitesCheckFilter(){
 }
 
 function VenNdTypStNdCellCore(id){
+	console.log("Welcome to VenNdTypStNdCellCore, the id is " +id);
 	var selectedVen=id.id;
-	//tree_Prop("#"+selectedItem+ "> span");
-	//tree_Prop("#"+selectedItem+ "_f > span");
-	//$("#"+selectedItem+ "> span").on('click',function () {
-		//var selectedSupp=$(this).parent().attr('id');
-		//Create_TreeParent(selectedSupp,"Supp");
-		//if(!SupNtCreated.includes(selectedSupp))
-		//{
-			//SupNtCreated.push(selectedSupp);
-		var VenChildrenLength=$("#" +selectedVen+"_f").find(' > ul > li').length;			
-		if(VenChildrenLength==0){
-			
-	    	  if(arrayParam[0]==1){
-					var paramEnterprise = true;
-				}else{
-					var paramEnterprise = false;
-				}
+	var VenChildrenLength=$("#" +selectedVen+"_f").find(' > ul > li').length;			
+	if(VenChildrenLength==0){
+		if(arrayParam[0]==1){
+			var paramEnterprise = true;
+		}
+		else{
+			var paramEnterprise = false;
+		}
 
-				if(arrayParam[1]==1){
-					var paramTransmission = true;
-				}else{
-					var paramTransmission = false;
-				}
-					
-				if(arrayParam[2]==1){
-					var paramRAN = true;
-				}else{
-					var paramRAN = false;
-				}
-
-				if(arrayParam[3]==1){
-					var paramCore = true;
-				}else{
-					var paramCore = false;
-				}
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+		if(arrayParam[2]==1){
+			var paramRAN = true;
+		}else{
+			var paramRAN = false;
+		}
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
 		
-			$.ajax({
+		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/FindOnClick_VenNdTSiteNodeCell',
@@ -462,73 +291,55 @@ function showMarkersAllSitesOneNt(id) {
 function RequestingSites(id) {
 	var selectedVen = id.id.substring(id.id.indexOf("_") + 1);
 	var SelectedNodeType = id.id.substring(0, id.id.indexOf("_"));
-/*
-	var res=$(this).parents().map(function() {
-			return this.id;
-			})
-		.get()
-		.join( "_" );
-		parents=res.split("_");
-		var SelectedNodeType=parents[0]; 
-*/
-		//if(!NtSiteCreated.includes(SelectedNodeType))
-		  //{
-			//NtSiteCreated.push(SelectedNodeType);
-		var NdTypeChildrenLength=$("#" +SelectedNodeType+"_" +selectedVen+"_f").find(' > ul > li').length;							            	
-		if(NdTypeChildrenLength==0){
-			
-	    	  if(arrayParam[0]==1){
-					var paramEnterprise = true;
-				}else{
-					var paramEnterprise = false;
-				}
-
-				if(arrayParam[1]==1){
-					var paramTransmission = true;
-				}else{
-					var paramTransmission = false;
-				}
-					
-				if(arrayParam[2]==1){
-					var paramRAN = true;
-				}else{
-					var paramRAN = false;
-				}
-
-				if(arrayParam[3]==1){
-					var paramCore = true;
-				}else{
-					var paramCore = false;
-				}
-			
-			$.ajax({
-				type: "GET",
-				contentType: "application/json; charset=utf-8",
-				url: getContext()+'/FindOnClick_VenNdTSiteNodeCell',
-				data: {
-					"selectedVen":selectedVen,
-					"SelectedNodeType":SelectedNodeType,
-		            "paramEnterprise": paramEnterprise,
-					"paramTransmission":paramTransmission,
-			     	"paramRAN":paramRAN,
-				    "paramCore":paramCore,
-				    "date":date,
-				},
-				dataType: "json",
-				success: function (data) {	    
-					if (data != null) {
-						var listVenSites = data.listVenSites;
-						//console.log("listVenSites: ",listVenSites);
-						if(NdTypeChildrenLength<listVenSites.length){
-							var dFrag = document.createDocumentFragment();
-							for (n = 0; n < listVenSites.length; n++) {	
-								str="<li id='"+listVenSites[n][1]+"_"+listVenSites[n][5]+"' class='SingleSiteVen' style='width:100px;display:none; margin-left:-20px'><input type='checkbox' id='" + listVenSites[n][1]+"_"+listVenSites[n][5] +"_SingleSite' class='SingleSiteVen' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listVenSites[n][1]+"_"+listVenSites[n][5] + "_SingleSite)'></input><span class='folder' onclick='Create_Sites("+listVenSites[n][1]+"_"+listVenSites[n][5]+")' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'onclick='PanTreeSites("+listVenSites[n][1]+"_"+listVenSites[n][5]+")'><i class='fas fa-crosshairs fa-2x'></i><img src='"+getContext()+"/resources/NetworkImages/site.png'> "+listVenSites[n][0]+"</span>";
-								str+= "<ul><li id='" +listVenSites[n][1]+"_"+listVenSites[n][5]+"_f' class='NodeFolder' style='display:none'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li></ul>"; 
-								//$("#"+SelectedNodeType+"_" +selectedSupp+"_f").append(str);
-								const div = document.createElement('ul');
-								div.innerHTML = str;
-								dFrag.appendChild(div);										  
-							  }
+	var NdTypeChildrenLength=$("#" +SelectedNodeType+"_" +selectedVen+"_f").find(' > ul > li').length;							            	
+	if(NdTypeChildrenLength==0){
+		if(arrayParam[0]==1){
+		var paramEnterprise = true;
+		}else{
+			var paramEnterprise = false;
+		}
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+		if(arrayParam[2]==1){
+			var paramRAN = true;
+		}else{
+			var paramRAN = false;
+		}
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/FindOnClick_VenNdTSiteNodeCell',
+			data: {
+				"selectedVen":selectedVen,
+				"SelectedNodeType":SelectedNodeType,
+		        "paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+			    "paramRAN":paramRAN,
+				"paramCore":paramCore,
+				"date":date,
+			},
+			dataType: "json",
+			success: function (data) {	    
+				if (data != null) {
+					var listVenSites = data.listVenSites;
+					if(NdTypeChildrenLength<listVenSites.length){
+						var dFrag = document.createDocumentFragment();
+						for (n = 0; n < listVenSites.length; n++) {	
+//							str="<li id='"+listVenSites[n][1]+"_"+listVenSites[n][5]+"' class='SingleSiteVen' style='width:100px;display:none; margin-left:-20px'><input type='checkbox' id='" + listVenSites[n][1]+"_"+listVenSites[n][5] +"_SingleSite' class='SingleSiteVen' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listVenSites[n][1]+"_"+listVenSites[n][5] + "_SingleSite)'></input><span class='folder' onclick='Create_Sites("+listVenSites[n][1]+"_"+listVenSites[n][5]+")' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'onclick='PanTreeSites("+listVenSites[n][1]+"_"+listVenSites[n][5]+")'><i class='fas fa-crosshairs fa-2x'></i><img src='"+getContext()+"/resources/NetworkImages/site.png'> "+listVenSites[n][0]+"</span>";
+							str="<li id='"+listVenSites[n][1]+"_"+listVenSites[n][5]+"' class='SingleSiteVen' style='width:100px;display:none; margin-left:-20px'><input type='checkbox' id='" + listVenSites[n][1]+"_"+listVenSites[n][5] +"_SingleSite' class='SingleSiteVen' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listVenSites[n][1]+"_"+listVenSites[n][5] + "_SingleSite)'></input><span class='folder' onclick='Create_Sites("+listVenSites[n][1]+"_"+listVenSites[n][5]+")' ><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'onclick='PanTreeSites("+listVenSites[n][1]+"_"+listVenSites[n][5]+")'><i class='fas fa-crosshairs fa-2x'></i>"+listVenSites[n][0]+"</span>";							
+							str+= "<ul><li id='" +listVenSites[n][1]+"_"+listVenSites[n][5]+"_f' class='NodeFolder' style='display:none'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Nodes </span></span></li></ul></li></ul>";
+							const div = document.createElement('ul');
+							div.innerHTML = str;
+							dFrag.appendChild(div);										  
+						}
 							document.getElementById(SelectedNodeType+"_" +selectedVen+"_f").appendChild(dFrag);
 							tree_prop_selection("#" +SelectedNodeType+"_" +selectedVen+"_f .SingleSiteVen .TreeSpan");
 				            Tree_PropagationAppendedNodes(SelectedNodeType+"_" +selectedVen+"_f .SingleSiteVen");
@@ -622,9 +433,6 @@ function PanTreeSites(id){
 	}
 
 function Create_Sites(id){
-	//var sitesNCreated=[];
-	//tree_prop_general();
-	//console.log("id.....",id);
 	
 	var splitArray = id.id.split("_");
 	var selectedItem = splitArray[0] + "_" + splitArray[1] + "_" + splitArray[2];
@@ -632,91 +440,60 @@ function Create_Sites(id){
 	
 	//var parentLi = $("#" + id.id).closest("li.Supplier");		  
 	var selectedVen = $("#" + id.id).closest("li.Vendor").attr("id");
-
-	//tree_prop_general();
-	//tree_Prop("#"+selectedId+ "> span");
-	//tree_Prop("#"+selectedId+ "_f > span"); 
-	/*
-	$("#"+selectedId+ "> span").on('click',function () {
-			var res=$(this ).parents().map(function() {
-				return this.id;
-				})
-				.get()
-				.join( "," );	
-			parents=res.split(",,");
-			var selectedSupp=parents[4];
-			parents2=selectedId.split("_");
-			var SelectedNodeType=parents2[3];
-			parents2=parents[0].split("_"+SelectedNodeType);
-			var selectedItem=parents2[0];
-		*/
-		//Site_Boq(selectedItem);		
-
-		//if(!sitesNCreated.includes(selectedItem))
-			//{
-			 //sitesNCreated.push(selectedItem);
-		var siteChildren=$("#"+selectedItem+"_"+selectedNodeType+"_f") .find(' > ul > li').length;
-		if(siteChildren == 0){	
-			
-			  if(arrayParam[0]==1){
-					var paramEnterprise = true;
-				}else{
-					var paramEnterprise = false;
-				}
-
-				if(arrayParam[1]==1){
-					var paramTransmission = true;
-				}else{
-					var paramTransmission = false;
-				}
-					
-				if(arrayParam[2]==1){
-					var paramRAN = true;
-				}else{
-					var paramRAN = false;
-				}
-
-				if(arrayParam[3]==1){
-					var paramCore = true;
-				}else{
-					var paramCore = false;
-				}
-				
-			 $.ajax({
-				  type: "GET",
-				  contentType: "application/json; charset=utf-8",
-				  url: getContext()+'/FindOnClick_VenNdTSiteNodeCell',
-				  data: {
-			                "selectedItem":selectedItem,
-							"selectedVen":selectedVen,
-							"SelectedNodeType":selectedNodeType,
-							"paramEnterprise": paramEnterprise,
-							"paramTransmission":paramTransmission,
-						    "paramRAN":paramRAN,
-							"paramCore":paramCore,
-							"date":date,
-				 },
-				 dataType: "json",
-				 success: function (data) {			        	
-				     if (data != null) {
-						var listVenNodes=data.listVenNodes;
-						var listCells=data.listCells;
-						if(siteChildren<listVenNodes.length){	
-							//Create_TreeNode_Cell(listVenNodes,"FindOnClick_SuppNdTSiteNodeCell",siteChildren,true,true,2,"Sup",4,"Sup",selectedItem);	
-							Create_TreeNode_CellGeneral(listVenNodes,listCells,siteChildren, true,selectedItem);
-							Tree_PropagationAppendedNodes(selectedItem+"_"+selectedNodeType+"_f  .Node");
-			            	tree_prop_selection("#" + selectedItem+"_"+selectedNodeType+"_f .Node .TreeSpan");
-							}
-				        }
-				     data = null;
-				     },
-				  error: function(result) {
-				     alert("Error");
-							         }
-						     });
-				//}   
+	var siteChildren=$("#"+selectedItem+"_"+selectedNodeType+"_f") .find(' > ul > li').length;
+	if(siteChildren == 0){
+		if(arrayParam[0]==1){
+			var paramEnterprise = true;
+		}else{
+			var paramEnterprise = false;
 		}
-		//});
+		if(arrayParam[1]==1){
+			var paramTransmission = true;
+		}else{
+			var paramTransmission = false;
+		}
+		if(arrayParam[2]==1){
+			var paramRAN = true;
+		}else{
+			var paramRAN = false;
+		}
+		if(arrayParam[3]==1){
+			var paramCore = true;
+		}else{
+			var paramCore = false;
+		}
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url: getContext()+'/FindOnClick_VenNdTSiteNodeCell',
+			data: {
+				"selectedItem":selectedItem,
+				"selectedVen":selectedVen,
+				"SelectedNodeType":selectedNodeType,
+				"paramEnterprise": paramEnterprise,
+				"paramTransmission":paramTransmission,
+				"paramRAN":paramRAN,
+				"paramCore":paramCore,
+				"date":date,
+			},
+			dataType: "json",
+			success: function (data) {			        	
+				if (data != null) {
+					var listVenNodes=data.listVenNodes;
+					var listCells=data.listCells;
+					if(siteChildren<listVenNodes.length){		
+						Create_TreeNode_CellGeneral(listVenNodes,listCells,siteChildren, true,selectedItem);
+						Tree_PropagationAppendedNodes(selectedItem+"_"+selectedNodeType+"_f  .Node");
+			            tree_prop_selection("#" + selectedItem+"_"+selectedNodeType+"_f .Node .TreeSpan");
+					}
+				}
+				data = null;
+			},
+			error: function(result) {
+				alert("Error");
+			}
+		});   
+	}
 } 
 ///////////////////////////////////////////////
 /* End of Supp NodeType Site NodeType Node Cell Tree Method */ 
