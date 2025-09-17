@@ -5743,7 +5743,6 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 								+ "where c.WAREHOUSE='" + dataSel + "' ) ")
 						.getResultList();
 								
-				//connectedSiteData.remove(dataSel);
 				query = session.createNativeQuery(
 						"SELECT DISTINCT WARE_ID,SITE_ID,WARE_NAME,LONGITUDE,LATITUDE FROM WAREHOUSE WHERE WARE_ID IN (:param1) and WARE_ID not like '" +dataSel+ "'");
 				query.setParameter("param1", connectedSiteData);
