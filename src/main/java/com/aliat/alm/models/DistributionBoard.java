@@ -23,6 +23,11 @@ public class DistributionBoard {
 	@Column(name = "DB_LONGITUDE")
 	private String distributionBoardLong;
 	
+	
+	@Column(name = "ROW_COUNTING")
+	private String rowCounting;
+	
+	
 	@Column(name = "SERIAL_NUMB")
 	private String distributionBoardSerialNum;
 	
@@ -101,7 +106,7 @@ public class DistributionBoard {
 			Float distributionBoardRowsNum, Float distributionBoardColsNum, Float distributionBoardFront,
 			Float distributionBoardBack, String distributionBoardProjectId, Timestamp boardCreationDate,
 			Timestamp boardLastModifiedDate, String dbNetLevel, String dBEngineerName, String dBInstaller,
-			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName, String distributionBoardControllerId) {
+			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName,String rowCounting, String distributionBoardControllerId) {
 		super();
 		DistributionBoardId = distributionBoardId;
 		this.distributionBoardName = distributionBoardName;
@@ -109,6 +114,7 @@ public class DistributionBoard {
 		this.distributionBoardLat = distributionBoardLat;
 		this.distributionBoardSerialNum=distributionBoardSerialNum;
 		this.distributionBoardCity = distributionBoardCity;
+		this.rowCounting=rowCounting;
 		this.distributionBoardSite = distributionBoardSite;
 		this.distributionBoardSiteName = distributionBoardSiteName;
 		this.distributionBoardWarehouse = distributionBoardWarehouse;
@@ -128,6 +134,18 @@ public class DistributionBoard {
 		DBInstaller = dBInstaller;
 		DBDeploymentType = dBDeploymentType;
 		DBAdaptorPanelType = dBAdaptorPanelType;
+	}
+
+
+
+	public String getRowCounting() {
+		return rowCounting;
+	}
+
+
+
+	public void setRowCounting(String rowCounting) {
+		this.rowCounting = rowCounting;
 	}
 
 
