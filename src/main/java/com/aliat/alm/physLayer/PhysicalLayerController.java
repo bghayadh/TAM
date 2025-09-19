@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.Properties;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
@@ -269,6 +270,8 @@ public class PhysicalLayerController {
 					List<Object[]> junctionHandholeList = new ArrayList<Object[]>();
 					List<Object[]> junctionHandholeListPt = new ArrayList<Object[]>();
 					List<Object[]> distribBoardList = new ArrayList<Object[]>();
+					List<Object[]> controllerList = new ArrayList<Object[]>();
+					
 					List<Object[]> distribBoardListPt = new ArrayList<Object[]>();
 					List<Object[]> ductList = new ArrayList<Object[]>();
 					List<Object[]> ductListPt = new ArrayList<Object[]>();
@@ -519,7 +522,7 @@ public class PhysicalLayerController {
 						if ("1".equals(readDB)) {
 //get db
 							distribBoardList = session.createNativeQuery(
-									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD where DB_ID LIKE '%"
+									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,TYPE FROM DISTRIBUTION_BOARD where DB_ID LIKE '%"
 											+ request.getParameter("FilteredDistribution_Board")
 											+ "%' OR DB_NAME LIKE '%"
 											+ request.getParameter("FilteredDistribution_Board")
@@ -1085,6 +1088,7 @@ public class PhysicalLayerController {
 							handholeList = Result.get("handholeList");
 							junctionHandholeList = Result.get("junctionHandholeList");
 							distribBoardList = Result.get("distribBoardList");
+							controllerList =Result.get("controllerList");
 							NodeList = Result.get("NodeList");
 
 							model.addAttribute("closestLatPoint", closestLatPoint);
@@ -2163,6 +2167,7 @@ public class PhysicalLayerController {
 								tempList.addAll(query.getResultList());
 
 								if (distribBoardList.size() > 0) {
+									System.out.println("okaaa");
 									newList = filterTempList(tempList, dbsId);
 									distribBoardList.addAll(newList);
 								} else {
@@ -2177,6 +2182,88 @@ public class PhysicalLayerController {
 							junctionHandholeList = session.createNativeQuery(
 									"SELECT DISTINCT A.JUNCTION_ID, A.JUNCTION_NAME,A.PHYSICAL_LAYER_ID,A.PHYSICAL_LAYER_NAME,A.JUNCTION_NUMBER,A.CAPACITY,A.CITY,trim(replace(A.LONGITUDE,'�','')) as LONGITUDE,trim(replace(A.LATITUDE,'�','')) as LATITUDE,A.PROJECT_ID FROM JUNCTION A INNER JOIN handhole B ON A.PHYSICAL_LAYER_ID = b.handhole_id ")
 									.getResultList();
+
+							List<Object[]> updatedDistribBoardList = new ArrayList<>();
+
+							for (Object[] row : distribBoardList) {
+							    // Extract DB_ID (index 0)
+							    String dbId = (String) row[0];
+
+							    // Query TYPE for this DB_ID
+							    String dbType = (String) session.createNativeQuery(
+							            "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+							        ).setParameter("param1", dbId)
+							         .getSingleResult();
+							    String controllerId = (String) session.createNativeQuery(
+							            "SELECT CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+							        ).setParameter("param1", dbId)
+							        .getSingleResult();
+
+							    // Append TYPE at the end of the array
+							    Object[] newRow = Arrays.copyOf(row, row.length + 2); // +2 for TYPE and CONTROLLER_ID
+							    newRow[newRow.length - 2] = dbType;  // TYPE
+							    newRow[newRow.length - 1] = controllerId;  // CONTROLLER_ID
+
+
+							    updatedDistribBoardList.add(newRow);
+							}
+							distribBoardList=updatedDistribBoardList;
+							List<String> controllerIdsList = new ArrayList<>();
+
+							// Loop through the distribBoardList to get the DB_IDs
+							for (Object[] row : distribBoardList) {
+							    String dbId = (String) row[0];  // Assuming DB_ID is at index 0
+
+							    // Create the query for each DB_ID
+							    String query = "SELECT DISTINCT CONTROLLER_ID " +
+							                   "FROM DISTRIBUTION_BOARD " +
+							                   "WHERE CONTROLLER_ID IS NOT NULL " +
+							                   "AND TYPE = 'active' " +
+							                   "AND DB_ID = :dbId";  // Use :dbId as a parameter to avoid SQL injection
+
+							    // Execute the query for the current DB_ID
+							    List<String> result = session.createNativeQuery(query)
+							        .setParameter("dbId", dbId)  // Bind the current DB_ID to the query
+							        .getResultList();
+
+							    // Add the controller IDs to the controllerIdsList
+							    if (result != null && !result.isEmpty()) {
+							        controllerIdsList.addAll(result);  // Add the retrieved controller IDs to the list
+							    }
+							}
+							System.out.println(mapper.writeValueAsString(controllerIdsList));
+							// Convert the controller IDs list to an array if needed
+							controllerIdsList = controllerIdsList.stream()
+								    .distinct()
+								    .collect(Collectors.toList());
+
+								System.out.println(mapper.writeValueAsString(controllerIdsList));
+							
+						// Create query with WHERE condition
+						
+							
+							
+
+							// Loop through each controller ID in the controllerIdsList
+							for (String controllerId : controllerIdsList) {
+							    // Create query for each controller ID
+							    String query = "SELECT C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER, " +
+							                   "COUNT(DB.DB_ID) AS DB_COUNT " +
+							                   "FROM CONTROLLER C " +
+							                   "LEFT JOIN DISTRIBUTION_BOARD DB ON C.CONTROLLER_ID = DB.CONTROLLER_ID " +
+							                   "WHERE C.CONTROLLER_ID = :controllerId " +  // Use = instead of IN
+							                   "GROUP BY C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER";
+							    
+							    // Execute the query for the current controller ID
+							    List<Object[]> result = session.createNativeQuery(query)
+							        .setParameter("controllerId", controllerId)  // Set the current controller ID as parameter
+							        .getResultList();
+
+							    // Add the result to the controllerDetailsList
+							    if (result != null && !result.isEmpty()) {
+							    	controllerList.addAll(result);  // Add the retrieved results
+							    }
+							}
 
 							model.addAttribute("startLongPoint", startLongPoint);
 							model.addAttribute("startLatPoint", startLatPoint);
@@ -2453,6 +2540,93 @@ public class PhysicalLayerController {
 								+ " AND (a.WARE_ID = :param1 OR b.WARE_ID = :param1)"
 								+ " AND a.DOMAIN IN ('Enterprise', 'Transmission')")
 								.setParameter("param1", siteId).getResultList();
+						
+						
+						List<Object[]> updatedDistribBoardList = new ArrayList<>();
+
+						for (Object[] row : distribBoardList) {
+						    // Extract DB_ID (index 0)
+						    String dbId = (String) row[0];
+
+						    // Query TYPE for this DB_ID
+						    String dbType = (String) session.createNativeQuery(
+						            "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+						        ).setParameter("param1", dbId)
+						         .getSingleResult();
+						    String controllerId = (String) session.createNativeQuery(
+						            "SELECT CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+						        ).setParameter("param1", dbId)
+						        .getSingleResult();
+
+						    // Append TYPE at the end of the array
+						    Object[] newRow = Arrays.copyOf(row, row.length + 2); // +2 for TYPE and CONTROLLER_ID
+						    newRow[newRow.length - 2] = dbType;  // TYPE
+						    newRow[newRow.length - 1] = controllerId;  // CONTROLLER_ID
+
+
+						    updatedDistribBoardList.add(newRow);
+						}
+						distribBoardList=updatedDistribBoardList;
+						List<String> controllerIdsList = new ArrayList<>();
+
+						// Loop through the distribBoardList to get the DB_IDs
+						for (Object[] row : distribBoardList) {
+						    String dbId = (String) row[0];  // Assuming DB_ID is at index 0
+
+						    // Create the query for each DB_ID
+						    String query = "SELECT DISTINCT CONTROLLER_ID " +
+						                   "FROM DISTRIBUTION_BOARD " +
+						                   "WHERE CONTROLLER_ID IS NOT NULL " +
+						                   "AND TYPE = 'active' " +
+						                   "AND DB_ID = :dbId";  // Use :dbId as a parameter to avoid SQL injection
+
+						    // Execute the query for the current DB_ID
+						    List<String> result = session.createNativeQuery(query)
+						        .setParameter("dbId", dbId)  // Bind the current DB_ID to the query
+						        .getResultList();
+
+						    // Add the controller IDs to the controllerIdsList
+						    if (result != null && !result.isEmpty()) {
+						        controllerIdsList.addAll(result);  // Add the retrieved controller IDs to the list
+						    }
+						}
+						System.out.println(mapper.writeValueAsString(controllerIdsList));
+						// Convert the controller IDs list to an array if needed
+						controllerIdsList = controllerIdsList.stream()
+							    .distinct()
+							    .collect(Collectors.toList());
+
+							System.out.println(mapper.writeValueAsString(controllerIdsList));
+						
+					// Create query with WHERE condition
+					
+						
+						
+
+						// Loop through each controller ID in the controllerIdsList
+						for (String controllerId : controllerIdsList) {
+						    // Create query for each controller ID
+						    String query = "SELECT C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER, " +
+						                   "COUNT(DB.DB_ID) AS DB_COUNT " +
+						                   "FROM CONTROLLER C " +
+						                   "LEFT JOIN DISTRIBUTION_BOARD DB ON C.CONTROLLER_ID = DB.CONTROLLER_ID " +
+						                   "WHERE C.CONTROLLER_ID = :controllerId " +  // Use = instead of IN
+						                   "GROUP BY C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER";
+						    
+						    // Execute the query for the current controller ID
+						    List<Object[]> result = session.createNativeQuery(query)
+						        .setParameter("controllerId", controllerId)  // Set the current controller ID as parameter
+						        .getResultList();
+
+						    // Add the result to the controllerDetailsList
+						    if (result != null && !result.isEmpty()) {
+						    	controllerList.addAll(result);  // Add the retrieved results
+						    }
+						}
+
+						// Print the controller details (if needed)
+						System.out.println(mapper.writeValueAsString(controllerList));
+				
 						model.addAttribute("siteId", request.getParameter("siteId"));
 						model.addAttribute("connectedSearchLong", request.getParameter("connectedSearchLong"));
 						model.addAttribute("connectedSearchLat", request.getParameter("connectedSearchLat"));
@@ -2878,6 +3052,8 @@ public class PhysicalLayerController {
 					physicalLayerList.put("Handhole", handholeList);
 					physicalLayerList.put("fiber", fiberList);
 					physicalLayerList.put("Distribution_Board", distribBoardList);
+					physicalLayerList.put("controllerList", controllerList);
+					
 					physicalLayerList.put("Trench", trenchList);
 					physicalLayerList.put("Node", NodeList);
 					physicalLayerList.put("duct", ductList);
@@ -3047,10 +3223,6 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
-
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/findDistBoardDetails", method = RequestMethod.GET)
-	@ResponseBody
 	public Map<String, Object> findDistBoardDetails(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
@@ -3069,7 +3241,7 @@ public class PhysicalLayerController {
 								+ selectedDistBoardContext
 								+ "'),(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS='Active' AND B.DB_ID='"
 								+ selectedDistBoardContext
-								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE,TYPE,SERIAL_NUMB,CONTROLLER_ID,CONTROLLER_NAME  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
+								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE,TYPE,SERIAL_NUMB,CONTROLLER_ID,CONTROLLER_NAME,ROW_COUNTING  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
 				/*
@@ -3084,6 +3256,54 @@ public class PhysicalLayerController {
 System.out.println(mapper.writeValueAsString(DistBoardDetails));
 				rtn.put("DistBoardDetails", DistBoardDetails);
 				rtn.put("DBnetLevel", DBnetLevel);
+				session.flush();
+				session.clear();
+				tx.commit();
+
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findDistBoardDetails due to \n " + exceptionAsString);
+				logger.info("Error in findDistBoardDetails due to \n " + exceptionAsString);
+				rtn.put("DistBoardDetails", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findDbType", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findDbType(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String dbId = request.getParameter("dbId");
+			try {
+				String dbType = (String) session.createNativeQuery(
+					    "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+					).setParameter("param1", dbId)
+					 .getSingleResult();
+	
+				
+				rtn.put("dbType", dbType);
 				session.flush();
 				session.clear();
 				tx.commit();
@@ -7282,11 +7502,11 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 			if (Target == "Manhole" || Target == "Handhole") {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[3]),
 						Double.valueOf((String) objectArray[2]));
-				System.out.println("pointDist is " + pointDist);
+				//System.out.println("pointDist is " + pointDist);
 			} else {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[2]),
 						Double.valueOf((String) objectArray[1]));
-				System.out.println("pointDist is " + pointDist);
+				//System.out.println("pointDist is " + pointDist);
 			}
 			ID = (String) objectArray[0];
 
@@ -8875,7 +9095,7 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 				distributionBoard.setDBInstaller(request.getParameter("DBInstaller"));
 				distributionBoard.setDistributionBoardType(request.getParameter("type"));
 				distributionBoard.setDBEngineerName(request.getParameter("DBEngineerName"));
-				
+				distributionBoard.setRowCounting(request.getParameter("rowCounting"));
 				distributionBoard.setDistributionBoardControllerId(request.getParameter("controllerId"));
 				distributionBoard.setDistributionBoardControllerName(request.getParameter("controllerName"));
 				distributionBoard.setDistributionBoardSerialNum(request.getParameter("serialNum"));
@@ -16787,6 +17007,8 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 		List<Object[]> junctionManholeList = new ArrayList<Object[]>();
 		List<Object[]> junctionHandholeList = new ArrayList<Object[]>();
 		List<Object[]> distribBoardList = new ArrayList<Object[]>();
+		List<Object[]> controllerList = new ArrayList<Object[]>();
+		
 		List<Object[]> newList = new ArrayList<Object[]>();
 		List<Object[]> NodeList = new ArrayList<Object[]>();
 		List<String> mhFilteredIDs = new ArrayList<>();
@@ -17120,7 +17342,8 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 		// cables/tubes/strands)
 		distribBoardList = findLinearDistance(dbFilteredIDs, distribBoardListQuery, Double.valueOf(closestLatPoint),
 				Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "DistribBoard", noOfPoints);
-
+		System.out.print(distribBoardListQuery);
+		System.out.print("wwwwwwwwwwwwwwwwwwwww");
 // To select the data needed in show points/real points & are outside the range
 		if (getRelatedPoints.equals("1")) {
 
@@ -17299,7 +17522,91 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 		resultMap.put("fiberStrands", fiberStrands);
 		resultMap.put("manholeList", manholeList);
 		resultMap.put("handholeList", handholeList);
-		resultMap.put("distribBoardList", distribBoardList);
+		
+		List<Object[]> updatedDistribBoardList = new ArrayList<>();
+
+		for (Object[] row : distribBoardList) {
+		    // Extract DB_ID (index 0)
+		    String dbId = (String) row[0];
+
+		    // Query TYPE for this DB_ID
+		    String dbType = (String) findnearest.createNativeQuery(
+		            "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+		        ).setParameter("param1", dbId)
+		         .getSingleResult();
+		    String controllerId = (String) findnearest.createNativeQuery(
+		            "SELECT CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+		        ).setParameter("param1", dbId)
+		        .getSingleResult();
+
+		    // Append TYPE at the end of the array
+		    Object[] newRow = Arrays.copyOf(row, row.length + 2); // +2 for TYPE and CONTROLLER_ID
+		    newRow[newRow.length - 2] = dbType;  // TYPE
+		    newRow[newRow.length - 1] = controllerId;  // CONTROLLER_ID
+
+
+		    updatedDistribBoardList.add(newRow);
+		}
+		
+		List<String> controllerIdsList = new ArrayList<>();
+
+		// Loop through the distribBoardList to get the DB_IDs
+		for (Object[] row : distribBoardList) {
+		    String dbId = (String) row[0];  // Assuming DB_ID is at index 0
+
+		    // Create the query for each DB_ID
+		    String query = "SELECT DISTINCT CONTROLLER_ID " +
+		                   "FROM DISTRIBUTION_BOARD " +
+		                   "WHERE CONTROLLER_ID IS NOT NULL " +
+		                   "AND TYPE = 'active' " +
+		                   "AND DB_ID = :dbId";  // Use :dbId as a parameter to avoid SQL injection
+
+		    // Execute the query for the current DB_ID
+		    List<String> result = findnearest.createNativeQuery(query)
+		        .setParameter("dbId", dbId)  // Bind the current DB_ID to the query
+		        .getResultList();
+
+		    // Add the controller IDs to the controllerIdsList
+		    if (result != null && !result.isEmpty()) {
+		        controllerIdsList.addAll(result);  // Add the retrieved controller IDs to the list
+		    }
+		}
+		controllerIdsList = controllerIdsList.stream()
+			    .distinct()
+			    .collect(Collectors.toList());
+
+			System.out.println(mapper.writeValueAsString(controllerIdsList));
+		
+		
+
+		// Loop through each controller ID in the controllerIdsList
+		for (String controllerId : controllerIdsList) {
+		    // Create query for each controller ID
+		    String query = "SELECT C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER, " +
+		                   "COUNT(DB.DB_ID) AS DB_COUNT " +
+		                   "FROM CONTROLLER C " +
+		                   "LEFT JOIN DISTRIBUTION_BOARD DB ON C.CONTROLLER_ID = DB.CONTROLLER_ID " +
+		                   "WHERE C.CONTROLLER_ID = :controllerId " +  // Use = instead of IN
+		                   "GROUP BY C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER";
+		    
+		    // Execute the query for the current controller ID
+		    List<Object[]> result = findnearest.createNativeQuery(query)
+		        .setParameter("controllerId", controllerId)  // Set the current controller ID as parameter
+		        .getResultList();
+
+		    // Add the result to the controllerDetailsList
+		    if (result != null && !result.isEmpty()) {
+		    	controllerList.addAll(result);  // Add the retrieved results
+		    }
+		}
+
+		// Print the controller details (if needed)
+		System.out.println(mapper.writeValueAsString(controllerList));
+		
+		
+		
+		resultMap.put("distribBoardList", updatedDistribBoardList);
+		resultMap.put("controllerList", controllerList);
 		resultMap.put("NodeList", NodeList);
 		resultMap.put("junctionManholeList", junctionManholeList);
 		resultMap.put("junctionHandholeList", junctionHandholeList);

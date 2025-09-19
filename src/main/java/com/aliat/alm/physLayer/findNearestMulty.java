@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.Properties;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
@@ -163,6 +164,7 @@ public class findNearestMulty {
 					List<Object[]> junctionManholeList = new ArrayList<Object[]>();
 					List<Object[]> junctionHandholeList = new ArrayList<Object[]>();
 					List<Object[]> distribBoardList = new ArrayList<Object[]>();
+					List<Object[]> controllerList = new ArrayList<Object[]>();
 					List<Object[]> ductList = new ArrayList<Object[]>();
 					List<Object[]> ductListPt = new ArrayList<Object[]>();
 					List<Object[]> ductAuxiliary_Data = new ArrayList<Object[]>();
@@ -403,7 +405,25 @@ public class findNearestMulty {
 												}
 											}
 										}
+										if (Result.get("controllerList") != null) {
+											for (Object item : Result.get("controllerList")) {
+												Object[] newItem = (Object[]) item; 
+												boolean found = false;
 
+												for (Object existingItem : controllerList) {
+													Object[] existingArray = (Object[]) existingItem; 
+													if (existingArray[0].equals(newItem[0])) { 
+														found = true;
+														break;
+													}
+												}
+
+												if (!found) {
+										
+													controllerList.add(newItem);
+												}
+											}
+										}
 										if (Result.get("NodeList") != null) {
 											for (Object item : Result.get("NodeList")) {
 												Object[] newItem = (Object[]) item; 
@@ -433,6 +453,9 @@ public class findNearestMulty {
 										ptPhysicalListResult.put("Handhole", Result.get("handholeList"));
 										ptPhysicalListResult.put("fiber", Result.get("fiberList"));
 										ptPhysicalListResult.put("Distribution_Board", Result.get("distribBoardList"));
+										ptPhysicalListResult.put("controllerList", Result.get("controllerList"));
+										System.out.println("zein");
+										System.out.println(Result.get("controllerList"));
 										ptPhysicalListResult.put("NodeList", Result.get("NodeList"));
 										ptPhysicalDataResult.put("fiber_Strands", Result.get("fiberStrands"));
 										ptPhysicalDataResult.put("fiber_Tubes", Result.get("fiberTubes"));
@@ -614,6 +637,9 @@ public class findNearestMulty {
 					physicalLayerList.put("Handhole", handholeList);
 					physicalLayerList.put("fiber", fiberList);
 					physicalLayerList.put("Distribution_Board", distribBoardList);
+					physicalLayerList.put("controllerList", controllerList);
+					
+					
 					physicalLayerList.put("Trench", trenchList);
 					physicalLayerList.put("Node", NodeList);
 					physicalLayerList.put("duct", ductList);
@@ -627,6 +653,7 @@ public class findNearestMulty {
 
 					model.addAttribute("physicalLayerList", mapper.writeValueAsString(physicalLayerList));
 					model.addAttribute("physicalLayerData", mapper.writeValueAsString(physicalLayerData));
+				//	System.out.println(mapper.writeValueAsString(physicalLayerList));
 					model.addAttribute("filterFlag", filterFlag);
 					model.addAttribute("checkedOption", checkedOption);
 					findnearest.flush();
@@ -761,6 +788,8 @@ public class findNearestMulty {
 		List<Object[]> junctionManholeList = new ArrayList<Object[]>();
 		List<Object[]> junctionHandholeList = new ArrayList<Object[]>();
 		List<Object[]> distribBoardList = new ArrayList<Object[]>();
+		List<Object[]> controllerList = new ArrayList<Object[]>();
+		
 		List<Object[]> newList = new ArrayList<Object[]>();
 		List<Object[]> NodeList = new ArrayList<Object[]>();
 		List<String> mhFilteredIDs = new ArrayList<>();
@@ -1052,6 +1081,7 @@ public class findNearestMulty {
 						+ " AND to_number (SUBSTR(DB_LATITUDE,1,6)) < " + bordeCircleLatitudes[1] + ")")
 				.getResultList();
 
+		
 		// Filter the DB that have distance<distanceRange or DB that exists in
 		// dbFilteredIDs (dbFilteredIDs contains HH that are src/dst/aux of
 		// cables/tubes/strands)
@@ -1236,7 +1266,96 @@ public class findNearestMulty {
 		resultMap.put("fiberStrands", fiberStrands);
 		resultMap.put("manholeList", manholeList);
 		resultMap.put("handholeList", handholeList);
-		resultMap.put("distribBoardList", distribBoardList);
+		List<Object[]> updatedDistribBoardList = new ArrayList<>();
+
+		for (Object[] row : distribBoardList) {
+		    // Extract DB_ID (index 0)
+		    String dbId = (String) row[0];
+
+		    // Query TYPE for this DB_ID
+		    String dbType = (String) findnearest.createNativeQuery(
+		            "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+		        ).setParameter("param1", dbId)
+		         .getSingleResult();
+		    String controllerId = (String) findnearest.createNativeQuery(
+		            "SELECT CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+		        ).setParameter("param1", dbId)
+		        .getSingleResult();
+
+		    // Append TYPE at the end of the array
+		    Object[] newRow = Arrays.copyOf(row, row.length + 2); // +2 for TYPE and CONTROLLER_ID
+		    newRow[newRow.length - 2] = dbType;  // TYPE
+		    newRow[newRow.length - 1] = controllerId;  // CONTROLLER_ID
+
+
+		    updatedDistribBoardList.add(newRow);
+		}
+		
+		List<String> controllerIdsList = new ArrayList<>();
+
+		// Loop through the distribBoardList to get the DB_IDs
+		for (Object[] row : distribBoardList) {
+		    String dbId = (String) row[0];  // Assuming DB_ID is at index 0
+
+		    // Create the query for each DB_ID
+		    String query = "SELECT DISTINCT CONTROLLER_ID " +
+		                   "FROM DISTRIBUTION_BOARD " +
+		                   "WHERE CONTROLLER_ID IS NOT NULL " +
+		                   "AND TYPE = 'active' " +
+		                   "AND DB_ID = :dbId";  // Use :dbId as a parameter to avoid SQL injection
+
+		    // Execute the query for the current DB_ID
+		    List<String> result = findnearest.createNativeQuery(query)
+		        .setParameter("dbId", dbId)  // Bind the current DB_ID to the query
+		        .getResultList();
+
+		    // Add the controller IDs to the controllerIdsList
+		    if (result != null && !result.isEmpty()) {
+		        controllerIdsList.addAll(result);  // Add the retrieved controller IDs to the list
+		    }
+		}
+		System.out.println(mapper.writeValueAsString(controllerIdsList));
+		// Convert the controller IDs list to an array if needed
+		controllerIdsList = controllerIdsList.stream()
+			    .distinct()
+			    .collect(Collectors.toList());
+
+			System.out.println(mapper.writeValueAsString(controllerIdsList));
+		
+	// Create query with WHERE condition
+	
+		
+		
+
+		// Loop through each controller ID in the controllerIdsList
+		for (String controllerId : controllerIdsList) {
+		    // Create query for each controller ID
+		    String query = "SELECT C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER, " +
+		                   "COUNT(DB.DB_ID) AS DB_COUNT " +
+		                   "FROM CONTROLLER C " +
+		                   "LEFT JOIN DISTRIBUTION_BOARD DB ON C.CONTROLLER_ID = DB.CONTROLLER_ID " +
+		                   "WHERE C.CONTROLLER_ID = :controllerId " +  // Use = instead of IN
+		                   "GROUP BY C.CONTROLLER_ID, C.LONGITUDE, C.LATITUDE, C.CONTROLLER_NAME, C.NETWORK_LAYER";
+		    
+		    // Execute the query for the current controller ID
+		    List<Object[]> result = findnearest.createNativeQuery(query)
+		        .setParameter("controllerId", controllerId)  // Set the current controller ID as parameter
+		        .getResultList();
+
+		    // Add the result to the controllerDetailsList
+		    if (result != null && !result.isEmpty()) {
+		    	controllerList.addAll(result);  // Add the retrieved results
+		    }
+		}
+
+		// Print the controller details (if needed)
+		System.out.println(mapper.writeValueAsString(controllerList));
+		
+		
+		
+		resultMap.put("distribBoardList", updatedDistribBoardList);
+		resultMap.put("controllerList", controllerList);
+		
 		resultMap.put("NodeList", NodeList);
 		resultMap.put("junctionManholeList", junctionManholeList);
 		resultMap.put("junctionHandholeList", junctionHandholeList);
@@ -1463,11 +1582,11 @@ public class findNearestMulty {
 			if (Target == "Manhole" || Target == "Handhole") {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[3]),
 						Double.valueOf((String) objectArray[2]));
-				System.out.println("pointDist is " + pointDist);
+				//System.out.println("pointDist is " + pointDist);
 			} else {
 				pointDist = haversine(closestLatPoint, closestLongPoint, Double.valueOf((String) objectArray[2]),
 						Double.valueOf((String) objectArray[1]));
-				System.out.println("pointDist is " + pointDist);
+				//System.out.println("pointDist is " + pointDist);
 			}
 			ID = (String) objectArray[0];
 
