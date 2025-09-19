@@ -20,6 +20,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterJunction = [];
 			markerClusterSite = [];
 			markersDistBoard=[];
+			markersController = [];
 			markersDistBoardFilter=[];
 			markersTempoDistBoard="";						
 			markersTempoHandhole="";
@@ -30,7 +31,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			placeMarkers=[];
 			markersJunction=[];
 			markersSite=[];
-			markersController=[];
+		
 
 
 	//		map.setZoom(6);
@@ -69,6 +70,10 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			markerClusterSite.setMap(map);// to be checked !!!!
 	
 			
+
+			    markerClusterController = new MarkerClusterer();
+			    markerClusterController.setMap(map);
+
 	
 			kenya=new google.maps.LatLng(1,38);					
 			LatLanMouse(map);

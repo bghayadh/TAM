@@ -2469,8 +2469,10 @@ function AllDistributionBoardCheckFilter(Id,clssName) {
 function AllDistributionBoardCheckFilter(Id,clssName) {
 			
 	$("#"+Id).children('input').bind("change",function() {
+		
+		if (typeof markerClusterController !== "undefined") {
 		markerClusterController.clearMarkers();
-	
+	}
 		if(clssName=="") {			
 			markerClusterAccessDistBoard.clearMarkers();
 			markerClusterMetroDistBoard.clearMarkers();
@@ -4808,15 +4810,21 @@ function allElementsCheckFilter(){//zeinaa
 		var start=Date.now();
 		markerClusterManhole.clearMarkers();
 		markerClusterHandhole.clearMarkers();
-		markerClusterAccessDistBoard.clearMarkers();
-		markerClusterMetroDistBoard.clearMarkers();
-		markerClusterBackboneDistBoard.clearMarkers();
-		if(nodeFlag == 1){
+			if(nodeFlag == 1){
 			markerClusterMSANNodes.clearMarkers();
 		    markerClusterDWDMNodes.clearMarkers();
 		    markerClusterSDHNodes.clearMarkers();
 		    markerClusterGPONNodes.clearMarkers();
 		    markerClusterEntSwitchNodes.clearMarkers();
+		}
+		
+		if(DBFlag == 1){
+			markerClusterAccessDistBoard.clearMarkers();
+					markerClusterMetroDistBoard.clearMarkers();
+					markerClusterBackboneDistBoard.clearMarkers();
+					markerClusterController.clearMarkers();
+				
+			
 		}
 		
 		if(junctionFlag == 1){
@@ -5351,7 +5359,7 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 }
 
 function openSearchConnected(checkedOption, siteId, selectConnectedSearch, connectedSearchLong, connectedSearchLat, connectedViewOnMap, 
-    arrayStrands, arrayTubes,  arrayFibers, arrayManhole, arrayHandhole, arrayDB, distribBoardListSize, getRelatedPoints, fpPath, bpPath, NodeList ) {
+    arrayStrands, arrayTubes,  arrayFibers, arrayManhole, arrayHandhole, arrayDB,controllerList, distribBoardListSize, getRelatedPoints, fpPath, bpPath, NodeList ) {
     // Show modal
     $('a[href="#connectedS"]').click();
     $("#fiberCitySearch").modal('show');
@@ -5881,6 +5889,7 @@ function appendConnectedTable(result) {
 
         // Append additional data for fpPath and bpPath
         [fpPath, bpPath].forEach(path => {
+			if (Array.isArray(path)) {
             path.forEach((fiber, indexFiber) => {
                 const fiberId = sanitizeValue(fiber[0]);
                 const fiberName = sanitizeValue(fiber[1]);
@@ -5892,6 +5901,7 @@ function appendConnectedTable(result) {
                 const strandName = sanitizeValue(fiber[7]);
                 markupConFiber += createFiberRow(indexFiber, fiberId, fiberName, tubeId, tubeNumber, tubeName, strandId, strandNumber, strandName);
             });
+			}
         });
     }
 

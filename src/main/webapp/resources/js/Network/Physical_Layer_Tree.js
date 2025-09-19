@@ -259,7 +259,7 @@ var TargetFiberStrand= {
 		//tubeNumber:"tubeNumber",
 		//tubeColor:"tubeColor"
 };
-function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,NodeActiveList){
+function CreateTree_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,controllerList, fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,ListManholeJunction,ListHandholeJunction,filterFlag,ductList,ductAuxiliary_Data,NodeActiveList){
 	EnableOriginationFiber=false;
 	
 	fiberArray=[];
@@ -1020,8 +1020,11 @@ else if(readDB === '0' & (treeExceptionDB === '1' || writeExceptionDB === '1')){
 	
 	
 	if(filterFlag==1 || filterFlag==2){ // filterFlag = 1 ---> Filter 
-				 createDB(distribBoardList);
-			}
+		createController(controllerList, distribBoardList);
+        createDB(distribBoardList);
+				 
+				 console.log("i");
+			   			}
 			else{
 				//console.log(" //////////passed else");	
 				$("#DistributionBoard_f_CurrentPhysicalLayer input[type=checkbox]").bind("change",function() {
@@ -8129,6 +8132,15 @@ singleHandhole = new ContextMenu({
 													if(data.DistBoardDetails[0][21]!=null || data.DistBoardDetails[0][21]!=""){
 															$("#DBControllerName").val(""+data.DistBoardDetails[0][21]);
 																									}
+																									
+
+																									if(data.DistBoardDetails[0][22]!=null || data.DistBoardDetails[0][22]!=""){
+																										rowCountValue = data.DistBoardDetails[0][22];
+																										if (rowCountValue === "Up To Down") rowCountValue = "upToDown";
+																										  if (rowCountValue === "Down To Up") rowCountValue = "downToUp";
+
+																										  $("#rowCounting").val(rowCountValue);
+	}
 										if(data.DistBoardDetails[0][10]!=null){ 
 											if(data.DistBoardDetails[0][1] !=null){
 												if(data.DistBoardDetails[0][1].split("_")[0] == "CUST"){
@@ -12703,7 +12715,7 @@ $("#saveHandhole").click(function () {
 					distboardControllerId= document.getElementById("DBController").value;
 					distboardControllerName= document.getElementById("DBControllerName").value;
 					distboardSerialNum= document.getElementById("DBSerialNum").value;				
-					
+					distboardRowCount= $("#rowCounting option:selected").text();		
 					if($("#projectIdDB").is(":visible") && $("#projectNameDB").is(":visible")){
 						if($("#DBProjectId").val()==""){
 							IdNodeSelectedTemp="CurrentPhysicalLayer";
@@ -12756,6 +12768,7 @@ $("#saveHandhole").click(function () {
 									"DistributionBoardSite"  	:locationId,
 									"DistributionBoardSiteName" :locationName,
 									"DistributionBoardWarehouse" :location,
+									"rowCounting" :distboardRowCount,
 									"DistributionBoardCapacity"	:DistributionBoardCapacity,
 									"DistributionBoardRowsNum":DistributionBoardRowsNum,
 									"DistributionBoardColsNum":DistributionBoardColsNum,
@@ -20674,6 +20687,7 @@ console.log("uf");
 
 		if (children.length > 0) {
 		    // Has children: toggle their visibility
+			console.log("wooo");
 		    if (children.is(":visible")) {
 		        children.hide(type);
 		        $(this).parent().children(clss).find('> svg')

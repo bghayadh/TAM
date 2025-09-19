@@ -38,7 +38,6 @@ function getDB(type,url,id,tr,showDBflag){
     				}
     				$("#loading").remove();	
 					if(showDBflag != null){
-						console.log(showDBflag.length)
 						if(showDBflag.length==3){
 					showDB(showDBflag[0],showDBflag[1],showDBflag[2]);
 					}
@@ -48,6 +47,8 @@ function getDB(type,url,id,tr,showDBflag){
 						
 					}
 					}
+					
+				
     			}
     		},
     		error: function(result) {
@@ -181,8 +182,17 @@ function DBLayerUnCheckAll(){
 function createDB(distribBoardList, transfer){
 
 
-
-
+	if (typeof markerClusterBackboneDistBoard === "undefined") {
+	     var checkExist = setInterval(function () {
+	        if (typeof markerClusterBackboneDistBoard !== "undefined") {
+	            clearInterval(checkExist);
+	            console.log("markerClusterBackboneDistBoard is ready");
+	            createDB(distribBoardList, transfer);
+	        }
+	    }, 100);
+	    return; // exit for now
+	}
+console.log(distribBoardList);
 
 	 
 		if(distribBoardList!=null){
@@ -191,8 +201,37 @@ function createDB(distribBoardList, transfer){
 					    allDB.push(distribBoardList[i][0]);
 						window[""+distribBoardList[i][0]]=[];
 						window[""+distribBoardList[i][0]]=distribBoardList[i];
+						var type ="";
+	/*	if (distribBoardList[i][9] !== "passive" && distribBoardList[i][9] !== "active")	{
+			
+			
+			 $.ajax({
+									type: "GET",
+									contentType: "application/json; charset=utf-8",
+									url: getContext()+'/findDbType',
+									data: {
+										"dbId": distribBoardList[i][0],			
+									},
+									dataType: "json",
+									success: function (data) {
+										
+										type=data.dbType;
+										console.log(type);
+										console.log("zzzzzzzzzzzzzzz");
+									},
+									error: function (result) {
+										alert("Error");
+									}
+								});
+							
 						
-						if(distribBoardList[i][9] == "passive"){
+			
+		}		*/	
+						
+						
+						
+						if(distribBoardList[i][9] === "passive" || distribBoardList[i][10] === "passive"){
+						
 						if(distribBoardList[i][8]=="backbone") {
 							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
 							$("#DistributionBoard_backbone__"+distribBoardList[i][6]).append(str);
@@ -216,25 +255,42 @@ function createDB(distribBoardList, transfer){
 						}
 						}
 						
-						else if (distribBoardList[i][9] == "active"){
+						else if (distribBoardList[i][9] === "active" || distribBoardList[i][10] === "active"){
 							if(distribBoardList[i][8]=="backbone") {
-								console.log("y");
+							
 							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-							$("#"+distribBoardList[i][10]).append(str);
+						
+							if(distribBoardList[i][10] === "active"){
+								$("#"+distribBoardList[i][11]).append(str);
+								}
+								else{
+									$("#"+distribBoardList[i][10]).append(str);
+									
+								}
 							create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
 							DBCheckFilter(distribBoardList[i][0],markerClusterBackboneDistBoard);
 													}
 							
 							else  if(distribBoardList[i][8]=="metro") {
 								str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-								$("#"+distribBoardList[i][10]).append(str);
-								create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
+								if(distribBoardList[i][10] === "active"){
+																$("#"+distribBoardList[i][11]).append(str);
+																}
+																else{
+																	$("#"+distribBoardList[i][10]).append(str);
+																	
+																}	create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
 								DBCheckFilter(distribBoardList[i][0],markerClusterMetroDistBoard);
 							}							
 							else  if(distribBoardList[i][8]=="access") {
 							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-							$("#"+distribBoardList[i][10]).append(str);
-						     create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
+							if(distribBoardList[i][10] === "active"){
+															$("#"+distribBoardList[i][11]).append(str);
+															}
+															else{
+																$("#"+distribBoardList[i][10]).append(str);
+																
+															}     create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
 							DBCheckFilter(distribBoardList[i][0],markerClusterAccessDistBoard);
 																															}
 																								
@@ -244,7 +300,6 @@ function createDB(distribBoardList, transfer){
 							menuName=singleDistBoard;
 							IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
 							selectedDistBoardContext=$(this).parents().attr('id');
-							console.log("uo");
 							selectedDistBoardName=$(this).text();
 							openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
 												
@@ -254,7 +309,7 @@ function createDB(distribBoardList, transfer){
 				
 		$(".DistBoard  > .TreeSpan").contextmenu(function(){
 			menuName=singleDistBoard;
-			console.log("uo");
+			
 			selectedDistBoardContext=$(this).attr('id');
 												selectedDistBoardName=$(this).text();
 												openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);							
@@ -273,7 +328,7 @@ function createDB(distribBoardList, transfer){
 
 function create_DB_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,city) {
 
-console.log("uuuuuuu");
+
 	const pos = new google.maps.LatLng(Lat,Long);
 	var data="<div>" +Name+ "</div>"; 
 	var mapIcon;
@@ -359,7 +414,7 @@ console.log("uuuuuuu");
 	
 
 	 if(!markers[Id]){
-		console.log("ywwww");
+
 		 Mapmarker = new google.maps.Marker({
 			position: pos,
 			data: data,
@@ -456,7 +511,7 @@ console.log("uuuuuuu");
 	        } else {
 	            infowindow = new google.maps.InfoWindow();
 	        }
-console.log("yal");
+
 	        infowindow.setContent(Id);
 	        infowindow.open(map, markers[Id]);
 	    });
@@ -588,16 +643,19 @@ function controllerLayerUnCheckAll(layer) {
 }
 
 
-	var markersController = [];
-	var markerClusterController;
+
 	
 	function createController(controllerList,DBList) {
-	
-	    markersController = [];
-
-	    markerClusterController = new MarkerClusterer();
-	    markerClusterController.setMap(map);
-
+		if (typeof markersController === "undefined") {
+			     var checkExist = setInterval(function () {
+			        if (typeof markersController !== "undefined") {
+			            clearInterval(checkExist);
+			            console.log("markersController is ready");
+			           createController(controllerList,DBList);
+			        }
+			    }, 100);
+			    return; // exit for now
+			}
 	   
 	   for (let i = 0; i < controllerList.length; i++) {
 	 

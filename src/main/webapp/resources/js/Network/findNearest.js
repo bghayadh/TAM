@@ -103,8 +103,10 @@ function viewNearestPointEvent(){
 }
 
 // To open the find nearest popup and drawing the circle, the rectangle and append the nearest points 
-function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat,customerID,customerName,serviceReq,serviceRef){ 	
-	$("#StartEnd").prop("checked",false);
+function  openFindNearest(checkedOption,closestLatPoint,closestLongPoint,closestDisRange,noP,arrayManhole,arrayHandhole,arrayDB,controllerList,arrayFibers,arrayStrands,arrayTubes,arrayNodes,getRelatedPoints,strtLng,endLng,strtLat,endLat,customerID,customerName,serviceReq,serviceRef){ 	
+console.log(arrayDB);
+	
+		$("#StartEnd").prop("checked",false);
 	 document.getElementById("closestLongDiv").style.display = "block";
 	 document.getElementById("closestLatDiv").style.display = "block";
 	 document.getElementById("closestDistanceRange").style.display = "block";
