@@ -1674,6 +1674,44 @@ $(document).ready(function() {
 				  if(strtEndCheckbox==true) {
 					  bordersFindNearest($("#startLongitude").val(),$("#startLatitude").val(),$("#endLongitude").val(),$("#endLatitude").val())
 				  }
+				  else if (circleRangeCheckbox == true) {
+				        const myLatLng = {
+				            lat: parseFloat($("#circleRangeLatitude").val()),
+				            lng: parseFloat($("#circleRangeLongitude").val())
+				        };
+
+				        new google.maps.Marker({
+				            position: myLatLng,
+				            map,
+				            title: "Marked",
+				        });
+
+				        var circleRadius = $("#circleRangeRadius").val();
+
+				        // Drawing find nearest circle
+				        var circ = new google.maps.Circle({
+				            strokeColor: "blue",
+				            strokeOpacity: 0.8,
+				            strokeWeight: 2,
+				            fillColor: "blue",
+				            fillOpacity: 0.1,
+				            map,
+				            center: myLatLng,
+				            radius: circleRadius * 1000,
+				            clickable: false
+				        });
+
+				        $("#SearchZone").click(function () {
+				            if ($(this).is(":checked")) {
+				                circ.setOptions({ fillOpacity: 0.35, strokeOpacity: 0.3 });
+				            } else {
+				                circ.setOptions({ fillOpacity: 0, strokeOpacity: 0 }); // ✅ fixed here
+				            }
+				        });
+
+				        map.setCenter(myLatLng);
+				        map.fitBounds(circ.getBounds());
+				    }
                   ReportArrayGlobal = data.nodeAssetReportList; 
                   if (ReportArrayGlobal.length == 0) { 
                 	  alert("There is no data to display");
