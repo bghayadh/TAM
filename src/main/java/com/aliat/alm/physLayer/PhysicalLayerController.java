@@ -3223,6 +3223,8 @@ public class PhysicalLayerController {
 		return rtn;
 
 	}
+	@RequestMapping(value = "/findDistBoardDetails", method = RequestMethod.GET)
+	@ResponseBody
 	public Map<String, Object> findDistBoardDetails(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
