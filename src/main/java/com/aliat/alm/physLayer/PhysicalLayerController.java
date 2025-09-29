@@ -37,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 //import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,6 +55,8 @@ import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.AccessCableJunction;
 import com.aliat.alm.models.AttachmentUpload;
+import com.aliat.alm.models.ControllerKit;
+import com.aliat.alm.models.ControllerModule;
 import com.aliat.alm.models.DistributionBoard;
 import com.aliat.alm.models.DistributionBoardMapping;
 import com.aliat.alm.models.DistributionBoardSurvey;
@@ -83,6 +86,8 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSchException;
@@ -3255,9 +3260,26 @@ public class PhysicalLayerController {
 						.createNativeQuery("SELECT DISTINCT DB_NETWORK_LEVEL FROM DISTRIBUTION_BOARD  WHERE DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
-System.out.println(mapper.writeValueAsString(DistBoardDetails));
+
+				rtn.put("DistBoardDetails", DistBoardDetails);
+				
+				List<Object[]> KitData = session
+						.createNativeQuery("SELECT  KIT_ID, KIT_SERIAL_NUM, KIT_TYPE FROM CONTROLLER_KIT  WHERE DB_ID='"
+								+ selectedDistBoardContext + "' ")
+						.getResultList();
+
+				List<Object[]> ModuleData = session
+						.createNativeQuery("SELECT  MODULE_ID, MODULE_POSITION, KIT_SERIAL_NUM, SENSORS_PER_PORT_NUM, LOWEST_PORT_NUM, SENSOR_COUNT,"
+								+ "OCCUPIED_SENSOR_MASK, ORIENTATION  FROM CONTROLLER_MODULE  WHERE DB_ID='"
+								+ selectedDistBoardContext + "' ")
+						.getResultList();
+				
+				
 				rtn.put("DistBoardDetails", DistBoardDetails);
 				rtn.put("DBnetLevel", DBnetLevel);
+				rtn.put("KitData", KitData);
+				rtn.put("ModuleData", ModuleData);
+				System.out.println(KitData);
 				session.flush();
 				session.clear();
 				tx.commit();
@@ -3492,7 +3514,8 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 			try {
 
 				List<Object[]> DistBoardMappingPts = session.createNativeQuery(
-						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_NB,FP_TUBE_NB,BP_STRAND_NB,BP_TUBE_NB,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_NB,FP_TUBE_NB,BP_STRAND_NB,BP_TUBE_NB,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, "
+						+ "FAR_KIT_SERIAL_NUM, FAR_MODULE, FAR_PORT_NUM, BACK_KIT_MODULE, BACK_PORT_NUM FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
 
@@ -9186,6 +9209,58 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 
 							}
 
+							
+							distributionBoardMapping.setNearModule(
+									itemParameters.getDictParameter().get(i).get("nearModule") != ""
+											? itemParameters.getDictParameter().get(i).get("nearModule")
+											: "");
+							
+							distributionBoardMapping.setNearPortNum(
+									itemParameters.getDictParameter().get(i).get("nearPortNum") != ""
+											? itemParameters.getDictParameter().get(i).get("nearPortNum")
+											: "");
+							
+							distributionBoardMapping.setNearPatchType(
+									itemParameters.getDictParameter().get(i).get("patchType") != ""
+											? itemParameters.getDictParameter().get(i).get("patchType")
+											: "");
+							
+							distributionBoardMapping.setFarKitSerialNum(
+									itemParameters.getDictParameter().get(i).get("farKitSerialNum") != ""
+											? itemParameters.getDictParameter().get(i).get("farKitSerialNum")
+											: "");
+							
+							
+							distributionBoardMapping.setFarModule(
+									itemParameters.getDictParameter().get(i).get("farModule") != ""
+											? itemParameters.getDictParameter().get(i).get("farModule")
+											: "");
+							
+							distributionBoardMapping.setFarPortNum(
+									itemParameters.getDictParameter().get(i).get("farPortNum") != ""
+											? itemParameters.getDictParameter().get(i).get("farPortNum")
+											: "");
+							
+							distributionBoardMapping.setBackKitModule(
+									itemParameters.getDictParameter().get(i).get("backKitModule") != ""
+											? itemParameters.getDictParameter().get(i).get("backKitModule")
+											: "");
+							
+							distributionBoardMapping.setBackportNum(
+									itemParameters.getDictParameter().get(i).get("backPortNum") != ""
+											? itemParameters.getDictParameter().get(i).get("backPortNum")
+											: "");
+							
+							distributionBoardMapping.setFarKitSerialNum(
+									itemParameters.getDictParameter().get(i).get("farPortNum") != ""
+											? itemParameters.getDictParameter().get(i).get("farPortNum")
+											: "");
+							
+							
+							
+							
+							
+							
 							distributionBoardMapping
 									.setRowNum((itemParameters.getDictParameter().get(i).get("rowNum")));
 							distributionBoardMapping
@@ -9376,7 +9451,121 @@ System.out.println(mapper.writeValueAsString(DistBoardDetails));
 
 					}
 				}
+				
+				// Extract JSON strings
+				String kitDataJson = request.getParameter("kitData");
+				String moduleDataJson = request.getParameter("moduleData");
 
+				Gson gson = new Gson();
+				Timestamp now = new Timestamp(System.currentTimeMillis());
+
+				// Parse JSON into lists
+				List<ControllerKit> kitDataList = gson.fromJson(
+				        kitDataJson, new TypeToken<List<ControllerKit>>(){}.getType()
+				);
+				List<ControllerModule> moduleDataList = gson.fromJson(
+				        moduleDataJson, new TypeToken<List<ControllerModule>>(){}.getType()
+				);
+
+				// === Save Kits ===
+				for (ControllerKit kit : kitDataList) {
+				    System.out.println("Kit => SerialNum: " + kit.getKitSerialNum() +
+				                       ", Type: " + kit.getKitType() +
+				                       ", Id: " + kit.getKitId());
+				    if (kit.getKitSerialNum() != null && !kit.getKitSerialNum().trim().isEmpty() &&
+				    	    kit.getKitType()      != null && !kit.getKitType().trim().isEmpty()) {
+				    	    
+				    	    // both fields are filled
+				    	
+				    ControllerKit kitEntity = new ControllerKit();
+				    kitEntity.setKitType(kit.getKitType());
+				    kitEntity.setKitSerialNum(kit.getKitSerialNum());
+				    kitEntity.setLastModifiedDate(now);
+			        kitEntity.setDbId(distributionBoardId);
+
+				    if (kit.getKitId() == null) {
+				    	String kitId = "KIT_" + year + "_" + Integer.parseInt( ((Query) session.createNativeQuery
+				    			("SELECT CONTROLLER_KIT FROM SEQ_TABLE")) .getSingleResult().toString()); 
+				    	query = (Query) session.createNativeQuery("UPDATE SEQ_TABLE SET CONTROLLER_KIT = CONTROLLER_KIT + 1 "); 
+				    	query.executeUpdate(); 
+				    	session.createNativeQuery("commit").executeUpdate();  
+				        kitEntity.setKitId(kitId);
+				        kitEntity.setCreateDate(now);
+			
+				    } else {
+				        kitEntity.setKitId(kit.getKitId());
+				    }
+
+				    session.saveOrUpdate(kitEntity);
+				}
+				}
+				// === Save Modules ===
+				for (ControllerModule mod : moduleDataList) {
+				    System.out.println("Module => Id: " + mod.getModuleId() +
+				                       ", ModulePos: " + mod.getModulePosition() +
+				                       ", Orientation: " + mod.getOrientation());
+				    System.out.println("jkj");
+				    System.out.println(mapper.writeValueAsString(moduleDataList));
+				    if ((mod.getModulePosition() != null || !mod.getModulePosition().trim().isEmpty()) &&
+				    	   ( mod.getKitSerialNum()   != null  || !mod.getKitSerialNum().trim().isEmpty()) &&
+				    	   ( mod.getOrientation()    != null || !mod.getOrientation().trim().isEmpty()) &&
+				    	   ( mod.getLowestPortNum()  != null || !mod.getLowestPortNum().trim().isEmpty()) &&
+				    	   ( mod.getSensorsPerPortNum() != null || !mod.getSensorsPerPortNum().trim().isEmpty()) &&
+				    	   (  mod.getSensorCount()    != null || !mod.getSensorCount().trim().isEmpty()) &&
+				    	   ( mod.getOccupiedSensorMask() != null || !mod.getOccupiedSensorMask().trim().isEmpty())) 
+				    	{
+				    	    // all fields are not empty
+				        System.out.println("jkj");
+					  
+
+				    ControllerModule modEntity = new ControllerModule();
+				    modEntity.setModulePosition(mod.getModulePosition());
+				    modEntity.setKitSerialNum(mod.getKitSerialNum());
+				    modEntity.setOrientation(mod.getOrientation());
+				    modEntity.setLowestPortNum(mod.getLowestPortNum());
+				    modEntity.setSensorsPerPortNum(mod.getSensorsPerPortNum());
+				    modEntity.setSensorCount(mod.getSensorCount());
+				    modEntity.setOccupiedSensorMask(mod.getOccupiedSensorMask());
+				    modEntity.setDbId(distributionBoardId);
+				    modEntity.setLastModifiedDate(now);
+
+				    if (mod.getModuleId() == null) {
+				    	String moduleId = "MODULE_" + year + "_" + Integer.parseInt( ((Query) session.createNativeQuery
+				    			("SELECT CONTROLLER_MODULE FROM SEQ_TABLE")) .getSingleResult().toString()); 
+				    	query = (Query) session.createNativeQuery("UPDATE SEQ_TABLE SET CONTROLLER_MODULE = CONTROLLER_MODULE + 1 "); 
+				    	query.executeUpdate(); 
+				    	session.createNativeQuery("commit").executeUpdate();  
+				    	modEntity.setModuleId(moduleId);
+				        modEntity.setCreateDate(now);
+				    } else {
+				        modEntity.setModuleId(mod.getModuleId());
+				    }
+
+				    session.saveOrUpdate(modEntity);
+				}
+				}
+				
+				String [] deletedKitIds = request.getParameterValues("deletedKitIds[]");
+				String [] deletedModuleIds = request.getParameterValues("deletedModuleIds[]");
+				if (deletedKitIds != null) {
+				    for (String kitId : deletedKitIds) {
+				        if (kitId != null && !kitId.trim().isEmpty()) {
+				            session.createNativeQuery("DELETE FROM CONTROLLER_KIT WHERE KIT_ID = :kitId")
+				                   .setParameter("kitId", kitId)
+				                   .executeUpdate();
+				        }
+				    }
+				}
+
+				if (deletedModuleIds != null) {
+				    for (String moduleId : deletedModuleIds) {
+				        if (moduleId != null && !moduleId.trim().isEmpty()) {
+				            session.createNativeQuery("DELETE FROM CONTROLLER_MODULE WHERE MODULE_ID = :moduleId")
+				                   .setParameter("moduleId", moduleId)
+				                   .executeUpdate();
+				        }
+				    }
+				}
 				List<Object[]> countConnections = session.createNativeQuery(
 						"select coalesce(NUM_ROWS,0) as NUM_ROWS,coalesce(NUM_COLUMNS,0) as NUM_COLUMNS,coalesce((select count (*) from DISTRIBUTION_BOARD_MAPPING a where a.DB_ID='"
 								+ distributionBoardId
