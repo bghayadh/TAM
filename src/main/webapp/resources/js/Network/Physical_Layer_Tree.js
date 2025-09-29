@@ -8011,7 +8011,9 @@ singleHandhole = new ContextMenu({
 									},
 									dataType: "json",
 									success: function (data) {
-										console.log(data);									
+										console.log(data);	
+										
+										
 										$("#DbMappingTable > tbody").empty();
 										actiondistBoardContext="Update";  
 										$("#DBnetlevel").val(data.DBnetLevel);
@@ -8060,6 +8062,47 @@ singleHandhole = new ContextMenu({
 											}
 										}
 										//
+										
+										let kitData = data.KitData; // from response
+										
+
+																				$("#DbKit > tbody").empty(); // clear old rows
+
+																				kitData.forEach(function(row) {
+																					console.log(kitData);
+																					var kitId = row[0];       // KIT_ID
+																					        var serialNum = row[1];   // KIT_SERIAL_NUM
+																					        var type = row[2];        // KIT_TYPE
+
+																					        console.log(serialNum);
+
+																							// Create markup using string concatenation and double quotes
+																							      var markup = "<tr>"
+																							          + "<td style='text-align:center;'>"
+																							          + "<input name='record' type='checkbox' id='" + kitId + "' style='vertical-align: middle; width:70px'>"
+																							          + "</td>"
+																							          + "<td name='serialNum'>"
+																							          + "<input class='form-control serial-input' type='text' style='width:400px;' value='" + serialNum + "' />"
+																							          + "</td>"
+																							          + "<td name='type'>"
+																							          + "<input class='form-control type-input' type='text' style='width:400px;' value='" + type + "' />"
+																							          + "</td>"
+																							          + "</tr>";
+
+																							      // Append row and keep a reference
+																							      let $row = $(markup);
+																							      $("#DbKit > tbody").append($row);
+
+																							      // Set values programmatically (just in case)
+																							      console.log("Serial input value:", $row.find(".serial-input").val());
+																							      $row.find(".serial-input").val(serialNum);
+																							      $row.find(".type-input").val(type);
+																								
+																								   
+																				});	
+																				
+																				
+																			
 										if(data.DistBoardDetails[0][1] == null){
 											document.getElementById("site_DBAutoComplete").checked = true;
 											$('#site_DBAutoComplete').val('1');
@@ -8072,6 +8115,61 @@ singleHandhole = new ContextMenu({
 											document.getElementById("DBSite").style.display = "block";
 											document.getElementById("DBSiteName").style.display = "block";
 										}
+										
+										let moduleData = data.ModuleData; // from response
+										$("#DbModule > tbody").empty(); // clear old rows
+
+										moduleData.forEach(function(row) {
+										    let moduleId        = row[0]; 
+										    let modulePosition  = row[1]; 
+										    let kitSerialNum    = row[2]; 
+										    let sensorsPerPort  = row[3]; 
+										    let lowestPortNum   = row[4]; 
+										    let sensorCount     = row[5]; 
+										    let occupiedMask    = row[6]; 
+										    let orientation     = row[7]; 
+
+										    console.log("Module Position:", modulePosition);
+
+										    var markup = "<tr>"
+										        + "<td style='text-align:center;'>"
+										        + "<input name='record' type='checkbox' id='" + moduleId + "' style='vertical-align: middle; width:70px'>"
+										        + "</td>"
+										        + "<td name='modulePos'>"
+										        + "<input class='form-control module-pos-input' type='text' style='width:110px;' value='" + modulePosition + "' />"
+										        + "</td>"
+										        + "<td name='kitSerialNum'>"
+										        + "<input class='form-control kit-serial-input' type='text' style='width:110px;' value='" + kitSerialNum + "' />"
+										        + "</td>"
+										        + "<td name='orientation'>"
+										        + "<input class='form-control orientation-input' type='text' style='width:110px;' value='" + orientation + "' />"
+										        + "</td>"
+										        + "<td name='lowestPortNum'>"
+										        + "<input class='form-control lowest-port-input' type='text' style='width:110px;' value='" + lowestPortNum + "' />"
+										        + "</td>"
+										        + "<td name='sensorsPerPortNum'>"
+										        + "<input class='form-control sensors-port-input' type='text' style='width:110px;' value='" + sensorsPerPort + "' />"
+										        + "</td>"
+										        + "<td name='sensorCount'>"
+										        + "<input class='form-control sensor-count-input' type='text' style='width:110px;' value='" + sensorCount + "' />"
+										        + "</td>"
+										        + "<td name='occupiedSensorMask'>"
+										        + "<input class='form-control occupied-mask-input' type='text' style='width:110px;' value='" + occupiedMask + "' />"
+										        + "</td>"
+										        + "</tr>";
+
+										    let $row = $(markup);
+										    $("#DbModule > tbody").append($row);
+
+										    // double-check values programmatically
+										    $row.find(".module-pos-input").val(modulePosition);
+										    $row.find(".kit-serial-input").val(kitSerialNum);
+										    $row.find(".orientation-input").val(orientation);
+										    $row.find(".lowest-port-input").val(lowestPortNum);
+										    $row.find(".sensors-port-input").val(sensorsPerPort);
+										    $row.find(".sensor-count-input").val(sensorCount);
+										    $row.find(".occupied-mask-input").val(occupiedMask);
+										});
 										//
 										if(data.DistBoardDetails[0][0]!=null){
 											$("#DistributionBoardName").val(""+data.DistBoardDetails[0][0]);
@@ -12724,6 +12822,43 @@ $("#saveHandhole").click(function () {
 							IdNodeSelectedTemp=$("#DBProjectId").val();
 						}
 					}
+					
+					
+					let kitData = [];
+
+					    // Loop through each row in the table body
+					    $("#DbKit tbody tr").each(function () {
+					        let row = {
+					            kitSerialNum: $(this).find("td[name='serialNum'] input").val(),
+					            kitType: $(this).find("td[name='type'] input").val(),
+								kitId: $(this).find("input[name='record']").attr("id"),
+								
+					        };
+					        kitData.push(row);
+					    });
+
+
+
+
+
+let moduleData = [];
+
+					    // Loop through each row in the table body
+					    $("#DbModule tbody tr").each(function () {
+					        let row = {
+					           	moduleId: $(this).find("input[name='record']").attr("id"),
+								modulePosition: $(this).find("td[name='modulePos'] input").val(),
+								kitSerialNum: $(this).find("td[name='kitSerialNum'] input").val(),
+								orientation: $(this).find("td[name='orientation'] input").val(),
+								lowestPortNum: $(this).find("td[name='lowestPortNum'] input").val(),
+								sesorsPerPortNum: $(this).find("td[name='sensorsPerPortNum'] input").val(),
+								sensorCount: $(this).find("td[name='sensorCount'] input").val(),
+								occupiedSensorMask: $(this).find("td[name='occupiedSensorMask'] input").val(),						        
+					        };
+					        moduleData.push(row);
+					    });
+
+
 					var locationId =""; 
 					var locationName = ""; 
 					var location = "";
@@ -12754,6 +12889,8 @@ $("#saveHandhole").click(function () {
 					distributionBoardId="";
 	
 					var token =  $('input[name="csrfToken"]').attr('value');
+					console.log(deletedKitIds);
+					console.log(dict);
 						$.ajax({
 							type: "POST",
 							headers: {
@@ -12788,12 +12925,16 @@ $("#saveHandhole").click(function () {
 									  "type" : distBoardType,
 									  "controllerId": distboardControllerId,
 									  "controllerName" : distboardControllerName,
-									  "serialNum" : distboardSerialNum
+									  "serialNum" : distboardSerialNum,
+									  "deletedKitIds" : deletedKitIds,
+									  "deletedModuleIds" : deletedModuleIds,
+									  "kitData" :  JSON.stringify(kitData),
+									  "moduleData" :  JSON.stringify(moduleData)
 									   
 							},
 							dataType: "json",
 							success: function (data) {
-								
+								console.log(deletedKitIds);
 								if(data!=null){
 									console.log(distBoardType);
 									window[""+data.distributionBoardId]=[];
@@ -14482,6 +14623,10 @@ $("#saveHandhole").click(function () {
 										if($("#dBMapCheck_Labels").prop("checked")==true){
 											markersDistBoard[data.distributionBoardDetails[i][0]].setLabel({text: data.distributionBoardDetails[i][3], className:"marker-position-dB",color:"#5665F9"});
 										}
+										
+
+										
+										
 										
 										$("#"+data.distributionBoardDetails[i][0]+" > .TreeSpan").css("display", "inline");
 											  
@@ -17314,9 +17459,18 @@ console.log(locNum);
 					
 				var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
 					    +"<td name='Index'><input name='Index'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+					
+						+"<td name='nearModule'><input name='nearModule'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
+						+"<td name='nearPortNum'><input name='nearPortNum'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
+										
+						
+						
 						+"<td name='RowIndex'><input name='rowIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 						+"<td name='ColIndex'><input name='colIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 
+						+"<td name='patchType'><input name='patchType'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+
+						
 						+"<td style='background-color:#00757C' width='-10px'></td>"
 						+"<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status"+dBBoqIndex+"'><option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option></select></td>"
 						+"<td name='FP_LocationType'>"
@@ -17338,7 +17492,13 @@ console.log(locNum);
 						+"<td name='FP_EquipmentID'><input name='FP_equipmentID' id='FP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentName'><input name='FP_equipmentName' id='FP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentType'><input name=' FP_equipmentType' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-						+"<td name='FP_Address'><input name='FP_Address' id='FP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+					
+						+"<td name='farKitSerialNum'><input name='farKitSerialNum' id='farKitSerialNum"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='farModule'><input name='farModule' id='farModule"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='farPortNum'><input name='farPortNum' id='farPortNum"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+																						
+						
+							+"<td name='FP_Address'><input name='FP_Address' id='FP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='FP_JunctionID'><input name='FP_junctionID' id='FP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_JunctionName'><input name='FP_junctionName' id='FP_junctionName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -17381,6 +17541,11 @@ console.log(locNum);
 						+"<td name='BP_EquipmentID'><input name='BP_equipmentID' id='BP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentName'><input name='BP_equipmentName' id='BP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentType'><input name=' BP_equipmentType' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						
+						+"<td name='backKitModule'><input name='backKitSerialNum' id='backKitModule"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
+						+"<td name='backPortNum'><input name='backPortNum' id='backPortNum"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
+											
+						
 						+"<td name='BP_Address'><input name='BP_Address' id='BP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='BP_JunctionID'><input name='BP_junctionID' id='BP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -17512,6 +17677,25 @@ console.log(locNum);
 				number=document.getElementById(numberId).value;
 				strandTubeSetColor(number,colorId);
 			
+			});
+			
+			// Attach change listener after row is added
+			$(document).on("change", "select[name='BP_equipment']", function() {
+			    let index = $(this).attr("id").replace("BP_equipment", ""); // extract the dBBoqIndex
+			    let selectedValue = $(this).val();
+
+			    let backKitSerialInput = $("#backKitModule" + index);
+			    let backPortNumInput   = $("#backPortNum" + index);
+
+			    if (selectedValue === "DistBoard") {
+			        // Make inputs editable
+			        backKitSerialInput.prop("readonly", false);
+			        backPortNumInput.prop("readonly", false);
+			    } else {
+			        // Make inputs readonly again
+			        backKitSerialInput.prop("readonly", true);
+			        backPortNumInput.prop("readonly", true);
+			    }
 			});
 			
 			document.getElementById("FP_strandNb"+dBBoqIndex).addEventListener ("input" ,function() {
