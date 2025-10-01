@@ -23,6 +23,12 @@ public class SystemSettings {
 	@Column(name = "SYSTEM_COUNTRY")
 	private String sysCountry;
 	
+	@Column(name = "LATITUDE")
+	private String lat;
+
+	@Column(name = "LONGITUDE")
+	private String longitude;
+	
 	@Column(name = "SYSTEM_CURRENCY")
 	private String sysCurrency;
 	
@@ -50,11 +56,13 @@ public class SystemSettings {
 		super();
 	}
 
-	public SystemSettings(String iD, String sysLangauge, String sysCountry,String sysCurrency, String username, String password, String path, String ipAddress, Timestamp createdDate, Timestamp lastModifiedDate) {
+	public SystemSettings(String iD, String sysLangauge, String sysCountry,String lat, String longitude,String sysCurrency, String username, String password, String path, String ipAddress, Timestamp createdDate, Timestamp lastModifiedDate) {
 		super();
 		this.ID = iD;
 		this.sysLangauge = sysLangauge;
 		this.sysCountry = sysCountry;
+		this.lat = lat;
+		this.longitude = longitude;
 		this.sysCurrency = sysCurrency;
 		this.username = username;
 		this.password = password;
@@ -80,6 +88,22 @@ public class SystemSettings {
 		this.sysLangauge = sysLangauge;
 	}
 
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+	
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
 	public String getSysCountry() {
 		return sysCountry;
 	}
@@ -87,6 +111,7 @@ public class SystemSettings {
 	public void setSysCountry(String sysCountry) {
 		this.sysCountry = sysCountry;
 	}
+
 
 	public String getSysCurrency() {
 		return sysCurrency;

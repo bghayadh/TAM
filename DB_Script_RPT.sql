@@ -18,8 +18,12 @@ alter profile DEFAULT limit password_life_time UNLIMITED;
 
 
 ---------------SCRIPT TO CREATE RPT OBJECT-------------------------------------------------------
-// if dblinkalm is existed and we need to create dblink from scratch, then we need to drop the dblinkalm.
+/* if dblinkalm is existed and we need to create dblink from scratch, then we need to drop the dblinkalm. */
 DROP DATABASE LINK dblinkalm;
+
+
+/*if drop gave error, then:*/
+SELECT * FROM V$DBLINK;
 
 CREATE DATABASE LINK dblinkalm
 CONNECT TO alm IDENTIFIED BY alm

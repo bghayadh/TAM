@@ -70,23 +70,25 @@ public class SystemSettingsController {
 					notifications.headerNotifications(session, model);
 	
 					query = session.createNativeQuery(
-							"select SYSTEM_SETTING_ID as sysSettingID, SYSTEM_LANGUAGE,SYSTEM_COUNTRY,"
-							+ "SYSTEM_CURRENCY,USERNAME,PASSWORD,PATH,IP_ADDRESS,TO_CHAR(CREATION_DATE,'MM/DD/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFICATION_DATE,'MM/DD/YYYY HH:MI AM') "
-							+ "FROM SYSTEM_SETTINGS");
+							"select SYSTEM_SETTING_ID as sysSettingID, SYSTEM_COUNTRY, LATITUDE, LONGITUDE, SYSTEM_LANGUAGE, "
+						  + "SYSTEM_CURRENCY,USERNAME,PASSWORD,PATH,IP_ADDRESS,TO_CHAR(CREATION_DATE,'MM/DD/YYYY HH:MI AM'),TO_CHAR(LAST_MODIFICATION_DATE,'MM/DD/YYYY HH:MI AM') "
+						  + "FROM SYSTEM_SETTINGS");
 				
 					List<Object[]> results = query.getResultList();
 					if(results.size()>0) {
 						for (Object[] row : results) {
 						    model.addAttribute("sysSettingID", row[0]);
-						    model.addAttribute("Language", row[1]);
-						    model.addAttribute("Country", row[2]);
-						    model.addAttribute("Currency", row[3]);
-						    model.addAttribute("username", row[4]);
-						    model.addAttribute("pass", row[5]);
-						    model.addAttribute("path", row[6]);
-						    model.addAttribute("ipAddress", row[7]);
-						    model.addAttribute("createdDate", row[8]); 
-						    model.addAttribute("lastModifiedDate", row[9]); 
+						    model.addAttribute("country", row[1]);
+						    model.addAttribute("lat", row[2]);
+						    model.addAttribute("longitude", row[3]);
+						    model.addAttribute("language", row[4]);						    
+						    model.addAttribute("currency", row[5]);
+						    model.addAttribute("username", row[6]);
+						    model.addAttribute("pass", row[7]);
+						    model.addAttribute("path", row[8]);
+						    model.addAttribute("ipAddress", row[9]);
+						    model.addAttribute("createdDate", row[10]); 
+						    model.addAttribute("lastModifiedDate", row[11]); 
 						}
 						model.addAttribute("status","saved");
 					}
@@ -129,36 +131,36 @@ public class SystemSettingsController {
 				return rtn;
 			}
 			else {
+				
+				System.out.println("Welcome to System Settings");				
 				SystemSettings sysSetting=new SystemSettings();
 				DateFormat formatter1 = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
 				String createdDate, sysSettingID = "";
 					
 				Calendar calendar = new GregorianCalendar();
-				calendar.setTime(new Date());
-				int year = calendar.get(Calendar.YEAR);
-				
+				calendar.setTime(new Date());				
 				
 				if (session != null && session.isOpen()) {
 					tx = session.beginTransaction();
 					
-					try {
-				
-						sysSettingID = "SYS_SETTING_" + year + "_1"; 						
-						createdDate = request.getParameter("creationDate");
-						
-						
+					try {				
+						sysSettingID = "SYS_SETTING_2025" + "_1";
 						sysSetting.setID(sysSettingID);
-						sysSetting.setSysLangauge(request.getParameter("Language"));
-						sysSetting.setSysCountry(request.getParameter("Country"));
-						sysSetting.setSysCurrency(request.getParameter("Currency"));
+						sysSetting.setSysLangauge(request.getParameter("language"));
+						sysSetting.setSysCountry(request.getParameter("country"));						
+						sysSetting.setLat(request.getParameter("lat"));
+						System.out.println("The latitude is " +request.getParameter("lat"));
+						sysSetting.setLongitude(request.getParameter("longitude"));
+						System.out.println("The longitude is " +request.getParameter("longitude"));
+						sysSetting.setSysCurrency(request.getParameter("currency"));
 						sysSetting.setUsername(request.getParameter("username"));
 						sysSetting.setPassword(request.getParameter("pass"));
 						sysSetting.setPath(request.getParameter("path"));
 						sysSetting.setIpAddress(request.getParameter("ipAddress"));
+						createdDate = request.getParameter("creationDate");
 						sysSetting.setCreatedDate((new Timestamp(formatter1.parse(createdDate).getTime())));
 						sysSetting.setLastModifiedDate(new Timestamp((new Timestamp(System.currentTimeMillis())).getTime()));						
 						session.saveOrUpdate(sysSetting);
-						
 					} catch (Exception e) {
 						sw = new StringWriter();
 						e.printStackTrace(new PrintWriter(sw));

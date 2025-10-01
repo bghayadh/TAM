@@ -190,67 +190,87 @@
 	<br>
 	<div class="container-fluid">
 		<div class="tab-content" id="custom-tabs-one-tabContent">
-			<div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
-
+			<div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">			
 			<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text" style="width:135px;">Username</span> 
-								<input type="text" id="username" value="${username}" class="form-control text-input" />
-							</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" style="width:135px;">Country</span> 
+							<input type="text" id="sysCountry" value="${country}" class="form-control text-input" />
 						</div>
 					</div>
-					<div class="col-md-4">
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" style="width:135px;">Latitude</span> 
+							<input type="text" id="lat" value="${lat}" class="form-control text-input" />
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" style="width:135px;">Longitude</span> 
+							<input type="text" id="longitude" value="${longitude}" class="form-control text-input" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" style="width:135px;">Language</span> 
+							<input type="text" id="sysLanguage" value="${language}" class="form-control text-input" />
+						</div>
+					</div>
+				</div>					
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" style="width:135px;">Currency</span>
+							<input type="text" id="sysCurrency" value="${currency}" class="form-control text-input" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" style="width:135px;">Username</span> 
+							<input type="text" id="username" value="${username}" class="form-control text-input" />
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text" style="width:135px;">Password</span> 
 							<input type="text" id="pass" value="${pass}" class="form-control text-input" />
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text" style="width:135px;">Upload Path</span> 
-								<input type="text" id="path" value="${path}" class="form-control text-input" />
-							</div>
-						</div>
-					</div>
-					<div class="col-md-4">
+				<div class="col-md-4">
+					<div class="form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text" style="width:135px;">IP Address</span> 
 							<input type="text" id="ipAddress" value="${ipAddress}" class="form-control text-input" />
 						</div>
 					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-4">
-						<div class="form-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text" style="width:135px;">Country</span> 
-								<input type="text" id="sysCountry" value="${Country}" class="form-control text-input" />
-							</div>
+				</div>					
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text" style="width:135px;">Upload Path</span> 
+							<input type="text" id="path" value="${path}" class="form-control text-input" />
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="width:135px;">Language</span> 
-							<input type="text" id="sysLanguage" value="${Language}" class="form-control text-input" />
-						</div>
-					</div>					
-				</div>				
-
-
-				<div class="row">
-					<div class="col-md-4">
-						<div class="input-group-prepend">
-							<span class="input-group-text" style="width:135px;">Currency</span>
-							 <input type="text" id="sysCurrency" value="${Currency}" class="form-control text-input" />
-						</div>
-				    </div>
 				</div>
-				
+			</div>
 			</div>
 		</div>
 	</div>
@@ -303,14 +323,16 @@
 					dataType : "json",
 					data : {
 						"sysSettingID" : $("#sysSettingID").val(),
-						 "Country" : $("#sysCountry").val(),
-						 "Language" : $("#sysLanguage").val(),
-						 "Currency": $("#sysCurrency").val(),
+						 "country" : $("#sysCountry").val(),
+						 "lat" : $("#lat").val(),
+						 "longitude" : $("#longitude").val(),
+						 "language" : $("#sysLanguage").val(),
+						 "currency": $("#sysCurrency").val(),
 						 "username": $("#username").val(),
-						  "pass": $("#pass").val(),
-						  "path":$("#path").val(),
-						  "ipAddress":$("#ipAddress").val(),
-						  "creationDate" : $("#createddate").val(),
+						 "pass": $("#pass").val(),
+						 "path":$("#path").val(),
+						 "ipAddress":$("#ipAddress").val(),
+						 "creationDate" : $("#createddate").val(),
 					},
 					success : function(data) {
 						var param ="${pageContext.request.contextPath}/systemSettings";
