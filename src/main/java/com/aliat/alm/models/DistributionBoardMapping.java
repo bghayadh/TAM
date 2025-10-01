@@ -162,6 +162,34 @@ public class DistributionBoardMapping {
 	@Column(name = "FP_JUNCTION_NAME")
 	private String fP_JunctionName;
 	
+	@Column(name = "NEAR_MODULE")
+	private String nearModule;
+
+	@Column(name = "NEAR_PORT_NUM")
+	private String nearPortNum;
+	
+	@Column(name = "NEAR_PATCH_TYPE")
+	private String nearPatchType;
+	
+	@Column(name = "FAR_KIT_SERIAL_NUM")
+	private String farKitSerialNum;
+	
+	@Column(name = "FAR_MODULE")
+	private String farModule;
+	
+	@Column(name = "FAR_PORT_NUM")
+	private String farPortNum;
+	
+	@Column(name = "BACK_KIT_MODULE")
+	private String backKitModule;
+	
+	@Column(name = "BACK_PORT_NUM")
+	private String backportNum;
+	
+	
+	
+	
+	
 	public DistributionBoardMapping() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -269,12 +297,22 @@ public class DistributionBoardMapping {
 			String bP_StrandName, String bP_TubeId, String bP_TubeName, String bP_FiberId, String bP_FiberName,
 			String bP_StrandNb, String fP_StrandNb, String fP_TubeNb, String bP_TubeNb, String bP_StrandColor,
 			String fP_StrandColor, String fP_TubeColor, String bP_TubeColor, String bP_JunctionId,
-			String bP_JunctionName, String fP_JunctionId, String fP_JunctionName) {
+			String bP_JunctionName, String fP_JunctionId, String fP_JunctionName, 
+			String nearModule, String nearPortNum, String nearPatchType, String farKitSerialNum, String farModule, 
+			String farPortNum, String backKitModule, String backportNum) {
 		super();
 		this.db_Port_Id = db_Port_Id;
 		this.distributionBoardId = distributionBoardId;
 		this.rowColIndex = rowColIndex;
 		this.rowNum = rowNum;
+		this.nearModule=nearModule;
+		this.nearPortNum=nearPortNum;
+		this.nearPatchType=nearPatchType;
+		this.farKitSerialNum=farKitSerialNum;
+		this.farModule=farModule;
+		this.farPortNum=farPortNum;
+		this.backKitModule=backKitModule;
+		this.backportNum=backportNum;
 		this.colNum = colNum;
 		this.fP_Status = fP_Status;
 		this.fP_LocationType = fP_LocationType;
@@ -324,6 +362,70 @@ public class DistributionBoardMapping {
 			
 			////
 	
+
+	public String getNearModule() {
+		return nearModule;
+	}
+
+	public void setNearModule(String nearModule) {
+		this.nearModule = nearModule;
+	}
+
+	public String getNearPortNum() {
+		return nearPortNum;
+	}
+
+	public void setNearPortNum(String nearPortNum) {
+		this.nearPortNum = nearPortNum;
+	}
+
+	public String getNearPatchType() {
+		return nearPatchType;
+	}
+
+	public void setNearPatchType(String nearPatchType) {
+		this.nearPatchType = nearPatchType;
+	}
+
+	public String getFarKitSerialNum() {
+		return farKitSerialNum;
+	}
+
+	public void setFarKitSerialNum(String farKitSerialNum) {
+		this.farKitSerialNum = farKitSerialNum;
+	}
+
+	public String getFarModule() {
+		return farModule;
+	}
+
+	public void setFarModule(String farModule) {
+		this.farModule = farModule;
+	}
+
+	public String getFarPortNum() {
+		return farPortNum;
+	}
+
+	public void setFarPortNum(String farPortNum) {
+		this.farPortNum = farPortNum;
+	}
+
+	public String getBackKitModule() {
+		return backKitModule;
+	}
+
+	public void setBackKitModule(String backKitModule) {
+		this.backKitModule = backKitModule;
+	}
+
+	public String getBackportNum() {
+		return backportNum;
+	}
+
+	public void setBackportNum(String backportNum) {
+		this.backportNum = backportNum;
+	}
 
 	public String getDb_Port_Id() {
 		return db_Port_Id;

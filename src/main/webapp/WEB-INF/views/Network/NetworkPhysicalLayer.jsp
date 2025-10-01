@@ -6725,6 +6725,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 						<ul class="nav nav-tabs" id="myTabDb" role="tablist" style="background-color: #00757C;">
 							<li class="nav-item"><a class="nav-link active" id="distBoard-tab" style="color: gold;" data-toggle="tab" href="#D_Board" role="tab" aria-controls="D_Board" aria-selected="true">Board </a></li>
 							<li class="nav-item"><a class="nav-link " id="mapping-tab" style="color: gold;" data-toggle="tab" href="#mapping" role="tab" aria-controls="mapping" aria-selected="false">Mapping</a></li>
+							<li class="nav-item"><a class="nav-link " id="mapping-tab" style="color: gold;" data-toggle="tab" href="#Kit" role="tab" aria-controls="Kit" aria-selected="false">Kit</a></li>
+							<li class="nav-item"><a class="nav-link " id="mapping-tab" style="color: gold;" data-toggle="tab" href="#module" role="tab" aria-controls="Module" aria-selected="false">Module</a></li>
 						</ul>
 						<div class="tab-content"><p></p>
 							<div class="tab-pane active" id="D_Board" role="tabpanel" aria-labelledby="distBoard-tab">
@@ -7001,6 +7003,94 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										</div></div></div>
 								</div>
 							</div>
+							
+							
+							
+									<div class="tab-pane" id="Kit" role="tabpanel"
+								aria-labelledby="kit-tab">
+								<p></p>
+								
+								<div class="container-fluid">
+								
+										
+									<form>
+										<div class="table-responsive-sm" id="DbKitDiv">
+											<table id="DbKit"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 430px; overflow: auto; width:900px; margin-right:20px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														<th style=" text-align: center" >
+															<button  type="button" id="selectAll_Kit" onclick="selectAllKit(this)" >
+																<span class="sub"></span>Select
+															</button>
+														</th>
+														
+													
+													<th width="415px" style=" text-align: center" >Serial Number
+												</th>
+														<th width="415px" style=" text-align: center" >Type</th>
+															</tr>
+												</thead>
+												<tbody>
+   
+  </tbody>
+											</table>
+									
+							
+										</div>
+											<button type="button" id="add_kit" onclick="addKit()">Add Row </button>
+										        <button type="button" id="delet_kit" onclick="deleteKit()">Delete Row</button>
+							
+								
+									</form></div></div>
+							
+							
+							
+								<div class="tab-pane" id="module" role="tabpanel"
+								aria-labelledby="module-tab">
+								<p></p>
+								<div class="container-fluid">
+										<form>
+										<div class="table-responsive-sm" id="DbModuleDiv">
+											<table id="DbModule"
+												class="table table-striped table-bordered table-sm"
+												style="display: block; height: 430px; overflow: auto; width:900px; margin-right:20px">
+												<thead style="background: #E9ECEF;">
+													<tr class="fixed-headerr">
+														<th style=" text-align: center" >
+															<button  type="button" id="selectAll_module" onclick="selectAllModule(this)" >
+																<span class="sub"></span>Select
+															</button>
+														</th>
+														
+													
+													<th width="118px" style=" text-align: center" >Module Position</th>
+													<th width="118px" style=" text-align: center" >Kit Serial # </th>
+													<th width="118px" style=" text-align: center" >Orientation</th>
+													<th width="118px" style=" text-align: center" >Lowest Port #</th>
+												    <th width="120px" style=" text-align: center" >Sensors Per Port #</th>
+													<th width="118px" style=" text-align: center" >Sensor Count</th>
+													<th width="120px" style=" text-align: center" >Occupied Sensor Mask </th>
+															</tr>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+												<button type="button" id="add_module" onclick="addModule()">Add Row </button>
+										        <button type="button" id="delet_module" onclick="deleteModule()">Delete Row</button>
+							
+										</div>
+								
+									</form></div></div>
+							
+							
+							
+							
+							
+							
+							
+							
 							<div class="tab-pane" id="mapping" role="tabpanel"
 								aria-labelledby="mapping-tab">
 								<p></p>
@@ -7017,11 +7107,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<thead style="background: #E9ECEF;">
 													<tr>
 														<th></th>
-														<th colspan="3"></th>
+														<th colspan="6">Near Port</th>
 														<th style="background-color: #00757C" width="-10px"></th>
-														<th colspan="22">Front Port</th>
+														<th colspan="25">Far Near Port</th>
 														<th style="background-color: #00757C" width="-10px"></th>
-														<th colspan="22">Back Port</th>
+														<th colspan="24">Back Port</th>
 													</tr>
 													<tr>
 														<th>
@@ -7031,8 +7121,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 															</button>
 														</th>
 													<th style="min-width: 80px">Index</th>
+													<th style="min-width: 90px">Module</th>
+													<th style="min-width: 90px">Port #</th>
 														<th style="min-width: 80px">Row #</th>
 														<th style="min-width: 80px">Column #</th>
+														<th style="min-width: 90px">Patch Type</th>
 														<th style="background-color: #00757C" width="-10px"></th>
 														<th style="min-width: 190px">Front Status</th>
 														<th style="min-width: 190px">Location Type</th>
@@ -7043,6 +7136,10 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 190px">Equipment ID</th>
 														<th style="min-width: 190px">Equipment Name</th>
 														<th style="min-width: 190px">Equipment Type</th>
+														<th style="min-width: 190px">Kit Serial Num </th>
+														<th style="min-width: 190px">Module</th>
+													    <th style="min-width: 190px">Port #</th>
+													
                                                         <th style="min-width: 190px">Address</th>
                                                         <th style="min-width: 190px">Junction ID</th>
 														<th style="min-width: 190px">Junction Name</th>
@@ -7066,6 +7163,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 190px">Equipment ID</th>
 														<th style="min-width: 190px">Equipment Name</th>
 														<th style="min-width: 190px">Equipment Type</th>
+														<th style="min-width: 190px">Kit Serial #</th>
+														<th style="min-width: 190px">Port #</th>
                                                         <th style="min-width: 190px">Address</th>
                                                         <th style="min-width: 190px">Junction ID</th>
 														<th style="min-width: 190px">Junction Name</th>
@@ -7451,7 +7550,8 @@ var handholeSurveyArray=[];
 var dbSurveyArray=[];
 var nodeSurveyArray=[];var fiberCableSurveyArray=[];var fiberTubesSurveyArray=[];var fiberStrandsSurveyArray=[];
 var manholeJctAttachmentIndex=0,handholeJctAttachmentIndex=0,projectAttachmentIndex=0;
-
+var deletedKitIds= [];
+var deletedModuleIds= [];
 
 updateModfUser=`${userFullName}`;
 var searchPopupPerm = '${searchPopup}';
@@ -9072,6 +9172,10 @@ function customerControllerChanged(checkbox) {
 		    document.activeElement.blur(); // remove focus
 		});
 
+
+
+			
+		
 
 </script>
 <script

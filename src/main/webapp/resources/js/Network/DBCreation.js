@@ -1102,3 +1102,114 @@ function controllerLayerUnCheckAll(layer) {
 	        );
 	    }
 	}
+function addKit(){
+
+		     const markup = `<tr>
+		         <td style='text-align:center;'><input  name='record' type='checkbox' style='vertical-align: middle; width:70px'></td>
+		         <td name='serialNum'><input  class='form-control' type='text' style='width:400px;'/></td>
+				 <td name='type'><input  class='form-control' type='text' style='width:400px;'/></td>
+				 	        
+		          </tr>`;
+
+		     $("#DbKit > tbody").append(markup);
+			 };
+			 
+			 
+			 
+			 
+function deleteKit(){
+	var check =0;    
+			     // Remove checked rows from the table
+			     $("#DbKit > tbody").find('input[name="record"]').each(function() {
+			         if ($(this).is(":checked")) {
+			             $(this).closest("tr").remove();
+						 
+						 let deletedId = $(this).attr("id");
+
+						            if (deletedId) {
+						                deletedKitIds.push(deletedId); 
+										check++; // store deleted id
+						            }
+			         }
+			     });
+				 if(check ==0){
+				 							
+				 							alert("Select Row(s) to Delete");
+				 						 }
+
+			   console.log(deletedKitIds);
+			 };
+			 	   function selectAllKit(btn) {
+			 		    if ($(btn).hasClass('allChecked')) {
+			 		        // Uncheck all checkboxes with name="record"
+			 		        $('#DbKit input[name="record"]').prop('checked', false);
+			 		        $(btn).removeClass('allChecked');
+			 		    } else {
+			 		        // Check all checkboxes with name="record"
+			 		        $('#DbKit input[name="record"]').prop('checked', true);
+			 		        $(btn).addClass('allChecked');
+			 		    }
+			 		}
+
+
+			 	   function selectAllModule(btn) {
+			 		    if ($(btn).hasClass('allChecked')) {
+			 		        // Uncheck all checkboxes with name="record"
+			 		        $('#DbModule input[name="record"]').prop('checked', false);
+			 		        $(btn).removeClass('allChecked');
+			 		    } else {
+			 		        // Check all checkboxes with name="record"
+			 		        $('#DbModule input[name="record"]').prop('checked', true);
+			 		        $(btn).addClass('allChecked');
+			 		    }
+			 		}
+
+
+			 	   function addModule(){
+
+			 		     const markup = `<tr>
+			 		         <td style='text-align:center;'><input  name='record' type='checkbox' style='vertical-align: middle; width:70px'></td>
+			 		         <td name='modulePos'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 				 <td name='kitSerialNum'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 				 <td name='orientation'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 				 <td name='lowestPortNum'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 				 <td name='sensorsPerPortNum'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 				 <td name='sensorCount'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 				 <td name='occupiedSensorMask'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 				 							 			
+			 				 		 			        
+			 		          </tr>`;
+
+			 		     $("#DbModule > tbody").append(markup);
+			 			 };
+			 			 
+			 			 
+			 			 
+			 			 
+			 function deleteModule(){
+			 			var check =0;  
+			 			     // Remove checked rows from the table
+			 			     $("#DbModule > tbody").find('input[name="record"]').each(function() {
+			 			         if ($(this).is(":checked")) {
+			 			             $(this).closest("tr").remove();
+									 let deletedId = $(this).attr("id");
+
+									            if (deletedId) {
+									                deletedModuleIds.push(deletedId); // store deleted id
+									            }
+			 						 check ++;
+			 			         }
+			 					 
+			 					
+			 			     });
+			 				 
+			 				 if(check ==0){
+			 					
+			 					alert("Select Row(s) to Delete");
+			 				 }
+
+			 			   
+			 			 };		 
+
+			 			 
+			

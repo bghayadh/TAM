@@ -1625,7 +1625,19 @@ $(document).ready(function() {
        handleCheckboxClick('#connNode', $(this));
    });
     
+   $(document).on('click', '#DbKit tr', function() {
+       handleRowClick('#DbKit', $(this));
+   });
 
+
+   $(document).on('click', '#DbModule tr', function() {
+       handleRowClick('#DbModule', $(this));
+   });
+
+
+   $(document).on('click', '#DbMappingTable tr', function() {
+       handleRowClick('#DbMappingTable', $(this));
+   });
     // Reusable function to handle row clicks
     function handleRowClick(tableId, clickedRow) {
         // Remove "ativeRecord" class from all rows in the specified table

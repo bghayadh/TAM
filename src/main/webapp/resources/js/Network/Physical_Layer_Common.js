@@ -12566,8 +12566,14 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 		if($(this).is(":checked")){
 			
 			var rowColIndex=$(this).parent().parent().children('td[name="Index"]').children('input').val();
+			
 			var rowNum=$(this).parent().parent().children('td[name="RowIndex"]').children('input').val();
-			var colNum=$(this).parent().parent().children('td[name="ColIndex"]').children('input').val();			
+			var colNum=$(this).parent().parent().children('td[name="ColIndex"]').children('input').val();		
+						
+			var patchType=$(this).parent().parent().children('td[name="patchType"]').children('input').val();		
+									
+			var nearPortNum=$(this).parent().parent().children('td[name="nearPortNum"]').children('input').val();
+			var nearModule=$(this).parent().parent().children('td[name="nearModule"]').children('input').val();			
 			
 			var fP_Status=$(this).parent().parent().children('td[name="FP_Status"]').children('select').val();
 			var fP_LocationType=$(this).parent().parent().children('td[name="FP_LocationType"]').children('select').val();
@@ -12576,6 +12582,13 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 			var fP_Location=$(this).parent().parent().children('td[name="FP_Location"]').children('input').val();
 			var fP_Equipment=$(this).parent().parent().children('td[name="FP_Equipment"]').children('select').val();
 			var fP_EquipmentType=$(this).parent().parent().children('td[name="FP_EquipmentType"]').children('input').val();
+			
+			var farKitSerialNum=$(this).parent().parent().children('td[name="farKitSerialNum"]').children('input').val();
+			var farModule=$(this).parent().parent().children('td[name="farModule"]').children('input').val();			
+			var farPortNum=$(this).parent().parent().children('td[name="farPortNum"]').children('input').val();			
+									
+			
+			
 			var fP_EquipmentID=$(this).parent().parent().children('td[name="FP_EquipmentID"]').children('input').val();
 			var fP_EquipmentName=$(this).parent().parent().children('td[name="FP_EquipmentName"]').children('input').val();
 			var fP_Address=$(this).parent().parent().children('td[name="FP_Address"]').children('input').val();
@@ -12601,6 +12614,10 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 			var bP_EquipmentType=$(this).parent().parent().children('td[name="BP_EquipmentType"]').children('input').val();
 			var bP_EquipmentID=$(this).parent().parent().children('td[name="BP_EquipmentID"]').children('input').val();
 			var bP_EquipmentName=$(this).parent().parent().children('td[name="BP_EquipmentName"]').children('input').val();
+			
+			var backKitModule=$(this).parent().parent().children('td[name="backKitModule"]').children('input').val();
+			var backPortNum=$(this).parent().parent().children('td[name="backPortNum"]').children('input').val();			
+						
 			var bP_Address=$(this).parent().parent().children('td[name="BP_Address"]').children('input').val();
 			var bP_JunctionID=$(this).parent().parent().children('td[name="BP_JunctionID"]').children('input').val();
 			var bP_JunctionName=$(this).parent().parent().children('td[name="BP_JunctionName"]').children('input').val();
@@ -12618,6 +12635,8 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 			var bP_FiberID=$(this).parent().parent().children('td[name="BP_FiberID"]').children('input').val();
 			var bP_FiberName=$(this).parent().parent().children('td[name="BP_FiberName"]').children('input').val();
 			
+			console.log("igggg");
+			console.log(patchType);
 			
 		if(actiondistBoardContext=="Update"){
 		   if(window["DB_Mapper"+selectedDistBoardContext] !=""){
@@ -12631,6 +12650,14 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 						"rowColIndex" : rowColIndex,
 						"rowNum" : rowNum,								    
 						"colNum" : colNum,
+						"backKitModule" :backKitModule,
+						"backPortNum" :backPortNum,
+						"farKitSerialNum" : farKitSerialNum,
+						"farModule": farModule,
+						"farPortNum" : farPortNum,
+						"patchType" : patchType,
+						"nearPortNum" : nearPortNum,
+						"nearModule" : nearModule,
 						"portId":portId,
 						"fP_Status":fP_Status,
 						"fP_LocationType":fP_LocationType,
@@ -12704,6 +12731,14 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 						"fP_Address":fP_Address,
 						"fP_JunctionID":fP_JunctionID,
 						"fP_JunctionName":fP_JunctionName,
+						"backKitModule" :backKitModule,
+						"backPortNum" :backPortNum,
+						"farKitSerialNum" : farKitSerialNum,
+						"farModule": farModule,
+						"farPortNum" : farPortNum,
+						"patchType" : patchType,
+						"nearPortNum" : nearPortNum,
+						"nearModule" : nearModule,
 						//added
 						"fP_StrandNb":fP_StrandNb,
 						"fP_StrandColor":fP_StrandColor,
@@ -12763,6 +12798,14 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 					"fP_Address":fP_Address,
 					"fP_JunctionID":fP_JunctionID,
 					"fP_JunctionName":fP_JunctionName,
+					"backKitModule" :backKitModule,
+					"backPortNum" :backPortNum,
+					"farKitSerialNum" : farKitSerialNum,
+					"farModule": farModule,
+					"farPortNum" : farPortNum,
+					"patchType" : patchType,
+					"nearPortNum" : nearPortNum,
+					"nearModule" : nearModule,
 					//added
 					"fP_StrandNb":fP_StrandNb,
 					"fP_StrandColor":fP_StrandColor,
@@ -12813,6 +12856,14 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 					"fP_LocationType":fP_LocationType,
 					"fP_LocationID":fP_LocationID,
 					"fP_LocationM":fP_LocationM,
+					"backKitModule" :backKitModule,
+					"backPortNum" :backPortNum,
+					"farKitSerialNum" : farKitSerialNum,
+					"farModule": farModule,
+					"farPortNum" : farPortNum,
+					"patchType" : patchType,
+					"nearPortNum" : nearPortNum,
+					"nearModule" : nearModule,
 					//"fP_Location":(fP_Location  == "" || fP_Location == null ? fP_Location : "" ) ,
 					"fP_Location":fP_Location,
 					"fP_EquipmentType":fP_EquipmentType,
@@ -14010,12 +14061,24 @@ function DBMappingData(DistBoardMappingPts){
 						else{
 							b_statusOption = "<option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option>";
 						}
-							
+						let backKitVal   = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
+						let backPortVal  = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
+
 					var markup = "<tr id='"+DistBoardMappingPts[i][3]+"''><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
 					    +"<td name='Index'><input name='Index' value='"+DistBoardMappingPts[i][0]+"' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-					    +"<td name='RowIndex'><input name='rowIndex' value='"+DistBoardMappingPts[i][1]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+						
+						+"<td name='nearModule'><input name='nearModule' value='"+DistBoardMappingPts[i][48]+"' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
+						+"<td name='nearPortNum'><input name='nearPortNum' value='"+DistBoardMappingPts[i][49]+"' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
+																   
+						
+						
+						
+						
+						+"<td name='RowIndex'><input name='rowIndex' value='"+DistBoardMappingPts[i][1]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 						+"<td name='ColIndex'><input name='colIndex' value='"+DistBoardMappingPts[i][2]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-					
+						
+						+"<td name='patchType'><input name='patchType' value='"+DistBoardMappingPts[i][50]+"' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
+												
 						+"<td style='background-color:#00757C' width='-10px'></td>"
 						+"<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status"+dBBoqIndex+"'>"+f_statusOption+"</select></td>"
 						+"<td name='FP_LocationType'>"+locationOptions+"</td>"
@@ -14032,6 +14095,15 @@ function DBMappingData(DistBoardMappingPts){
 						+"<td name='FP_EquipmentID'><input name='FP_equipmentID' value='"+DistBoardMappingPts[i][11]+"' id='FP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentName'><input name='FP_equipmentName' value='"+DistBoardMappingPts[i][12]+"' id='FP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='FP_EquipmentType'><input name='FP_equipmentType' value='"+DistBoardMappingPts[i][9]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						
+						+"<td name='farKitSerialNum'><input name='farKitSerialNum' value='"+DistBoardMappingPts[i][51]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='farModule'><input name='farModule' value='"+DistBoardMappingPts[i][52]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='farPortNum'><input name='farPortNum' value='"+DistBoardMappingPts[i][53]+"' id='FP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+												
+						
+						
+						
+						
 						+"<td name='FP_Address'><input name='FP_Address' value='"+DistBoardMappingPts[i][13]+"' id='FP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='FP_JunctionID'><input name='FP_junctionID' value='"+DistBoardMappingPts[i][44]+"' id='FP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -14064,6 +14136,12 @@ function DBMappingData(DistBoardMappingPts){
 						+"<td name='BP_EquipmentID'><input name='BP_equipmentID' value='"+DistBoardMappingPts[i][33]+"' id='BP_equipmentID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentName'><input name='BP_equipmentName' value='"+DistBoardMappingPts[i][34]+"' id='BP_equipmentName"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						+"<td name='BP_EquipmentType'><input name='BP_equipmentType' value='"+DistBoardMappingPts[i][31]+"' id='BP_equipmentType"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						
+						+"<td name='backKitModule'><input name='backKitModule' value='"+backKitVal+"' id='backKitModule"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+						+"<td name='backPortNum'><input name='backPortNum' value='"+backPortVal+"' id='backPortNum"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+												
+					
+					
 						+"<td name='BP_Address'><input name='BP_Address' value='"+DistBoardMappingPts[i][35]+"'id='BP_Address"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
 						
 						+"<td name='BP_JunctionID'><input name='BP_junctionID' value='"+DistBoardMappingPts[i][46]+"' id='BP_junctionID"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -14083,7 +14161,36 @@ function DBMappingData(DistBoardMappingPts){
 						+"<td name='BP_FiberName'><input name='BP_fiberName' value='"+DistBoardMappingPts[i][20]+"' id='BP_fiberName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
 						$("#DbMappingTable > tbody").append(markup);
 				
+						let backKitModule = $("#backKitModule" + dBBoqIndex);
+						let backPortNumInput   = $("#backPortNum" + dBBoqIndex);
+
+						console.log(backKitModule.length, backPortNumInput.length);
+						console.log(DistBoardMappingPts[i][32]);
+							if(DistBoardMappingPts[i][32] == "DistBoard"){
+							
 				
+										        backKitModule.prop("readonly", false);
+										        backPortNumInput.prop("readonly", false);
+										    } else {
+										        // Make inputs readonly again
+										        backKitModule.prop("readonly", true);
+										        backPortNumInput.prop("readonly", true);
+										    }
+							
+											$(document).on("change", "select[name='BP_equipment']", function() {
+														    let selectedValue = $(this).val();
+
+														    if (selectedValue === "DistBoard") {
+														        // Make inputs editable
+														        backKitModule.prop("readonly", false);
+														        backPortNumInput.prop("readonly", false);
+														    } else {
+														        // Make inputs readonly again
+														        backKitModule.prop("readonly", true);
+														        backPortNumInput.prop("readonly", true);
+														    }
+														}); 
+											
 					if(DistBoardMappingPts[i][40] !=null){
 						$("#FP_strandcolor"+dBBoqIndex).val(DistBoardMappingPts[i][40]);
 					}
