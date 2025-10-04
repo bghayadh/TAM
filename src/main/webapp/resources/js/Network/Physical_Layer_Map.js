@@ -75,7 +75,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			    markerClusterController.setMap(map);
 
 	
-			kenya=new google.maps.LatLng(1,38);					
+			//kenya=new google.maps.LatLng(1,38);
+			kenya=new google.maps.LatLng(-19.2370074705615,29.7948325794125);					
 			LatLanMouse(map);
 	
 			iconManhole = {

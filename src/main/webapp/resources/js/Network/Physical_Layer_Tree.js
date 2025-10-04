@@ -9258,7 +9258,8 @@ singleDistBoard = new ContextMenu({
 								
 		}
 	},					
-	{ 'icon': 'check', 'name': 'Show Points', action: () => {			
+	{ 'icon': 'check', 'name': 'Show Points', action: () => {
+		console.log("show points for fiber cable");			
 		checkLabel="";		
 		if(window['fiberCheckPoints_'+selectedFiberContext] == "unchecked") {					
 			window['fiberCheckPoints_'+selectedFiberContext] = "checked";

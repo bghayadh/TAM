@@ -8236,10 +8236,14 @@ function showHideAllSequence(pathID,action) {
 }
 
 function showHideAllPoints(pathID,checkSeqWindowID,action) {
+console.log("Welcome to showHideAllPoints");	
 showHidePointsArray=[];
 if(window["mapPointsNames_"+pathID] != undefined) {
-
-	if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {	
+console.log("window[mapPointsNames_+pathID] length is ", window["mapPointsNames_"+pathID].length);
+console.log("contents of window[mapPointsNames_+pathID] is " , window["mapPointsNames_"+pathID].length);
+console.log("pathID is " , pathID);
+	if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {
+		console.log("filerFlag is " , filterFlag);	
 
 		$('#Manhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
 			var manHandDbName = $(this).text().trim();
@@ -8296,7 +8300,8 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 				var type =String(x);
 			}
 			
-			if(showHidePointsArray[x].startsWith("WARE_")==true) {
+			console.log("showHidePointsArray[x] is " , showHidePointsArray[x]);
+			if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
 				var wareName = showHidePointsArray[x].split(":")[1];
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
@@ -8338,7 +8343,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("CUST_")==true) {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("CUST_")==true) {
 				var cltID = showHidePointsArray[x].split(":")[0];
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
 	
@@ -8365,7 +8370,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("N/A")==true) {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("N/A")==true) {
 				var idNA = showHidePointsArray[x].concat("_"+type+"_"+pathID);
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
 				createSiteCltMarker(idNA,idNA,longLat.split(",")[0],longLat.split(",")[1],siteCltSrcMarkers);	
@@ -8378,7 +8383,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 				}	
 			}
-			else if(showHidePointsArray[x].startsWith("MH_")==true && readManhole ==='1') {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("MH_")==true && readManhole ==='1') {
 				var manID = showHidePointsArray[x].split(":")[0];
 				if(markersManhole[manID]) {
 					if(markersManhole[manID].getMap() ==null) {
@@ -8410,7 +8415,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}				
 				}			
 			}
-			else if(showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
 				var handID = showHidePointsArray[x].split(":")[0];
 				if(markersHandhole[handID]) {
 					if(markersHandhole[handID].getMap() ==null) {
@@ -8442,7 +8447,7 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 					}
 				}						
 			}
-		else if(showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
+		else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
 				var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {	
 					if(markersDistBoard[dbID].getMap() ==null) {
@@ -10475,12 +10480,12 @@ function AuxAppendBOQ(auxArray,insertType,OrigiTermination,Target,indx){
 				else if(value[3] !="null" && value[3] !=null){
 					auxName = value[3]+":" +value[5]+":"+value[4];		
 				}
-				else if (value[5].includes("Auxiliary_Point")==true) {
+				else if (value[5] && value[5].includes("Auxiliary_Point")==true) {
 					auxName = value[10]+":" +value[5];	
 				}
 					
 				else {
-					if (value[4].split("_")[0]=="MH" || value[4].split("_")[0]=="HH" || value[4].split("_")[0]=="DB") {
+					if (value[4] && (value[4].split("_")[0]=="MH" || value[4].split("_")[0]=="HH" || value[4].split("_")[0]=="DB")) {
 						auxName = value[4]+":" +value[5];	
 					}
 					else {

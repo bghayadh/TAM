@@ -7683,68 +7683,67 @@ function initMap() {
 	  createdUser = $("#crtdByFiberCable").val();
 	  lstModfUser = $("#modifiedByFiberCable").val();
 	//New Map//
-						          			map = new google.maps.Map(document.getElementById("mapContainer"), {
-						          						center: { lat: 1, lng: 38 },
-						          				 		mapTypeControl: true,
-						          				 			mapTypeId: google.maps.MapTypeId.ROADMAP,
-						          				 			mapTypeControlOptions: {
-						          				 				style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-						          				 				position: google.maps.ControlPosition.TOP_CENTER,
-						          				 			},						          				 			
-						          				 			zoomControl: true,
-						          				 			zoomControlOptions: {
-						          				 				position: google.maps.ControlPosition.LEFT_CENTER,
-						          				 			},
-						          				 			scaleControl: true,
-						          				 			streetViewControl: true,
-						          				 			streetViewControlOptions: {
-						          				 				position: google.maps.ControlPosition.LEFT_TOP,
-						          				 			},
-
-						          				 			fullscreenControl: true,
-						          				 });
-map.setOptions({ minZoom: 3, maxZoom: 28});
-//new AutocompleteDirectionsHandler(map);
-directionsDisplay.setMap(map);
-
-		restingMap();
-		var x = document.getElementById("removeFilter");								 
-		$("#open-popup-btn").removeAttr('disabled');
-		console.log("Inside the success of physical layer");
-		var keys =[];
-		var Emptydiv=null;
-		var projectID;
-		filterFlag = ${filterFlag};
-		checkedOption = '${checkedOption}';
-		$("#filterSection").empty();
-		 // This loop to build the filter tab information which is existed in the search popup.
-		for (i = 0;i<Object.keys(${physicalLayerList}).length;i++){
-			  if(Object.keys(${physicalLayerList})[i]=="Project"){
-					str="<div class='row' style='margin-left:-15px;'  ><div class='col-md-6'><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>Project</b></span><input	type='text' name='filteredField' id='FilteredProject' class='form-control text-input' placeholder='Project'/></div></div></div><p></p><p></p>";
-				  }else if(Object.keys(${physicalLayerList})[i].includes("_")){
-						let text = Object.keys(${physicalLayerList})[i];
-						let result = text.replace("_", " ");
-						result = result.charAt(0).toUpperCase() + result.slice(1);
-						str="<div class='rowhashMapList' style='margin-left:-15px;' id='hashMapList'><div class='col-md-6' ><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>"+result+"</b></span><input	type='text' name='filteredField' id='Filtered"+Object.keys(${physicalLayerList})[i]+"'class='form-control text-input' placeholder='"+result+"'/></div></div></div><p></p><p></p>";
-					  }else{
-						let	result = (Object.keys(${physicalLayerList})[i]).charAt(0).toUpperCase() + (Object.keys(${physicalLayerList})[i]).slice(1);
-							  
-						str="<div class='rowhashMapList' style='margin-left:-15px;' id='hashMapList'><div class='col-md-6'><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>"+result+"</b></span><input	type='text' name='filteredField' id='Filtered"+Object.keys(${physicalLayerList})[i]+"'class='form-control text-input' placeholder='"+result+"'/></div></div></div><p></p><p></p>";
-					  }
+	map = new google.maps.Map(document.getElementById("mapContainer"), {
+		//center: { lat: 1, lng: 38 },
+		center: { lat: -19.2370074705615, lng: 29.7948325794125 },		
+		mapTypeControl: true,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		mapTypeControlOptions: {
+			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+			position: google.maps.ControlPosition.TOP_CENTER,
+		},						          				 			
+		zoomControl: true,
+		zoomControlOptions: {
+			position: google.maps.ControlPosition.LEFT_CENTER,
+		},
+		scaleControl: true,
+		streetViewControl: true,
+		streetViewControlOptions: {
+			position: google.maps.ControlPosition.LEFT_TOP,
+		},
+		fullscreenControl: true,
+	});
+	
+	map.setOptions({ minZoom: 3, maxZoom: 28});
+	//new AutocompleteDirectionsHandler(map);
+	directionsDisplay.setMap(map);
+	
+	restingMap();
+	var x = document.getElementById("removeFilter");								 
+	$("#open-popup-btn").removeAttr('disabled');
+	console.log("Inside the success of physical layer");
+	var keys =[];
+	var Emptydiv=null;
+	var projectID;
+	filterFlag = ${filterFlag};
+	checkedOption = '${checkedOption}';
+	$("#filterSection").empty();
+	 // This loop to build the filter tab information which is existed in the search popup.
+	for (i = 0;i<Object.keys(${physicalLayerList}).length;i++){
+	  if(Object.keys(${physicalLayerList})[i]=="Project"){
+		str="<div class='row' style='margin-left:-15px;'  ><div class='col-md-6'><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>Project</b></span><input	type='text' name='filteredField' id='FilteredProject' class='form-control text-input' placeholder='Project'/></div></div></div><p></p><p></p>";
+	  } else if(Object.keys(${physicalLayerList})[i].includes("_")){
+	  	let text = Object.keys(${physicalLayerList})[i];
+		let result = text.replace("_", " ");
+		result = result.charAt(0).toUpperCase() + result.slice(1);
+		str="<div class='rowhashMapList' style='margin-left:-15px;' id='hashMapList'><div class='col-md-6' ><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>"+result+"</b></span><input	type='text' name='filteredField' id='Filtered"+Object.keys(${physicalLayerList})[i]+"'class='form-control text-input' placeholder='"+result+"'/></div></div></div><p></p><p></p>";
+		}else{
+			let	result = (Object.keys(${physicalLayerList})[i]).charAt(0).toUpperCase() + (Object.keys(${physicalLayerList})[i]).slice(1);
+			str="<div class='rowhashMapList' style='margin-left:-15px;' id='hashMapList'><div class='col-md-6'><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>"+result+"</b></span><input	type='text' name='filteredField' id='Filtered"+Object.keys(${physicalLayerList})[i]+"'class='form-control text-input' placeholder='"+result+"'/></div></div></div><p></p><p></p>";
+		}
 		$("#filterSection").append(str);
-
-		  }	 physicalLayerFilter(); // to build click event on Filter Submit.
-	      CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node']);
-		  CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node']); 
-		  if(checkedOption == "circleRange"){
-			  openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}','${startLng}','${endLng}','${startLat}','${endLat}','${CustomerID}','${CustomerName}', '${serviceReq}','${serviceRef}');
-		  }else if(checkedOption == "StartEnd"){
-			  openFindBetweenMarkers(checkedOption,'${startLongPoint}','${startLatPoint}','${endLongPoint}','${endLatPoint}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}');
-		  }else if(checkedOption == "circleRange_multy"){
-				 openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}',`${ptList}`,'${ptData}','${getRelatedPoints}' , '${borderCircleLatitudes}' , '${borderCircleLongitudes}', circleDraw, squareDraw,locationNum, '${rowMultyIndex}');
-		  }else if(checkedOption == "connected"){
-			  openSearchConnected(checkedOption,'${siteId}','${selectConnectedSearch}','${connectedSearchLong}','${connectedSearchLat}','${connectedViewOnMap}',${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['fiber'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],'${distribBoardListSize}','${getRelatedPoints}', '${fpPath}','${bpPath}', ${physicalLayerList}['Node']);
-		   }		  
+	}	physicalLayerFilter(); // to build click event on Filter Submit.
+	    CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node']);
+		CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node']); 
+		if(checkedOption == "circleRange"){
+			openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}','${startLng}','${endLng}','${startLat}','${endLat}','${CustomerID}','${CustomerName}', '${serviceReq}','${serviceRef}');
+		}else if(checkedOption == "StartEnd"){
+			openFindBetweenMarkers(checkedOption,'${startLongPoint}','${startLatPoint}','${endLongPoint}','${endLatPoint}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}');
+		}else if(checkedOption == "circleRange_multy"){
+			openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}',`${ptList}`,'${ptData}','${getRelatedPoints}' , '${borderCircleLatitudes}' , '${borderCircleLongitudes}', circleDraw, squareDraw,locationNum, '${rowMultyIndex}');
+		}else if(checkedOption == "connected"){
+			openSearchConnected(checkedOption,'${siteId}','${selectConnectedSearch}','${connectedSearchLong}','${connectedSearchLat}','${connectedViewOnMap}',${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['fiber'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],'${distribBoardListSize}','${getRelatedPoints}', '${fpPath}','${bpPath}', ${physicalLayerList}['Node']);
+		}		  
 			  
 		$(document).ready(function () { 
 			$(function(){			 

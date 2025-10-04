@@ -109,6 +109,7 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 			window[""+fiberList[i][4]]=[];
 			window["mapPoints_"+fiberList[i][4]]=[];
 			// array of fiber auxiliary names
+			console.log("at fiberpathcreation, the fiberList[i][4] is " , fiberList[i][4]);
 			window["mapPointsNames_"+fiberList[i][4]]=[];
 			
 			//Case of wareHouse
@@ -191,19 +192,22 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 				auxPoint="";
 			}
 			//Case of wareHouse
-			else if(fiberAuxiliary_Data[i][3] !="null"){
-				auxPoint = fiberAuxiliary_Data[i][3]+":" +fiberAuxiliary_Data[i][5]+":"+fiberAuxiliary_Data[i][4];		
+			else if(fiberAuxiliary_Data[i][3] !="null" && fiberAuxiliary_Data[i][3] !=null){
+				console.log("warehouse point");
+				auxPoint = fiberAuxiliary_Data[i][3]+":" +fiberAuxiliary_Data[i][5]+":"+fiberAuxiliary_Data[i][4];
+				console.log("warehouse point, auxPoint is " , auxPoint);
 			}
 			else {
 				
-				if (fiberAuxiliary_Data[i][4].split("_")[0]=="MH" || fiberAuxiliary_Data[i][4].split("_")[0]=="HH" ||fiberAuxiliary_Data[i][4].split("_")[0]=="DB") {
+				if (fiberAuxiliary_Data[i][4] && (fiberAuxiliary_Data[i][4].split("_")[0]=="MH" || fiberAuxiliary_Data[i][4].split("_")[0]=="HH" ||fiberAuxiliary_Data[i][4].split("_")[0]=="DB")) {
 					auxPoint = fiberAuxiliary_Data[i][4]+":" +fiberAuxiliary_Data[i][5];	
 				}
-				else if (fiberAuxiliary_Data[i][5].includes("Auxiliary_Point")==true) {
+				else if (fiberAuxiliary_Data[i][5] && fiberAuxiliary_Data[i][5].includes("Auxiliary_Point")==true) {
 					auxPoint = fiberAuxiliary_Data[i][7]+":"+fiberAuxiliary_Data[i][5];
 				}
-				else {
+				else {					
 					auxPoint = fiberAuxiliary_Data[i][5];
+					console.log("auxPoint is " , auxPoint);
 				}
 			}
 			window["mapPointsNames_"+fiberAuxiliary_Data[i][6]].splice(window["mapPointsNames_"+fiberAuxiliary_Data[i][6]].length-1, 0,auxPoint);// insert at before last index which is the destination
@@ -465,4 +469,5 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 	filterMap_CableLabels("FIBER",fiberArray,"fiberMapCheck_Labels");
 	filterMap_CableLabels("TUBE",tubeArray,"tubeMapCheck_Labels");
 	filterMap_CableLabels("STRAND",strandArray,"strandMapCheck_Labels")
+	console.log("fiberOwnerList is " ,fiberOwnerList);
 }
