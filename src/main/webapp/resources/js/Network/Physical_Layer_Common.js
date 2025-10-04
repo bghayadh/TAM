@@ -8060,7 +8060,7 @@ function showHideAllSequence(pathID,action) {
 			}
 			
 			
-			if(window["mapPointsNames_"+pathID][x].startsWith("WARE_")==true) {
+			if(window["mapPointsNames_"+pathID][x] && window["mapPointsNames_"+pathID][x].startsWith("WARE_")==true) {
 				var wareID = window["mapPointsNames_"+pathID][x].split(":")[0];
 				if(siteCltSrcMarkers[wareID]) {
 					//if(siteCltSrcMarkers[wareID].getLabel()!="undefined" && siteCltSrcMarkers[wareID].getLabel()!=null) {
@@ -8072,7 +8072,7 @@ function showHideAllSequence(pathID,action) {
 					}	
 				}			
 			}		 
-			else if(window["mapPointsNames_"+pathID][x].startsWith("CUST_")==true) {
+			else if(window["mapPointsNames_"+pathID][x] && window["mapPointsNames_"+pathID][x].startsWith("CUST_")==true) {
 				var cltID = window["mapPointsNames_"+pathID][x].split(":")[0];	
 			
 				if(siteCltSrcMarkers[cltID]) {
@@ -8085,7 +8085,7 @@ function showHideAllSequence(pathID,action) {
 					}	
 				}	
 			}		 
-			else if(window["mapPointsNames_"+pathID][x].startsWith("N/A")==true) {
+			else if(window["mapPointsNames_"+pathID][x] && window["mapPointsNames_"+pathID][x].startsWith("N/A")==true) {
 				var idNA = window["mapPointsNames_"+pathID][x].concat("_"+type+"_"+pathID);
 				if(siteCltSrcMarkers[idNA]) {
 					siteCltSrcMarkers[idNA].setLabel({text: type , className:"marker-position-sequence",color:"red"});										
@@ -8153,7 +8153,7 @@ function showHideAllSequence(pathID,action) {
 					var type =String(x);
 				}				
 				
-				if(window["mapPointsNames_"+pathID][x].startsWith("WARE_")==true) {
+				if(window["mapPointsNames_"+pathID][x] && window["mapPointsNames_"+pathID][x].startsWith("WARE_")==true) {
 					var wareID = window["mapPointsNames_"+pathID][x].split(":")[0];
 					if(siteCltSrcMarkers[wareID]) {
 						//if(siteCltSrcMarkers[wareID].getLabel()!="undefined" && siteCltSrcMarkers[wareID].getLabel()!=null) {
@@ -8165,7 +8165,7 @@ function showHideAllSequence(pathID,action) {
 						}	
 					}			
 				}		 
-				else if(window["mapPointsNames_"+pathID][x].startsWith("CUST_")==true) {
+				else if(window["mapPointsNames_"+pathID][x] && window["mapPointsNames_"+pathID][x].startsWith("CUST_")==true) {
 					var cltID = window["mapPointsNames_"+pathID][x].split(":")[0];	
 				
 					if(siteCltSrcMarkers[cltID]) {
@@ -8178,7 +8178,7 @@ function showHideAllSequence(pathID,action) {
 						}	
 					}	
 				}		 
-				else if(window["mapPointsNames_"+pathID][x].startsWith("N/A")==true) {
+				else if(window["mapPointsNames_"+pathID][x] && window["mapPointsNames_"+pathID][x].startsWith("N/A")==true) {
 					var idNA = window["mapPointsNames_"+pathID][x].concat("_"+type+"_"+pathID);
 					if(siteCltSrcMarkers[idNA]) {
 						siteCltSrcMarkers[idNA].setLabel(null);										
@@ -8240,21 +8240,21 @@ console.log("Welcome to showHideAllPoints");
 showHidePointsArray=[];
 if(window["mapPointsNames_"+pathID] != undefined) {
 console.log("window[mapPointsNames_+pathID] length is ", window["mapPointsNames_"+pathID].length);
-console.log("contents of window[mapPointsNames_+pathID] is " , window["mapPointsNames_"+pathID].length);
+console.log("contents of window[mapPointsNames_+pathID] is " , window["mapPointsNames_"+pathID]);
 console.log("pathID is " , pathID);
 	if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {
 		console.log("filerFlag is " , filterFlag);	
 
 		$('#Manhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
 			var manHandDbName = $(this).text().trim();
-			if(manHandDbName.includes("Junctions")) {
+			if(manHandDbName && manHandDbName.includes("Junctions")) {
 				manHandDbName=manHandDbName.split("Junctions")[0].replaceAll(' ', '');
 			}
 			allTreePoints.push($(this).attr('id')+":"+manHandDbName);
 		});
 		$('#Handhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
 			var manHandDbName = $(this).text().trim();
-			if(manHandDbName.includes("Junctions")) {
+			if(manHandDbName && manHandDbName.includes("Junctions")) {
 				manHandDbName=manHandDbName.split("Junctions")[0].replaceAll(' ', '');
 			}
 			allTreePoints.push($(this).attr('id')+":"+manHandDbName);
@@ -8265,8 +8265,8 @@ console.log("pathID is " , pathID);
 		
 		window["mapPointsNamesTemp"]=[];
 			for(var x=0;x<window["mapPointsNames_"+pathID].length;x++) {
-				if(window["mapPointsNames_"+pathID][x].includes("MH_") || window["mapPointsNames_"+pathID][x].includes("HH_")
-						|| window["mapPointsNames_"+pathID][x].includes("DB_")) {
+				if(window["mapPointsNames_"+pathID][x] && (window["mapPointsNames_"+pathID][x].includes("MH_") || window["mapPointsNames_"+pathID][x].includes("HH_")
+						|| window["mapPointsNames_"+pathID][x].includes("DB_"))) {
 					
 					if(allTreePoints.includes(window["mapPointsNames_"+pathID][x])==true) {
 						window["mapPointsNamesTemp"].push(window["mapPointsNames_"+pathID][x]);
@@ -8533,7 +8533,7 @@ console.log("pathID is " , pathID);
 				var type =String(x);
 			}
 			
-			if(showHidePointsArray[x].startsWith("WARE_")==true) {
+			if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
 				if(markersSite[wareID]) {
 					markersSite[wareID].setMap(null);				
@@ -8541,19 +8541,19 @@ console.log("pathID is " , pathID);
 					$("#"+wareID).children(':checkbox').prop( "checked", false );
 			    }
 			}
-			else if(showHidePointsArray[x].startsWith("CUST_")==true) {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("CUST_")==true) {
 				var cltID = showHidePointsArray[x].split(":")[0];
 				if(siteCltSrcMarkers[cltID]) {
 			    	siteCltSrcMarkers[cltID].setMap(null);
 			    }	
 			}
-			else if(showHidePointsArray[x].startsWith("N/A")==true) {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("N/A")==true) {
 				var idNA = showHidePointsArray[x].concat("_"+type+"_"+pathID);
 				if(siteCltSrcMarkers[idNA]) {
 			    	siteCltSrcMarkers[idNA].setMap(null);
 			    }
 			}
-			else if(showHidePointsArray[x].startsWith("MH_")==true && readManhole ==='1') {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("MH_")==true && readManhole ==='1') {
 				var manID = showHidePointsArray[x].split(":")[0];	
 				if(markersManhole[manID]) {
 					markersManhole[manID].setMap(null);				
@@ -8561,7 +8561,7 @@ console.log("pathID is " , pathID);
 					$("#"+manID).children(':checkbox').prop( "checked", false );	
 				}
 			}
-			else if(showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
+			else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("HH_")==true && readHandhole ==='1') {
 				var handID = showHidePointsArray[x].split(":")[0];	
 				if(markersHandhole[handID]) {
 					markersHandhole[handID].setMap(null);
@@ -8570,7 +8570,7 @@ console.log("pathID is " , pathID);
 				}
 				
 			}
-				else if(showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
+				else if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("DB_")==true && readDB ==='1') {
 	        	var dbID = showHidePointsArray[x].split(":")[0];
 				if(markersDistBoard[dbID]) {
 					markersDistBoard[dbID].setMap(null);	

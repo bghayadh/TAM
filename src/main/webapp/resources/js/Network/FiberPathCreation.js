@@ -113,11 +113,11 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 			window["mapPointsNames_"+fiberList[i][4]]=[];
 			
 			//Case of wareHouse
-			if(fiberList[i][5] !="null"){
+			if(fiberList[i][5] && fiberList[i][5] !="null"){
 				src = fiberList[i][5]+":" +fiberList[i][7]+":"+fiberList[i][6];		
 			}
 			else {
-			 if (fiberList[i][6].split("_")[0]=="MH" || fiberList[i][6].split("_")[0]=="HH" ||fiberList[i][6].split("_")[0]=="DB" || fiberList[i][6].split("_")[0]=="CUST") {
+			 if (fiberList[i][6] && (fiberList[i][6].split("_")[0]=="MH" || fiberList[i][6].split("_")[0]=="HH" ||fiberList[i][6].split("_")[0]=="DB" || fiberList[i][6].split("_")[0]=="CUST")) {
 					src  = fiberList[i][6]+":" +fiberList[i][7];	
 				}
 				else {
@@ -127,11 +127,11 @@ function CreateFiberPath(fiberList,fiberTubes,fiberStrands,fiberAuxiliary_Data,t
 			window["mapPointsNames_"+fiberList[i][4]].push(src);
 			
 			//Case of wareHouse
-			if(fiberList[i][8] !="null"){
+			if(fiberList[i][6] && fiberList[i][8] !="null"){
 				dst = fiberList[i][8]+":" +fiberList[i][10]+":"+fiberList[i][9];		
 			}
 			else {
-				if (fiberList[i][9].split("_")[0]=="MH" || fiberList[i][9].split("_")[0]=="HH" ||fiberList[i][9].split("_")[0]=="DB" || fiberList[i][9].split("_")[0]=="CUST") {
+				if (fiberList[i][9] && (fiberList[i][9].split("_")[0]=="MH" || fiberList[i][9].split("_")[0]=="HH" ||fiberList[i][9].split("_")[0]=="DB" || fiberList[i][9].split("_")[0]=="CUST")) {
 					dst  = fiberList[i][9]+":" +fiberList[i][10];	
 				}
 				else {
