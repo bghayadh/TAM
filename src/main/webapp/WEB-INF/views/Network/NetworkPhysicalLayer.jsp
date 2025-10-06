@@ -7490,6 +7490,8 @@ function delay(ms) {
 }
 
 async function loadFiberList() {
+	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
+	  
     $.ajax({
         url: "${pageContext.request.contextPath}/getFiberScript",
         type: "GET",
@@ -7530,7 +7532,7 @@ async function loadFiberList() {
                 const destinationLng = parseFloat(fiber[3]);
                 const destinationLat = parseFloat(fiber[4]);
 
-                getSelectedFiberCableRows(fiberId);
+                getSelectedFiberAux(fiberId);
                 const auxPoints = dict.length ? dict : [];
 
                 calculateGeoDistance(
@@ -7555,6 +7557,8 @@ async function loadFiberList() {
                 data: { geoDistances: JSON.stringify(geoDistances) },
                 success: function(response) {
                     console.log("Server Response:", response);
+                	$("#loading").remove();		
+    				
                 },
                 error: function(err) {
                     console.error("Error sending geoDistances:", err);
@@ -7568,7 +7572,7 @@ async function loadFiberList() {
 }
 
 // fill global dict
-function getSelectedFiberCableRows(fiberId) {
+function getSelectedFiberAux(fiberId) {
     dict = [];
     const auxEntry = auxGrouped.find(a => a.fiberId == fiberId);
     if (auxEntry) {
