@@ -7475,6 +7475,173 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 </body>
 
 <script>
+
+
+let fiberList = [];
+let auxDat = [];
+let auxGrouped = [];
+let geoDistances = [];
+let dict = []; // global like your reference code
+
+
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function loadFiberList() {
+    $.ajax({
+        url: "${pageContext.request.contextPath}/getFiberScript",
+        type: "GET",
+        success: async function(response) {
+            fiberList = response.fiberList || [];
+            auxDat = response.auxDat || [];
+
+            console.log("FiberList loaded:", fiberList);
+            console.log("Raw Aux Data loaded:", auxDat);
+
+            // ---- Group auxiliary data by fiber cable ----
+            let auxMap = {};
+            auxDat.forEach(row => {
+                let fiberId = row[0];
+                let lng = parseFloat(row[1]);
+                let lat = parseFloat(row[2]);
+                let seq = parseInt(row[3]);
+
+                if (!auxMap[fiberId]) auxMap[fiberId] = [];
+                auxMap[fiberId].push({
+                    aux_Longitude: lng,
+                    aux_Latitude: lat,
+                    aux_seqSorting: seq
+                });
+            });
+
+            auxGrouped = Object.keys(auxMap).map(fiberId => ({
+                fiberId,
+                auxPoints: auxMap[fiberId]
+            }));
+
+            // ---- Loop all fibers with delay ----
+            for (let i = 0; i < fiberList.length; i++) {
+                const fiber = fiberList[i];
+                const fiberId = fiber[0];
+                const sourceLng = parseFloat(fiber[1]);
+                const sourceLat = parseFloat(fiber[2]);
+                const destinationLng = parseFloat(fiber[3]);
+                const destinationLat = parseFloat(fiber[4]);
+
+                getSelectedFiberCableRows(fiberId);
+                const auxPoints = dict.length ? dict : [];
+
+                calculateGeoDistance(
+                    fiberId,
+                    auxPoints,
+                    sourceLng,
+                    sourceLat,
+                    destinationLng,
+                    destinationLat
+                );
+
+                console.log(`Fiber ${fiberId} processed.`);
+                await delay(20);
+            }
+
+            console.log("All fibers processed. GeoDistances:", geoDistances);
+
+            // ---- Send geoDistances to server ----
+            $.ajax({
+                url: "${pageContext.request.contextPath}/updateGeoDistances",
+                type: "POST",
+                data: { geoDistances: JSON.stringify(geoDistances) },
+                success: function(response) {
+                    console.log("Server Response:", response);
+                },
+                error: function(err) {
+                    console.error("Error sending geoDistances:", err);
+                }
+            });
+        },
+        error: function(err) {
+            console.error("Error loading fiber list:", err);
+        }
+    });
+}
+
+// fill global dict
+function getSelectedFiberCableRows(fiberId) {
+    dict = [];
+    const auxEntry = auxGrouped.find(a => a.fiberId == fiberId);
+    if (auxEntry) {
+        auxEntry.auxPoints.forEach(aux => {
+            dict.push({
+                aux_Name: "Aux_Point " + aux.aux_seqSorting,
+                aux_Longitude: aux.aux_Longitude,
+                aux_Latitude: aux.aux_Latitude,
+                aux_seqSorting: aux.aux_seqSorting
+            });
+        });
+    }
+}
+
+function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng, destinationLat) {
+    const allAuxData = aux || [];
+    let totalGeoDistance = 0.0;
+
+    // Ensure floats
+    sourceLat = parseFloat(sourceLat);
+    sourceLng = parseFloat(sourceLng);
+    destinationLat = parseFloat(destinationLat);
+    destinationLng = parseFloat(destinationLng);
+
+  
+    if (allAuxData.length > 0) {
+        for (let h = 0; h < allAuxData.length + 1; h++) {
+            let latitudeSrc = (h === 0) ? sourceLat : parseFloat(allAuxData[h - 1].aux_Latitude);
+            let longitudeSrc = (h === 0) ? sourceLng : parseFloat(allAuxData[h - 1].aux_Longitude);
+            let latitudeDst = (h === allAuxData.length) ? destinationLat : parseFloat(allAuxData[h].aux_Latitude);
+            let longitudeDst = (h === allAuxData.length) ? destinationLng : parseFloat(allAuxData[h].aux_Longitude);
+
+          
+            if (!isNaN(latitudeSrc) && !isNaN(longitudeSrc) && !isNaN(latitudeDst) && !isNaN(longitudeDst)) {
+                const segmentDistance = google.maps.geometry.spherical
+                    .computeDistanceBetween(
+                        new google.maps.LatLng(latitudeSrc, longitudeSrc),
+                        new google.maps.LatLng(latitudeDst, longitudeDst)
+                    ) / 1000;
+
+                      totalGeoDistance += segmentDistance;
+            } else {
+                console.warn(`⚠️ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
+            }
+        }
+    } else {
+        // No aux points, direct link
+        if (!isNaN(sourceLat) && !isNaN(sourceLng) && !isNaN(destinationLat) && !isNaN(destinationLng)) {
+            totalGeoDistance = google.maps.geometry.spherical
+                .computeDistanceBetween(
+                    new google.maps.LatLng(sourceLat, sourceLng),
+                    new google.maps.LatLng(destinationLat, destinationLng)
+                ) / 1000;
+         
+        } else {
+            console.warn(`Invalid main coordinates for fiber ${fiberId}`);
+        }
+    }
+
+    geoDistances.push({
+        fiberId: fiberId,
+        distance: parseFloat(totalGeoDistance.toFixed(3))
+    });
+
+    
+}
+
+
+
+
+
+
+
 // Parse them into JavaScript objects
 var circleDraw = '${circleDraw}';
 var squareDraw= '${squareDraw}';
@@ -8008,7 +8175,7 @@ $("#saveController").click(function () {
     	                    			        markerClusterBackboneDistBoard.removeMarker(marker);
     	                    			        marker.setMap(null);
     	                    			        delete markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterBackboneDistBoard.repaint(); // 🔥 force refresh
+    	                    			        markerClusterBackboneDistBoard.repaint(); // ð¥ force refresh
     	                    			    }
     	                    			}
     	                    			else if (data.oldNetworkLevel == "metro") {
@@ -8753,7 +8920,7 @@ function scrollToController(id) {
 }	  
 //zeinaaa
 function siteControllerChanged(checkbox) {
-    console.log("Site Controller changed → checked =", checkbox.checked);
+    console.log("Site Controller changed â checked =", checkbox.checked);
     if ($(checkbox).is(":checked")) {
         document.getElementById("customer_ControllerAutoComplete").checked = false;
         $('#customer_ControllerAutoComplete').val('0');
@@ -8787,7 +8954,7 @@ function siteControllerChanged(checkbox) {
 }
 
 function customerControllerChanged(checkbox) {
-    console.log("Customer Controller changed → checked =", checkbox.checked);
+    console.log("Customer Controller changed â checked =", checkbox.checked);
 
     if ($(checkbox).is(":checked")) {
         document.getElementById("site_ControllerAutoComplete").checked = false;
