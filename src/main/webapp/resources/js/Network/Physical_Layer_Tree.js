@@ -2477,7 +2477,20 @@ if (addFiber === '1') {
 
 					
 		}
-	});
+	},		
+				{'icon': 'route', 'name': 'Update Geo Distances', action: () => {
+				
+			loadFiberList();			 
+		}			
+
+	}, 		{'icon': 'route', 'name': 'Update Line Of Sites', action: () => {
+				
+			
+		}			
+
+	}
+
+);
 }
 if (delFiber === '1') {
     menufibers.push(
@@ -2502,6 +2515,8 @@ if (delFiber === '1') {
 					}
 				});
 }
+
+
 // Create the ContextMenu instance with the updated items array
 menuFiberPath = new ContextMenu({
     'theme': 'default',
@@ -24098,5 +24113,4 @@ function appendAttachmentRow(attachmentID,jctAttachmentIndex,attachmentName,atta
 	var myDiv = document.getElementById(""+tableID);
 	myDiv.scrollTop = myDiv.scrollHeight;
 }
-
 
