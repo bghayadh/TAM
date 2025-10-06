@@ -15025,7 +15025,7 @@ $("#calculateGeodistance").click(function () {
 geoFlag=0;
 });
 
-function calculateDrivingDistance(sourceLng,sourceLat,destinationLng,destinationLat,type,lstAuxToDst,totalDist){
+function calculateDrivingDistance(sourceLng,sourceLat,destinationLng,destinationLat,type,lstAuxToDst,totalDist, drivingForm){
 	
 	if(type=="FiberTube") {
 		var sourceLng = $("#"+sourceLng+indexTubeForAuxs).val();
@@ -15179,6 +15179,7 @@ function calculateDrivingDistance(sourceLng,sourceLat,destinationLng,destination
 	
 		$("#"+lstAuxToDst).val(drivingDistance[p]);
 		$("#"+totalDist).val((totaldrivingDist / 1000).toFixed(3));
+		$("#"+drivingForm).val((totaldrivingDist / 1000).toFixed(3));
 		}
 	} 
 }	    	
@@ -15204,7 +15205,7 @@ $("#calculateDrivingDistanceDuct").click(function () {
 $("#calculatedrivingdistance").click(function () {	
 
 
-calculateDrivingDistance("SourceLng","SourceLat","DestinationLng","DestinationLat","fiber","distanceLstAuxToDestDrivg","totalDistanceDrivg");
+calculateDrivingDistance("SourceLng","SourceLat","DestinationLng","DestinationLat","fiber","distanceLstAuxToDestDrivg","totalDistanceDrivg", "FiberDrivDist");
 
 });
 
