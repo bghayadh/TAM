@@ -1485,7 +1485,14 @@ if (readHandhole === '1') {
                 }
             });
         }
-    }
+    },
+	{
+					         'icon': 'map-marker',
+					         'name': 'Update Cities',
+					         action: () => {
+					  		updateCities("manhole");
+					     }
+					     }
 ];
 
 if (addManhole === '1') {
@@ -1658,6 +1665,13 @@ if (addManhole === '1') {
 							   });
 				}
 			}
+		,			{
+								         'icon': 'map-marker',
+								         'name': 'Update Cities',
+								         action: () => {
+								  		updateCities("handhole");
+								     }
+								     }
 			  
     
 ];
@@ -5887,6 +5901,8 @@ if(exceptionManWriteList){
             });
         }
     },
+	
+	
    
 ];
 
@@ -6179,7 +6195,7 @@ singleManhole = new ContextMenu({
 						
 					   }
 					  },
-			 	 
+					
 ];
 
 			
