@@ -2483,12 +2483,17 @@ if (addFiber === '1') {
 			loadFiberList();			 
 		}			
 
-	}, 		{'icon': 'route', 'name': 'Update Line Of Sites', action: () => {
+	}, 		{'icon': 'slash', 'name': 'Update Line Of Sites', action: () => {
 				
-			
-		}			
+		updateLineOfSites();
+		}		
 
-	}
+	},
+	{'icon': 'map-marker', 'name': 'Update Cities', action: () => {
+				
+		updateCities("fiber");
+		}
+		}	
 
 );
 }
