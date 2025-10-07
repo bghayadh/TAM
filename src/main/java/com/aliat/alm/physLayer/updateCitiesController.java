@@ -224,4 +224,241 @@ public class updateCitiesController {
 
 	    return rtn;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	
+	@RequestMapping(value = "/getManholeInfoCity", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getManholeInfoCity(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+
+    Map<String, Object> rtn = new LinkedHashMap<>();
+
+    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+        rtn.put("Login", "redirect:/");
+        return rtn;
+    }
+
+    Session session = AlmDbSession.getInstance().getSession();
+    Transaction tx = null;
+
+    try {
+    	List<Object[]> manholeList = new ArrayList<Object[]>();
+    	manholeList = session.createNativeQuery(
+				"SELECT DISTINCT MANHOLE_ID,LONGITUDE,LATITUDE FROM MANHOLE ")
+				.getResultList();
+
+		rtn.put("manholeList", manholeList);
+		
+
+    } catch (Exception e) {
+        if (tx != null && tx.isActive()) 
+        tx.rollback();
+        System.out.println("Error during update:");
+        e.printStackTrace(System.out);
+        rtn.put("status", "error");
+        rtn.put("message", e.getMessage());
+    }
+
+    return rtn;
+}
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/saveManholeCities", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveManholeCities(HttpServletRequest request, HttpServletResponse response) {
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", "redirect:/");
+	        return rtn;
+	    }
+
+	    Session session = AlmDbSession.getInstance().getSession();
+	    Transaction tx = null;
+
+	    try {
+	        String manholeCityList = request.getParameter("manholeCityList");
+	        if (manholeCityList == null || manholeCityList.isEmpty()) {
+	            rtn.put("status", "error");
+	         
+	            return rtn;
+	        }
+
+	        ObjectMapper mapper = new ObjectMapper();
+	        List<Map<String, Object>> manholeCity = mapper.readValue(
+	        		manholeCityList, new TypeReference<List<Map<String, Object>>>() {}
+	        );
+
+	        if (session != null && session.isOpen()) {
+	            System.out.println("Session open and transaction started...");
+	            System.out.println("manholeCityList size: " + (manholeCity != null ? manholeCity.size() : "NULL"));
+
+	            tx = session.beginTransaction();
+
+	            int totalUpdatedRows = 0;
+	            for (Map<String, Object> entry : manholeCity) {
+	                String Id = (String) entry.get("manholeId");
+	                String city = (String) entry.get("city");
+
+	                System.out.println("city: " + city);
+
+	                Query query = session.createNativeQuery(
+	                    "UPDATE MANHOLE SET CITY = :param1 WHERE MANHOLE_ID = :param2"
+	                );
+	                query.setParameter("param1", city);
+	                query.setParameter("param2", Id);
+
+	                int rowsUpdated = query.executeUpdate();
+	                totalUpdatedRows += rowsUpdated;
+
+	                System.out.println("Query done. Rows updated for manholeId " + Id + " = " + rowsUpdated);
+	            }
+
+	            tx.commit(); // ✅ This actually applies the updates to the database
+
+	            System.out.println("Transaction committed successfully. Total rows updated: " + totalUpdatedRows);
+
+	            rtn.put("status", "success");
+	            rtn.put("updatedRows", totalUpdatedRows);
+	        } else {
+	            rtn.put("status", "error");
+	            rtn.put("message", "Session not open");
+	        }
+
+	    } catch (Exception e) {
+	        if (tx != null && tx.isActive()) tx.rollback();
+	        System.out.println("Error during update:");
+	        e.printStackTrace(System.out);
+	        rtn.put("status", "error");
+	        rtn.put("message", e.getMessage());
+	    }
+
+	    return rtn;
+	}
+	
+	@SuppressWarnings("unchecked")
+	
+	@RequestMapping(value = "/getHandholeInfoCity", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getHandholeInfoCity(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+
+    Map<String, Object> rtn = new LinkedHashMap<>();
+
+    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+        rtn.put("Login", "redirect:/");
+        return rtn;
+    }
+
+    Session session = AlmDbSession.getInstance().getSession();
+    Transaction tx = null;
+
+    try {
+    	List<Object[]> handholeList = new ArrayList<Object[]>();
+    	handholeList = session.createNativeQuery(
+				"SELECT DISTINCT HANDHOLE_ID,LONGITUDE,LATITUDE FROM HANDHOLE ")
+				.getResultList();
+
+		rtn.put("handholeList", handholeList);
+		
+System.out.println(handholeList);
+    } catch (Exception e) {
+        if (tx != null && tx.isActive()) 
+        tx.rollback();
+        System.out.println("Error during update:");
+        e.printStackTrace(System.out);
+        rtn.put("status", "error");
+        rtn.put("message", e.getMessage());
+    }
+
+    return rtn;
+}
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/saveHandholeCities", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveHandholeCities(HttpServletRequest request, HttpServletResponse response) {
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", "redirect:/");
+	        return rtn;
+	    }
+
+	    Session session = AlmDbSession.getInstance().getSession();
+	    Transaction tx = null;
+
+	    try {
+	        String handholeCityList = request.getParameter("handholeCityList");
+	        if (handholeCityList == null || handholeCityList.isEmpty()) {
+	            rtn.put("status", "error");
+	         
+	            return rtn;
+	        }
+
+	        ObjectMapper mapper = new ObjectMapper();
+	        List<Map<String, Object>> handholeCity = mapper.readValue(
+	        		handholeCityList, new TypeReference<List<Map<String, Object>>>() {}
+	        );
+
+	        if (session != null && session.isOpen()) {
+	            System.out.println("Session open and transaction started...");
+	          
+	            tx = session.beginTransaction();
+	            System.out.println("handholeCity: "+ handholeCity);
+	            // Loop through all items in geoDistances list
+	            int totalUpdatedRows = 0;
+	            for (Map<String, Object> entry : handholeCity) {
+	                String Id = (String) entry.get("handholeId");
+	                String city = (String) entry.get("city");
+	               
+	                System.out.println("handholeCity: "+ handholeCity);
+	                System.out.println("city: "+ city);
+	              
+	                Query query = session.createNativeQuery(
+	                	    "UPDATE HANDHOLE SET CITY = :param1 WHERE HANDHOLE_ID = :param2"
+	                	);
+	                	query.setParameter("param1", city);
+	                	query.setParameter("param2", Id);
+	                
+
+	                	int result = query.executeUpdate();
+	                	System.out.println("Number of rows updated: " + result);
+  
+	                System.out.println("Executing update query for handholeId: " + Id);
+	                int rowsUpdated = query.executeUpdate();
+	                totalUpdatedRows += rowsUpdated;
+	                System.out.println("Query done. Rows updated for handholeId " + Id + " = " + rowsUpdated);
+	            }
+
+	            tx.commit();
+	            System.out.println("Transaction committed successfully. Total rows updated: " + totalUpdatedRows);
+
+	            rtn.put("status", "success");
+	            rtn.put("updatedRows", totalUpdatedRows);
+	        } else {
+	            rtn.put("status", "error");
+	            rtn.put("message", "Session not open");
+	        }
+
+	    } catch (Exception e) {
+	        if (tx != null && tx.isActive()) tx.rollback();
+	        System.out.println("Error during update:");
+	        e.printStackTrace(System.out);
+	        rtn.put("status", "error");
+	        rtn.put("message", e.getMessage());
+	    }
+
+	    return rtn;
+	}
+	
+
 	}
