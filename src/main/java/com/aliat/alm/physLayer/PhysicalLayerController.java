@@ -11569,6 +11569,10 @@ public class PhysicalLayerController {
 								+ request.getParameter("ProjectId") + "'")
 						.getResultList();
 
+				
+				
+				
+				
 				@SuppressWarnings("unchecked")
 				List<Object[]> fiberOwnerTklBackbone = session.createNativeQuery(
 						"select count(*) from FIBER_CABLES WHERE FIBER_OWNER = 'tkl' and FIBER_NETWORK_LEVEL = 'backbone'  and PROJECT_ID='"
@@ -11587,7 +11591,88 @@ public class PhysicalLayerController {
 								+ request.getParameter("ProjectId") + "'")
 						.getResultList();
 
-				@SuppressWarnings("unchecked")
+				
+				
+				
+				 // Step 1: Get the Project ID from request
+		        String projectId = request.getParameter("ProjectId");
+
+		        String ownersQuery = "SELECT FIELD_VALUES FROM MODULE_FIELDS " +
+                        "WHERE SCREEN_TABLE = 'FIBER_CABLES' AND FIELD_NAME = 'FIBER_OWNER'";
+   List<String> fieldValuesList = session.createNativeQuery(ownersQuery).getResultList();
+
+   if (fieldValuesList.isEmpty()) {
+       System.out.println("⚠️ No FIELD_VALUES found for FIBER_OWNER in MODULE_FIELDS");
+       rtn.put("error", "No fiber owner data found");
+       return rtn;
+   }
+
+   // Parse owners list (example: ["tkl","nofbi","ogn","others"])
+   String fieldValues = fieldValuesList.get(0)
+           .replace("[", "")
+           .replace("]", "")
+           .replace("\"", "");
+   String[] owners = fieldValues.split(",");
+
+   // Lists for the three network levels
+   List<Object[]> backboneOwnerResults = new ArrayList<>();
+   List<Object[]> metroOwnerResults = new ArrayList<>();
+   List<Object[]> accessOwnerResults = new ArrayList<>();
+
+   // Step 2: Loop through owners
+   for (String owner : owners) {
+       owner = owner.trim();
+       if (owner.isEmpty()) continue;
+
+       // Backbone
+       Object backboneCount = session.createNativeQuery(
+               "SELECT COUNT(*) FROM FIBER_CABLES " +
+               "WHERE FIBER_OWNER = :owner " +
+               "AND FIBER_NETWORK_LEVEL = 'backbone' " +
+               "AND PROJECT_ID = :projectId")
+               .setParameter("owner", owner)
+               .setParameter("projectId", projectId)
+               .getSingleResult();
+
+       backboneOwnerResults.add(new Object[]{owner, backboneCount});
+
+       // Metro
+       Object metroCount = session.createNativeQuery(
+               "SELECT COUNT(*) FROM FIBER_CABLES " +
+               "WHERE FIBER_OWNER = :owner " +
+               "AND FIBER_NETWORK_LEVEL = 'metro' " +
+               "AND PROJECT_ID = :projectId")
+               .setParameter("owner", owner)
+               .setParameter("projectId", projectId)
+               .getSingleResult();
+
+       metroOwnerResults.add(new Object[]{owner, metroCount});
+
+       // Access
+       Object accessCount = session.createNativeQuery(
+               "SELECT COUNT(*) FROM FIBER_CABLES " +
+               "WHERE FIBER_OWNER = :owner " +
+               "AND FIBER_NETWORK_LEVEL = 'access' " +
+               "AND PROJECT_ID = :projectId")
+               .setParameter("owner", owner)
+               .setParameter("projectId", projectId)
+               .getSingleResult();
+
+       accessOwnerResults.add(new Object[]{owner, accessCount});
+   }
+
+   // Step 3: Add to the return map (outside the loop)
+   rtn.put("backboneOwners", backboneOwnerResults);
+   rtn.put("metroOwners", metroOwnerResults);
+   rtn.put("accessOwners", accessOwnerResults);
+
+   // Optional: print JSON in console for debugging
+   ObjectMapper mapper = new ObjectMapper();
+   System.out.println("Backbone → " + mapper.writeValueAsString(backboneOwnerResults));
+   System.out.println("Metro → " + mapper.writeValueAsString(metroOwnerResults));
+   System.out.println("Access → " + mapper.writeValueAsString(accessOwnerResults));
+	      
+		       	@SuppressWarnings("unchecked")
 				List<Object[]> metro = session.createNativeQuery(
 						"SELECT 'fiber', count(FIBER_CABLE_ID),'tube',coalesce(sum(NUMBER_OF_TUBES),0) ,'strand',coalesce(sum(NUMBER_OF_STRANDS),0) from FIBER_CABLES where FIBER_NETWORK_LEVEL='metro' and PROJECT_ID='"
 								+ request.getParameter("ProjectId") + "'")
