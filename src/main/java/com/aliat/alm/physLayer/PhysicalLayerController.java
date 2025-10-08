@@ -7704,8 +7704,9 @@ public class PhysicalLayerController {
 				destLat = Double.parseDouble(row[4].toString());
 			}
 
-			String sourceId = row[6].toString();
-			String destinationId = row[9].toString();
+			String sourceId = (row[6] == null) ? "Unknown Source" : row[6].toString();
+			String destinationId = (row[6] == null) ? "Unknown Destination" : row[6].toString();
+
 
 			if (sourceLng > newStartLngPt && sourceLat > newStartLatPt && sourceLng < newEndLngPt
 					&& sourceLat < newEndLatPt) {
@@ -7819,8 +7820,7 @@ public class PhysicalLayerController {
 				Lng = Double.parseDouble(row[1].toString());
 				Lat = Double.parseDouble(row[2].toString());
 			}
-
-			String auxId = row[4].toString();
+			String auxId = (row[4] == null) ? "null" : row[4].toString();
 
 			if (Lng > newStartLngPt && Lat > newStartLatPt && Lng < newEndLngPt && Lat < newEndLatPt) {
 
