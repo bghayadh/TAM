@@ -72,6 +72,7 @@ import com.aliat.alm.models.FiberTubes;
 import com.aliat.alm.models.FiberTubesSurvey;
 import com.aliat.alm.models.HandholeSurvey;
 import com.aliat.alm.models.ManholeSurvey;
+import com.aliat.alm.models.ModuleField;
 import com.aliat.alm.models.NodeActive;
 import com.aliat.alm.models.NodeSurvey;
 import com.aliat.alm.models.PhysicalLayerActivity;
@@ -247,7 +248,26 @@ public class PhysicalLayerController {
 
 					String readExceptionDB = (String) model.asMap().get("readExceptionDB");
 					String writeExceptionDB = (String) model.asMap().get("writeExceptionDB");
+					 List<String> fiberOwners = new ArrayList<>();
+					 String hql = "FROM ModuleField WHERE screenTable = :table AND fieldName = :field";
+			            ModuleField field = (ModuleField) session.createQuery(hql)
+			                    .setParameter("table", "FIBER_CABLES")
+			                    .setParameter("field", "FIBER_OWNER")
+			                    .uniqueResult();
 
+			            if (field != null && field.getFieldValues() != null) {
+			                String json = field.getFieldValues(); // e.g. ["owner 1","owner 2"]
+			                json = json.replace("[", "").replace("]", "").replace("\"", "");
+			                for (String val : json.split(",")) {
+			                    fiberOwners.add(val.trim());
+			                }
+			            }
+
+			            model.addAttribute("fiberOwners", fiberOwners);
+			            model.addAttribute("writeFiber", 1); 
+
+				        
+				        
 					int filterFlag = 0;
 					List<?> projectList = new ArrayList<Object[]>();
 					List<Object[]> manholeList = new ArrayList<Object[]>();
