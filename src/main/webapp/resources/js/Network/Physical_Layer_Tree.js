@@ -1485,7 +1485,14 @@ if (readHandhole === '1') {
                 }
             });
         }
-    }
+    },
+	{
+					         'icon': 'map-marker',
+					         'name': 'Update Cities',
+					         action: () => {
+					  		updateCities("manhole");
+					     }
+					     }
 ];
 
 if (addManhole === '1') {
@@ -1658,6 +1665,13 @@ if (addManhole === '1') {
 							   });
 				}
 			}
+		,			{
+								         'icon': 'map-marker',
+								         'name': 'Update Cities',
+								         action: () => {
+								  		updateCities("handhole");
+								     }
+								     }
 			  
     
 ];
@@ -2483,12 +2497,17 @@ if (addFiber === '1') {
 			loadFiberList();			 
 		}			
 
-	}, 		{'icon': 'route', 'name': 'Update Line Of Sites', action: () => {
+	}, 		{'icon': 'slash', 'name': 'Update Line Of Sites', action: () => {
 				
-			
-		}			
+		updateLineOfSites();
+		}		
 
-	}
+	},
+	{'icon': 'map-marker', 'name': 'Update Cities', action: () => {
+				
+		updateCities("fiber");
+		}
+		}	
 
 );
 }
@@ -5882,6 +5901,8 @@ if(exceptionManWriteList){
             });
         }
     },
+	
+	
    
 ];
 
@@ -6174,7 +6195,7 @@ singleManhole = new ContextMenu({
 						
 					   }
 					  },
-			 	 
+					
 ];
 
 			
@@ -15025,7 +15046,7 @@ $("#calculateGeodistance").click(function () {
 geoFlag=0;
 });
 
-function calculateDrivingDistance(sourceLng,sourceLat,destinationLng,destinationLat,type,lstAuxToDst,totalDist){
+function calculateDrivingDistance(sourceLng,sourceLat,destinationLng,destinationLat,type,lstAuxToDst,totalDist, drivingForm){
 	
 	if(type=="FiberTube") {
 		var sourceLng = $("#"+sourceLng+indexTubeForAuxs).val();
@@ -15179,6 +15200,7 @@ function calculateDrivingDistance(sourceLng,sourceLat,destinationLng,destination
 	
 		$("#"+lstAuxToDst).val(drivingDistance[p]);
 		$("#"+totalDist).val((totaldrivingDist / 1000).toFixed(3));
+		$("#"+drivingForm).val((totaldrivingDist / 1000).toFixed(3));
 		}
 	} 
 }	    	
@@ -15204,7 +15226,7 @@ $("#calculateDrivingDistanceDuct").click(function () {
 $("#calculatedrivingdistance").click(function () {	
 
 
-calculateDrivingDistance("SourceLng","SourceLat","DestinationLng","DestinationLat","fiber","distanceLstAuxToDestDrivg","totalDistanceDrivg");
+calculateDrivingDistance("SourceLng","SourceLat","DestinationLng","DestinationLat","fiber","distanceLstAuxToDestDrivg","totalDistanceDrivg", "FiberDrivDist");
 
 });
 
