@@ -2573,11 +2573,22 @@ menuBackbone = new ContextMenu({
              var tr = "<tr>"+"<th>Backbone: </th><td> "+data.Backbone+"</td></tr>"	
                        +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
 					   +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklBackbone+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiBackbone+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherBackbone+"</td></tr>"
-					   +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.backbone_total_geo).toFixed(2)+" Km</td></tr>"
+					   +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>";
+					
+					   if (data.backboneOwners) {
+					     data.backboneOwners.forEach(function(item) {
+					       tr += "<tr><th>Backbone (" + item[0].toUpperCase() + ")</th><td>" + item[1] + "</td></tr>";
+					     });
+					   }
+					             // Add totals
+					             tr += "<tr><th>Total path Length (Geo):</th><td>" + parseFloat(data.backbone_total_geo).toFixed(2) + " Km</td></tr>"
+					                + "<tr><th>Total path Length (Line Of Site):</th><td>" + parseFloat(data.backbone_total_LineOfsite).toFixed(2) + " Km</td></tr>"
+					                + "<tr><th>Total Strand Length (Geo):</th><td>" + parseFloat(data.geoBackboneStrand).toFixed(2) + " Km</td></tr>"
+					                + "<tr><th>Total Strand Length (Line Of Site):</th><td>" + parseFloat(data.LengthBackboneStrand).toFixed(2) + " Km</td></tr>";
+
+					   
+					   
+					   tr+="<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.backbone_total_geo).toFixed(2)+" Km</td></tr>"
 					   +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.backbone_total_LineOfsite).toFixed(2)+" Km</td></tr>"
 					   +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoBackboneStrand).toFixed(2)+" Km</td></tr>"
 					   +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthBackboneStrand).toFixed(2)+" Km</td></tr>"
@@ -2626,11 +2637,15 @@ menuMetor = new ContextMenu({
              var tr = "<tr>"+"<th>Metro: </th><td> "+data.Metro+"</td></tr>"	
                        +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
 					   +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklMetro+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiMetro+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherMetro+"</td></tr>"
-					   +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Metro_total_geo).toFixed(2)+" Km</td></tr>"
+					   +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>";
+					 
+					   if (data.metroOwners) {
+					   					     data.metroOwners.forEach(function(item) {
+					   					       tr += "<tr><th>Metro (" + item[0].toUpperCase() + ")</th><td>" + item[1] + "</td></tr>";
+					   					     });
+					   					   }
+					   
+					   tr += "<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Metro_total_geo).toFixed(2)+" Km</td></tr>"
                        +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Metro_total_LineOfsite).toFixed(2)+" Km</td></tr>"
                        +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoMetroStrand).toFixed(2)+" Km</td></tr>"
 					   +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthMetroStrand).toFixed(2)+" Km</td></tr>"
@@ -2679,10 +2694,14 @@ menuAccess = new ContextMenu({
                      +"<tr>"+"<th>Fiber Cables Count: </th><td> "+fiberCount[0][1]+"</td></tr>"
 		             +"<tr>"+"<th>Fiber Tubes Count: </th><td> "+fiberCount[0][3]+"</td></tr>"
 			         +"<tr>"+"<th>Fiber Strands Count: </th><td> "+fiberCount[0][5]+"</td></tr>"
-			         +"<tr>"+"<th>Fiber Cables (TKL) Count: </th><td> "+data.fiberOwnerTklAccess+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (NOFBI) Count: </th><td> "+data.fiberOwnerNofbiAccess+"</td></tr>"
-					   +"<tr>"+"<th>Fiber Cables (OTHERS) Count: </th><td> "+data.fiberOwnerOtherAccess+"</td></tr>"
-			         +"<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
+			      
+					 if (data.accessOwners) {
+					 			   					     data.accessOwners.forEach(function(item) {
+					 			   					       tr += "<tr><th>Access (" + item[0].toUpperCase() + ")</th><td>" + item[1] + "</td></tr>";
+					 			   					     });
+					 			   					   }
+					 
+					  tr += "<tr>"+"<th>Total path Length (Geo): </th><td> "+parseFloat(data.Access_total_geo).toFixed(2)+" Km</td></tr>"
                      +"<tr>"+"<th>Total path Length (Line Of Site): </th><td> "+parseFloat(data.Access_total_LineOfsite).toFixed(2)+" Km</td></tr>"
                      +"<tr>"+"<th>Total Strand Length (Geo): </th><td> "+parseFloat(data.geoAccessStrand).toFixed(2)+" Km</td></tr>"
 					 +"<tr>"+"<th>Total Strand Length (Line Of Site): </th><td> "+parseFloat(data.LengthAccessStrand).toFixed(2)+" Km</td></tr>"
