@@ -692,9 +692,7 @@ max-height: 100%;
                         <input type="text" id="fieldValueInput" class="form-control" placeholder="Enter a value">
                     
                   
-                          <button style="height:40px;" id="addButton" class="btn btn-primary">Add</button>
-                        <button style="height:40px; " id="deleteListButton" class="btn btn-danger">Delete</button>
-                      </div><br>
+                        </div><br>
                     <select id="fieldValuesList" class="form-select" multiple size="10">
                       <!-- Dynamically generated options -->
                        
@@ -721,8 +719,15 @@ max-height: 100%;
 			</div>
 		</div>
 	</div>
-        
-        
+         <div class="col-md-4">
+         <div class="form-group">
+			<div class="input-group-prepend">
+		
+            <button style="height:40px; width:170px; " id="addButton" class="btn btn-primary">Add</button>
+            <button style="height:40px; width:170px; margin-left: 5px;" id="deleteListButton" class="btn btn-primary">Delete</button>
+           	</div>
+		</div>
+	</div>         
         </div>
 	
 	
