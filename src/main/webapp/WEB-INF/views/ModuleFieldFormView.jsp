@@ -723,8 +723,8 @@ max-height: 100%;
          <div class="form-group">
 			<div class="input-group-prepend">
 		
-            <button style="height:40px; width:200px; margin-left: 30px" id="addButton" class="btn btn-primary">Add</button>
-            <button style="height:40px; width:200px; margin-left: 5px;" id="deleteListButton" class="btn btn-primary">Delete</button>
+            <button style="height:40px; width:235px;" id="addButton" class="btn btn-primary">Add</button>
+            <button style="height:40px; width:235px; margin-left: 5px;" id="deleteListButton" class="btn btn-primary">Delete</button>
            	</div>
 		</div>
 	</div>         
