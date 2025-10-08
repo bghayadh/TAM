@@ -3867,12 +3867,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
     <div class="input-group-prepend">
         <span style="width: 100px; font-size: 12px;" class="input-group-text"><b>Fiber Owner </b></span> 
         <select id="fiberowner" class="form-control" <c:if test="${writeFiber == 0}">disabled</c:if>>
-            <option value="" selected></option>
-            <option value="tkl">TKL</option>
-            <option value="nofbi">NOFBI</option>
-            <option value="ogn">OGN</option>
-            <option value="others">Others</option>
-        </select>
+        <option value="" selected>Choose</option>
+        <c:forEach var="owner" items="${fiberOwners}">
+            <option value="${owner}">${owner}</option>
+        </c:forEach>
+    </select>
     </div>
 </div>
 
@@ -7639,6 +7638,35 @@ function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng
 
     
 }
+
+ function updateLineOfSites() {
+
+
+	 $('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
+	  
+	    $.ajax({
+	        url: "${pageContext.request.contextPath}/updateLineOfSites",
+	        type: "GET",
+	        success: async function(response) {
+
+	   	     if(response){
+
+	   	        console.log(response);
+
+
+
+	   	     $("#loading").remove();		
+		   	     }
+	           
+	        },
+	        error: function(err) {
+	            console.error("Error loading fiber list:", err);
+	        }
+	    });
+
+
+
+	 }
 
 async function updateCities(item) {
 	  $('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>');
