@@ -7640,8 +7640,229 @@ function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng
     
 }
 
+async function updateCities(item) {
+	  $('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>');
+	  
+	  if (item === "fiber") {
+	    try {
+	      // Fetch fiber list
+	      const response = await $.ajax({
+	        url: `${pageContext.request.contextPath}/getFiberInfoCity`,
+	        type: "GET"
+	      });
 
+	      // Check if response contains fiber list
+	      if (response && response.fiberList) {
+	        const fiberList = response.fiberList;
+	        const geocoder = new google.maps.Geocoder();
+	        const fiberCityList = [];
 
+	        // Loop through each fiber and fetch city data
+	        for (let i = 0; i < fiberList.length; i++) {
+	          const fiber = fiberList[i];
+	          const fiberId = fiber[0];
+	          const srcLng = parseFloat(fiber[1]);
+	          const srcLat = parseFloat(fiber[2]);
+	          const destLng = parseFloat(fiber[3]);
+	          const destLat = parseFloat(fiber[4]);
+
+	          // Geocode for source and destination cities (await)
+	          const srcCity = await getCityFromCoords(srcLat, srcLng, geocoder);
+	          const destCity = await getCityFromCoords(destLat, destLng, geocoder);
+
+	          // Add fiber city data to list
+	          fiberCityList.push({
+	            fiberId: fiberId,
+	            srcCity: srcCity,
+	            destCity: destCity
+	          });
+
+	       console.log(fiberId +" --> srcCity: " + srcCity +" and distCity: " + destCity);
+	           // Add delay between requests to prevent throttling
+	          
+	        }
+
+	        console.log("All fibers processed. City list:", fiberCityList);
+
+	         $.ajax({
+	          url: `${pageContext.request.contextPath}/saveFiberCities`, // POST to server
+	          type: "POST",
+	          data: { fiberCityList: JSON.stringify(fiberCityList) },
+	          success: function(response) {
+	            console.log("Server Response:", response);
+	            $("#loading").remove();  // Remove loading screen after processing
+	          },
+	          error: function(err) {
+	            console.error("Error sending fiber city data:", err);
+	          }
+	        });
+
+	      } else {
+	        console.warn("No fiber data found.");
+	        $("#loading").remove();  // Remove loading screen if no data
+	      }
+	    } catch (err) {
+	      console.error("Error loading fiber list:", err);
+	      $("#loading").remove();  // Remove loading screen on error
+	    }
+	  }
+
+	  else if (item === "manhole"){
+		  try {
+		      // Fetch fiber list
+		      const response = await $.ajax({
+		        url: `${pageContext.request.contextPath}/getManholeInfoCity`,
+		        type: "GET"
+		      });
+
+		      // Check if response contains fiber list
+		      if (response && response.manholeList) {
+		        const manholeList = response.manholeList;
+		        const geocoder = new google.maps.Geocoder();
+		        const manholeCityList = [];
+
+		        // Loop through each fiber and fetch city data
+		        for (let i = 0; i < manholeList.length; i++) {
+		          const manhole = manholeList[i];
+		          const manholeId = manhole[0];
+		          const lng = parseFloat(manhole[1]);
+		          const lat = parseFloat(manhole[2]);
+		          
+		          // Geocode for source and destination cities (await)
+		          const city = await getCityFromCoords(lat, lng, geocoder);
+		       
+		          // Add fiber city data to list
+		          manholeCityList.push({
+		        	  manholeId: manholeId,
+		        	  city: city
+		           
+		          });
+
+		       console.log(manholeId +" --> City: " + city);
+		           // Add delay between requests to prevent throttling
+		          
+		        }
+
+		        console.log("All manholes processed. City list:", manholeCityList);
+
+		         $.ajax({
+		          url: `${pageContext.request.contextPath}/saveManholeCities`, // POST to server
+		          type: "POST",
+		          data: { manholeCityList: JSON.stringify(manholeCityList) },
+		          success: function(response) {
+		            console.log("Server Response:", response);
+		            $("#loading").remove();  // Remove loading screen after processing
+		          },
+		          error: function(err) {
+		            console.error("Error sending fiber city data:", err);
+		          }
+		        });
+
+		      } else {
+		         $("#loading").remove();  // Remove loading screen if no data
+		      }
+		    } catch (err) {
+		      console.error("Error loading  list:", err);
+		      $("#loading").remove();  // Remove loading screen on error
+		    }
+
+		  }
+
+	  else if (item === "handhole"){
+		  try {
+		      // Fetch fiber list
+		
+		      const response = await $.ajax({
+		        url: `${pageContext.request.contextPath}/getHandholeInfoCity`,
+		        type: "GET"
+		      });
+
+		      // Check if response contains fiber list
+		      if (response && response.handholeList) {
+			   
+		        const handholeList = response.handholeList;
+		        const geocoder = new google.maps.Geocoder();
+		        const handholeCityList = [];
+
+		        // Loop through each fiber and fetch city data
+		        for (let i = 0; i < handholeList.length; i++) {
+		          const handhole = handholeList[i];
+		          const handholeId = handhole[0];
+		          const lng = parseFloat(handhole[1]);
+		          const lat = parseFloat(handhole[2]);
+		          
+		          // Geocode for source and destination cities (await)
+		          const city = await getCityFromCoords(lat, lng, geocoder);
+		       
+		          // Add fiber city data to list
+		          handholeCityList.push({
+		        	  handholeId: handholeId,
+		        	  city: city
+		           
+		          });
+
+		       console.log(handholeId +" --> City: " + city);
+		           // Add delay between requests to prevent throttling
+		          
+		        }
+
+		        console.log("All handholes processed. City list:", handholeCityList);
+
+		         $.ajax({
+		          url: `${pageContext.request.contextPath}/saveHandholeCities`, // POST to server
+		          type: "POST",
+		          data: { handholeCityList: JSON.stringify(handholeCityList) },
+		          success: function(response) {
+		            console.log("Server Response:", response);
+		            $("#loading").remove();  // Remove loading screen after processing
+		          },
+		          error: function(err) {
+		            console.error("Error sending fiber city data:", err);
+		          }
+		        });
+
+		      } else {
+		         $("#loading").remove();  // Remove loading screen if no data
+		      }
+		    } catch (err) {
+		      console.error("Error loading  list:", err);
+		      $("#loading").remove();  // Remove loading screen on error
+		    }
+
+		  }
+	}
+
+	// Function to get city name from geocode results
+	function getCityFromCoords(lat, lng, geocoder) {
+	  return new Promise((resolve) => {
+	    const latlng = new google.maps.LatLng(lat, lng);
+
+	    geocoder.geocode({ latLng: latlng }, function(results, status) {
+	      if (status === google.maps.GeocoderStatus.OK && results[0]) {
+	        let city = "";
+
+	        // Look for "locality" type in address components
+	        for (let i = 0; i < results[0].address_components.length; i++) {
+	          const comp = results[0].address_components[i];
+	          if (comp.types.includes("locality")) {
+	            city = comp.long_name;
+	            break;
+	          }
+	        }
+
+	        // Fallback to first part of formatted address if locality not found
+	        if (!city) {
+	          city = results[0].formatted_address.split(",")[0];
+	        }
+
+	        resolve(city);
+	      } else {
+	        console.warn("Geocoder failed for", lat, lng, "→", status);
+	        resolve("");  // Resolve with empty string if geocoding fails
+	      }
+	    });
+	  });
+	}
 
 
 
