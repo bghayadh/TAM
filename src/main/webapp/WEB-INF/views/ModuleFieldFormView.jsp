@@ -693,7 +693,7 @@ max-height: 100%;
                     
                   
                         </div><br>
-                    <select id="fieldValuesList" class="form-select" multiple size="10">
+                    <select id="fieldValuesList" class="form-select" multiple size="10" style="width : 480px">
                       <!-- Dynamically generated options -->
                        
                     </select>
@@ -723,8 +723,8 @@ max-height: 100%;
          <div class="form-group">
 			<div class="input-group-prepend">
 		
-            <button style="height:40px; width:170px; " id="addButton" class="btn btn-primary">Add</button>
-            <button style="height:40px; width:170px; margin-left: 5px;" id="deleteListButton" class="btn btn-primary">Delete</button>
+            <button style="height:40px; width:200px; margin-left: 30px" id="addButton" class="btn btn-primary">Add</button>
+            <button style="height:40px; width:200px; margin-left: 5px;" id="deleteListButton" class="btn btn-primary">Delete</button>
            	</div>
 		</div>
 	</div>         
