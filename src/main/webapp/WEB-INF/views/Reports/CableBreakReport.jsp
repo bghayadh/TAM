@@ -777,7 +777,8 @@ var srcDestID = [];
 
 function initMap() {	
 	 map = new google.maps.Map(document.getElementById("mapContainer"), {
-			center: { lat: 1, lng: 38 },
+		 	center: { lat: -19.2370074705615, lng: 29.7948325794125 },
+			//center: { lat: 1, lng: 38 },
 			 zoom: 6,
 	 		mapTypeControl: true,
 	 		mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -1053,7 +1054,8 @@ function DefaultZoomControl(controlDiv, map) {
     controlDiv.appendChild(controlUI);
 
     controlUI.addEventListener("click", () => {
-    	var center=new google.maps.LatLng(1,38);
+    	//var center=new google.maps.LatLng(1,38);
+    	var center=new google.maps.LatLng(-19.2370074705615,29.7948325794125);    	
         map.setCenter(center);
 		map.setZoom(7);	
      });

@@ -7252,7 +7252,7 @@ public class PhysicalLayerController {
 
 			// Check if manholeID exists in auxList
 			boolean manholeExistsInAuxList = auxList.stream()
-					.anyMatch(auxData -> auxData[4].toString().equals(manholeId));
+					.anyMatch(auxData -> auxData[4] != null && auxData[4].toString().equals(manholeId));
 
 			if (!manholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
 				// System.out.println("manholee "+manholeName);
@@ -7301,7 +7301,7 @@ public class PhysicalLayerController {
 
 			// Check if handholeId exists in auxList
 			boolean handholeExistsInAuxList = auxList.stream()
-					.anyMatch(auxData -> auxData[4].toString().equals(handholeId));
+					.anyMatch(auxData -> auxData[4] != null && auxData[4].toString().equals(handholeId));
 
 			if (!handholeExistsInAuxList && distance <= maxDistance && distance < minDistance) {
 				minDistance = distance;

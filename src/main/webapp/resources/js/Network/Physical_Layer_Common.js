@@ -8091,7 +8091,7 @@ function showHideAllSequence(pathID,action) {
 					siteCltSrcMarkers[idNA].setLabel({text: type , className:"marker-position-sequence",color:"red"});										
 				}
 			}
-			else if(window["mapPointsNames_"+pathID][x] ==null || window["mapPointsNames_"+pathID][x] =="null"){
+			else if(window["mapPointsNames_"+pathID][x] == null || window["mapPointsNames_"+pathID][x] =="null" || window["mapPointsNames_"+pathID][x].startsWith("null")){
 				var AuxId = "null".concat("_"+type+"_"+pathID);
 				if(siteCltSrcMarkers[AuxId]) {
 					siteCltSrcMarkers[AuxId].setLabel({text: type , className:"marker-position-sequence",color:"green"});										
@@ -8235,16 +8235,10 @@ function showHideAllSequence(pathID,action) {
 	 }
 }
 
-function showHideAllPoints(pathID,checkSeqWindowID,action) {
-console.log("Welcome to showHideAllPoints");	
+function showHideAllPoints(pathID,checkSeqWindowID,action) {	
 showHidePointsArray=[];
 if(window["mapPointsNames_"+pathID] != undefined) {
-console.log("window[mapPointsNames_+pathID] length is ", window["mapPointsNames_"+pathID].length);
-console.log("contents of window[mapPointsNames_+pathID] is " , window["mapPointsNames_"+pathID]);
-console.log("pathID is " , pathID);
-	if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {
-		console.log("filerFlag is " , filterFlag);	
-
+	if( (filterFlag==2 || filterFlag==1) && showPointsType=="0") {	
 		$('#Manhole_f_CurrentPhysicalLayer').find(' > ul > li ').each(function(){		
 			var manHandDbName = $(this).text().trim();
 			if(manHandDbName && manHandDbName.includes("Junctions")) {
@@ -8300,7 +8294,6 @@ console.log("pathID is " , pathID);
 				var type =String(x);
 			}
 			
-			console.log("showHidePointsArray[x] is " , showHidePointsArray[x]);
 			if(showHidePointsArray[x] && showHidePointsArray[x].startsWith("WARE_")==true) {
 				var wareID = showHidePointsArray[x].split(":")[0];
 				var wareName = showHidePointsArray[x].split(":")[1];
@@ -8487,7 +8480,7 @@ console.log("pathID is " , pathID);
 				}
 			}
 			// Case of null auxiliary point
-			else if(showHidePointsArray[x] ==null || showHidePointsArray[x] =="null"){
+			else if(showHidePointsArray[x] ==null || showHidePointsArray[x] =="null" || (showHidePointsArray[x] && showHidePointsArray[x].includes("null"))){
 				var AuxId = "null".concat("_"+type+"_"+pathID);
 				var longLat = String(window["mapPoints_"+pathID][x]).replaceAll(/[( )]/g, '');
 								
@@ -8586,7 +8579,7 @@ console.log("pathID is " , pathID);
 					$("#"+dbID).children(':checkbox').prop( "checked", false );	
 				}					
 			}
-			else if(showHidePointsArray[x] ==null || showHidePointsArray[x] =="null"){
+			else if(showHidePointsArray[x] ==null || showHidePointsArray[x] =="null" || (showHidePointsArray[x] && showHidePointsArray[x].includes("null"))){
 				var AuxId = "null".concat("_"+type+"_"+pathID);		
 				if(siteCltSrcMarkers[AuxId]) {
 					siteCltSrcMarkers[AuxId].setMap(null);

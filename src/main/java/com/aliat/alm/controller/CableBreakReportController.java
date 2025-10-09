@@ -254,7 +254,7 @@ public class CableBreakReportController {
 						  DestLatStr = (String) fiberCableSrcDestID[9];
 				    	
 				    	 //get the DBs related to the source
-				    	if((!"null".equals(fiberCableSrcDestID[2]) && fiberCableSrcDestID[2] != null) || sourceID.startsWith("CUST_") ) {
+				    	if(fiberCableSrcDestID[2] != null && sourceID.startsWith("CUST_")) {
 				    		
 				    		List<String> TempDBList = session.createNativeQuery(
 									"SELECT DB_ID FROM DISTRIBUTION_BOARD "
@@ -268,7 +268,7 @@ public class CableBreakReportController {
 				    		}
 							
 				    	}
-				    	else if(sourceID.toString().startsWith("DB_")) {
+				    	else if(sourceID != null && sourceID.toString().startsWith("DB_")) {
 				    		
 				    		srcDBs.add(sourceID);
 				    		
@@ -276,7 +276,7 @@ public class CableBreakReportController {
 				    	
 				    	
 				    	 //get the DBs related to the destination 
-				    	if((!"null".equals(fiberCableSrcDestID[5]) && fiberCableSrcDestID[5] != null) || DestID.startsWith("CUST_") ) {
+				    	if(fiberCableSrcDestID[5] != null && DestID.startsWith("CUST_") ) {
 				    		
 				    		List<String> TempDBList = session.createNativeQuery(
 									"SELECT DB_ID FROM DISTRIBUTION_BOARD "
@@ -290,7 +290,7 @@ public class CableBreakReportController {
 				    		}
 							
 				    	}
-				    	else if(DestID.toString().startsWith("DB_")) {
+				    	else if(DestID != null && DestID.toString().startsWith("DB_")) {
 				    		dstDBs.add(DestID);
 				    		
 				    	}
