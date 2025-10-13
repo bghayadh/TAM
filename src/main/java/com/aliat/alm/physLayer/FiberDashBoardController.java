@@ -132,6 +132,7 @@ public class FiberDashBoardController {
 	    Transaction tx = null;
 	    List<Object[]> fiberList = new ArrayList<>();
 	    List<Object[]> fiberAuxiliaryData = new ArrayList<>();
+	    List<Object[]> fiberOwnersWithColors = new ArrayList<>();
 
 	    try {
 	        session = AlmDbSession.getInstance().getSession();
@@ -160,14 +161,20 @@ public class FiberDashBoardController {
 	                            + "AND A.PROJECT_ID='CurrentPhysicalLayer' "
 	                            + "ORDER BY B.SEQ_SORTING ASC")
 	                    .getResultList();
-
+	           
+	             fiberOwnersWithColors = session.createNativeQuery(
+	            	    "SELECT FIBER_OWNER, " +
+	            	           "NVL(FIBER_COLOR_OWNER, 'blue') AS FIBER_COLOR " +
+	            	    "FROM FIBER_OWNER_COLOR"
+	            	).getResultList(); 
+	            
 	            tx.commit();
 	        }
 
 	        Gson gson = new Gson();
 	        String fiberListJson = gson.toJson(fiberList);
 	        String fiberAuxiliaryDataJson = gson.toJson(fiberAuxiliaryData);
-
+	        model.addAttribute("fiberOwnersWithColors", fiberOwnersWithColors);
 	        model.addAttribute("fiberListJson", fiberListJson);
 	        model.addAttribute("fiberAuxiliaryDataJson", fiberAuxiliaryDataJson);
 	    } catch (Exception e) {
