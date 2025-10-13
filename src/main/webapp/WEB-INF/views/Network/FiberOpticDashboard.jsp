@@ -319,18 +319,24 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 		
 	     <div class="legendContainer">
   <div class="card-body">      
-   <div class="box stack-top" id="legendDiv" style="position: relative;bottom:50px;width: 200px; float:left; background:white; margin:37px; margin-top:150px;display: none">   
+   <div class="box stack-top" id="legendDiv" style="position: relative;bottom:50px;width: 175px; float:left; background:white; margin:37px; margin-top:190px;display: none">   
       <!-- Header -->
-     <div class="legendHeader" id="legendHeader" style="height: 30px"> <span style="color:white;font-weight:bold; font-size:1.9ex;display:inline-block;position: relative;margin-left:30px;">Fiber Owners Legend</span> </div>
+<div class="legendHeader" id="legendHeader" 
+     style="height: 30px; display: flex; align-items: center; justify-content: center; ">
+    <span style="color: white; font-weight: bold; font-size: 1.9ex;">
+        Fiber Owners Legend
+    </span>
+</div>
+
 
       <!-- Table -->
       <div id="tableDiv">
         <table id="fiberDashboard" style="width: 90%; border-collapse: collapse; margin-top:7px; margin-bottom:7px">
           <c:forEach var="ownerColor" items="${fiberOwnersWithColors}">
-            <tr class="fiberOwnerRow" style="height: 15px;">
+            <tr class="fiberOwnerRow" style="height: 10px;">
               <!-- Color box + owner name -->
-              <td style="padding-left: 15px; padding-top: 10px; display: flex; align-items: center; gap: 8px;">
-                <div style="width: 40px; height: 3px; background-color: ${ownerColor[1]};"></div>
+              <td style="padding-left: 15px; padding-top: 5px; display: flex; align-items: center; gap: 8px;">
+                <div style="width: 30px; height: 3px; background-color: ${ownerColor[1]};"></div>
                 <label style="color: black; font-weight: bold; font-size: 1em; margin: 0;">
                   ${ownerColor[0]}
                 </label>
