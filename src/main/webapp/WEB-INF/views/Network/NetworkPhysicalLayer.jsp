@@ -659,8 +659,7 @@
 	
 	
 	
-	<!--  CONTROLLER MODAL -->
-	//zeinaaa 
+	<!--  CONTROLLER MODAL --> 
 	
 <div class="container">
 		<div id="controllerModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"  data-keyboard="false" data-backdrop="static">

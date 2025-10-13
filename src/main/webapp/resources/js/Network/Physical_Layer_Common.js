@@ -8184,7 +8184,7 @@ function showHideAllSequence(pathID,action) {
 						siteCltSrcMarkers[idNA].setLabel(null);										
 					}
 				}
-				else if(window["mapPointsNames_"+pathID][x] ==null || window["mapPointsNames_"+pathID][x] =="null"){
+				else if(window["mapPointsNames_"+pathID][x] == null || window["mapPointsNames_"+pathID][x] =="null" || window["mapPointsNames_"+pathID][x].startsWith("null")){
 					var AuxId = "null".concat("_"+type+"_"+pathID);
 					if(siteCltSrcMarkers[AuxId]) {
 						siteCltSrcMarkers[AuxId].setLabel(null);										
