@@ -422,7 +422,7 @@ display:none;
          
          
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FiberOpticDashboard" >Fiber Optic</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FiberOpticDashboard" >Fiber Optics</a></li>
           
            <!-- <div class="dropdown-divider" href="#"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Dashboard">Tasks</a></li>
