@@ -223,7 +223,7 @@ max-width: 100%;
 }
 
 #fiberDashboard .fiberOwnerRow {
-    height: 25px; /* adjust spacing */
+    height: 2px; /* adjust spacing */
 }
 </style>
 <body>
@@ -333,7 +333,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
       <div id="tableDiv">
         <table id="fiberDashboard" style="width: 90%; border-collapse: collapse; margin-top:7px; margin-bottom:7px">
           <c:forEach var="ownerColor" items="${fiberOwnersWithColors}">
-            <tr class="fiberOwnerRow" style="height: 10px;">
+            <tr class="fiberOwnerRow">
               <!-- Color box + owner name -->
               <td style="padding-left: 15px; padding-top: 5px; display: flex; align-items: center; gap: 8px;">
                 <div style="width: 30px; height: 3px; background-color: ${ownerColor[1]};"></div>
@@ -832,42 +832,55 @@ function clearMarkers(){
 
 //Add legend button under zoom control on map
 function ShowHideMapLegend(controlDiv, map) {
-	
-    const controlUI = document.createElement("dv");
-    controlUI.style.backgroundColor = "white";
-    controlUI.style.border = "8px solid white";
-    controlUI.style.cursor = "pointer";
-    controlUI.style.marginLeft = "10px";
-    controlUI.innerHTML = '<button style="border:none;outline:none; background:white;"><i class="fas fa-arrow-right fa-lg "></i></button>';
-    controlUI.title = "Open Legend";
-    controlDiv.appendChild(controlUI);
-
-    controlUI.addEventListener("click", () => {
-    	$("#legendDiv").toggle();        
-     });
-
-  }
- 
-//Add defaultZoom button under zoom control on map
-function DefaultZoomControl(controlDiv, map) {
-	
     const controlUI = document.createElement("div");
-    controlUI.style.backgroundColor = "white";
-    controlUI.style.border = "8px solid white";
+    controlUI.style.backgroundColor = "#fff";
+    controlUI.style.border = "2px solid #fff";
+    controlUI.style.borderRadius = "2px";
+    controlUI.style.boxShadow = "0 1px 4px rgba(0,0,0,0.3)";
     controlUI.style.cursor = "pointer";
     controlUI.style.marginLeft = "10px";
-    controlUI.style.marginTop = "10px";
-    controlUI.innerHTML = '<button style="border:none;outline:none; background:white;" ><i class="fa fa-undo fa-lg "></i></button>';
-    controlUI.title = "Reset Default Zoom";
+    controlUI.style.width = "40px";
+    controlUI.style.height = "40px";
+    controlUI.style.display = "flex";
+    controlUI.style.alignItems = "center";
+    controlUI.style.justifyContent = "center";
+
+    controlUI.title = "Open Legend";
+    controlUI.innerHTML = '<i class="fas fa-arrow-right fa-lg" style="color:#333;"></i>';
     controlDiv.appendChild(controlUI);
 
     controlUI.addEventListener("click", () => {
-    	var center=new google.maps.LatLng(1,38);
-        map.setCenter(center);
-		map.setZoom(7);	
-     });
+        $("#legendDiv").toggle();
+    });
+}
 
-  }
+// Add default zoom button under zoom control on map
+function DefaultZoomControl(controlDiv, map) {
+    const controlUI = document.createElement("div");
+    controlUI.style.backgroundColor = "#fff";
+    controlUI.style.border = "2px solid #fff";
+    controlUI.style.borderRadius = "2px";
+    controlUI.style.boxShadow = "0 1px 4px rgba(0,0,0,0.3)";
+    controlUI.style.cursor = "pointer";
+    controlUI.style.marginLeft = "10px";
+    controlUI.style.marginTop = "5px";
+    controlUI.style.width = "40px";
+    controlUI.style.height = "40px";
+    controlUI.style.display = "flex";
+    controlUI.style.alignItems = "center";
+    controlUI.style.justifyContent = "center";
+
+    controlUI.title = "Reset Default Zoom";
+    controlUI.innerHTML = '<i class="fa fa-undo fa-lg" style="color:#333;"></i>';
+    controlDiv.appendChild(controlUI);
+
+    controlUI.addEventListener("click", () => {
+        const center = new google.maps.LatLng(1, 38);
+        map.setCenter(center);
+        map.setZoom(7);
+    });
+}
+
 
 
 </script>
