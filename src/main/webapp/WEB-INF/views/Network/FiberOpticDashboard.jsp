@@ -317,9 +317,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
  </div>
 		</div>
 		
-	     <div class="legendContainer">
-  <div class="card-body">      
-   <div class="box stack-top" id="legendDiv" style="position: relative;bottom:50px;width: 175px; float:left; background:white; margin:37px; margin-top:190px;display: none">   
+	     <div class="legendContainer" >
+  <div class="card-body" >      
+   <div class="box stack-top" id="legendDiv" style=" position: relative;  margin-top: calc(583px / 2 - 120px); /* centers it vertically */
+        margin-left: 40px;
+        /* true centering */
+      width: 175px;  background:white; display: none">   
       <!-- Header -->
 <div class="legendHeader" id="legendHeader" 
      style="height: 30px; display: flex; align-items: center; justify-content: center; ">
