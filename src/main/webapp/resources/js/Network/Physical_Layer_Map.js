@@ -902,6 +902,12 @@ $('#tree').toggleClass('orange');
 $('#gis').toggleClass('orange');
 
 
+document.getElementById("DefaultRightbutton").click();
+$('#tree').toggleClass('orange');
+$('#gis').toggleClass('orange');
+
+
+
 $("#left").resizable({
 	handles: "e" 
 });

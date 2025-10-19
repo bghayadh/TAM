@@ -8497,6 +8497,219 @@ singleHandhole = new ContextMenu({
 		
 						}
 					 },
+					 
+					 	{'icon': 'project-diagram','name': 'View Panel Diagram',action: () => {
+							const panelBtn = document.getElementById("panelBtn");
+							    openRightab({ currentTarget: panelBtn }, "panelContainer");
+
+							    // Step 2: call backend and draw diagram
+							    $.ajax({
+							      type: "GET",
+							      contentType: "application/json; charset=utf-8",
+							      url: getContext() + '/getDbRowNum',
+							      async: false,
+							      data: { "selectedDistBoardContext": selectedDistBoardContext },
+							      dataType: "json",
+							      success: function (data) {
+							        console.log("totalPortsStr:", data);
+
+							        // Clean the panel div
+							        const container = document.getElementById("panelStage");
+							        container.innerHTML = "";
+									// Number of DB rows
+									// Number of DB rows
+									// Number of DB rows
+									var totalPorts = Number(data.totalPortsStr); // convert to Number if it's a string or other type
+									var numRowsFromDb = Math.ceil(totalPorts / 24);
+
+									// Dynamic panel size based on rows
+									var panelWidth = 850;
+									var panelHeight = 50 + numRowsFromDb * 20; // dynamic height depending on rows
+
+									// Stage size
+									var stageWidth = panelWidth + 100; // add space for racks
+									var stageHeight = panelHeight + 40;
+
+									var stage = new Konva.Stage({
+									  container: "panelStage",
+									  width: stageWidth,
+									  height: stageHeight,
+									  id: "mainPanelStage"
+									});
+
+									var layer = new Konva.Layer();
+									stage.add(layer);
+
+									// Draw main panel ("sachi")
+									var panelBackground = new Konva.Rect({
+									  x: 50,
+									  y: 20,
+									  width: panelWidth,
+									  height: panelHeight,
+									  fill: "#ecf0f1",
+									  stroke: "black",
+									  strokeWidth: 2,
+									  cornerRadius: 10,
+									  id: "mainPanel"
+									});
+									layer.add(panelBackground);
+
+									// Add click event on panel
+									panelBackground.on("click", function () {
+									  alert("Whole panel clicked");
+									});
+
+									// Draw left and right racks (no space with panel)
+									var rackWidth = 30;
+
+									var leftRack = new Konva.Rect({
+									  x: 50 - rackWidth, // directly touching the panel
+									  y: 20,
+									  width: rackWidth,
+									  height: panelHeight,
+									  fill: "#95a5a6",
+									  stroke: "black",
+									  strokeWidth: 2,
+									  id: "leftRack"
+									});
+									layer.add(leftRack);
+
+									// Add click event on left rack
+									leftRack.on("click", function () {
+									  alert("Whole panel clicked");
+									});
+
+									var rightRack = new Konva.Rect({
+									  x: 50 + panelWidth, // directly touching the panel
+									  y: 20,
+									  width: rackWidth,
+									  height: panelHeight,
+									  fill: "#95a5a6",
+									  stroke: "black",
+									  strokeWidth: 2,
+									  id: "rightRack"
+									});
+									layer.add(rightRack);
+
+									// Add click event on right rack
+									rightRack.on("click", function () {
+									  alert("Whole panel clicked");
+									});
+
+									// Function to create circular connectors inside racks (transparent)
+									function createConnector(x, y, id) {
+									  var circle = new Konva.Circle({
+									    x: x,
+									    y: y,
+									    radius: 6,
+									    fill: "transparent",
+									    stroke: "black",
+									    strokeWidth: 1,
+									    id: id
+									  });
+									  layer.add(circle);
+									}
+
+									// Add top and bottom connectors inside racks
+									createConnector(leftRack.x() + rackWidth / 2, leftRack.y() + 10, "leftTopConnector");
+									createConnector(leftRack.x() + rackWidth / 2, leftRack.y() + panelHeight - 10, "leftBottomConnector");
+
+									createConnector(rightRack.x() + rackWidth / 2, rightRack.y() + 10, "rightTopConnector");
+									createConnector(rightRack.x() + rackWidth / 2, rightRack.y() + panelHeight - 10, "rightBottomConnector");
+
+									// Function to create smaller ports with grey fill
+									function createPort(x, y, id) {
+									  const portWidth = 20;   
+									  const portHeight = 15;  
+									  const notchWidth = 10;  
+									  const notchHeight = 4;  
+
+									  var port = new Konva.Line({
+									    points: [
+									      x, y,
+									      x + 5, y,
+									      x + 5, y - notchHeight,
+									      x + 5 + notchWidth, y - notchHeight,
+									      x + 5 + notchWidth, y,
+									      x + portWidth, y,
+									      x + portWidth, y + portHeight,
+									      x, y + portHeight,
+									    ],
+									    closed: true,
+									    stroke: "black",
+									    strokeWidth: 1.5,
+									    fill: "#7f8c8d", // grey fill
+									    id: id,
+									  });
+
+									  // Slots inside port (lighter grey)
+									  for (let i = 0; i < 4; i++) {
+									    let slot = new Konva.Rect({
+									      x: x + 2 + i * 4,  
+									      y: y + 4,
+									      width: 3,
+									      height: 9,
+									      fill: "#bdc3c7",
+									    });
+									    layer.add(slot);
+									  }
+
+									  var label = new Konva.Text({
+									    x: x,
+									    y: y + portHeight + 2,
+									  
+									    fontSize: 7,  
+									    fill: "black",
+									  });
+
+									  port.on("click", function (e) {
+									    e.cancelBubble = true; // prevent triggering panel click
+									    alert("Clicked " + this.id());
+									  });
+
+									  layer.add(port);
+									  layer.add(label);
+									}
+
+									// Place ports inside panel, vertically centered
+									const portsPerRow = 24;
+									const portSpacingX = 35; 
+									const portSpacingY = 35; 
+									const portHeight = 15;
+
+									const totalPortHeight = (numRowsFromDb - 1) * portSpacingY + portHeight;
+									const startX = 60;    
+									const startY = panelBackground.y() + (panelHeight - totalPortHeight) / 2;
+
+									let portCount = 1;
+									for (let row = 0; row < numRowsFromDb; row++) {
+									  for (let col = 0; col < portsPerRow; col++) {
+									    let x = startX + col * portSpacingX;
+									    let y = startY + row * portSpacingY;
+									    createPort(x, y, "P" + portCount);
+									    portCount++;
+									  }
+									}
+
+									layer.draw();
+
+
+
+
+							      },
+							      error: function (xhr, status, error) {
+							        console.error("Error fetching DB row number:", error);
+							      }
+							    });
+							  }
+							},
+					 
+					 
+					 
+					 
+					 
+					 
+					 
 	/////////////*********************	PORTS Mapping  ***********************///////////////
 	//-------------------------------------------------------------------------------------------------//	         
 			{'icon': 'braille', 'name': 'View Board Mapping', action: () => {
