@@ -43,6 +43,9 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/findNearest.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/findNearestMulty.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/DBCreation.js"></script>
+<script src="https://unpkg.com/konva/konva.min.js"></script>
+
+
 <style>
 .close {
   float: right;
@@ -408,9 +411,18 @@
 		</div>
 		<!-- End of Left Div that contains the Tree div, arrows div, layers, options and Boq div -->
 		<!--  Beginning of GIS part -->
-		<div id="right">
-		<div id="mapContainer"></div>
-		</div>
+	<div id="right">
+  <div class="tab" style="margin-bottom: 10px">
+    <button class="tablink" onclick="openRightab(event, 'mapContainer')" id="DefaultRightbutton" style="color:#FFD966; font-weight:bold">Map</button>		
+    <button id="panelBtn" class="tablink" onclick="openRightab(event, 'panelContainer')" style="color:#FFD966; font-weight:bold">Panel</button>		
+  </div>
+
+  <div id="mapContainer" class="rightcontent"></div>
+  <div id="panelContainer" class="rightcontent" style="display:none;">
+  
+    <div id="panelStage" style="width:1300px; height:600px; border:1px solid #ccc;"></div>
+  </div>
+</div>
 		<!--  Ending of GIS part -->
 	</div>
 	<!-- Projects Model -->
@@ -9590,8 +9602,28 @@ function customerControllerChanged(checkbox) {
 		    document.activeElement.blur(); // remove focus
 		});
 
+	   function openRightab(evt, functionality) {
+		   var i, tabcontent, tablinks;
+		   tabcontent = document.getElementsByClassName("rightcontent");
+		   for (i = 0; i < tabcontent.length; i++) {
+		     tabcontent[i].style.display = "none";
+		   }
+		   tablinks = document.getElementsByClassName("tablink");
+		   for (i = 0; i < tablinks.length; i++) {
+		     tablinks[i].className = tablinks[i].className.replace(" active", "");
+		   }
+		   document.getElementById(functionality).style.display = "block";
+		   evt.currentTarget.className += " active";
 
-
+		   // 👇 Add this
+		   if (functionality === "panelContainer") {
+		     // Give it a slight delay so DOM updates first
+		     setTimeout(() => {
+		       if (typeof drawPanelDiagram === "function") drawPanelDiagram();
+		     }, 100);
+		   }
+		 }
+		
 			
 		
 
