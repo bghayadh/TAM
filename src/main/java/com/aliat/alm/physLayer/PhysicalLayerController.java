@@ -3320,6 +3320,65 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	
+	
+	
+	@RequestMapping(value = "/getDbRowNum", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getDbRowNum(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedDistBoardContext = request.getParameter("selectedDistBoardContext");
+			try {
+				// Execute native query to get NUM_ROWS and NUM_COLUMNS
+				Object[] result = (Object[]) session.createNativeQuery(
+				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+				    )
+				    .setParameter("dbId", selectedDistBoardContext)
+				    .getSingleResult();
+
+				// Cast to BigDecimal
+				BigDecimal numRows = (BigDecimal) result[0];
+				BigDecimal numColumns = (BigDecimal) result[1];
+
+				// Calculate product
+				BigDecimal totalPorts = numRows.multiply(numColumns);
+
+				// Convert to String
+				String totalPortsStr = totalPorts.toPlainString();
+
+				System.out.println("Total ports: " + totalPortsStr);
+				
+				rtn.put("totalPortsStr", totalPortsStr);
+				session.flush();
+				session.clear();
+				tx.commit();
+
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findDistBoardDetails due to \n " + exceptionAsString);
+				logger.info("Error in findDistBoardDetails due to \n " + exceptionAsString);
+				rtn.put("DistBoardDetails", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
 
 	
 	
