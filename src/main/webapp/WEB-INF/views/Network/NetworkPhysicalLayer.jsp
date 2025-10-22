@@ -7486,7 +7486,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 
 <script>
 
-
 let fiberList = [];
 let auxDat = [];
 let auxGrouped = [];
@@ -7494,8 +7493,6 @@ let geoDistances = [];
 let dict = []; // global like your reference code
 systemLong = ${systemLong};
 systemLat = ${systemLat};
-
-
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -7676,9 +7673,6 @@ function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng
 	            console.error("Error loading fiber list:", err);
 	        }
 	    });
-
-
-
 	 }
 
 async function updateCities(item) {
@@ -8083,8 +8077,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-
-
 //function on map clustring
 function initMap() {
 
@@ -8137,7 +8129,6 @@ function initMap() {
 	});
 	
 	map.setOptions({ minZoom: 3, maxZoom: 28});
-	//new AutocompleteDirectionsHandler(map);
 	directionsDisplay.setMap(map);
 	
 	restingMap();
@@ -8387,8 +8378,6 @@ $("#saveController").click(function () {
             			
             			}
                     	else  	if (networkLayer == "access") {
-            				
-            				
                     		str="<ul><li id='"+data.controllerId+"'  class='aController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";								
 							$("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
         					
@@ -8399,8 +8388,6 @@ $("#saveController").click(function () {
             				        openContext(selectedControllerId, selectedControllerName, singleController, event);
             				    });
             				//treeCollapseFolder("#DistributionBoard_accessController__CurrentPhysicalLayer" ,".folder","fast",".folder");
-                				    
-
             			}
                 		createControllerMarkerClick(
     							data.controllerId,
@@ -8414,11 +8401,8 @@ $("#saveController").click(function () {
     					controllerCheckFilter(
     							data.controllerId,
     							markerClusterController
-    							); 
-    				
+    							);
     					markerClusterController.addMarker(markersController[data.controllerId]);
-    			    
-            					
                     }
                     // Handle Update
                     else if (actiondistControllerContext == "Update") {
@@ -8472,15 +8456,10 @@ $("#saveController").click(function () {
     	                    }
                     	       	}
                     		$("#"+data.controllerId).remove();
-
-                
-                    		if(markersController[data.controllerId]){
-                    			
+                    		if(markersController[data.controllerId]){                    			
                     			   markersController[data.controllerId].setMap(null);
-
                     	            markerClusterController.removeMarker(markersController[data.controllerId]);
-                    	        	delete markersController[data.controllerId];       
-                            		
+                    	        	delete markersController[data.controllerId];
                         		}
 
                         	if (data.controllerDBCount != "0"){
@@ -8507,8 +8486,6 @@ $("#saveController").click(function () {
                     				    });
                     				// Correct order: selector, type, clss
                     				treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
-		
-                    			
                     			}	
                             	else  	if (networkLayer == "metro") {
                     				
@@ -8533,9 +8510,7 @@ $("#saveController").click(function () {
                     				treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
 		
                     			}
-                            	else  	if (networkLayer == "access") {
-                    				
-                    				
+                            	else  	if (networkLayer == "access") {                    				
                             		str = "<ul><li id='" + data.controllerId + "' class='aController' style='display:none;width:100px;'>"
                             	    + "<input type='checkbox' class='ControllerPannel checkFilter filter' />"
                             	    + "<span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span>"
@@ -8641,27 +8616,13 @@ $("#saveController").click(function () {
             							); 
             				
             					markerClusterController.addMarker(markersController[data.controllerId]);
-            			    
-
                             	}
-
-
-
-
-
-
-
                         	}
                     	else {
-
                         	if(data.controllerDBCount != "0"){
-
-
                     		$("#"+data.controllerId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li>");
-
                         	}
-                    	}
-                        	 
+                    	}                        	 
                     }
                     var childrenInitial=$("#initial_ul_CurrentPhysicalLayer").find(' > ul > li');
 					var children = $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li');
@@ -8680,20 +8641,13 @@ $("#saveController").click(function () {
 				        console.warn("Folder icon NOT found for controllerId:", controllerId);
 				    }
 					 $("#"+data.controllerId).children(':checkbox').prop( "checked", true );
-						
-				    
-					       
 			
                     $("#initial_ul_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 					$("#initial_ul_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
 					$("#DistributionBoard_f_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 
-
-
 					$("#DistributionBoard_f_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 					$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-				
-					
 											
 					children.show('fast');
 					childrenInitial.show('fast');
@@ -9629,9 +9583,6 @@ function customerControllerChanged(checkbox) {
 		   }
 		 }
 		
-			
-		
-
 </script>
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
