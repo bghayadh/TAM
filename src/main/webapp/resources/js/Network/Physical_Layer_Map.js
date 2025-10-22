@@ -7,9 +7,9 @@ function getContext() {
 // To let the layer tab opened when the page is loaded
 
 	
-function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,filterFlag){
+//function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,filterFlag){
+function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,systemLong,systemLat){
 
-	var start = performance.now();
 			panPath = [];   // An array of points the current panning action will use
 			panQueue = [];  // An array of subsequent panTo actions to take
 			STEPS = 80;
@@ -76,7 +76,8 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 
 	
 			//kenya=new google.maps.LatLng(1,38);
-			kenya=new google.maps.LatLng(-19.2370074705615,29.7948325794125);					
+			//kenya=new google.maps.LatLng(-19.2370074705615,29.7948325794125);
+			kenya=new google.maps.LatLng(systemLat,systemLong);					
 			LatLanMouse(map);
 	
 			iconManhole = {
@@ -331,8 +332,6 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 						}
 				});				
 			});
-	 var end = performance.now();
-	 var start2 = performance.now();
 	
 			if(ListManhole!=null){
 				str="";
@@ -429,7 +428,6 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 		    AllNodesTreeCheckFilter("NodeActive_f_CurrentPhysicalLayer","");
 		}*/
 			
-	var end2 = performance.now();
 			allElementsCheckFilter();	
 			filterMap_Labels("MANHOLE",markersManhole,"manholesMapCheck_Labels","marker-position-manhole","red");
 			filterMap_Labels("HANDHOLE",markersHandhole,"handholesMapCheck_Labels","marker-position-handhole","#E5C523");	
