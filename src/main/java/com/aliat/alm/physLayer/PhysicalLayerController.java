@@ -51,6 +51,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.GetSystemSettings;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.AccessCableJunction;
@@ -116,7 +117,10 @@ public class PhysicalLayerController {
 	@Autowired
 	Notify notifications;
 	@Autowired
-	Permissions permissions;
+	Permissions permissions;	
+	@Autowired
+	GetSystemSettings getSystemSettings;
+
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value = "/NetworkPhysicalLayer", method = RequestMethod.GET)
@@ -314,6 +318,9 @@ public class PhysicalLayerController {
 					// System.out.println("url is "+request.getParameter("selectedField"));
 					String checkedOption = "all";
 					System.out.println("url is " + request.getParameter("Checked"));
+					
+					getSystemSettings.getLongLat(session,model);
+					
 					if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "CurrentPhysicalLayer")
 							|| StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "PROJECT")) {
 
