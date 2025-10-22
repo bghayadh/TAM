@@ -3,9 +3,7 @@ function getContext() {
    return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 }
 
-
 // To let the layer tab opened when the page is loaded
-
 	
 //function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,filterFlag){
 function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,systemLong,systemLat){
@@ -15,7 +13,6 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 	STEPS = 80;	
 	markersManhole=[];		
 	markersHandhole=[];
-	//markersNodeActive=[];
 	markerClusterJunction = [];
 	markerClusterSite = [];
 	markersDistBoard=[];
@@ -30,7 +27,6 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 	placeMarkers=[];
 	markersJunction=[];
 	markersSite=[];
-//		map.setZoom(6);
 	
 	markerClusterManhole = new MarkerClusterer();
 	markerClusterManhole.setMap(map); // to be checked !!!!
@@ -123,7 +119,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 		}                   
 	});
 			
-			// Handholes cluster Calculator
+	// Handholes cluster Calculator
 			
 	markerClusterHandhole.setOptions( {									
 		minimumClusterSize: 2,
@@ -477,64 +473,8 @@ function filterMap_CableLabels(className,RelativeArray,RelativeCheckboxId){
 			});
 		}
 	});
-}	
-
-
-
-/* TO BE DELETED 
- * 
- * // filter from map fiber,tubes,and strands labels
-function filterMap_CableLabels(className,RelativeArray,RelativeCheckboxId){
-	
-	$("#"+RelativeCheckboxId).on('change',function(){
-	
-		if($(this).prop("checked")==true){
-
-		$("#FiberPath_f_CurrentPhysicalLayer > .AllFiberCables").on('change',function(){	
-
-			if($(this).prop("checked")==true){
-				
-				$("#FiberPath_f_CurrentPhysicalLayer").find(' > ul > li >ul >li').each(function(){		
-				fiberArray[$(this).attr('id')].mapLabel.setMap(map);
-				})
-
-			} 
-		})
-			
-			
-			$('.'+className).each(function(){
-				
-				$(this).children('input:checkbox').on('change',function(){
-					if($(this).prop("checked")==true){
-		                if(directionHashmap.get($(this).parent().attr('id'))) {
-			                    directionHashmap.get($(this).parent().attr('id')).mapLabel.setMap(map);
-		                }
-						if(RelativeArray[$(this).parent().attr('id')]){
-							RelativeArray[$(this).parent().attr('id')].mapLabel.setMap(map);
-						}
-					} 
-				});
-
-
-			})
-			
-		}
-	
-		else{
-			$('.'+className).each(function(){
-				
-                if(directionHashmap.get($(this).attr('id'))) {
-	                    directionHashmap.get($(this).attr('id')).mapLabel.setMap(null);
-                }
-				
-				if(RelativeArray[$(this).attr('id')]){
-					RelativeArray[$(this).attr('id')].mapLabel.setMap(null);
-				}
-			})
-		}
-	});
 }
-*/	
+
 
 //calculate distance of path
 function haversine_distance(lat1,lng1,lat2,lng2) {
@@ -599,157 +539,129 @@ function returnNormal() {
 	}
 
 function FilterOptions(x){
-
-	 var input, filter, table, tr, td, i, txtValue;
-	 var str=x;
+	var input, filter, table, tr, td, i, txtValue;
+	var str=x;
 	 
-		 if(str=='options'){
-	  input = document.getElementById("searchOption");
-	  filter = input.value.toUpperCase();
-	  table = document.getElementById("optionstable");
-	  tr = table.getElementsByTagName("tr");
+	if(str=='options'){
+		input = document.getElementById("searchOption");
+	  	filter = input.value.toUpperCase();
+	  	table = document.getElementById("optionstable");
+	  	tr = table.getElementsByTagName("tr");
 
-	  // Loop through all table rows, and hide those who don't match the search query
-	  for (i = 0; i < tr.length; i++) {
-	    td = tr[i].getElementsByTagName("td")[0];
-	    if (td) {
-	      txtValue = td.textContent || td.innerText;
-	      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-	        tr[i].style.display = "";
-	      } else {
-	        tr[i].style.display = "none";
-	      }
-	    }
-	  }
-		 }
-
-		 else if(str=='layers'){
-
-			 input = document.getElementById("layerSearch");
-			  filter = input.value.toUpperCase();
-			  table = document.getElementById("LayersTable");
-			  tr = table.getElementsByTagName("tr");
-              var div=table.rows[0];
-			  // Loop through all table rows, and hide those who don't match the search query
-			  for (i = 0; i < tr.length; i++) {
-			    td = tr[i].getElementsByTagName("td")[0];
-			    if (td) {
-			      txtValue = td.textContent || td.innerText;
-			      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-			    	 
-			         tr[i].style.display = "";
-			        
+		// Loop through all table rows, and hide those who don't match the search query
+	  	for (i = 0; i < tr.length; i++) {
+	    	td = tr[i].getElementsByTagName("td")[0];
+	    	if (td) {
+	      		txtValue = td.textContent || td.innerText;
+	      	if (txtValue.toUpperCase().indexOf(filter) > -1) {
+	        	tr[i].style.display = "";
+	      	} else {
+	        	tr[i].style.display = "none";
+	      	}
+	    	}
+	  	}
+	}
+	else if(str=='layers'){
+		input = document.getElementById("layerSearch");
+		filter = input.value.toUpperCase();
+		table = document.getElementById("LayersTable");
+		tr = table.getElementsByTagName("tr");
+        var div=table.rows[0];
+		// Loop through all table rows, and hide those who don't match the search query
+		for (i = 0; i < tr.length; i++) {
+			td = tr[i].getElementsByTagName("td")[0];
+			if (td) {
+				txtValue = td.textContent || td.innerText;
+				if (txtValue.toUpperCase().indexOf(filter) > -1) {
+			    	tr[i].style.display = "";
 			      } else {
 			        tr[i].style.display = "none";
-			        
 			      }
 			    }
-
-			    tr[0].style.display="";
-
-			 }
-		 }
-	 }
+			tr[0].style.display="";
+		}
+	}
+}
 
 $(document).ready(function () {
 	
-document.getElementById("Defaultbutton").click();
-$('#tree').toggleClass('orange');
-$('#gis').toggleClass('orange');
+	document.getElementById("Defaultbutton").click();
+	$('#tree').toggleClass('orange');
+	$('#gis').toggleClass('orange');
 
 
-document.getElementById("DefaultRightbutton").click();
-$('#tree').toggleClass('orange');
-$('#gis').toggleClass('orange');
+	document.getElementById("DefaultRightbutton").click();
+	$('#tree').toggleClass('orange');
+	$('#gis').toggleClass('orange');
 
+	$("#left").resizable({
+		handles: "e" 
+	});
 
+	$("#network_tree").resizable({
+		handles: "s",
+	});
 
-$("#left").resizable({
-	handles: "e" 
-});
-
-$("#network_tree").resizable({
-	handles: "s", 	
-
-});
-
-$('.modal-content').resizable({
-	handles: "e" ,
-	
+	$('.modal-content').resizable({
+		handles: "e" ,	
 	});
     
-$('.modal-dialog').draggable({
-	handle: ".modal-header, .modal-footer"
-	});
-//To be deleted
-/*
-$('#mapModal').on('hidden.bs.modal', function() {
-	    $(this).find('.modal-content').css({'width': '', 'height': ''});
+	$('.modal-dialog').draggable({
+		handle: ".modal-header, .modal-footer"
+	});	
+	
+	//reset popup position after it has been dragged and closed
+	$('body').on('hidden.bs.modal', function() { 
+		$('.modal-dialog').css({'top': '', 'left':''});
 	})
-	
-$('#modalOrderTree').on('hidden.bs.modal', function() {
-	    $(this).find('.modal-content').css({'width': '', 'height': ''});
-	})
-*/	
-	
-	
-//reset popup position after it has been dragged and closed
-$('body').on('hidden.bs.modal', function() { 
-	$('.modal-dialog').css({'top': '', 'left':''});
-})
 
-$(".modalMinimize").on("click", function(){
-	console.log("click4");
-  $(".modal-body").slideToggle();
-  $(".modal-footer").slideToggle();
+	$(".modalMinimize").on("click", function(){
+		console.log("click4");
+  		$(".modal-body").slideToggle();
+  		$(".modal-footer").slideToggle();
   
-  //Toggle between minimize/maximize icons
-	var iconToChange = $('.icon-to-change');
-	  if(iconToChange.hasClass('fa-window-restore')){
-		 iconToChange.removeClass('fa-window-restore')
+  		//Toggle between minimize/maximize icons
+		var iconToChange = $('.icon-to-change');
+		if(iconToChange.hasClass('fa-window-restore')){
+			iconToChange.removeClass('fa-window-restore')
 	       .addClass('fa-minus')
-	  }
-	  else{
-		 iconToChange.addClass('fa-window-restore')
+	  	}
+	  	else{
+			iconToChange.addClass('fa-window-restore')
 	       .removeClass('fa-minus')
-	  }    		         
-  }); // end minimize/maximize fct
+	  	}
+	}); // end minimize/maximize fct
 
     //Later use  
-$('#arrow_up').click(function() { 
-	console.log("click5");
-	 $("#network_tree").animate({height: "0px"});
-	 $(".searchcontainer").css("display", "none");
-	 $(".tabcontent").animate({height: "613px"});
-   	$('#arrow_down').hide();
-   	$('#arrow_up').hide();
-   	$('#arrow_down_normal').show();
-   	       
-    });	
-$('#arrow_down').click(function() {
-	console.log("click6");
+	$('#arrow_up').click(function() { 
+		console.log("click5");
+	 	$("#network_tree").animate({height: "0px"});
+	 	$(".searchcontainer").css("display", "none");
+	 	$(".tabcontent").animate({height: "613px"});
+   		$('#arrow_down').hide();
+   		$('#arrow_up').hide();
+   		$('#arrow_down_normal').show();
+    });
+	
+	$('#arrow_down').click(function() {
+		console.log("click6");
     	$(".searchcontainer").css("display", "block");
     	$("#network_tree").animate({height: "572px"});
     	$('#arrow_down').hide();
     	$('#arrow_up').hide();
     	$('#arrow_up_normal').show();
-    	
-    
-    });
+});
 
-		var TreeArray=[];
-
+	var TreeArray=[];
 		TreeArray.push("Site");//>>>
 		TreeArray.push("Node");////>>>> Site/Node/Cell Case
 		TreeArray.push("Cell");//>>>
 
-//$( "#sortable" ).sortable();
-$( "#sortable" ).sortable({
-		    cancel: ".unsortable_sup",
-		    items: "li:not(.unsortable)",
-		});
-$( "#sortable" ).disableSelection();
+	//$( "#sortable" ).sortable();
+	$( "#sortable" ).sortable({
+		cancel: ".unsortable_sup",
+		items: "li:not(.unsortable)",
+	});
 
-
+	$( "#sortable" ).disableSelection();
 });
-
