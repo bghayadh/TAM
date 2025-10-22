@@ -10,439 +10,196 @@ function getContext() {
 //function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,filterFlag){
 function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,distribBoardList,fiberTubes,fiberStrands,fiberAuxiliary_Data,tubesAuxiliaries,strandsAuxiliaries,trenchList,trenchAuxiliary_Data,NodeList,systemLong,systemLat){
 
-			panPath = [];   // An array of points the current panning action will use
-			panQueue = [];  // An array of subsequent panTo actions to take
-			STEPS = 80;
+	panPath = [];   // An array of points the current panning action will use
+	panQueue = [];  // An array of subsequent panTo actions to take
+	STEPS = 80;	
+	markersManhole=[];		
+	markersHandhole=[];
+	//markersNodeActive=[];
+	markerClusterJunction = [];
+	markerClusterSite = [];
+	markersDistBoard=[];
+	markersController = [];
+	markersDistBoardFilter=[];
+	markersTempoDistBoard="";						
+	markersTempoHandhole="";
+	markersTempo="";
+	markersJctTempo="";
+	markersTempoHandholeJct="";	
+	siteCltSrcMarkers=[];
+	placeMarkers=[];
+	markersJunction=[];
+	markersSite=[];
+//		map.setZoom(6);
 	
-			markersManhole=[];		
-			markersHandhole=[];
-			//markersNodeActive=[];
-			markerClusterJunction = [];
-			markerClusterSite = [];
-			markersDistBoard=[];
-			markersController = [];
-			markersDistBoardFilter=[];
-			markersTempoDistBoard="";						
-			markersTempoHandhole="";
-			markersTempo="";
-			markersJctTempo="";
-			markersTempoHandholeJct="";	
-			siteCltSrcMarkers=[];
-			placeMarkers=[];
-			markersJunction=[];
-			markersSite=[];
+	markerClusterManhole = new MarkerClusterer();
+	markerClusterManhole.setMap(map); // to be checked !!!!
+	markerClusterHandhole = new MarkerClusterer();
+	markerClusterHandhole.setMap(map);// to be checked !!!!
+	
+	markerClusterBackboneDistBoard = new MarkerClusterer();
+	markerClusterBackboneDistBoard.setMap(map);			
+	markerClusterMetroDistBoard = new MarkerClusterer();
+	markerClusterMetroDistBoard.setMap(map);			
+	markerClusterAccessDistBoard = new MarkerClusterer();
+	markerClusterAccessDistBoard.setMap(map);
+						
+	markerClusterJunction = new MarkerClusterer();
+	markerClusterJunction.setMap(map);// to be checked !!!!
 		
+	markerClusterSite = new MarkerClusterer();
+	markerClusterSite.setMap(map);// to be checked !!!!			
 
+	markerClusterController = new MarkerClusterer();
+	markerClusterController.setMap(map);
+	
+	center=new google.maps.LatLng(systemLat,systemLong);					
+	LatLanMouse(map);
+	iconManhole = {
+		url: getContext()+"/resources/NetworkImages/manholeRed.png", // url
+		scaledSize: new google.maps.Size(20, 20), // scaled size
+	};
 
-	//		map.setZoom(6);
+	iconHandhole ={
+		url:""+getContext()+"/resources/NetworkImages/handholeYellow.png", // url
+		scaledSize: new google.maps.Size(20, 20), // scaled size
+	};
+			
+	iconBackboneDistBoard = {
+		url:getContext()+"/resources/NetworkImages/backboneDB.png", // url
+		scaledSize: new google.maps.Size(20, 20), // scaled size
+	};
 	
-			markerClusterManhole = new MarkerClusterer();
-			markerClusterManhole.setMap(map); // to be checked !!!!
-			markerClusterHandhole = new MarkerClusterer();
-			markerClusterHandhole.setMap(map);// to be checked !!!!
-			
+	iconMetroDistBoard = {
+		url:getContext()+"/resources/NetworkImages/metroDb.png", // url
+		scaledSize: new google.maps.Size(20, 20), // scaled size
+	};
 	
-			markerClusterBackboneDistBoard = new MarkerClusterer();
-			markerClusterBackboneDistBoard.setMap(map);
+	iconAccessDistBoard = {
+		url:getContext()+"/resources/NetworkImages/accessDb.png", // url
+		scaledSize: new google.maps.Size(20, 20), // scaled size
+	};
+	iconManholeJct = {
+		url: getContext()+"/resources/NetworkImages/manholeJct.png", // url
+		scaledSize: new google.maps.Size(20, 20), // scaled size
+	};
+	iconHandholeJct ={
+		url:""+getContext()+"/resources/NetworkImages/handholeYellowJct.png", // url
+		scaledSize: new google.maps.Size(20, 20), // scaled size
+	};
+	iconSite ={
+		url:""+getContext()+"/resources/NetworkImages/redSiteIcon.png", // url
+		scaledSize: new google.maps.Size(35, 35), // scaled size
+	};
+	iconPlace ={
+		url:""+getContext()+"/resources/markers/Map-Marker-PNG-File.png", // url
+		scaledSize: new google.maps.Size(35, 35), // scaled size
+	};
+	iconGeneric ={
+		url:""+getContext()+"/resources/NetworkImages/generic.png", // url
+		scaledSize: new google.maps.Size(40, 40), // scaled size
+	};
+	iconAuxPoint ={
+		url:""+getContext()+"/resources/NetworkImages/handholeGreen.png", // url
+		scaledSize: new google.maps.Size(10, 10), // scaled size
+	};
+	iconClient ={
+		url:""+getContext()+"/resources/images/google-maps-client.png", // url
+		scaledSize: new google.maps.Size(40, 40), // scaled size
+	};
 			
-			markerClusterMetroDistBoard = new MarkerClusterer();
-			markerClusterMetroDistBoard.setMap(map);
-			
-			markerClusterAccessDistBoard = new MarkerClusterer();
-			markerClusterAccessDistBoard.setMap(map);
-			
-		/*	markerClusterMSANNodes = new MarkerClusterer();
-			markerClusterMSANNodes.setMap(map);
-			
-			markerClusterDWDMNodes = new MarkerClusterer();
-			markerClusterDWDMNodes.setMap(map);
-			
-			markerClusterSDHNodes = new MarkerClusterer();
-			markerClusterSDHNodes.setMap(map);
-			
-			markerClusterGPONNodes = new MarkerClusterer();
-			markerClusterGPONNodes.setMap(map);*/
-			
-			markerClusterJunction = new MarkerClusterer();
-			markerClusterJunction.setMap(map);// to be checked !!!!
-			
-			markerClusterSite = new MarkerClusterer();
-			markerClusterSite.setMap(map);// to be checked !!!!
-	
-			
-
-			    markerClusterController = new MarkerClusterer();
-			    markerClusterController.setMap(map);
-
-	
-			//kenya=new google.maps.LatLng(1,38);
-			//kenya=new google.maps.LatLng(-19.2370074705615,29.7948325794125);
-			kenya=new google.maps.LatLng(systemLat,systemLong);					
-			LatLanMouse(map);
-	
-			iconManhole = {
-				url: getContext()+"/resources/NetworkImages/manholeRed.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-		
-		
-			iconHandhole ={
-				url:""+getContext()+"/resources/NetworkImages/handholeYellow.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-		
-			iconBackboneDistBoard = {
-				url:getContext()+"/resources/NetworkImages/backboneDB.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconMetroDistBoard = {
-				url:getContext()+"/resources/NetworkImages/metroDb.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconAccessDistBoard = {
-				url:getContext()+"/resources/NetworkImages/accessDb.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconManholeJct = {
-				url: getContext()+"/resources/NetworkImages/manholeJct.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconHandholeJct ={
-				url:""+getContext()+"/resources/NetworkImages/handholeYellowJct.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconSite ={
-				url:""+getContext()+"/resources/NetworkImages/redSiteIcon.png", // url
-				scaledSize: new google.maps.Size(35, 35), // scaled size
-			};
-			iconPlace ={
-				url:""+getContext()+"/resources/markers/Map-Marker-PNG-File.png", // url
-				scaledSize: new google.maps.Size(35, 35), // scaled size
-			};
-			iconGeneric ={
-				url:""+getContext()+"/resources/NetworkImages/generic.png", // url
-				scaledSize: new google.maps.Size(40, 40), // scaled size
-			};
-			iconAuxPoint ={
-				url:""+getContext()+"/resources/NetworkImages/handholeGreen.png", // url
-				scaledSize: new google.maps.Size(10, 10), // scaled size
-			};
-			
-			iconClient ={
-					url:""+getContext()+"/resources/images/google-maps-client.png", // url
-					scaledSize: new google.maps.Size(40, 40), // scaled size
-			};
-			
-			/*iconMSANNode = {
-				url:getContext()+"/resources/NetworkImages/MSANNodeIcon.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconSDHNode = {
-				url:getContext()+"/resources/NetworkImages/SDHNodeIcon.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconDWDMNode = {
-				url:getContext()+"/resources/NetworkImages/DWDMNodeIcon.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};
-			iconGPONNode = {
-				url:getContext()+"/resources/NetworkImages/GPONNodeIcon.png", // url
-				scaledSize: new google.maps.Size(20, 20), // scaled size
-				
-			};*/
-			
-			
-			// Manholes cluster Calculator
-			
-		markerClusterManhole.setOptions( {					  					
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/redCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
+	markerClusterManhole.setOptions( {					  					
+		minimumClusterSize: 2,
+		styles: [
+		         {
+		        	 url: getContext()+'/resources/clusterIcons/redCluster.png',
+			         height: 60,
+			         width:60,
+			         anchorText:[-3,-3]
+			      },
 				],
-				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 3}; // red
-				}                   
-			});
+		calculator: function(markers, numStyles) {
+			if (markers.length >= 1) return {text: markers.length, index: 3}; // red
+		}                   
+	});
 			
 			// Handholes cluster Calculator
 			
-			markerClusterHandhole.setOptions( {									
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/yellowCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-4,-2]
-					      },
+	markerClusterHandhole.setOptions( {									
+		minimumClusterSize: 2,
+		styles: [
+		         {
+		        	 url: getContext()+'/resources/clusterIcons/yellowCluster.png',
+			         height: 60,
+			         width:60,
+			         anchorText:[-4,-2]
+			      },
 				],
-				calculator: function(markers, numStyles) {
-				if (markers.length >= 1) return {text: markers.length, index: 2}; 
-				}                   
-			});
-			
-			
-			
-	/*		
-			// Backbone Distribution Boards cluster Calculator
-			markerClusterBackboneDistBoard.setOptions({								
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/blueCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-					if (markers.length >= 1) return {text: markers.length,index:1}; 
-				}                   
-			});
-			
-			
-			// Metro Distribution Boards cluster Calculator
-			markerClusterMetroDistBoard.setOptions({								
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/dbMetroCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-					if (markers.length >= 1) return {text: markers.length,index:1}; 
-				}                   
-			});
-			
-			// Access Distribution Boards cluster Calculator
-			markerClusterAccessDistBoard.setOptions({								
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/dbAccessCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-					if (markers.length >= 1) return {text: markers.length,index:1}; 
-				}                   
-			});
-			
-		markerClusterMSANNodes.setOptions({								
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/nodeMSANCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-					if (markers.length >= 1) return {text: markers.length,index:1}; 
-				}                   
-			});
-			
-		markerClusterSDHNodes.setOptions({								
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/nodeSDHCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-					if (markers.length >= 1) return {text: markers.length,index:1}; 
-				}                   
-			});
-			
-			markerClusterDWDMNodes.setOptions({								
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/nodeDWDMCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-					if (markers.length >= 1) return {text: markers.length,index:1}; 
-				}                   
-			});
-			
-			markerClusterGPONNodes.setOptions({								
-				minimumClusterSize: 2,
-				styles: [
-				         {
-				        	 url: getContext()+'/resources/clusterIcons/nodeGPONCluster.png',
-					         height: 60,
-					         width:60,
-					         anchorText:[-3,-3]
-					      },
-				],
-				calculator: function(markers, numStyles) {
-					if (markers.length >= 1) return {text: markers.length,index:1}; 
-				}                   
-			});*/
-			
-		
+		calculator: function(markers, numStyles) {
+			if (markers.length >= 1) return {text: markers.length, index: 2}; 
+		}                   
+	});			
 	
-			$(".Initial_CurrentPhysicalLayer > .TreeSpan").on("click",function(){
+	$(".Initial_CurrentPhysicalLayer > .TreeSpan").on("click",function(){
 		console.log("click1");
-				map.setZoom(7);	
-				map.setCenter(kenya);
-	
-				google.maps.event.addListenerOnce(map, 'idle', function() {
-						markerClusterManhole.repaint();
-						markerClusterHandhole.repaint();
-						if(	DBFlag == 1){
-						markerClusterBackboneDistBoard.repaint();	
-						markerClusterMetroDistBoard.repaint();	
-						markerClusterAccessDistBoard.repaint();	
-						}
-						if(nodeFlag == 1){
-							markerClusterMSANNodes.repaint();
-							markerClusterSDHNodes.repaint();
-							markerClusterDWDMNodes.repaint();
-							markerClusterGPONNodes.repaint();	
-							markerClusterEntSwitchNodes.repaint();
-						}
-				});				
-			});
-	
-			if(ListManhole!=null){
-				str="";
-				for(i=0;i<ListManhole.length;i++){
-					//Junction exists
-					if(ListManhole[i][5]>0){	
-						create_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"Junction","");				
-						//createManhole_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"Junction");	
-							
-						ManholeCheckFilter(ListManhole[i][0]);						
-					}
-					else {
-						create_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"No_Junction","");				
-						//createManhole_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"No_Junction");				
-						ManholeCheckFilter(ListManhole[i][0]);					
-					}
-				}
-				//AllManholeCheckFilter();
+		map.setZoom(7);	
+		map.setCenter(center);
+		google.maps.event.addListenerOnce(map, 'idle', function() {
+			markerClusterManhole.repaint();
+			markerClusterHandhole.repaint();
+			if(	DBFlag == 1){
+				markerClusterBackboneDistBoard.repaint();	
+				markerClusterMetroDistBoard.repaint();	
+				markerClusterAccessDistBoard.repaint();	
 			}
+			if(nodeFlag == 1){
+				markerClusterMSANNodes.repaint();
+				markerClusterSDHNodes.repaint();
+				markerClusterDWDMNodes.repaint();
+				markerClusterGPONNodes.repaint();	
+				markerClusterEntSwitchNodes.repaint();
+			}
+		});				
+	});
 	
-			if(ListHandhole!=null)
-			{
-				//console.log("ListHandhole is not null "+ListHandhole);
-				for(i=0;i<ListHandhole.length;i++){
-					if(ListHandhole[i][5]>0){
-						
-					create_Marker_Click(ListHandhole[i][0],ListHandhole[i][1],ListHandhole[i][2],ListHandhole[i][3],markersHandhole,markerClusterHandhole,"Junction","");											
-					//createHandhole_Marker_Click(ListHandhole[i][0],ListHandhole[i][1],ListHandhole[i][2],ListHandhole[i][3],markersHandhole,markerClusterHandhole,"Junction");				
-					HandholeCheckFilter(ListHandhole[i][0]);
-					
+	if(ListManhole!=null){
+		str="";
+		for(i=0;i<ListManhole.length;i++){
+			//Junction exists
+			if(ListManhole[i][5]>0){	
+				create_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"Junction","");				
+				//createManhole_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"Junction");	
+				ManholeCheckFilter(ListManhole[i][0]);						
 			}
 			else {
-				create_Marker_Click(ListHandhole[i][0],ListHandhole[i][1],ListHandhole[i][2],ListHandhole[i][3],markersHandhole,markerClusterHandhole,"No_Junction","");				
-				//createHandhole_Marker_Click(ListHandhole[i][0],ListHandhole[i][1],ListHandhole[i][2],ListHandhole[i][3],markersHandhole,markerClusterHandhole,"No_Junction");				
-				HandholeCheckFilter(ListHandhole[i][0]);			
+				create_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"No_Junction","");				
+				//createManhole_Marker_Click(ListManhole[i][0],ListManhole[i][1],ListManhole[i][2],ListManhole[i][3],markersManhole,markerClusterManhole,"No_Junction");				
+				ManholeCheckFilter(ListManhole[i][0]);					
 			}
-		
-				}		
-				//AllHandholeCheckFilter();
+		}
+	}
+	
+	if(ListHandhole!=null) {
+		for(i=0;i<ListHandhole.length;i++){
+			if(ListHandhole[i][5]>0){
+				create_Marker_Click(ListHandhole[i][0],ListHandhole[i][1],ListHandhole[i][2],ListHandhole[i][3],markersHandhole,markerClusterHandhole,"Junction","");											
+				HandholeCheckFilter(ListHandhole[i][0]);
 			}
-			/*if(distribBoardList!=null){
-				for(i=0;i<distribBoardList.length;i++){		
-					if(distribBoardList[i][8]=="backbone"){
-						clusterName = markerClusterBackboneDistBoard;
-					}
-					else if(distribBoardList[i][8]=="metro"){
-						clusterName = markerClusterMetroDistBoard;
-					}
-					else {
-						clusterName = markerClusterAccessDistBoard;
-					}
-					create_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,clusterName,"",distribBoardList[i][7]);
-					DistributionBoardCheckFilter(distribBoardList[i][0],"",clusterName);
-				}
-			
-				//AllDistributionBoardFilter();
-				
-			AllDistributionBoardCheckFilter("DistributionBoard_access__CurrentPhysicalLayer",markerClusterAccessDistBoard);
-		    AllDistributionBoardCheckFilter("DistributionBoard_metro__CurrentPhysicalLayer",markerClusterMetroDistBoard);
-		    AllDistributionBoardCheckFilter("DistributionBoard_backbone__CurrentPhysicalLayer",markerClusterBackboneDistBoard);
-		    AllDistributionBoardCheckFilter("DistributionBoard_f_CurrentPhysicalLayer","")
-			}
-			
-			
-		
-			
-			if(NodeList != null){
-			   for(i=0;i<NodeList.length;i++){
-			     if(NodeList[i][8]=='MSAN'){
-			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterMSANNodes,"","");				
-						NodeActiveCheckFilter(NodeList[i][0],markerClusterMSANNodes);
-			   }
-			 
-			 else if(NodeList[i][8]=='DWDM'){
-			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterDWDMNodes,"","");				
-						NodeActiveCheckFilter(NodeList[i][0],markerClusterDWDMNodes);
-			   }
-			   
-			 else if(NodeList[i][8]=='SDH'){
-			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterSDHNodes,"","");				
-						NodeActiveCheckFilter(NodeList[i][0],markerClusterSDHNodes);
-			   }
-			   
-			 else if(NodeList[i][8]=='GPON'){
-			            create_Marker_Click(NodeList[i][0],NodeList[i][1],NodeList[i][5],NodeList[i][6],markersNodeActive,markerClusterGPONNodes,"","");				
-						NodeActiveCheckFilter(NodeList[i][0],markerClusterGPONNodes);
-			   }
-			   
-			   }
-			AllNodesTreeCheckFilter("Entreprise_MSAN__CurrentPhysicalLayer",markerClusterMSANNodes);
-		    AllNodesTreeCheckFilter("Transmission_DWDM__CurrentPhysicalLayer",markerClusterDWDMNodes);
-		    AllNodesTreeCheckFilter("Transmission_SDH__CurrentPhysicalLayer",markerClusterSDHNodes);
-		    AllNodesTreeCheckFilter("Transmission_GPON__CurrentPhysicalLayer",markerClusterGPONNodes);
-		    AllNodesTreeCheckFilter("NodeActive_f_CurrentPhysicalLayer","");
-		}*/
-			
-			allElementsCheckFilter();	
-			filterMap_Labels("MANHOLE",markersManhole,"manholesMapCheck_Labels","marker-position-manhole","red");
-			filterMap_Labels("HANDHOLE",markersHandhole,"handholesMapCheck_Labels","marker-position-handhole","#E5C523");	
-			filterMap_Labels("DistributionBoard",markersDistBoard,"dBMapCheck_Labels","marker-position-dB","#5665F9");
-			/////////////called from CreateFiberPath()/////////////////7
-			//filterMap_CableLabels("FIBER",fiberArray,"fiberMapCheck_Labels");
-			//filterMap_CableLabels("TUBE",tubeArray,"tubeMapCheck_Labels");
-			//filterMap_CableLabels("STRAND",strandArray,"strandMapCheck_Labels");
-			
-			//filterMap_CableLabels("FIBER",directionHashmap,"fiberMapCheck_Labels");
-			filterMapTrenchDuctLabels("TRENCH",trenchArray,"trenchMapCheck_Labels");
-			filterMapTrenchDuctLabels("DUCT",ductArray,"ductMapCheck_Labels");
-
-			sitesMapLabel();
-			clientsMapLabel();
+			else {
+				create_Marker_Click(ListHandhole[i][0],ListHandhole[i][1],ListHandhole[i][2],ListHandhole[i][3],markersHandhole,markerClusterHandhole,"No_Junction","");
+				HandholeCheckFilter(ListHandhole[i][0]);
+			}		
+		}
+	}
+	
+	allElementsCheckFilter();	
+	filterMap_Labels("MANHOLE",markersManhole,"manholesMapCheck_Labels","marker-position-manhole","red");
+	filterMap_Labels("HANDHOLE",markersHandhole,"handholesMapCheck_Labels","marker-position-handhole","#E5C523");	
+	filterMap_Labels("DistributionBoard",markersDistBoard,"dBMapCheck_Labels","marker-position-dB","#5665F9");
+	filterMapTrenchDuctLabels("TRENCH",trenchArray,"trenchMapCheck_Labels");
+	filterMapTrenchDuctLabels("DUCT",ductArray,"ductMapCheck_Labels");
+	sitesMapLabel();
+	clientsMapLabel();
 	map.setZoom(6);
 		
 	//This is the google map menu that will open when right click on the google map
@@ -469,6 +226,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
     })
 }
 // The end of CreateMap_PhysicalLayer
+
 function sitesMapLabel() {
 
 	$("#sitesMapCheck_Labels").on('change',function(){
