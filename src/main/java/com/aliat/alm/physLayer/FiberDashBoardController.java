@@ -1,93 +1,32 @@
 package com.aliat.alm.physLayer;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.math.BigDecimal;
-import java.net.Socket;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.Properties;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
+
 //import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
+
 import com.aliat.alm.common.AlmDbSession;
+import com.aliat.alm.common.GetSystemSettings;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
-import com.aliat.alm.models.AccessCableJunction;
-import com.aliat.alm.models.AttachmentUpload;
-import com.aliat.alm.models.DistributionBoard;
-import com.aliat.alm.models.DistributionBoardMapping;
-import com.aliat.alm.models.DistributionBoardSurvey;
-import com.aliat.alm.models.Duct;
-import com.aliat.alm.models.DuctAuxPoints;
-import com.aliat.alm.models.FiberAuxPoints;
-import com.aliat.alm.models.FiberCable;
-import com.aliat.alm.models.FiberCableSurvey;
-import com.aliat.alm.models.FiberStrands;
-import com.aliat.alm.models.FiberStrandsSurvey;
-import com.aliat.alm.models.FiberTubes;
-import com.aliat.alm.models.FiberTubesSurvey;
-import com.aliat.alm.models.HandholeSurvey;
-import com.aliat.alm.models.ManholeSurvey;
-import com.aliat.alm.models.NodeActive;
-import com.aliat.alm.models.NodeSurvey;
-import com.aliat.alm.models.PhysicalLayerActivity;
-import com.aliat.alm.models.StrandAuxPoints;
-import com.aliat.alm.models.Survey;
-import com.aliat.alm.models.Trench;
-import com.aliat.alm.models.TrenchAuxPoints;
-import com.aliat.alm.models.TubeAuxPoints;
-import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.SftpException;
 
 @Controller
 public class FiberDashBoardController {
@@ -112,8 +51,10 @@ public class FiberDashBoardController {
 	Notify notifications;
 	@Autowired
 	Permissions permissions;
+	@Autowired
+	GetSystemSettings getSystemSettings;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/FiberOpticDashboard", method = RequestMethod.GET)
 	public String FiberOpticDashboard(Locale locale, Model model, HttpServletRequest request,
 	                                  HttpServletResponse response) throws JsonProcessingException {
@@ -139,6 +80,7 @@ public class FiberDashBoardController {
 	        if (session != null && session.isOpen()) {
 	            tx = session.beginTransaction();
 	        	notifications.headerNotifications(session, model);
+	    	    getSystemSettings.getLongLat(session,model);
 	            fiberList = session.createNativeQuery(
 	                    "SELECT SOURCE_LNG,SOURCE_LAT,DESTINATION_LNG,DESTINATION_LAT,A.FIBER_CABLE_ID,"
 	                            + "A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,"

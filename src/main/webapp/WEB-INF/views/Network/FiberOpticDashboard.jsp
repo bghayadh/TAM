@@ -377,11 +377,14 @@ var fiberArray = [];
 var panPath = [];
 var panQueue = [];
 var STEPS = 80;
+var systemLong = ${systemLong};
+var systemLat = ${systemLat};
 
 
 function initMap() {
     map = new google.maps.Map(document.getElementById("mapContainer"), {
-        center: { lat: 1, lng: 38 },
+    	center: { lat: systemLat, lng: systemLong },
+        //center: { lat: 1, lng: 38 },
         zoom: 6,
         mapTypeControl: true,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -876,9 +879,9 @@ function DefaultZoomControl(controlDiv, map) {
     controlUI.title = "Reset Default Zoom";
     controlUI.innerHTML = '<i class="fa fa-undo fa-lg" style="color:#333;"></i>';
     controlDiv.appendChild(controlUI);
-
+    
     controlUI.addEventListener("click", () => {
-        const center = new google.maps.LatLng(1, 38);
+        const center = new google.maps.LatLng(systemLat, systemLong);
         map.setCenter(center);
         map.setZoom(7);
     });
