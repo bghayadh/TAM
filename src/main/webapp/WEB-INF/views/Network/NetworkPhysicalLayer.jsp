@@ -7492,6 +7492,8 @@ let auxDat = [];
 let auxGrouped = [];
 let geoDistances = [];
 let dict = []; // global like your reference code
+systemLong = ${systemLong};
+systemLat = ${systemLat};
 
 
 
@@ -8115,8 +8117,7 @@ function initMap() {
 	  lstModfUser = $("#modifiedByFiberCable").val();
 	//New Map//
 	map = new google.maps.Map(document.getElementById("mapContainer"), {
-		//center: { lat: 1, lng: 38 },
-		center: { lat: -19.2370074705615, lng: 29.7948325794125 },		
+		center: { lat: systemLat, lng: systemLong },
 		mapTypeControl: true,
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		mapTypeControlOptions: {
@@ -8147,8 +8148,6 @@ function initMap() {
 	var Emptydiv=null;
 	var projectID;
 	filterFlag = ${filterFlag};
-	systemLong = ${systemLong};
-	systemLat = ${systemLat};
 	checkedOption = '${checkedOption}';
 	$("#filterSection").empty();
 	 // This loop to build the filter tab information which is existed in the search popup.
