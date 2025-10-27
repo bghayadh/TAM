@@ -12,7 +12,7 @@ function openPop(element){
 
 function sendValBoqToPopup(indxRow){      
 	$('#popupProcName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procName"]').children('input').val());
-	$('#popupProcStatus') .val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procProcStatus"]').children('input').val()); 
+	$('#popupProcStatus') .val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').children('input').val()); 
 	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());
 	$('#popupProcCronExpr').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val());							 
 	var element = document.getElementById("popupNb");
@@ -50,15 +50,82 @@ function htmlBOQRowInsertion(rowParams){
 				+"<td name='procName'><input name='procName' type='text' value='"+ rowParams.name +"' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
             	+"<td name='procStatus'>"
     			+"<input name='procStatus' type='text' value='"+ rowParams.status +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
-    			+"<td name='className'>"
-    	     	+"<input name='className' type='text' value='"+ rowParams.className +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
- 				+"<td name='cronExpr'>"
-				+"<input name='cronExpr' type='text' value='"+  rowParams.cronExpr +"'style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
-				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-desktop'></i></button></td></tr>"; 
+    			+"<td name='procClassName'>"
+    	     	+"<input name='procClassName' type='text' value='"+ rowParams.className +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
+ 				+"<td name='procCronExpr'>"
+				+"<input name='procCronExpr' type='text' value='"+  rowParams.cronExpr +"'style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
+				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-desktop'></i></button></td>"
+				+"<td name='procRunManual' style='text-align:center;'><button type='button' name='procRunManual' href = '#' onclick='runProc(this)' class='btn btn-primary BtnActive' style='margin:0;'>Run Now</button></td>"				
+				+"<td name='procID'><input type='text' style='width:200px;' readonly value= 0 class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>"; 
 	return markup;
 }
 
+
+// Insert row below fct
+ function insertRowBelow(){ 
+	addNewRow("below");	
+	rowindx++ ;
+	var belowIndex = parseInt(rowindx);    	
+	sendValBoqToPopup(belowIndex);
+	
+}// End insertRowBelow fct in popup   
+
+// Insert Row Above fct
+function insertRowAbove(){
+	addNewRow("above");
+ 	sendValBoqToPopup(rowindx);
+}// End insertRowAbove fct in popup   
+
+ // Delete row fct
+function deleteBoqRow() {
+	console.log("RowIndx" +rowindx);
+	rowindx++;
+	$("tr").eq(rowindx).remove();
+	
+	// Get Nb of rows after delete 
+	var rowCount = $("#boqTable >tbody tr").length;
+	console.log("rowCount in BoQ:" +rowCount);
+	rowindx--;
+	if (rowindx == 0 && rowCount ==0) {
+		$("#processModal").modal("hide");
+	}
+  
+	else if(rowindx >= 0 && rowindx < rowCount) {
+		sendValBoqToPopup(rowindx);
+	}
+
+    // Show previous record 
+	else if (rowindx >= rowCount){
+		rowindx--;
+		sendValBoqToPopup(rowindx);
+	} 
+} // End delete fct
+
+
 $(function(){
+	
+	//remove selected rows from boq
+	$(".delete-row").click(function(){	
+		slctDelOrd =[];
+		var checked="false"; //when no checkbox is checked
+		var proc_Pk ="";
+		$("#boqTable > tbody").find('input[name="record"]').each(function(){
+			if($(this).is(":checked")){
+				checked="true"; //when 1 or more checkbox is checked		 
+				proc_Pk=$(this).parent().parent().children('td[name="procID"]').children('input').val();
+	        	if( proc_Pk !=0) {
+	        		slctDelOrd.push(proc_Pk);
+	      		}   
+				$(this).parents("tr").remove();  
+	      	} 
+		});
+		if(checked=="false"){
+			alert(' Select Row(s) to Delete');    			
+			return false;
+		}	          
+	});	// end delete row
+	
+	
 	// Resize and drag the popup
 	$('.modal-content').resizable({
 		handles: "e" ,

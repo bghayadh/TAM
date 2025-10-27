@@ -653,6 +653,7 @@
 						    <th>Class Name</th>
 						    <th>Cron Expression</th>
 						    <th>Calendar Cron</th>
+						    <th>Process ID</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -681,6 +682,7 @@
 			<div class="modal-header" style="background-color: #2678CC ; height: 55px; display:flex; align-items:center;">
 				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative;"></h5>
 				<div style="float: right;">
+					<button  name="runProcBtn"  onclick="runProc(this)" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -40px; font-weight: bold;">Run Now </button>				
 					<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold;">Insert Below </button>
 					<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold;">Insert Above </button>
 					<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold;">Delete</button>
@@ -698,8 +700,7 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="info-tab-content" role="tabpanel" aria-labelledby="info-tab">
-						<p></p>
-  					</div>
+						<p></p>  					
 						<div class="container-fluid">
 							<div class="row">
 								<div class="col-sm-6">
@@ -724,7 +725,7 @@
 									<div class="form-group">
 									<div class="input-group-prepend">
 									<span class="input-group-text" >Process Class Name</span>
-									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupClassName" style="width:675px; height:37px"/>					
+									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupProcClassName" style="width:675px; height:37px"/>					
 									</div>
 									</div>
 								</div>
@@ -738,6 +739,7 @@
 								</div>
 							</div>							
 						</div>
+					</div>
 				</div>
 			</div>
 			<div class="modal-footer">

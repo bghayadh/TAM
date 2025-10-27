@@ -569,7 +569,7 @@ public class PurchaseController {
 						    itemMap.put("prqPoStatus", row[18]);
 						    return itemMap;
 						}).collect(Collectors.toList());
-						model.addAttribute("ListPRqItem", mapper.writeValueAsString(listPRqBoq));
+						model.addAttribute("ListPRqItem", mapper.writeValueAsString(listPRqBoq));					
 					}
 
 				} catch (Exception e) {
@@ -761,9 +761,9 @@ public class PurchaseController {
 
 						// add data in table PurchaseorderItem
 						
-						str = "SELECT t.ITEM_CODE as itemCode , t.ITEM_NAME as itemName , t.ITEM_MODEL as itemModel , t.ITEM_PART_NUMBER as itemPartNumber ,t.QTY as qty,"
-								+ " t.RATE as rate,t.DISCOUNT_AMOUNT as discountAmount,t.TAX1 as tax1 , t.NET_RATE as netRate, t.TOTAL as total, t.TOTAL_AT as totalAt, "
-								+ " t.ITEM_BARCODE as poBarCode, "
+						str = "SELECT t.ITEM_CODE as itemCode, t.ITEM_NAME as itemName, t.ITEM_MODEL as itemModel, t.ITEM_PART_NUMBER as itemPartNumber,"
+								+ " t.ITEM_BARCODE as poBarCode, t.QTY as qty, t.RATE as rate, t.DISCOUNT_AMOUNT as discountAmount,"
+								+ " t.TAX1 as tax1, t.NET_RATE as netRate, t.TOTAL as total, t.TOTAL_AT as totalAt,"								
 								+ " (SELECT coalesce(sum(distinct(a.QTY)),0) FROM GOODS_RECEIVED_ITEM a   "
 								+ " INNER JOIN GOODS_RECEIVED b ON b.GR_ID=a.GR_ID "
 								+ " INNER JOIN PURCHASE_ORDER c ON c.PO_ID= b.PO_ID "
@@ -816,6 +816,8 @@ public class PurchaseController {
 						}).collect(Collectors.toList());
 		model.addAttribute("docStatus", "Existed");
 						model.addAttribute("ListPoItem", mapper.writeValueAsString(listPurchaseOrderBoq));
+						
+						System.out.println("listPurchaseOrderBoq is "+mapper.writeValueAsString(listPurchaseOrderBoq));
 
 						///////// Discrepancy Report
 						query = session.createNativeQuery(
