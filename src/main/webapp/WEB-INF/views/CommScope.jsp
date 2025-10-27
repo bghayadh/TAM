@@ -5,7 +5,6 @@
 <meta charset="utf-8">
     <title>CommScope</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- ADDED BY AHMAD TAFECH -->
 	<script src="${pageContext.request.contextPath}/resources/js/popper.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
@@ -17,9 +16,8 @@
 	<script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>	
 	<script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>	 
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet"/>
-<!-- 	
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
-	 -->
+
+	<!--  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css"> -->
 		
     <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>	
 	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
@@ -29,13 +27,13 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
 	
 	<!-- ALM GRID Scripts -->
-	<script type="text/javascript"
-		src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/almgrid.css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/almgrid.class.js"></script>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
-	        
+	
+	<script src="${pageContext.request.contextPath}/resources/boqTable/boqPopup.js"></script>
 <style>
 
 .hide-row { visibility: hidden; }
@@ -74,6 +72,15 @@
 .nav-link.active {
   background-color: #FFD966 !important;
   color: #00757c !important;
+}
+
+.fixed-headerr{
+	opacity: 1;
+	filter: alpha(opacity=100);
+	background: #ebf2ef;
+	position: sticky;
+	top: 0;
+	z-index: 15;
 }
 
 </style>
@@ -569,13 +576,67 @@
 			<p></p>
 		</div>	
 
-		<div class="tab-pane fade" id="custom-tabs-schedule" role="tabpanel"
-			aria-labelledby="schedule-tab">
-			<p></p>
+		<div class="tab-pane fade" id="custom-tabs-schedule" role="tabpanel" aria-labelledby="schedule-tab">
+			<div class="table-responsive-sm" id="tableContainer">
+				<p></p> 
+				<table id ="boqTable" class="table table-striped table-bordered table-sm" style="display:block; height:200px; overflow-y: auto;">
+					<thead>
+						<tr id="bisotr" class="fixed-headerr">
+							<th><button type="button" id="selectAll" class="main"><span class="sub"></span>Select</button></th>
+						    <th>Name</th>
+						    <th>Status</th>
+						    <th>Class Name</th>
+						    <th>Cron Expression</th>
+						    <th>Calendar Cron</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
 		</div>
+		<form>
+			<input type = "hidden" type="text" id="RowIndex" value="">
+			<input type="button" class="add-row" value="Add Row" onClick="addNewRow('next')">
+			<button type="button" class="delete-row">Delete Row</button>
+		</form>
+		
+		
 			<!-- Log form -->
 		<div class="tab-pane fade" id="custom-tabs-one-logs" role="tabpanel" aria-labelledby="logs-tab">
 			<p></p>
+		</div>
+		
+	</div>
+</div>
+
+<div id ="processModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
+				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
+				<div style="float: right;">
+					<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
+					<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
+					<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete</button>
+					<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
+	            	<button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+					<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
+					<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+				</div>
+			</div>
+			<div class="modal-body">
+				<ul class="nav nav-tabs" id="popupTab" role="tablist" style="background-color: #00757C;">
+					<li class="nav-item">
+						<a class="nav-link active" id="info-tab" style="color: gold;" data-toggle="tab" href="#item" role="tab" aria-controls="item" aria-selected="true">INFORMATION</a>
+					</li>  
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="info-tab-content" role="tabpanel" aria-labelledby="info-tab">
+						<p></p>
+  					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

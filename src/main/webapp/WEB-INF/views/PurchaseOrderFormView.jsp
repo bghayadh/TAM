@@ -28,29 +28,26 @@
     <style>
 
     
-    #popUpDiv {
-position:fixed;
-top: 30%;
-left: 50%;
-background-color:#eeeeee;
-border:5px solid #08526d;
-width:400px;
-height:450px;
-margin-left:-150px;
-margin-top:-95px;
-
--moz-border-radius: 16px;
--webkit-border-radius: 16px;
-border-radius: 16px;
-box-shadow: 12px 0 15px -4px #000000, -12px 0 15px -4px#000000;
-
-z-index: 9003;
+#popUpDiv {
+	position:fixed;
+	top: 30%;
+	left: 50%;
+	background-color:#eeeeee;
+	border:5px solid #08526d;
+	width:400px;
+	height:450px;
+	margin-left:-150px;
+	margin-top:-95px;
+	-moz-border-radius: 16px;
+	-webkit-border-radius: 16px;
+	border-radius: 16px;
+	box-shadow: 12px 0 15px -4px #000000, -12px 0 15px -4px#000000;
+	z-index: 9003;
  /*above nine thousand*/}
  
-     .btn-pop {
+.btn-pop {
 	background-color: #C2CBC0 !important;
 	border-color: #C2CBC0;
-	3
 }
 
 .btn-pop:hover {
@@ -59,48 +56,49 @@ z-index: 9003;
 	border-color: #8696A0 !important;
 }
 
-				.ui-autocomplete {
-	            	max-height: 250px;
-					overflow-y: auto; /* prevent horizontal scrollbar */
-					overflow-x: both; /* add padding to account for vertical scrollbar */
-					padding-right: 10px;
-					z-index:9999;
-					width: 350px;
-	        		}
+.ui-autocomplete {
+	max-height: 250px;
+	overflow-y: auto; /* prevent horizontal scrollbar */
+	overflow-x: both; /* add padding to account for vertical scrollbar */
+	padding-right: 10px;
+	z-index:9999;
+	width: 350px;
+}
 
-				.dot {
-				  height: 17px;
-				  width: 17px;
-				  background-color: chartreuse;
-				  border-radius: 50%;
-				  display: inline-block;
-				 margin-top:10px; 
-				}
-				.dotStatus {
-				  height: 15px;
-				  width: 15px;
-				  background-color: orange;
-				  border-radius: 50%;
-				  display: inline-block;
-				  margin-top: 10px;
-				  margin-left: 10px;
-				  
-				}
-				.fixed-headerr{
-					opacity: 1;
-					filter: alpha(opacity=100);
-				 	background: #ebf2ef;
-				  	position: sticky;
-				  	top: 0;
-				  	z-index: 15;
-					}
+.dot {
+	height: 17px;
+	width: 17px;
+	background-color: chartreuse;
+	border-radius: 50%;
+	display: inline-block;
+	margin-top:10px; 
+}
+
+.dotStatus {
+	height: 15px;
+	width: 15px;
+	background-color: orange;
+	border-radius: 50%;
+	display: inline-block;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+.fixed-headerr {
+	opacity: 1;
+	filter: alpha(opacity=100);
+	background: #ebf2ef;
+	position: sticky;
+	top: 0;
+	z-index: 15;
+}
 				
- .hide-row { display:none; }
+.hide-row { display:none; }
 				
-#wrapper {width:100%;display: grid;max-height:100px;grid-gap: 100px;grid-column-gap:10px!important;grid-row-gap:8px!important;display:flex;
-			grid-template-rows:1fr 1fr!important;grid-template-columns:1fr 1fr 1fr!important;
-  					
-					}					
+#wrapper {
+	width:100%;display: grid;max-height:100px;grid-gap: 100px;grid-column-gap:10px!important;grid-row-gap:8px!important;display:flex;
+	grid-template-rows:1fr 1fr!important;grid-template-columns:1fr 1fr 1fr!important;
+}
  
 #one {min-width:380px;margin:50px;min-height:260px;border-radius: 10px;padding:10px;}
 
@@ -122,30 +120,30 @@ z-index: 9003;
 .divv2{text-align:center;justify-content: center;background-color: lightgray;border-radius: 0px 0px 25px 25px!important;font-size:13px;font-family: cursive;  
 border-style: groove;border-width: 2px;border-color: #4B8C8C;box-shadow: 5px 5px 5px rgb(75,140,140);border-top:none;} 	
  	
- tr{height:40px;}	
- table{align:top;margin-left:auto;margin-right:auto;}
+tr{height:40px;}	
+table{align:top;margin-left:auto;margin-right:auto;}
 
- .TD{border-bottom: 1pt solid black;}			
+.TD{border-bottom: 1pt solid black;}			
 		 
 .custom-class-assignedto-modal .modal-dialog {
-  width: 100%;
+	width: 100%;
 }
 .custom-class-assignedto-modal .modal-body {
-  height: 500px;
-  overflow : auto;
+	height: 500px;
+	overflow : auto;
 }
     
 .modal-header .btnGrp{
-      position: absolute;
-      top: 8px;
-      right: 10px;
+	position: absolute;
+	top: 8px;
+	right: 10px;
 }
   
 .display-none{display: none;}
     
 button .fa{
-        font-size: 16px;
-        margin-left: 10px;
+	font-size: 16px;
+	margin-left: 10px;
 }
 
    
@@ -155,68 +153,61 @@ button:focus { outline: none; }
 /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
   .input[type=text] {
-    width: 100%;
-    margin-top: 0;
+		width: 100%;
+    	margin-top: 0;
   }
 }
 
 
-
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-  .modal-content, .modal-dialog {
-  max-height: 100%;
-  max-width: 100%;
-  
- }
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+ 	}
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 600px) {
-.modal-content, .modal-dialog {
-max-height: 100%;
-max-width: 100%;
-
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
 }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (max-width: 768px) {
- .modal-content, .modal-dialog {
-  max-height: 100%;
-  max-width: 100%;
-  
+	.modal-content, .modal-dialog {
+ 		max-height: 100%;
+		max-width: 100%;
+	}
 }
-} 
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (max-width: 992px) {
-  .modal-content, .modal-dialog {
-  
-  max-height: 100%;
-        max-width: 100%;
-  
- }
-} 
+	.modal-content, .modal-dialog { 
+		max-height: 100%;
+    	max-width: 100%;
+ 	}
+}
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (max-width: 1200px) {
- .modal-content, .modal-dialog {
- 
- max-height: 100%;
- max-width: 100%;
+	.modal-content, .modal-dialog {
+ 		max-height: 100%;
+ 		max-width: 100%;
+	}
 }
+.nav-link.active {
+	background-color: #FFD966 !important;
+	color: #00757c !important;
 }
-  .nav-link.active {
-                background-color: #FFD966 !important;
-                color: #00757c !important;
-            }
 
 </style>
     
 </head>
 <body>
 
-  <c:set var="pg" value="purchasing" scope="session"  />
+<c:set var="pg" value="purchasing" scope="session"  />
 <jsp:include page="header.jsp"></jsp:include>
      <!--  end of general head page -->
      <p></p>
