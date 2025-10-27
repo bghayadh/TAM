@@ -57,3 +57,47 @@ function htmlBOQRowInsertion(rowParams){
 				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-desktop'></i></button></td></tr>"; 
 	return markup;
 }
+
+$(function(){
+	// Resize and drag the popup
+	$('.modal-content').resizable({
+		handles: "e" ,
+	});
+	 
+	$('.modal-dialog').draggable({
+		handle: ".modal-header, .modal-footer"
+	});
+	   
+	$('#processModal').on('show.bs.modal', function() {
+		$(this).find('.modal-body').css({
+			'max-height': '100%',
+		});
+	});
+	 
+	//Reset the popup to original size after resizing 
+	$('#processModal').on('hidden.bs.modal', function() {
+		$(this).find('.modal-content').css({'width': '', 'height': ''});
+	})
+	 
+	//Reset popup position after it has been dragged and closed
+	$('body').on('hidden.bs.modal', function() {
+		$('.modal-dialog').css({'top': '', 'left':''});
+	})
+			      
+	// Minimize and Maximize fct for popup
+	$(".modalMinimize").on("click", function(){
+		$(".modal-body").slideToggle();
+		$(".modal-footer").slideToggle();
+	
+		//Toggle between minimize/maximize icons
+		var iconToChange = $('.icon-to-change');
+		if(iconToChange.hasClass('fa-window-restore')) {
+			iconToChange.removeClass('fa-window-restore')
+			            .addClass('fa-minus')
+		}
+		else{
+	 		iconToChange.addClass('fa-window-restore')
+			             .removeClass('fa-minus')
+		}    		         
+	}); // end minimize/maximize fct
+});

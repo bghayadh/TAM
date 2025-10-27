@@ -83,6 +83,21 @@
 	z-index: 15;
 }
 
+.custom-class-assignedto-modal .modal-dialog {
+	max-width: 70% !important;   /* or 1000px, or any width you like */	
+	width: 100%;
+}
+.custom-class-assignedto-modal .modal-body {
+	height: 500px;
+	overflow : auto;
+}
+    
+.modal-header .btnGrp{
+	position: absolute;
+	top: 8px;
+	right: 10px;
+}
+
 .btn-pop {
 	background-color: #C2CBC0 !important;
 	border-color: #C2CBC0;
@@ -92,6 +107,45 @@
 	color: #fff;
 	background-color: #8696A0 !important;
 	border-color: #8696A0 !important;
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+ 	}
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (max-width: 600px) {
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+}
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (max-width: 768px) {
+	.modal-content, .modal-dialog {
+ 		max-height: 100%;
+		max-width: 100%;
+	}
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (max-width: 992px) {
+	.modal-content, .modal-dialog { 
+		max-height: 100%;
+    	max-width: 100%;
+ 	}
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1200px) {
+	.modal-content, .modal-dialog {
+ 		max-height: 100%;
+ 		max-width: 100%;
+	}
 }
 
 </style>
@@ -621,17 +675,17 @@
 	</div>
 </div>
 
-<div id ="processModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+<div id ="processModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 		<div class="modal-content">
-			<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
-				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative; bottom: 12px;"></h5>
+			<div class="modal-header" style="background-color: #2678CC ; height: 55px; display:flex; align-items:center;">
+				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative;"></h5>
 				<div style="float: right;">
-					<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold; margin-top: -7px;"">Insert Below </button>
-					<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold; margin-top: -7px;"">Insert Above </button>
-					<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold; margin-top: -7px;"">Delete</button>
-					<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold; margin-top: -7px;"">Previous</button>
-	            	<button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold; margin-top: -7px;"">Next</button> 
+					<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold;">Insert Below </button>
+					<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold;">Insert Above </button>
+					<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold;">Delete</button>
+					<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold;">Previous</button>
+	            	<button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold;">Next</button> 
 					<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
 					<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
 				</div>
@@ -646,7 +700,47 @@
 					<div class="tab-pane active" id="info-tab-content" role="tabpanel" aria-labelledby="info-tab">
 						<p></p>
   					</div>
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+									<div class="input-group-prepend">
+									<span class="input-group-text" >Process Name</span>
+									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupProcName" style="width:675px; height:37px"/>					
+									</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+									<div class="input-group-prepend">
+									<span class="input-group-text">Process Status</span>
+									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupProcStatus" style="width:674px; height:37px"/>
+									</div>
+									</div>
+								</div>
+							</div>							
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+									<div class="input-group-prepend">
+									<span class="input-group-text" >Process Class Name</span>
+									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupClassName" style="width:675px; height:37px"/>					
+									</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+									<div class="form-group">
+									<div class="input-group-prepend">
+									<span class="input-group-text">Process Cron Expression</span>
+									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupProcCronExpr" style="width:675px; height:37px"/>
+									</div>
+									</div>
+								</div>
+							</div>							
+						</div>
 				</div>
+			</div>
+			<div class="modal-footer">
 			</div>
 		</div>
 	</div>
