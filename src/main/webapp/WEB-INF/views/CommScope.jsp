@@ -38,12 +38,12 @@
 
 .hide-row { visibility: hidden; }
        
-.label{ 
-  display: table-caption;
-  text-align: center;
-  font-size: 20px;
-  font-style: bold;
-  }
+.label { 
+	display: table-caption;
+	text-align: center;
+	font-size: 20px;
+	font-style: bold;
+}
   
 .ui-autocomplete {
 	max-height: 250px;
@@ -52,7 +52,7 @@
 	padding-right: 10px;
 	width: 350px;
 	z-index:9999;					
-	}
+}
 	        		
 .dot {
 	height: 17px;
@@ -70,17 +70,28 @@
 }
 
 .nav-link.active {
-  background-color: #FFD966 !important;
-  color: #00757c !important;
+	background-color: #FFD966 !important;
+	color: #00757c !important;
 }
 
-.fixed-headerr{
+.fixed-headerr {
 	opacity: 1;
 	filter: alpha(opacity=100);
 	background: #ebf2ef;
 	position: sticky;
 	top: 0;
 	z-index: 15;
+}
+
+.btn-pop {
+	background-color: #C2CBC0 !important;
+	border-color: #C2CBC0;
+}
+
+.btn-pop:hover {
+	color: #fff;
+	background-color: #8696A0 !important;
+	border-color: #8696A0 !important;
 }
 
 </style>
