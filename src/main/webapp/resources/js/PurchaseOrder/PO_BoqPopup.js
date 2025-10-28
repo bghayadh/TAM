@@ -115,86 +115,11 @@ function sendValPopupToBoq(indxRow){
 	        var serNum = $(this).parent().parent().children('td[name="serialNumber"]').children('input').val();
 	        var itemMod = $(this).parent().parent().children('td[name="itmModel"]').children('input').val();
 	    	var itemPartnum = $(this).parent().parent().children('td[name="itemPart"]').children('input').val();
-	    	
-
 			    Data.serialArray.push({serial_no:serNum, itm_model:itemMod, itm_partno:itemPartnum});
-
 	      }
 	  	});
 	    	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);			
 }
-
-function buildingSavedBOQ(itmRow){
- 	var barcode =  itmRow.poBarCode;
-	if(barcode == null){
-	barcode = "";
-	}
-	else{
-	barcode =  itmRow.poBarCode;
-	}
-	var itemModel =  itmRow.itemModel;
-   		if(itemModel == null)
-   		itemModel = "";
-   		else
-   		itemModel =  itmRow.itemModel;
-
-
-   	var itemPartNumber = itmRow.itemPartNumber;
-	if(itemPartNumber == null)
-		itemPartNumber = "";
-	else
-		itemPartNumber = itmRow.itemPartNumber;
- 	var dotStatus = (itmRow.poItemStatus);
-	var span;
-	         				 
-      if(dotStatus == "1")
-     {
-     
-	
-	   span = "<span class='dotStatus' name='dotStatus' value='"+dotStatus+"' style='background-color: chartreuse;'></span>";
-     }
-else 
-     {
-	 
-   
-	 span = "<span class='dotStatus' name='dotStatus' value='"+dotStatus+"' style='background-color: orange;'></span>";
-	    }
-
-	var serialArrays = [];
-  if (itmRow.serial_obj != null) {
-  serialArrays.push(itmRow.serial_obj);
-  }
-  else{
-  serialArrays.push(null);
-  }     
-       
-    var itemRow = "<tr>";
-    itemRow= itemRow + "<td><input type='checkbox' name='record'>"+span+"<button type='button'  href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default' style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
-	itemRow =itemRow + "<td name='itemCode'><input type='text' name='itmCode' value='" + itmRow.itemCode +":"+ itmRow.itemName + "' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>";
-	itemRow =itemRow + "<td name='itemModel'><input name='itmModel' type='text' value='" + itemModel + "' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>";
-	itemRow =itemRow + "<td name='itemPartNo'><input name='itmPartNo' type='text' value='" + itemPartNumber + "' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' /></td>";		 			
-	itemRow =itemRow + "<td hidden name='poBarCode'><input type='text' style='width:200px;' hidden value='" + barcode +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='qty'><input name='qty' type='text' style='width:200px;' value='" + itmRow.qty +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='rate'><input name='rate' type='text' style='width:200px;' value='" + itmRow.rate +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='discountAmount'><input  name='discountAmount' type='text' style='width:200px;' value='" + itmRow.discountAmount +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='tax1'><input name='tax1' type='text' style='width:200px;' value='" + itmRow.tax1 +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-    itemRow =itemRow + "<td name='netRate'><input type='text' style='width:200px;' value='" + itmRow.netRate +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-    itemRow =itemRow + "<td name='total'><input type='text' style='width:200px;' value='" + itmRow.total +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='totalAt'><input type='text' style='width:200px;' value='"  + itmRow.totalAt +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='grpQty'><input type='text' style='width:200px;' value='" + itmRow.grQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='prQty'><input type='text' style='width:200px;' value='" + itmRow.prQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='arQty'><input type='text' style='width:200px;' value='" + itmRow.arQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='cipQty'><input type='text' style='width:200px;' value='" + itmRow.cipQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='farQty'><input type='text' style='width:200px;' value='" + itmRow.farQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='porItemId'><input type='text' style='width:200px;' value='" + itmRow.pordItemId +"'readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'><input name='poItemStatus' type='text' value='" + (itmRow.poItemStatus !== null ? itmRow.poItemStatus : "0") + "'hidden class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";
-	itemRow =itemRow + "<td name='serialNo'><input type='text'  style='width:200px;' value=" + serialArrays[0] +" hidden class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>";		
-	itemRow =itemRow + "</tr>";
-    $("#bisotab > tbody").append(itemRow);
-
-    //var loadRowCount =  $("#bisotab >tbody tr").length;
-    //boqAutocomplete(loadRowCount);
-		        
-}  
 
 
 function htmlBOQRowInsertion(name, model, partnum, barcode){
@@ -1411,9 +1336,7 @@ var ctx = getContextPath();
 	});
 	
 // Send concatenated Serial Table rows to boq table on any change in td
-  $('#serialNoTable').on('focusout', function() {
- 
- 
+  $('#serialNoTable').on('focusout', function() {  
 		 var Data = {};
 	 	 var serial_no="";
 	 	 var itm_model ="";
@@ -1432,13 +1355,8 @@ var ctx = getContextPath();
 			    Data.serialArray.push({serial_no:serNum, itm_model:itemMod, itm_partno:itemPartnum});
 		  	});
 
-
 	    	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);
-	    
-
 }); // end fct
-
-
 
 	    	
  //Send input values from popup to boq when any popup input change
@@ -1464,8 +1382,7 @@ var ctx = getContextPath();
 	 $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="prQty"]').children('input').val($('#popupPrQty').val());
 	 $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="arQty"]').children('input').val($('#popupArQty').val());
 	 $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="cipQty"]').children('input').val($('#popupCipQty').val());
-	 $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="farQty"]').children('input').val($('#popupFarQty').val());
-	
+	 $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="farQty"]').children('input').val($('#popupFarQty').val());	
 				
 	    getTotalAT_SumQty();
 	    amountsUpdate();
@@ -1479,92 +1396,76 @@ var ctx = getContextPath();
 	    $("#poModal").modal("hide");
 	    getTotalAT_SumQty();
 	    amountsUpdate();
-	    
-	    
 		 
  }); // end close fct
 
  
- function getTotalAT_SumQty(){
-  var sumQty =0;
-  var sumTotalAt=0;	
-   if (ordNetTotal.value == ''){ 
-   ordNetTotal.value=0;
-   }
-   if (orddiscamnt.value == ''){
-    orddiscamnt.value=0;
-	orddiscpercent.value=0;
+function getTotalAT_SumQty(){
+	var sumQty =0;
+	var sumTotalAt=0;	
+	if (ordNetTotal.value == ''){ 
+		ordNetTotal.value=0;
 	}
-  if (ordoutstand.value == ''){
-  ordoutstand.value=0;
-   }
-   if (ordpaidamnt.value == ''){
-   ordpaidamnt.value=0;
+	if (orddiscamnt.value == ''){
+		orddiscamnt.value=0;
+		orddiscpercent.value=0;
 	}
- 
+	if (ordoutstand.value == ''){
+		ordoutstand.value=0;
+	}
+	if (ordpaidamnt.value == ''){
+		ordpaidamnt.value=0;
+	}
   
- $("#bisotab > tbody > tr").each(function(i, row){
- 
+	$("#bisotab > tbody > tr").each(function(i, row){
  		sumQty = sumQty + parseFloat($(this).children('td[name="qty"]').children('input').val());
 		//console.log("sumQty is:"+sumQty);
 		sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="totalAt"]').children('input').val());
 		//console.log("sumTotalAt is:"+sumTotalAt);
-	
-   });
-		$('#ordtotqty').val(sumQty);
-		$('#ordtotamnt').val(sumTotalAt);
-		     	            	
- }
+	});
+	$('#ordtotqty').val(sumQty);
+	$('#ordtotamnt').val(sumTotalAt);
+}
  
- function amountsUpdate(){
+function amountsUpdate(){
 	ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
 	ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
- }
+}
  
 	       				 
 // Send input values from popup to boq table and close the popup using ESC 
-	document.addEventListener('keydown', function(event){
-    	if(event.key === "Escape"){
-			if($("#poModal").hasClass("show")){
-				// Send input values from popup to boq table and close the popup using ESC 
-				sendValPopupToBoq(rowindx);
-				$("#poModal").modal("hide");
-				getTotalAT_SumQty();
-				amountsUpdate();
-			}		       						
-    	}
- });// end close fct using esc
+document.addEventListener('keydown', function(event){
+	if(event.key === "Escape"){
+		if($("#poModal").hasClass("show")){
+			// Send input values from popup to boq table and close the popup using ESC 
+			sendValPopupToBoq(rowindx);
+			$("#poModal").modal("hide");
+			getTotalAT_SumQty();
+			amountsUpdate();
+		}		       						
+    }
+});// end close fct using esc
     				
 // Prev fct in popup
 
-  $("button[name='previousRow']").on("click", function(){
-        		        
-   	if(rowindx > 0) {
-   		
+$("button[name='previousRow']").on("click", function(){        		        
+	if(rowindx > 0) {
 		rowindx-- ;
 		var PrevIndex = parseInt(rowindx);
 		sendValBoqToPopup(PrevIndex);
-   		
-   		
-     }
-     // Close popup on row 0 (end of prev fct)
-	  else if (rowindx == 0) {
-       		    	$("#poModal").modal("hide");
-       }
-       
-       del=[] 
-     for(i=0;i<allDelSerials.length;i++){
-    
-     if(allDelSerials[i]!=""){
-     del.push(allDelSerials[i]);
-     }
-    }
-     
-   
-				
-				
-   	});// end prev fct  
-   	
+	}
+	// Close popup on row 0 (end of prev fct)
+	else if (rowindx == 0) {
+		$("#poModal").modal("hide");
+	}
+
+	del=[] 
+	for(i=0;i<allDelSerials.length;i++) {
+		if(allDelSerials[i]!="") {
+			del.push(allDelSerials[i]);
+		}
+	}
+});// end prev fct
 
   	
  //to select all checkbox or unselect them all from top table
@@ -1576,8 +1477,7 @@ $('body').on('click', '#selectAll', function  () {
     	$('input[type="checkbox"]', '#bisotab').prop('checked', true);
     }
     $(this).toggleClass('allChecked');
-       				
-   })   	
+})
    
  // on change discount amount net total changed
 $("#orddiscamnt").on("input", function(){
@@ -1615,9 +1515,7 @@ $("#ordpaidamnt").on("input", function(){
 	}
 }); // end of on change paid amount
 
- //restore basic discount amount if we remove dsicount percent after save
-var maindiscamont = (parseFloat(orddiscamnt.value))
-				    				    
+
 // on change Discount percent  Net total changed 
 $("#orddiscpercent").on("input", function(){
 	// validate Discount Percent to be number
@@ -1634,9 +1532,7 @@ $("#orddiscpercent").on("input", function(){
 
 //remove selected rows from boq
 $(".delete-row").click(function(){
-	//slctDelOrd =[];
 	var checked="false"; //when no checkbox is checked
-   
 	$("#bisotab > tbody").find('input[name="record"]').each(function(){
 		if($(this).is(":checked")){
 			checked="true"; //when 1 or more checkbox is checked		 
@@ -1645,7 +1541,7 @@ $(".delete-row").click(function(){
 				slctDelOrd.push(po_Pk);
 			}   
 			$(this).parents("tr").remove();  
-		} 
+		}
 	});
 	if(checked=="false"){
 		alert(' Select Row(s) to Delete');
@@ -1977,14 +1873,8 @@ select: function(event, data) {
 		});	
 
 	//End SS
-				 
-	
 	/////////////end autocpmplete for purchase request
-	
-	
-	
-									
-  });
+});
   
      		         
 
