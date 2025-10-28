@@ -225,38 +225,28 @@ return markup;
 				
 }
 function addNewRow(position){ 
-	    
-	                
-var markup = htmlBOQRowInsertion('', '', '', '');
-
-		if (position == "next"){
-			$("#bisotab > tbody").append(markup);
-			
-			newRowIndx =  parseInt($("#bisotab >tbody tr").length-1);
-      		boqAutocomplete(newRowIndx);
-			$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(2) input').focus();
-     	}
-     	if (position =="below"){
-			$("#bisotab > tbody tr").eq(rowindx).after(markup);
-			newRowIndx = parseInt(rowindx+1);
-			//belowRowCount =  $("#bisotab >tbody tr").length;
-      		boqAutocomplete(newRowIndx);
-			$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(1) input').focus();
-		}
-		if (position =="above"){
-			$("#bisotab > tbody tr").eq(rowindx).before(markup);
-			
-			newRowIndx =  rowindx;
-      		boqAutocomplete(newRowIndx);
-			$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(1) input').focus();
-		}
-		
-		//var myDiv = document.getElementById("bisotab");
-    	//myDiv.scrollTop = myDiv.scrollHeight
-    						
-
-			rowInputListener((newRowIndx+1));
-    	
+	var markup = htmlBOQRowInsertion('', '', '', '');
+	if (position == "next"){
+		$("#bisotab > tbody").append(markup);
+		newRowIndx =  parseInt($("#bisotab >tbody tr").length-1);
+      	boqAutocomplete(newRowIndx);
+		$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(2) input').focus();
+     }
+     if (position =="below"){
+		$("#bisotab > tbody tr").eq(rowindx).after(markup);
+		newRowIndx = parseInt(rowindx+1);
+		//belowRowCount =  $("#bisotab >tbody tr").length;
+      	boqAutocomplete(newRowIndx);
+		$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(1) input').focus();
+	}
+	if (position =="above"){
+		$("#bisotab > tbody tr").eq(rowindx).before(markup);
+		newRowIndx =  rowindx;
+      	boqAutocomplete(newRowIndx);
+		$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(1) input').focus();
+	}
+	rowInputListener((newRowIndx+1));
+	getSumQty_totalAT();
      	    
 } // end add new row
 function checkItemCodeBoqRow(code){
@@ -380,116 +370,101 @@ $("#bisotab > tbody").find('td[name="itemCode"]').each(function(){
 	
         
 	///////////////////////////////////////////
-	function rowInputListener(Indx){
-		 // select cell per row and col
-		$('#bisotab tr:eq('+Indx+') td input').change(function() {
-				
-				var cell = $(this).val();
-				var column_name = $(this).parent().attr('name');
-				
-              if ((column_name == 'qty') ) {
-                    // validate Qty
-						 if (($. isNumeric(cell ))== false) {
-						 alert('Qty is  not Numeric');
-						 this.focus();
-						 return false;}
-						 else {
-							 
-							 calculateParam.bind(this)();
-							 
-						 }
-				}
-				else if ((column_name == 'rate') ) {
-                // validate Rate
-					 if (($. isNumeric(cell ))== false) {
-					 alert('Rate is  not Numeric');
-					 this.focus();
-					 return false;} 
-					 else {
-						 calculateParam.bind(this)();
-	 
-					 }
+function rowInputListener(Indx){
+	// select cell per row and col
+	$('#bisotab tr:eq('+Indx+') td input').change(function() {
+		var cell = $(this).val();
+		var column_name = $(this).parent().attr('name');
+		if ((column_name == 'qty')) {
+			// validate Qty
+			if (($. isNumeric(cell ))== false) {
+				alert('Qty is  not Numeric');
+				this.focus();
+			return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+		else if ((column_name == 'rate')) {
+			// validate Rate
+			if (($. isNumeric(cell ))== false) {
+				alert('Rate is  not Numeric');
+				this.focus();
+				return false;} 
+			else {
+				calculateParam.bind(this)();
+			}
           }
-				else if ((column_name == 'discountAmount') ) {
-                // validate Discount
-					 if (($. isNumeric(cell ))== false) {
-					 alert('Discount is  not Numeric');
-					 this.focus();
-					 return false;}
-					 else {
-						 calculateParam.bind(this)();
+		else if ((column_name == 'discountAmount')) {
+			// validate Discount
+			if (($. isNumeric(cell ))== false) {
+				alert('Discount is  not Numeric');
+				this.focus();
+				return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+          }
+		else if ((column_name == 'tax1') ) {
+			// validate Discount
+			if (($. isNumeric(cell ))== false) {
+				alert('Tax is  not Numeric');
+				this.focus();
+			return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+	});
+}
 
-					 }
-          }
-				else if ((column_name == 'tax1') ) {
-                // validate Discount
-					 if (($. isNumeric(cell ))== false) {
-					 alert('Tax is  not Numeric');
-					 this.focus();
-					 return false;}
-					 else {
-						 calculateParam.bind(this)();
-					 }
-          }
-          
-         
-			});
-	}
-	function boqInputListener(){
-		   // select cell per row and col
-		$('#bisotab tr td input').change(function() {
-				
-				var cell = $(this).val();
-				var column_name = $(this).parent().attr('name');
-				
-              if ((column_name == 'qty') ) {
-                    // validate Qty
-						 if (($. isNumeric(cell ))== false) {
-						 alert('Qty is  not Numeric');
-						 this.focus();
-						 return false;}
-						 else {
-							 
-							 calculateParam.bind(this)();
-							 
-						 }
-				}
-				else if ((column_name == 'rate') ) {
-                // validate Rate
-					 if (($. isNumeric(cell ))== false) {
-					 alert('Rate is  not Numeric');
-					 this.focus();
-					 return false;} 
-					 else {
-						 calculateParam.bind(this)();
-	 
-					 }
-          }
-				else if ((column_name == 'discountAmount') ) {
-                // validate Discount
-					 if (($. isNumeric(cell ))== false) {
-					 alert('Discount is  not Numeric');
-					 this.focus();
-					 return false;}
-					 else {
-						 calculateParam.bind(this)();
-
-					 }
-          }
-				else if ((column_name == 'tax1') ) {
-                // validate Discount
-					 if (($. isNumeric(cell ))== false) {
-					 alert('Tax is  not Numeric');
-					 this.focus();
-					 return false;}
-					 else {
-						 calculateParam.bind(this)();
-					 }
-          }
-          
-         
-			});
-	}
+function boqInputListener(){
+	// select cell per row and col
+	$('#bisotab tr td input').change(function() {
+		var cell = $(this).val();
+		var column_name = $(this).parent().attr('name');
+		if ((column_name == 'qty')) {
+			// validate Qty
+			if (($. isNumeric(cell ))== false) {
+				alert('Qty is  not Numeric');
+				this.focus();
+			return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+		else if ((column_name == 'rate')) {
+        	// validate Rate
+			if (($. isNumeric(cell ))== false) {
+				alert('Rate is  not Numeric');
+				this.focus();
+				return false;} 
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+		else if ((column_name == 'discountAmount')) {
+        	// validate Discount
+			if (($. isNumeric(cell ))== false) {
+				alert('Discount is  not Numeric');
+				this.focus();
+				return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+		else if ((column_name == 'tax1') ) {
+			// validate Discount
+			if (($. isNumeric(cell ))== false) {
+				alert('Tax is  not Numeric');
+				this.focus();
+				return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+	});
+}
 ///////////////////////////////////////////////
 function calculateParam(){
 	var netrate= parseFloat($(this).parent().parent().children('td[name="rate"]').children('input').val()) - parseFloat($(this).parent().parent().children('td[name="discountAmount"]').children('input').val());

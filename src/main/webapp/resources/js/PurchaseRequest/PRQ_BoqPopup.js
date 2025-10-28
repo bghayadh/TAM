@@ -96,8 +96,7 @@ return markup;
 }
 function addNewRow(position){ 
 	////////HTML row drawing
-		var markup = boqRowInsrt('', '', '', '', '');
-		
+		var markup = boqRowInsrt('', '', '', '', '');		
 		if (position == "next"){
 			RowCount =  $("#bisotab >tbody tr").length;
 			$("#bisotab > tbody").append(markup);
@@ -195,56 +194,50 @@ function updateAmounts () {
 }
 // function to put listener on change while adding a row by (bisotab, next, below, above, barcode adder, sequance adder).
 function boqInputsListenerWhileAdding(rowIndex){
-
 	$('#bisotab tr:eq('+rowIndex+') td input').change(function() { // td:eq(4),td:eq(5),td:eq(6),td:eq(7) input
-					
-					var column_name = $(this).parent().attr('name');
-					var cell = $(this).val();
-					
-				    if ((column_name == 'prQty') ) {
-				          // validate Qty
-							 if (($. isNumeric(cell))== false) {
-							 alert('Qty is  not Numeric');
-							 this.focus();
-							 return false;}
-							 else {
-								 calculateParam.bind(this)();
-							 }
-					}
-					if ((column_name == 'prRate') ) {
-				      // validate Rate
-						 if (($. isNumeric(cell ))== false) {
-						 alert('Rate is  not Numeric');
-						 this.focus();
-						 return false;} 
-						 else {
-							 calculateParam.bind(this)();
-			
-						 }
-				}
-				  if ((column_name == 'prDiscountAmount') ) {
-				      // validate Discount
-						 if (($. isNumeric(cell ))== false) {
-						 alert('Discount is  not Numeric');
-						 this.focus();
-						 return false;}
-						 else {
-							 calculateParam.bind(this)();
-			
-						 }
-				}
-				if ((column_name == 'prTax1') ) {
-				      // validate Discount
-						 if (($. isNumeric(cell ))== false) {
-						 alert('Tax is  not Numeric');
-						 this.focus();
-						 return false;}
-						 else {
-							 calculateParam.bind(this)();
-						 }
-				}
-			
-					});
+		var column_name = $(this).parent().attr('name');
+		var cell = $(this).val();
+		if ((column_name == 'prQty')) {
+			// validate Qty
+			if (($. isNumeric(cell))== false) {
+				alert('Qty is  not Numeric');
+				this.focus();
+				return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+		if ((column_name == 'prRate')) {
+			// validate Rate
+			if (($. isNumeric(cell ))== false) {
+				alert('Rate is  not Numeric');
+				this.focus();
+				return false;} 
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+		if ((column_name == 'prDiscountAmount')) {
+			// validate Discount
+			if (($. isNumeric(cell ))== false) {
+				alert('Discount is  not Numeric');
+				this.focus();
+				return false;}
+			else {
+				calculateParam.bind(this)();			
+			}
+		}
+		if ((column_name == 'prTax1')) {
+			// validate Discount
+			if (($. isNumeric(cell ))== false) {
+				alert('Tax is  not Numeric');
+				this.focus();
+				return false;}
+			else {
+				calculateParam.bind(this)();
+			}
+		}
+	});
 }
 //calculate footer parameters
 function calcFooterDataOnChangeListener(){
