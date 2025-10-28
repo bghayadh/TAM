@@ -6,13 +6,10 @@ var allDelSerials=[]; // to store all deleted serial numbers from different popu
 var po_Pk ="";
 
  //Open popup fct 
- function openPop(element) {
- 	
+function openPop(element) { 	
 	var buttonRowIndx = $(element).closest("tr");
 	rowindx = (buttonRowIndx[0].rowIndex - 1);
-	//console.log("5555" );
-	     
-	    
+	
 	//Send input values from Boq table  to popup
 	sendValBoqToPopup(rowindx);
 	
@@ -22,7 +19,6 @@ var po_Pk ="";
 }// end open popup fct
      
 function sendValBoqToPopup(indxRow){
-
 	//Send input values from Boq table  to popup
 	$('#popupItemCode').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="itemCode"]').children('input').val());
 	$('#popupItemModel') .val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="itemModel"]').children('input').val()); 
@@ -45,7 +41,6 @@ function sendValBoqToPopup(indxRow){
 	$('#popupArQty').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="arQty"]').children('input').val());
 	$('#popupCipQty').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="cipQty"]').children('input').val());
 	$('#popupFarQty').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="farQty"]').children('input').val());
-								 
 	
 	// Send hidden concatenated value of serial/Model/PartNum from Boq to Serial table in popup
 	var serial;
@@ -68,8 +63,7 @@ function sendValBoqToPopup(indxRow){
 		}
 		var element = document.getElementById("popupNb");
     	element.innerHTML = "Item # " +(indxRow+1);
-  		  
-    		
+
 } //end sendValBoqToPopup fct
 
 function sendValPopupToBoq(indxRow){
@@ -97,13 +91,13 @@ function sendValPopupToBoq(indxRow){
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="cipQty"]').children('input').val($('#popupCipQty').val());
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="farQty"]').children('input').val($('#popupFarQty').val());
 	
- // Send concatenated Serial Table rows to boq table
-	 	 var Data = {};
-	 	 var serial_no="";
-	 	 var itm_model ="";
-	 	 var itm_partno = "";
-	 	 var indx;
-	 	 Data.serialArray=[];
+ 	// Send concatenated Serial Table rows to boq table
+	 var Data = {};
+	 var serial_no="";
+	 var itm_model ="";
+	 var itm_partno = "";
+	 var indx;
+	 Data.serialArray=[];
 	 $("#serialNoTable > tbody >tr").find('input[name="record"]').each(function(){
 		indx = $(this).parents("tr").index()
  // Remove the row where SerialNumber is empty
@@ -174,44 +168,24 @@ function addNewRow(position){
 	getSumQty_totalAT();
      	    
 } // end add new row
+
 function checkItemCodeBoqRow(code){
-$("#bisotab > tbody").find('td[name="itemCode"]').each(function(){	
-								 				var index =  $(this).parent().closest("tr").index();
-								 			var itmCode = 	($("#bisotab >tbody").find("tr").eq(index).find('td[name="itemCode"]').children('input').val().split(":"))[0];
-								 			if (itmCode == code){
-									var qty = $("#bisotab >tbody").find("tr").eq(index).find('td[name="qty"]').children('input').val();
-									qty++;
-								$("#bisotab >tbody").find("tr").eq(index).find('td[name="qty"]').children('input').val(qty);
-									//$('#barcode').val("");
-
-							}
-							 });
+	$("#bisotab > tbody").find('td[name="itemCode"]').each(function(){	
+		var index =  $(this).parent().closest("tr").index();
+		var itmCode = 	($("#bisotab >tbody").find("tr").eq(index).find('td[name="itemCode"]').children('input').val().split(":"))[0];
+		if (itmCode == code) {
+			var qty = $("#bisotab >tbody").find("tr").eq(index).find('td[name="qty"]').children('input').val();
+			qty++;
+			$("#bisotab >tbody").find("tr").eq(index).find('td[name="qty"]').children('input').val(qty);									
+		}
+	});
 }
-/////////////////
- function getAllItemCodeFromBarCode()
- {
- 	ItemCodeArray = [];
- 	var ItemCodeValues = "";
- 	$("#bisotab > tbody").find('td[name="itemCode"]').each(function(){
- 	
- 		if($(this).children('input').val() == "")
- 			ItemCodeValues = "empty";
- 		else
- 			ItemCodeValues = ($(this).children('input').val()).split(":");
- 		ItemCodeArray.push(ItemCodeValues[0]);
- 	});
- 	return ItemCodeArray;   
- }
 
- function checkifItemCodeExist(itemCode)
- {
+function checkifItemCodeExist(itemCode) {
 	var exist = "";
-	$("#bisotab > tbody").find('td[name="itemCode"]').each(function(){
-		
+	$("#bisotab > tbody").find('td[name="itemCode"]').each(function(){		
 		ItemCodeValue = ($(this).children('input').val()).split(":");
 		ItemCodeValue = ItemCodeValue[0];
-		
-
 		if(itemCode == ItemCodeValue){
 			exist = "true";
 			return false;
@@ -221,37 +195,29 @@ $("#bisotab > tbody").find('td[name="itemCode"]').each(function(){
    		}
 	});
 	return exist;
- }
+}
  
- ////////////////
  
- 		//checking some validations before saving on the action buttons
-	function checkedDataOnAction(){
+//checking some validations before saving on the action buttons
+function checkedDataOnAction() {
+	val1 = Date.parse($("#ordorderdate").val());
+	if (isNaN(val1) == true) {
+		alert(' Ordered Date is not valid');
+		return false;
+	}
+	val1 = Date.parse($("#orddeliverydate").val());
+	if (isNaN(val1) == true) {
+		alert(' Delivered Date is not valid');
+		return false;
+	}
 
-		val1 = Date.parse($("#ordorderdate").val());
-	  
-	    if (isNaN(val1) == true) {
-	         alert(' Ordered Date is not valid');
-	         return false;
-	          
-	       }
-	      
-	    val1 = Date.parse($("#orddeliverydate").val());
-	   
-	    if (isNaN(val1) == true) {
-	         alert(' Delivered Date is not valid');
-	         return false;
-	         
-	       }
-		 
-		  if ($("#ordtotamnt").val() == '')  { ordtotamnt.value = 0;  }
-		  if ($("#orddiscamnt").val() == '')  { orddiscamnt.value = 0; }
-		  if ($("#orddiscpercent").val() == '') { orddiscpercent.value = 0; }
-		  if ($("#ordpaidamnt").val() == '') { ordpaidamnt.value = 0; }
-		  if ($("#ordoutstand").val() == '') { ordoutstand.value = 0; }
-		  if ($("#ordtotqty").val() == '') { ordtotqty.value = 0; }
-		  if ($("#ordNetTotal").val() == '') { ordNetTotal.value = 0; }
-		  
+	if ($("#ordtotamnt").val() == '')  { ordtotamnt.value = 0;  }
+	if ($("#orddiscamnt").val() == '')  { orddiscamnt.value = 0; }
+	if ($("#orddiscpercent").val() == '') { orddiscpercent.value = 0; }
+	if ($("#ordpaidamnt").val() == '') { ordpaidamnt.value = 0; }
+	if ($("#ordoutstand").val() == '') { ordoutstand.value = 0; }
+	if ($("#ordtotqty").val() == '') { ordtotqty.value = 0; }
+	if ($("#ordNetTotal").val() == '') { ordNetTotal.value = 0; }
 		  
 		 // validate Total Amount to be number 
 		 if (($. isNumeric( $("#ordtotamnt").val()))== false) {
@@ -286,12 +252,8 @@ $("#bisotab > tbody").find('td[name="itemCode"]').each(function(){
 		 // validate netTotal to be number
 		 if (($. isNumeric( $("#ordNetTotal").val()))== false) {
 		 alert('Net Total is  not Numeric');
-		 return false;}
-		 
-	 
-	}
-	
-	///////////////////////////////////////////
+		 return false;}	 
+}
 	
         
 	///////////////////////////////////////////
@@ -431,19 +393,14 @@ function getSumQty_totalAT (){
 	
 	$('#ordtotqty').val(sumQntity);
 	$('#ordtotamnt').val(sumtotAT);
-	//$('#orddiscamnt').val(sumDiscount);
 
     updateamounts();
-                        
 }
 
 function updateamounts(){
-	//ordtotamnt.value = ordtotamnt.value + sumTotal;
 	ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
 	ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
 }
-
- 
   
 //boqAutocomplete fct
 function boqAutocomplete(rowCnt){
@@ -620,37 +577,8 @@ function boqAutocomplete(rowCnt){
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}
-	}); // end ITEM PARTNO autocomplete
-	/*
-	$('#'+tableID+' > tbody > tr').eq(rowCnt).find('input[name ="qty"]').focus(function(){
-	
-	 $("#formStatus").text("Not Saved");
-	 $('.dot').css({"background-color" : "orange"});
-	 
-	});
-	$('#'+tableID+' > tbody > tr').eq(rowCnt).find('input[name ="rate"]').focus(function(){
-	
-	 $("#formStatus").text("Not Saved");
-	 $('.dot').css({"background-color" : "orange"});
-	 
-	});
-	
-	$('#'+tableID+' > tbody > tr').eq(rowCnt).find('input[name ="discountAmount"]').focus(function(){
-	
-	 $("#formStatus").text("Not Saved");
-	 $('.dot').css({"background-color" : "orange"});
-	 
-	});
-	$('#'+tableID+' > tbody > tr').eq(rowCnt).find('input[name ="tax1"]').focus(function(){
-	
-	 $("#formStatus").text("Not Saved");
-	 $('.dot').css({"background-color" : "orange"});
-	 
-	});
-	*/
-	
+	}); // end ITEM PARTNO autocomplete	
 } // end boqAutocomplete fct
-
 
   
 // Next Fct in popup
@@ -1022,72 +950,56 @@ var ctx = getContextPath();
  }); // End Add row using enter key 
  
  
- 
- // Delete row in serialNo Table	
- $(".delete-row-serial").click(function () {
- slctDel = [];
- 
- $("#serialNoTable > tbody").find('input[name="record"]').each(function () {
- if ($(this).is(":checked")) {
-	slctDel.push($(this).parent().parent().children('td[name="serialNumber"]').children('input').val());
-	console.log("The selected delete is " + slctDel);
-	 
-	 if(allDelSerials.includes($(this).parent().parent().children('td[name="serialNumber"]').children('input').val())==false) {
-	 	allDelSerials.push($(this).parent().parent().children('td[name="serialNumber"]').children('input').val());
-     }
- }
- });
-	console.log("The selected delete after is " + slctDel);
-
+// Delete row in serialNo Table	
+$(".delete-row-serial").click(function () {
+	slctDel = [];
+	$("#serialNoTable > tbody").find('input[name="record"]').each(function () {
+		if ($(this).is(":checked")) {
+			slctDel.push($(this).parent().parent().children('td[name="serialNumber"]').children('input').val());
+		 	if(allDelSerials.includes($(this).parent().parent().children('td[name="serialNumber"]').children('input').val())==false) {
+		 		allDelSerials.push($(this).parent().parent().children('td[name="serialNumber"]').children('input').val());
+	     	}
+		}
+	});
 	
  	if (slctDel.length == 0) {
     	alert(' Select Row(s) to Delete');
-        return false;
-     
+        return false;     
      }
 	$("#serialNoTable > tbody").find('input[name="record"]').each(function () {
     	if ($(this).is(":checked")) {
        	$(this).parents("tr").remove();
        
        	}
-     
-
 	});
-			 var Data = {};
-	 	 var serial_no="";
-	 	 var itm_model ="";
-	 	 var itm_partno = "";
-	 	 var indx;
-	 	 Data.serialArray=[];
-	 	 $("#serialNoTable > tbody >tr").find('input[name="record"]').each(function(){
-
- 
-	        var serNum = $(this).parent().parent().children('td[name="serialNumber"]').children('input').val();
-	        var itemMod = $(this).parent().parent().children('td[name="itmModel"]').children('input').val();
-	    	var itemPartnum = $(this).parent().parent().children('td[name="itemPart"]').children('input').val();
-			    serial_no = serNum;
-			    itm_model = itemMod;
-			    itm_partno = itemPartnum;
-			    Data.serialArray.push({serial_no:serNum, itm_model:itemMod, itm_partno:itemPartnum});
-		  	}); 
-
-
-	    	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);
-	    	
- }); // end delete row fct
+	var Data = {};
+	var serial_no="";
+	var itm_model ="";
+	var itm_partno = "";
+	var indx;
+	Data.serialArray=[];
+	$("#serialNoTable > tbody >tr").find('input[name="record"]').each(function() { 
+		var serNum = $(this).parent().parent().children('td[name="serialNumber"]').children('input').val();
+		var itemMod = $(this).parent().parent().children('td[name="itmModel"]').children('input').val();
+	    var itemPartnum = $(this).parent().parent().children('td[name="itemPart"]').children('input').val();
+		serial_no = serNum;
+		itm_model = itemMod;
+		itm_partno = itemPartnum;
+		Data.serialArray.push({serial_no:serNum, itm_model:itemMod, itm_partno:itemPartnum});
+	}); 
+	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);	    	
+}); // end delete row fct
  
  //Select all checkbox in serialNo table
- $('body').on('click', '#selectAllSerial', function  () {
+$('body').on('click', '#selectAllSerial', function  () {
 	if ($(this).hasClass('allChecked')) {
 		$('input[type="checkbox"]', '#serialNoTable').prop('checked', false);
 	} 
 	else {
 		$('input[type="checkbox"]', '#serialNoTable').prop('checked', true);
-	}
-	
+	}	
 	$(this).toggleClass('allChecked');
-	       				
- }) // end select checkbox fct 
+}) // end select checkbox fct 
  
  
  
@@ -1299,15 +1211,13 @@ var ctx = getContextPath();
 		}    		         
 	}); // end minimize/maximize fct
     
- 
-   	
+    	
 	// Calculate netRate, total, totalAt, sum of TotalAt in popup 
 	$('#popupRate, #popupDiscountAmount,#popupQty,#popupNetRate,#popupTax').change(function() {
  	
 		if ($('#popupDiscountAmount').val() == '') {
 			$('#popupDiscountAmount').val(0);
 		}
-
 		if ($('#popupTax').val() == '') {
 			$('#popupTax').val(0);
 		}
@@ -1875,11 +1785,3 @@ select: function(event, data) {
 	//End SS
 	/////////////end autocpmplete for purchase request
 });
-  
-     		         
-
-    			  
-  
-
-    			 
-   
