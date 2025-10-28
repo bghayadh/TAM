@@ -1,7 +1,7 @@
 var rowindx =0;
- var rowcountSerial =0;
- var serialRowIndex=0;
- var slctDelOrd =[];
+var rowcountSerial =0;
+var serialRowIndex=0;
+var slctDelOrd =[];
 var allDelSerials=[]; // to store all deleted serial numbers from different popups
 var po_Pk ="";
 
@@ -912,39 +912,39 @@ function insertRowAbove(){
 }// End insertRowAbove fct in popup   
 
  // Delete row fct
- function deleteBoqRow() {
-	
+ function deleteBoqRow() {	
 	console.log("RowIndx" +rowindx);	
 	po_Pk = $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="porItemId"]').children('input').val();
-	console.log("po_Pk of the deleted row is " +po_Pk);
 	if( po_Pk !=0){
 		slctDelOrd.push($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="porItemId"]').children('input').val());
 	}
 	rowindx++;	
 	$("tr").eq(rowindx).remove();
+/*	
+	var sumQty=0;
+	var sumTotalAt=0;
+	$("#bisotab > tbody > tr").each(function(i, row){
+		sumQty = sumQty + parseFloat($(this).children('td[name="qty"]').children('input').val());
+		//console.log("sumQty is:"+sumQty);
+		sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="totalAt"]').children('input').val());
+		//console.log("sumTotalAt is:"+sumTotalAt);
+	});
+	$('#ordtotqty').val(sumQty);
+	$('#ordtotamnt').val(sumTotalAt);
+	ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
+	ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
+*/
 	
 	// Get Nb of rows after delete 
 	var rowCount = $("#bisotab >tbody tr").length;
 	console.log("rowCount in BoQ:" +rowCount);
 	   	 
-	 rowindx--;
+	rowindx--;
 	 
-	 if (rowindx == 0 && rowCount ==0) {
+	if (rowindx == 0 && rowCount ==0) {
 		$("#poModal").modal("hide");		
 	}  
 	else if(rowindx >= 0 && rowindx < rowCount) {
-		var sumQty=0;
-		var sumTotalAt=0;
-		$("#bisotab > tbody > tr").each(function(i, row){
-			sumQty = sumQty + parseFloat($(this).children('td[name="qty"]').children('input').val());
-			//console.log("sumQty is:"+sumQty);
-			sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="totalAt"]').children('input').val());
-			//console.log("sumTotalAt is:"+sumTotalAt);
-		});
-		$('#ordtotqty').val(sumQty);
-		$('#ordtotamnt').val(sumTotalAt);
-		ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
-		ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
 		sendValBoqToPopup(rowindx);	
 	}
 
@@ -954,13 +954,9 @@ function insertRowAbove(){
 		rowindx--;
 		sendValBoqToPopup(rowindx);
 	}
+	getSumQty_totalAT();
  
  } // End delete fct
- 
-
-     				
-
-
 								
 function checkSerial() {
 var Data = {};
@@ -980,14 +976,11 @@ var Data = {};
 	     else {
 	        var serNum = $(this).parent().parent().children('td[name="serialNumber"]').children('input').val();
 	        var itemMod = $(this).parent().parent().children('td[name="itmModel"]').children('input').val();
-	    	var itemPartnum = $(this).parent().parent().children('td[name="itemPart"]').children('input').val();
-	    
-	   
+	    	var itemPartnum = $(this).parent().parent().children('td[name="itemPart"]').children('input').val();	    	   
 			    serial_no = serNum;
 			    itm_model = itemMod;
 			    itm_partno = itemPartnum;
 			    Data.serialArray.push({serial_no:serNum, itm_model:itemMod, itm_partno:itemPartnum});
-			    
 	      }
 	  	});
 	    	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);
@@ -1006,12 +999,8 @@ var Data = {};
 	+"<input name='serialNumber'  class='form-control text-input' type='text' style='width:200px;position:relative;left:11px;'/></td>"
 	+ "<td name='itmModel' style='width:200px'> <input name='itmModel' id=" + "itmModel_" + rowcountSerial +" style='width:200px;position:relative;left:11px;'  type='text'  class='form-control text-input ui-widget ui-widget-content ui-corner-all' /></td>"
 	+ "<td name='itemPart' style='width:200px'> <input name='itemPart' id=" + "itemPart_" + rowcountSerial +" style='width:200px;position:relative;left:11px;'  type='text'  class='form-control text-input ui-widget ui-widget-content ui-corner-all'/></td></tr>";
-	$("#serialNoTable > tbody").append(markup);
-	
-	
-	
-		$('#itemPart_'+rowcountSerial).autocomplete({
-			
+	$("#serialNoTable > tbody").append(markup);	
+	$('#itemPart_'+rowcountSerial).autocomplete({
 		source: function(request, response) {
 		$.ajax({ 
 			type: "GET",

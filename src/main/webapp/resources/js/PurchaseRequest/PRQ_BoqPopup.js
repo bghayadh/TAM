@@ -1,20 +1,18 @@
-  var slctDel= [];
+var slctDel= [];
 var rowindx =0;
+var pri_Pk = "";
 
- function openPop(element) {	
+function openPop(element) {	
      var buttonRowIndx = $(element).closest("tr");
      rowindx = (buttonRowIndx[0].rowIndex - 1);
     
     //Send input values from Boq table  to popup
 	sendValBoqToPopup(rowindx);
-        			  
     $("#preqModal").modal("show");
-    		
-    				   
+
 }// end open popup fct
 
 function sendValBoqToPopup(indxRow){
-
       
 	$('#popupItem').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val());
 	$('#popupItemModel') .val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemModel"]').children('input').val()); 
@@ -110,8 +108,7 @@ function addNewRow(position){
 			$('table#bisotab tr:last td:nth-child(2) input').focus();				
 			boqInputsListenerWhileAdding((RowCount+1));
      	}
-     	
-     	
+     	     	
      	else if (position =="below"){
 			var indx = parseInt(rowindx+1);
 			$("#bisotab > tbody tr").eq(rowindx).after(markup);
@@ -123,11 +120,6 @@ function addNewRow(position){
 			boqInputsListenerWhileAdding((indx+1));	
 		}
 		else if (position =="above"){
-				
-												   
-												 
-   
-						  
 			$("#bisotab > tbody tr").eq(rowindx).before(markup);
 			$("#bisotab > tbody tr:eq("+rowindx+")").find("td[name=prItemCode]").children('input').attr('id', 'itmCode'+rowindx);	
 			$("#bisotab > tbody tr:eq("+rowindx+")").find("td[name=prItemModel]").children('input').attr('id', 'itmModel'+rowindx);
@@ -135,12 +127,9 @@ function addNewRow(position){
 			boqAutocomplete(rowindx,"bisotab"); 
 			$('table#bisotab tr:eq('+rowindx+') td:nth-child(2) input').focus();
 			boqInputsListenerWhileAdding(rowindx+1);	
-		}		
-		
-		/*var myDiv = document.getElementById("bisotab");
-    	    myDiv.scrollTop = myDiv.scrollHeight;
-    	    */
-			   
+		}
+		getSumQty_totalAT();		
+					   
 } // end add new row  	
 
 function calculateParam(){
@@ -666,51 +655,46 @@ function nextRow(){
    }
 // End insertRowAbove fct in popup
    
-// Delete row fct   
+// Delete row fct
  function deleteBoqRow() {
-
-	
+	pri_Pk = $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="prqItemId"]').children('input').val();
+	if( pri_Pk !=0){
+		slctDel.push($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="prqItemId"]').children('input').val());
+	}
 	rowindx++;
 	$("tr").eq(rowindx).remove();
-	
+/*	
+	var sumQty=0;
+	var sumTotalAt=0;
+	$("#bisotab > tbody > tr").each(function(i, row) {
+		sumQty = sumQty + parseFloat($(this).children('td[name="prQty"]').children('input').val());
+		console.log("sumQty is:"+sumQty);
+		sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="prTotalAt"]').children('input').val());
+		console.log("sumTotalAt is:"+sumTotalAt);
+	});
+	$('#prtotqty').val(sumQty);
+	$('#prtotamnt').val(sumTotalAt);
+	prtotword.value= parseFloat(prtotamnt.value) - parseFloat(prdiscamnt.value);
+	proutstand.value=parseFloat(prtotword.value) - parseFloat(prpaidamnt.value);
+*/
+		
+		
 	// Get Nb of rows after delete 
-	var rowCount = $("#bisotab >tbody tr").length;
-	   	 
+	var rowCount = $("#bisotab >tbody tr").length;	   	 
 	rowindx--;
 	 
 	if (rowindx == 0 && rowCount == 0) {
-	    var sumQty=0;
-	    var sumTotalAt=0;
-		$("#preqModal").modal("hide");
-		
-		$("#bisotab > tbody > tr").each(function(i, row){
-			sumQty = sumQty + parseFloat($(this).children('td[name="prQty"]').children('input').val());
-			console.log("sumQty is:"+sumQty);
-			sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="prTotalAt"]').children('input').val());
-			console.log("sumTotalAt is:"+sumTotalAt);
-							
-		 });
-			$('#prtotqty').val(sumQty);
-			$('#prtotamnt').val(sumTotalAt);
-		     
-			prtotword.value= parseFloat(prtotamnt.value) - parseFloat(prdiscamnt.value);
-			proutstand.value=parseFloat(prtotword.value) - parseFloat(prpaidamnt.value);	                
+		$("#preqModal").modal("hide");		
 	}
- 
- 
 	else if(rowindx >= 0 && rowindx < rowCount) {
-	
 		sendValBoqToPopup(rowindx);
 	}
-
 	// Show previous record 
-	else if (rowindx >= rowCount){
-
+	else if (rowindx >= rowCount) {
 		rowindx--;
-
 		sendValBoqToPopup(rowindx);
 	}
- 
+	getSumQty_totalAT(); 
 }// End Delete fct  
   
 function getContextPath() {
@@ -1116,31 +1100,23 @@ $("#prpaidamnt").on("input", function(){
 	
 //remove selected rows from boq
 $(".delete-row").click(function(){
-    	var checked="false"; //when no checkbox is checked
-        var pri_Pk = "";  
-	   
-   	   	$("#bisotab > tbody").find('input[name="record"]').each(function(){
-
-         if($(this).is(":checked")){ 
-        	 checked="true"; //when 1 or more checkbox is checked
-        			 
-   				pri_Pk=$(this).parent().parent().children('td[name="prqItemId"]').children('input').val();
-   				if( pri_Pk !=0)
-   					slctDel.push(pri_Pk);
- 			        
-   				$(this).parents("tr").remove();  
-   			
-	    	}   //end of checked box in boq for delete
-       			});
-       	   	if(checked=="false"){					  
-       	 	alert(' Select Row(s) to Delete');
-         	return false;
-       	   	}
-       	   	
-      
-			getSumQty_totalAT();
-			            
-        });// end delete row
+	var checked="false"; //when no checkbox is checked  
+	$("#bisotab > tbody").find('input[name="record"]').each(function(){
+		if($(this).is(":checked")) { 
+			checked="true"; //when 1 or more checkbox is checked
+			pri_Pk=$(this).parent().parent().children('td[name="prqItemId"]').children('input').val();
+			if (pri_Pk !=0) {
+				slctDel.push(pri_Pk);
+			}    
+   			$(this).parents("tr").remove();  
+	    }   //end of checked box in boq for delete
+	});
+	if(checked=="false") {					  
+		alert(' Select Row(s) to Delete');
+		return false;
+	}
+	getSumQty_totalAT();
+});// end delete row
         
 // auto complete for barcode in popup.
 $("#popupBarcode").autocomplete({
