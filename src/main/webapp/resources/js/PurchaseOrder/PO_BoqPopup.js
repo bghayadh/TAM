@@ -3,6 +3,7 @@ var rowindx =0;
  var serialRowIndex=0;
  var slctDelOrd =[];
 var allDelSerials=[]; // to store all deleted serial numbers from different popups
+var po_Pk ="";
 
  //Open popup fct 
  function openPop(element) {
@@ -912,9 +913,14 @@ function insertRowAbove(){
 
  // Delete row fct
  function deleteBoqRow() {
-
-	console.log("RowIndx" +rowindx);
-	rowindx++;
+	
+	console.log("RowIndx" +rowindx);	
+	po_Pk = $("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="porItemId"]').children('input').val();
+	console.log("po_Pk of the deleted row is " +po_Pk);
+	if( po_Pk !=0){
+		slctDelOrd.push($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="porItemId"]').children('input').val());
+	}
+	rowindx++;	
 	$("tr").eq(rowindx).remove();
 	
 	// Get Nb of rows after delete 
@@ -924,29 +930,22 @@ function insertRowAbove(){
 	 rowindx--;
 	 
 	 if (rowindx == 0 && rowCount ==0) {
-	    var sumQty=0;
-	    var sumTotalAt=0;
-		$("#poModal").modal("hide");
+		$("#poModal").modal("hide");		
+	}  
+	else if(rowindx >= 0 && rowindx < rowCount) {
+		var sumQty=0;
+		var sumTotalAt=0;
 		$("#bisotab > tbody > tr").each(function(i, row){
- 
- 		sumQty = sumQty + parseFloat($(this).children('td[name="qty"]').children('input').val());
-		//console.log("sumQty is:"+sumQty);
-		sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="totalAt"]').children('input').val());
-		//console.log("sumTotalAt is:"+sumTotalAt);
-	
-        });
+			sumQty = sumQty + parseFloat($(this).children('td[name="qty"]').children('input').val());
+			//console.log("sumQty is:"+sumQty);
+			sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="totalAt"]').children('input').val());
+			//console.log("sumTotalAt is:"+sumTotalAt);
+		});
 		$('#ordtotqty').val(sumQty);
 		$('#ordtotamnt').val(sumTotalAt);
-		
 		ordNetTotal.value= parseFloat(ordtotamnt.value) - parseFloat(orddiscamnt.value);
-	    ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
- 
-		
-	}
-  
-	else if(rowindx >= 0 && rowindx < rowCount) {
-		sendValBoqToPopup(rowindx);
-	
+		ordoutstand.value=parseFloat(ordNetTotal.value) - parseFloat(ordpaidamnt.value);
+		sendValBoqToPopup(rowindx);	
 	}
 
     // Show previous record 
@@ -1667,39 +1666,29 @@ $("#orddiscpercent").on("input", function(){
 	updateamounts ();
 	}
 }); // end of on change Discount percent
-
 				    
 
 //remove selected rows from boq
- $(".delete-row").click(function(){
- 		slctDelOrd =[];
-        	var checked="false"; //when no checkbox is checked
-			var po_Pk ="";
+$(".delete-row").click(function(){
+	//slctDelOrd =[];
+	var checked="false"; //when no checkbox is checked
    
-        	$("#bisotab > tbody").find('input[name="record"]').each(function(){
-
-              if($(this).is(":checked")){
-            	  checked="true"; //when 1 or more checkbox is checked		 
-        				po_Pk=$(this).parent().parent().children('td[name="porItemId"]').children('input').val();
-        				if( po_Pk !=0){
-        					slctDelOrd.push(po_Pk);
-      			            	}   
-      			           		    $(this).parents("tr").remove();  
-      			                } 
-        			});
-        	if(checked=="false"){
-               	alert(' Select Row(s) to Delete');
-    			
-             	return false;
-             }	          
-			   getSumQty_totalAT();         
-       
-       
-       
-        });	// end delete row
-
-
-
+	$("#bisotab > tbody").find('input[name="record"]').each(function(){
+		if($(this).is(":checked")){
+			checked="true"; //when 1 or more checkbox is checked		 
+			po_Pk=$(this).parent().parent().children('td[name="porItemId"]').children('input').val();
+			if( po_Pk !=0){
+				slctDelOrd.push(po_Pk);
+			}   
+			$(this).parents("tr").remove();  
+		} 
+	});
+	if(checked=="false"){
+		alert(' Select Row(s) to Delete');
+		return false;
+	}	          
+	getSumQty_totalAT();         
+});	// end delete row
 
 
  $("#popupBarcode").autocomplete({

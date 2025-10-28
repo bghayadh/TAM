@@ -2825,7 +2825,7 @@ return false;
 	 		}						   
 
             function saveRowsInTables (){
-   		     var token =  $('input[name="csrfToken"]').attr('value');    
+   		     var token =  $('input[name="csrfToken"]').attr('value');   		     
 				$.ajax({
 					type : "POST",
 					url : "${pageContext.request.contextPath}/PurchaseOrdFormSave",
