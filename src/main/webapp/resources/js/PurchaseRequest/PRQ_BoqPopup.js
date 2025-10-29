@@ -1099,7 +1099,8 @@ $("#popupBarcode").autocomplete({
 		$("#popupCat3").val("");
 		$("#popupCat4").val("");
 		$("#popupSeq").val("");
-			
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
 		return false;
 	}
 	}).autocomplete("instance")._renderItem = function(ul, item) {
@@ -1134,7 +1135,6 @@ $("#popupBarcode").autocomplete({
 		 var cat2 = ($("#popupCat2").val().split(":"))[0];
 		 var cat3 = ($("#popupCat3").val().split(":"))[0];
 		 var cat4 = ($("#popupCat4").val().split(":"))[0];
-		
 		$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -1144,8 +1144,7 @@ $("#popupBarcode").autocomplete({
 			 "cat2Input":cat2,
 			  "cat3Input":cat3,
 			  "cat4Input":cat4,
-		},
-		
+		},		
 		dataType: "json",
 		success: function (data) {
 			 if (data != null) {
@@ -1161,9 +1160,10 @@ $("#popupBarcode").autocomplete({
 		select: function(event, ui) {
 			$("#popupCat1").val(ui.item[0]+":"+ui.item[1]);
 			$("#popupBarcode").val("");
+			$("#formStatus").text("Not Saved");
+			$('.dot').css({"background-color" : "orange"});
 			return false;
-		}
-		
+		}		
 		}).autocomplete("instance")._renderItem = function(ul, item) {
 			return $("<li class='each'>")
 			.append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
@@ -1180,13 +1180,12 @@ $("#popupBarcode").autocomplete({
 
 
 	$("#popupCat2").autocomplete({
-		 source: function(request, response) {
+		source: function(request, response) {
 			 
 		var cat1 =($("#popupCat1").val().split(":"))[0];
 		var cat2 = ($("#popupCat2").val().split(":"))[0];
 		var cat3 = ($("#popupCat3").val().split(":"))[0];
-		var cat4 = ($("#popupCat4").val().split(":"))[0];
-		
+		var cat4 = ($("#popupCat4").val().split(":"))[0];		
 		$.ajax({
          type: "GET",
          contentType: "application/json; charset=utf-8",
@@ -1196,7 +1195,6 @@ $("#popupBarcode").autocomplete({
         	  "cat2Input":cat2,
                 "cat3Input":cat3,
                "cat4Input":cat4,
-
 		 },
          dataType: "json",
          success: function (data) {
@@ -1210,18 +1208,20 @@ $("#popupBarcode").autocomplete({
      });
          }, minLength:0, maxShowItems: 40, scroll:true,
 	select: function(event, data) {	
-         $(this).val(data.item[0]+":"+data.item[1]);
-		 $("#popupBarcode").val("");
-	
-			return false;
-		}
-		}).autocomplete("instance")._renderItem = function(ul, item) {
+        $(this).val(data.item[0]+":"+data.item[1]);
+		$("#popupBarcode").val("");
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
+		return false;
+	}
+	}).autocomplete("instance")._renderItem = function(ul, item) {
 			return $("<li class='each'>")
 			.append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
 				  item[0] +", "+item[1]+ "</span><br><span class='desc'>" +
 			item[2] + "</span><span class='desc'>" +","+   item[3] + "</span></div>")
 			.appendTo(ul);
 		};
+		
 		$("#popupCat2").focus(function(){
 	       	if (this.value == ""){
 	           	$(this).autocomplete("search");
@@ -1260,6 +1260,8 @@ $("#popupBarcode").autocomplete({
 					select: function(event, data) {
 			        	$(this).val(data.item[0]+":"+data.item[1]);
 					 	$("#popupBarcode").val("");
+						$("#formStatus").text("Not Saved");
+						$('.dot').css({"background-color" : "orange"});
 						return false;
 					}
 			}).autocomplete("instance")._renderItem = function(ul, item) {
@@ -1269,6 +1271,7 @@ $("#popupBarcode").autocomplete({
 			item[2] + "</span><span class='desc'>" +","+   item[3] + "</span></div>")
 					.appendTo(ul);
 			};
+			
 			$("#popupCat3").focus(function(){
 		       	if (this.value == ""){
 		           	$(this).autocomplete("search");
@@ -1278,8 +1281,7 @@ $("#popupBarcode").autocomplete({
 
 $("#popupCat4").autocomplete({
 	 source: function(request, response) {
-		
-	     
+
 	    var cat1=($("#popupCat1").val().split(":"))[0];
 		var cat2 = ($("#popupCat2").val().split(":"))[0];
 		var cat3 = ($("#popupCat3").val().split(":"))[0];
@@ -1300,7 +1302,6 @@ $("#popupCat4").autocomplete({
              success: function (data) {
                  if (data != null) {
                      response(data.listCat);
-        
                  }
              },
              error: function(result) {
@@ -1308,12 +1309,13 @@ $("#popupCat4").autocomplete({
              }
         	 });
     	 }, minLength:0, maxShowItems: 40, scroll:true,
-		select: function(event, data) {
-					
-	     $(this).val(data.item[0]+":"+data.item[1]);
-		 $("#popupBarcode").val("");
-		return false;
-					}
+		select: function(event, data) {					
+		    $(this).val(data.item[0]+":"+data.item[1]);
+			$("#popupBarcode").val("");
+			$("#formStatus").text("Not Saved");
+			$('.dot').css({"background-color" : "orange"});		 
+			return false;
+		}
 		}).autocomplete("instance")._renderItem = function(ul, item) {
 	        return $("<li class='each'>")
 				.append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
@@ -1321,12 +1323,12 @@ $("#popupCat4").autocomplete({
 				item[2] + "</span><span class='desc'>" +","+   item[3] + "</span></div>")
 				.appendTo(ul);
 			};
+			
 			$("#popupCat4").focus(function(){
 		       	if (this.value == ""){
 		           	$(this).autocomplete("search");
 		       	}						
 			});
-
 
 $("#popupSeq").autocomplete({
 					
@@ -1348,13 +1350,11 @@ $("#popupSeq").autocomplete({
                "cat3Input":cat3,
               "cat4Input":cat4,
              "seqInput":seq,
-				},
- 
+				}, 
          dataType: "json",
          success: function (data) {
              if (data != null) {
-                 response(data.listCat);
-     
+                 response(data.listCat);     
              }
          },
          error: function(result) {
@@ -1362,20 +1362,18 @@ $("#popupSeq").autocomplete({
          }
 		     });
 		 }, minLength:0, maxShowItems: 40, scroll:true,		
-		select: function(event, data) {
-					
+		select: function(event, data) {					
          		$(this).val(data.item[0]);
 				$("#popupItem").val(data.item[0] + ":" + data.item[1]) ;
 				$("#popupItemModel").val(data.item[3]);
 				$("#popupItemPart").val(data.item[4]);
-
 				$("#popupBarcode").val("");
-		
+				$("#formStatus").text("Not Saved");
+				$('.dot').css({"background-color" : "orange"});		
 				return false;
-					}
-			}).autocomplete("instance")._renderItem = function(ul, item) {
-				var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-                
+		}
+		}).autocomplete("instance")._renderItem = function(ul, item) {
+			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
 				item[0] + "</span><br><span class='desc'>" +
 				item[1] + "</span><span class='desc'>" +","+ 
 				item[2] + "</span><span class='desc'>";
@@ -1393,4 +1391,4 @@ $("#popupSeq").autocomplete({
 			       	}						
 				});
 //End autocomplete in popup
-  });  
+  });
