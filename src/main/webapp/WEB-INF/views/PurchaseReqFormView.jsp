@@ -1407,9 +1407,9 @@ $(document).on("triggerBoqListenersEvent", function () {
 
 	c+="<tr>"+
 	"<td><input type='checkbox' name='record' >"+span+"<button type='button'  href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default' style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"+
-	"<td name='prItemCode'><input name='prItemCode' type='text' value='" + boqArray[i].prItemCode +":"+ boqArray[i].prItemName + "' style='width:300px;' class='form-control text-input'/></td>"+
-	"<td name='prItemModel'><input name='prItemModel' type='text' value='" + itemModel + "' style='width:200px;' class='form-control text-input'/></td>"+
-	"<td name='prItemPartNo'><input name='prItemPartNo' type='text' value='" + itemPartNumber + "' style='width:200px;' class='form-control text-input'/></td>"+
+	"<td name='prItemCode'><input name='itmCode' type='text' value='" + boqArray[i].prItemCode +":"+ boqArray[i].prItemName + "' style='width:300px;' class='form-control text-input'/></td>"+
+	"<td name='prItemModel'><input name='itmModel' type='text' value='" + itemModel + "' style='width:200px;' class='form-control text-input'/></td>"+
+	"<td name='prItemPartNo'><input name='itmPartNo' type='text' value='" + itemPartNumber + "' style='width:200px;' class='form-control text-input'/></td>"+
 	"<td hidden name='prBarCode'><input name='barcode' type='text' hidden value='" + barcode + "' style='width:200px;' class='form-control text-input'/></td>"+
 	"<td name='prQty'><input type='text' value='" + boqArray[i].prQty +"'style='width:200px;' class='form-control text-input'></td>"+
 	"<td name='prRate'><input type='text' value='" + boqArray[i].prRate +"'style='width:200px;' class='form-control text-input'></td>"+
