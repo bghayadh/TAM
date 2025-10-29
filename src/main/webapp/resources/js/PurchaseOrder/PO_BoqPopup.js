@@ -11,11 +11,8 @@ function openPop(element) {
 	rowindx = (buttonRowIndx[0].rowIndex - 1);
 	
 	//Send input values from Boq table  to popup
-	sendValBoqToPopup(rowindx);
-	
+	sendValBoqToPopup(rowindx);	
 	$("#poModal").modal("show");
-    AutocompleteOnLoad();
-
 }// end open popup fct
      
 function sendValBoqToPopup(indxRow){
@@ -413,8 +410,7 @@ function boqAutocomplete(rowCnt){
 	
 	//ITEM CODE autocomplete
 	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmCode"]').autocomplete({
-	source: function(request, response,event, ui) {
-		
+	source: function(request, response,event, ui) {		
 			$.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -422,7 +418,6 @@ function boqAutocomplete(rowCnt){
 			data: {
 				requestValue : request.term,
 				barcode : $("#barcode").val()
-				
 			},
 			dataType: "json",
 			success: function (data) {
@@ -439,7 +434,8 @@ function boqAutocomplete(rowCnt){
 			this.value = (ui.item ? ui.item[0] + ":" + ui.item[1] : '');  // 0 is itemCode,  1 is itemName, 2 is model, 3 partNo , 4 Barcode
 			$(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[2]);
 			$(this).parents("tr").find('input[name ="itmPartNo"]').val(ui.item[3]);
-					 
+			$("#formStatus").text("Not Saved");
+			$('.dot').css({"background-color" : "orange"});					 
 			return false;
 		}
 		}).autocomplete("instance")._renderItem= function(ul, item) {
@@ -460,8 +456,6 @@ function boqAutocomplete(rowCnt){
 	  	};
 	  	
 	  	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmCode"]').focus(function(){
-			$("#formStatus").text("Not Saved");
-			$('.dot').css({"background-color" : "orange"});
 	  		if (this.value == ""){
 	  			$(this).autocomplete("search");
 			}
@@ -495,7 +489,8 @@ function boqAutocomplete(rowCnt){
 				this.value = (ui.item ? ui.item[0] : '');
 				$(this).parents("tr").find('input[name ="itmCode"]').val(ui.item[1]+ ":" + ui.item[2]);
 				$(this).parents("tr").find('input[name ="itmPartNo"]').val(ui.item[3]);
-						
+				$("#formStatus").text("Not Saved");
+				$('.dot').css({"background-color" : "orange"});						
 			return false;
 		}
 		}).autocomplete("instance")._renderItem = function(ul, item) {
@@ -514,9 +509,6 @@ function boqAutocomplete(rowCnt){
 		};
 		
 	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmModel"]').focus(function(){
-		$("#formStatus").text("Not Saved");
-		$('.dot').css({"background-color" : "orange"});
-				
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}
@@ -532,8 +524,7 @@ function boqAutocomplete(rowCnt){
 		url:  ctx+'/getPartNo',
 		data: {
         	requestValue : request.term,
-        	barcode : $("#barcode").val()
-        	
+        	barcode : $("#barcode").val()        	
 		 },
 		 dataType: "json",
 		 success: function (data) {
@@ -549,15 +540,14 @@ function boqAutocomplete(rowCnt){
 	 }, minLength:0, maxShowItems: 40, scroll:true,
 	 select: function(event, ui) {
 	 		this.value = (ui.item ? ui.item[0] : '');
-				$(this).parents("tr").find('input[name ="itmCode"]').val(ui.item[1]+ ":" + ui.item[2]);
-				$(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[3]);
-						
-	return false;
+			$(this).parents("tr").find('input[name ="itmCode"]').val(ui.item[1]+ ":" + ui.item[2]);
+			$(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[3]);
+			$("#formStatus").text("Not Saved");
+			$('.dot').css({"background-color" : "orange"});
+		return false;
 	}
-	}).autocomplete("instance")._renderItem = function(ul, item) {
-	
-		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-									                
+	}).autocomplete("instance")._renderItem = function(ul, item) {	
+		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +									                
 		item[0] + "</span><br><span class='desc'>" +
 		item[1] + "</span><span class='desc'>" +","+ 
 		item[2] + "</span><span class='desc'>";
@@ -568,11 +558,9 @@ function boqAutocomplete(rowCnt){
 
 		appendString += "</span></div>";
 		return $("<li class='each'>").append(appendString).appendTo(ul);
-		
 	};
 	
 	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmPartNo"]').focus(function(){
-		
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}
@@ -583,11 +571,9 @@ function boqAutocomplete(rowCnt){
 // Next Fct in popup
 function nextRow(){
 	// Get total nb of rows
-	var rowCount = $("#bisotab >tbody tr").length;
-	
+	var rowCount = $("#bisotab >tbody tr").length;	
 	rowindx++ ;
-	var nextIndex = parseInt(rowindx);
-	
+	var nextIndex = parseInt(rowindx);	
 		 
 	if(rowindx >= 0 && rowindx < rowCount) {
 		sendValBoqToPopup(nextIndex);
@@ -599,124 +585,7 @@ function nextRow(){
 	 	sendValBoqToPopup(nextIndex); 
 	}	
  }// End next fct in popup  
- 
- 
- function AutocompleteOnLoad() {	 
-  var ctx = getContextPath();
-	$("input[name='itemPart']").each(function(i, el) {
-		$(el).autocomplete({
-		source: function(request, response, event, ui) {
-	$.ajax({ 
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url: ctx+'/getPartNo',
-		data: {
-			requestValue : request.term
-	},
-		dataType: "json",
-		success: function (data) {
-				                 
-		if (data != null) {
-			response(data.ListPartNos);
-		}
-		},
-		error: function(result) {
-			console.log(222);
-			                 
-		}
-		});
-		}, minLength:0, maxShowItems: 4, scroll:true,
-		select: function(event, ui) {
-			this.value = (ui.item ? ui.item[0]  : '');
-			document.getElementById("popupItemPartno").value= ui.item[0] ;
-			document.getElementById("popupItemCode").value= ui.item[1] + ":" + ui.item[2] ;
-			document.getElementById("popupItemModel").value= ui.item[3] ;
-			 $(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[3]);
-			return false;
-		}
-		}).autocomplete("instance")._renderItem = function(ul, item) {
-			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-									                
-			item[0] + "</span><br><span class='desc'>" +
-			item[1] + "</span><span class='desc'>" +","+ 
-			item[2] + "</span><span class='desc'>";
-			if(item[3] != '-')
-				appendString += ","+item[3] + "</span><span class='desc'>";
-			if(item[4] != '-')
-				appendString += ","+item[4];
 
-			appendString += "</span></div>";
-			return $("<li class='each'>").append(appendString).appendTo(ul);
-	     };
-		$("input[name='itemPart']").focus(function(){
-		
-		$("#formStatus").text("Not Saved");
-		$('.dot').css({"background-color" : "orange"});
-			
-			if (this.value == ""){
-				$(this).autocomplete("search");
-   	        }
-	
-		});
-	 });
-	$("input[name='itmModel']").each(function(i, el) {
-				$(el).autocomplete({
-	
-	source: function(request, response, event, ui) {
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url:ctx+'/getModel',
-		data: {
-			requestValue : request.term
-		},
-		dataType: "json",
-		success: function (data) {
-			if (data != null) {
-				response(data.ListModels);
-			}
-		},
-		error: function(result) {
-			console.log(222);
-		}
-	});
-	}, minLength:0, maxShowItems: 4, scroll:true,
-	select: function(event, ui) {
-		this.value = (ui.item ? ui.item[0]  : '');
-		document.getElementById("popupItemModel").value= ui.item[0] ;
-		document.getElementById("popupItemCode").value= ui.item[1] + ":" + ui.item[2] ;
-		document.getElementById("popupItemPartno").value= ui.item[3] ;
-		$(this).parents("tr").find('input[name ="itemPart"]').val(ui.item[3]);
-		return false;
-	}
-	}).autocomplete("instance")._renderItem = function(ul, item) {
-					
-		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-					
-		item[0] + "</span><br><span class='desc'>" +
-		item[1] + "</span><span class='desc'>"+"," +
-		item[2] + "</span><span class='desc'>";
-		if(item[3] != '-')
-			appendString += ","+item[3] + "</span><span class='desc'>";
-		if(item[4] != '-')
-			appendString += ","+item[4];
-
-		appendString += "</span></div>";
-		return $("<li class='each'>").append(appendString).appendTo(ul);
-	  		
-	};
-		$("input[name='itmModel']").focus(function(){
-		
-		$("#formStatus").text("Not Saved");
-		$('.dot').css({"background-color" : "orange"});
-		
-			if (this.value == ""){
-				$(this).autocomplete("search");
-   	        }
-	
-		});
-	 });	 
-    				   } 
    
  // Insert row below fct
  function insertRowBelow(){
@@ -925,10 +794,8 @@ var Data = {};
 			$('#itmModel_'+rowcountSerial ).focus(function(){
 			if (this.value == ""){
 				$(this).autocomplete("search");
-   	        }
-	
+   	        }	
 		});
-	 
  }
  
 function getContextPath() {
@@ -1026,11 +893,11 @@ $('body').on('click', '#selectAllSerial', function  () {
 		this.value = (ui.item ? ui.item[0]  : '');
 		document.getElementById("popupItemCode").value= ui.item[1] + ":" + ui.item[2] ;
 		document.getElementById("popupItemPartno").value= ui.item[3];
-		document.getElementById("popupBarcode").value= ui.item[4];					
+		document.getElementById("popupBarcode").value= ui.item[4];
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
 		return false;
 	}
-
-
 	  }).autocomplete("instance")._renderItem = function(ul, item) {
 			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
 						
@@ -1045,14 +912,11 @@ $('body').on('click', '#selectAllSerial', function  () {
 			appendString += "</span></div>";
 			return $("<li class='each'>").append(appendString).appendTo(ul);
 		};
-
-
 		$("#popupItemModel").focus(function(){
 			if (this.value == ""){
 				$(this).autocomplete("search");
 			}						
-		});
-   
+		});   
    	
 	
 		//Itemcode & name autocomplete
@@ -1074,20 +938,19 @@ $('body').on('click', '#selectAllSerial', function  () {
 		error: function(result) {
 			alert("Error");
 		}
-	});
-	
+	});	
 	}, minLength:0, maxShowItems: 40, scroll:true,
 	select: function(event, ui) {
 		popupItemCode.value = (ui.item ? ui.item[0] + ":" + ui.item[1] : '');
 		document.getElementById("popupItemModel").value= ui.item[2];
 		document.getElementById("popupItemPartno").value= ui.item[3];
 		document.getElementById("popupBarcode").value= ui.item[4];
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
 		return false;
 	}
-
 	}).autocomplete("instance")._renderItem = function(ul, item) {
-		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-                
+		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +                
 		item[0] + "</span><br><span class='desc'>" +
 		item[1] + "</span><span class='desc'>";
 		if(item[2] != '-')
@@ -1106,9 +969,7 @@ $('body').on('click', '#selectAllSerial', function  () {
 			$(this).autocomplete("search");
 		}						
 	});
- 	
- 	
-	
+ 		
 	
 	// ItemPartNo autocomplete in 1st tab
 					
@@ -1130,8 +991,7 @@ $('body').on('click', '#selectAllSerial', function  () {
 			 error: function(result) {
               	alert("Error");
               }
-         });
-         
+         });         
          }, minLength:0, maxShowItems: 40, scroll:true,	
 
 		select: function(event, ui) {
@@ -1139,10 +999,10 @@ $('body').on('click', '#selectAllSerial', function  () {
 			document.getElementById("popupItemCode").value= ui.item[1] + ":" + ui.item[2] ;
 			document.getElementById("popupItemModel").value= ui.item[3];
 			document.getElementById("popupBarcode").value= ui.item[4];
+			$("#formStatus").text("Not Saved");
+			$('.dot').css({"background-color" : "orange"});
 			return false;
 	    }
-
-
 		}).autocomplete("instance")._renderItem = function(ul, item) {
 			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
 									                
@@ -1741,7 +1601,6 @@ source: function(request, response) {
 		success: function (data) {
 			if (data != null) {
 				response(data.listCat);
-	
 			}
 		},
 		error: function(result) {
@@ -1778,8 +1637,7 @@ select: function(event, data) {
 			if (this.value == ""){
 				$(this).autocomplete("search");
 			}						
-		});	
-
+		});
 	//End SS
 	/////////////end autocpmplete for purchase request
 });

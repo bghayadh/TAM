@@ -9,12 +9,9 @@ function openPop(element) {
     //Send input values from Boq table  to popup
 	sendValBoqToPopup(rowindx);
     $("#preqModal").modal("show");
-
 }// end open popup fct
 
 function sendValBoqToPopup(indxRow){
-	console.log("Sending values from Boq from Popup");
-	console.log("item code is " , $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val());
 	$('#popupItem').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val());
 	$('#popupItemModel') .val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemModel"]').children('input').val()); 
 	$('#popupItemPart').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemPartNo"]').children('input').val());
@@ -41,41 +38,39 @@ function sendValBoqToPopup(indxRow){
     	element.innerHTML = "Item # " +(indxRow+1);
 }
 
-function sendValPopupToBoq(indxRow){
-      
-	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val($('#popupItem').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemModel"]').children('input').val($('#popupItemModel').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemPartNo"]').children('input').val($('#popupItemPart').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prBarCode"]').children('input').val($('#popupBarcode').val());	
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prQty"]').children('input').val($('#popupQty').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat1"]').children('input').val($('#popupCat1').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat2"]').children('input').val($('#popupCat2').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat3"]').children('input').val($('#popupCat3').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat4"]').children('input').val($('#popupCat4').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prSequ"]').children('input').val($('#popupSeq').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prRate"]').children('input').val($('#popupRate').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prTax1"]').children('input').val($('#popupTax').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prDiscountAmount"]').children('input').val($('#popupDiscount').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prNetRate"]').children('input').val($('#popupNetrate').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prTotal"]').children('input').val($('#popupTotal').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prTotalAt"]').children('input').val($('#popupTotalat').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="poQty"]').children('input').val($('#popupPoQty').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="grQty"]').children('input').val($('#popupGrQty').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="arQty"]').children('input').val($('#popupArQty').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="cipQty"]').children('input').val($('#popupCipQty').val());
-	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="farQty"]').children('input').val($('#popupFarQty').val());
-
-
+function sendValPopupToBoq(indxRow){      
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val($('#popupItem').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemModel"]').children('input').val($('#popupItemModel').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemPartNo"]').children('input').val($('#popupItemPart').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prBarCode"]').children('input').val($('#popupBarcode').val());	
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prQty"]').children('input').val($('#popupQty').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat1"]').children('input').val($('#popupCat1').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat2"]').children('input').val($('#popupCat2').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat3"]').children('input').val($('#popupCat3').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prCat4"]').children('input').val($('#popupCat4').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prSequ"]').children('input').val($('#popupSeq').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prRate"]').children('input').val($('#popupRate').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prTax1"]').children('input').val($('#popupTax').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prDiscountAmount"]').children('input').val($('#popupDiscount').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prNetRate"]').children('input').val($('#popupNetrate').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prTotal"]').children('input').val($('#popupTotal').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prTotalAt"]').children('input').val($('#popupTotalat').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="poQty"]').children('input').val($('#popupPoQty').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="grQty"]').children('input').val($('#popupGrQty').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="arQty"]').children('input').val($('#popupArQty').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="cipQty"]').children('input').val($('#popupCipQty').val());
+	$("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="farQty"]').children('input').val($('#popupFarQty').val());
 }
+
 function boqRowInsrt(newRowCount, itmName, model, partNum, barcode){
 	
 	var markup = "<tr><td><input type='checkbox' name='record'><span class='dotStatus' id='dotStatus'></span><button type='button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 				+"<td name='prItemCode'>"
-				+"<input name='prItemCode' type='text' value='"+ itmName +"' style='width:300px;' class='form-control text-input'/></td>"
+				+"<input name='itmCode' type='text' value='"+ itmName +"' style='width:300px;' class='form-control text-input'/></td>"
 				+"<td name='prItemModel'>"
-				+"<input name='prItemModel' type='text' value='"+ model +"' style='width:200px;' class='form-control text-input'/></td>"
+				+"<input name='itmModel' type='text' value='"+ model +"' style='width:200px;' class='form-control text-input'/></td>"
 				+"<td name='prItemPartNo'>"
-				+"<input name='prItemPartNo' type='text' value='"+ partNum +"' style='width:200px;' class='form-control text-input'/></td>"
+				+"<input name='itmPartNo' type='text' value='"+ partNum +"' style='width:200px;' class='form-control text-input'/></td>"
 				+"<td hidden name='prBarCode'>"
 				+"<input name='barcode' type='text' value ='"+ barcode +"' style='width:200px;' class='form-control text-input'/></td>"
 				+"<td name='prQty'><input type='text' value= 1 style='width:200px;' class='form-control text-input'></td>"
@@ -93,6 +88,7 @@ function boqRowInsrt(newRowCount, itmName, model, partNum, barcode){
 				+"<td name='prqItemId'><input type='text' readonly value= 0 style='width:200px;' class='form-control text-input'><input type='text' name='prqPoStatus' hidden value= '0'></td></tr>";
 	return markup;
 }
+
 function addNewRow(position){ 
 	////////HTML row drawing
 		var markup = boqRowInsrt('', '', '', '', '');
@@ -127,8 +123,7 @@ function addNewRow(position){
 			$('table#bisotab tr:eq('+rowindx+') td:nth-child(2) input').focus();
 			boqInputsListenerWhileAdding(rowindx+1);	
 		}
-*/		
-					
+*/							
 		if (position == "next"){
 			$("#bisotab > tbody").append(markup);
 			newRowIndx =  parseInt($("#bisotab >tbody tr").length-1);
@@ -148,10 +143,8 @@ function addNewRow(position){
 		  	boqAutocomplete(newRowIndx);
 			$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(1) input').focus();
 		}
-
 		boqInputsListenerWhileAdding(rowindx+1);
-		getSumQty_totalAT();		
-					   
+		getSumQty_totalAT();
 } // end add new row  	
 
 function calculateParam(){
@@ -207,13 +200,13 @@ function getSumQty_totalAT (){
 	 //$('#prdiscamnt').val(sumDiscount);
 	 
 	 updateAmounts ();
-                        
 };
 
 function updateAmounts () {
 	prtotword.value= parseFloat(prtotamnt.value) - parseFloat(prdiscamnt.value);
 	proutstand.value=parseFloat(prtotword.value) - parseFloat(prpaidamnt.value);
 }
+
 // function to put listener on change while adding a row by (bisotab, next, below, above, barcode adder, sequance adder).
 function boqInputsListenerWhileAdding(rowIndex){
 	$('#bisotab tr:eq('+rowIndex+') td input').change(function() { // td:eq(4),td:eq(5),td:eq(6),td:eq(7) input
@@ -261,6 +254,7 @@ function boqInputsListenerWhileAdding(rowIndex){
 		}
 	});
 }
+
 //calculate footer parameters
 function calcFooterDataOnChangeListener(){
 				
@@ -316,12 +310,11 @@ function calcFooterDataOnChangeListener(){
 
 					 
 function boqAutocomplete(rowCnt){
-	console.log("rowCnt is " ,rowCnt);
 	var ctx=getContextPath();
 	//var tableID=tableIndx;
 	
 	//ITEM CODE autocomplete
-	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemCode"]').autocomplete({
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmCode"]').autocomplete({
 	source: function(request, response) {
 			$.ajax({
 			type: "GET",
@@ -345,15 +338,14 @@ function boqAutocomplete(rowCnt){
 		}, minLength:0, maxShowItems: 4, scroll:true,
 		select: function(event, ui) {
 			this.value = (ui.item ? ui.item[0] + ":" + ui.item[1] : '');  // 0 is itemCode,  1 is itemName, 2 is model, 3 partNo , 4 Barcode
-			$(this).parents("tr").find('input[name ="prItemModel"]').val(ui.item[2]);
-			$(this).parents("tr").find('input[name ="prItemPartNo"]').val(ui.item[3]);
-					 	 
+			$(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[2]);
+			$(this).parents("tr").find('input[name ="itmPartNo"]').val(ui.item[3]);
+			$("#formStatus").text("Not Saved");
+			$('.dot').css({"background-color" : "orange"});					 	 
 			return false;
 		}
 		}).autocomplete("instance")._renderItem = function(ul, item) {
-
-			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-                
+			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +                
 			item[0] + "</span><br><span class='desc'>" +
 			item[1] + "</span><span class='desc'>";
 			if(item[2] != '-')
@@ -367,16 +359,14 @@ function boqAutocomplete(rowCnt){
 			return $("<li class='each'>").append(appendString).appendTo(ul);			
 	  	};
 	  	
-	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemCode"]').focus(function(){
-		$("#formStatus").text("Not Saved");
-		$('.dot').css({"background-color" : "orange"});
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmCode"]').focus(function(){
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}
 	}); // end ITEM CODE autocomplete
 		
 	//ITEM MODEL AUTOCOMPLETE
-	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemModel"]').autocomplete({
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmModel"]').autocomplete({
 		source: function(request, response) {
 		$.ajax({
 			type: "GET",
@@ -399,8 +389,10 @@ function boqAutocomplete(rowCnt){
 		}, minLength:0, maxShowItems: 4, scroll:true,
 			 select: function(event, ui) {
 					this.value = (ui.item ? ui.item[0] : '');
-					$(this).parents("tr").find('input[name ="prItemCode"]').val(ui.item[1]+ ":" + ui.item[2]);
-					$(this).parents("tr").find('input[name ="prItemPartNo"]').val(ui.item[3]);
+					$(this).parents("tr").find('input[name ="itmCode"]').val(ui.item[1]+ ":" + ui.item[2]);
+					$(this).parents("tr").find('input[name ="itmPartNo"]').val(ui.item[3]);
+					$("#formStatus").text("Not Saved");
+					$('.dot').css({"background-color" : "orange"});
 				return false;
 			}
 		}).autocomplete("instance")._renderItem = function(ul, item) {
@@ -417,17 +409,14 @@ function boqAutocomplete(rowCnt){
 				return $("<li class='each'>").append(appendString).appendTo(ul);
 		};
 		
-	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemModel"]').focus(function(){
-		$("#formStatus").text("Not Saved");
-		$('.dot').css({"background-color" : "orange"});
-
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmModel"]').focus(function(){
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}
 	}); // end ITEM MODEL autocomplete
 		
 	//ITEM PARTNO autocomplete
-	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemPartNo"]').autocomplete({
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmPartNo"]').autocomplete({
 		source: function(request, response) {	
 		$.ajax({
 			type: "GET",
@@ -446,20 +435,18 @@ function boqAutocomplete(rowCnt){
 			 error: function(result) {
 			 	alert("Error");
 			 }
-			 
 		 });
 		 }, minLength:0, maxShowItems: 40, scroll:true,
 		 select: function(event, ui) {
 		 			this.value = (ui.item ? ui.item[0] : '');
-					$(this).parents("tr").find('input[name ="prItemCode"]').val(ui.item[1]+ ":" + ui.item[2]);
-					$(this).parents("tr").find('input[name ="prItemModel"]').val(ui.item[3]);
-										
+					$(this).parents("tr").find('input[name ="itmCode"]').val(ui.item[1]+ ":" + ui.item[2]);
+					$(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[3]);
+					$("#formStatus").text("Not Saved");
+					$('.dot').css({"background-color" : "orange"});										
 		return false;
 		}
 		}).autocomplete("instance")._renderItem = function(ul, item) {
-		
 			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-										                
 			item[0] + "</span><br><span class='desc'>" +
 			item[1] + "</span><span class='desc'>" +","+ 
 			item[2] + "</span><span class='desc'>";
@@ -469,11 +456,10 @@ function boqAutocomplete(rowCnt){
 				appendString += ","+item[4];
 	
 			appendString += "</span></div>";
-			return $("<li class='each'>").append(appendString).appendTo(ul);
-			
+			return $("<li class='each'>").append(appendString).appendTo(ul);			
 		};
 	
-	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemPartNo"]').focus(function(){
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmPartNo"]').focus(function(){
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}
@@ -517,8 +503,7 @@ function getselectedrows () {
 			   
 			     if (isNaN(val1) == true) {
 			          alert(' Ordered Date is not valid');
-			          return false;
-			        
+			          return false;			        
 			        }
 			        
 			         // validate Delivered Date cannot be null
@@ -627,7 +612,6 @@ function nextRow(){
    rowindx++ ;
    var nextIndex = parseInt(rowindx);
    
-	     
 	if(rowindx >= 0 && rowindx < rowCount) {
 		sendValBoqToPopup(nextIndex);
 	   	}			 
@@ -669,22 +653,7 @@ function insertRowAbove(){
 	}
 	rowindx++;
 	$("tr").eq(rowindx).remove();
-/*	
-	var sumQty=0;
-	var sumTotalAt=0;
-	$("#bisotab > tbody > tr").each(function(i, row) {
-		sumQty = sumQty + parseFloat($(this).children('td[name="prQty"]').children('input').val());
-		console.log("sumQty is:"+sumQty);
-		sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="prTotalAt"]').children('input').val());
-		console.log("sumTotalAt is:"+sumTotalAt);
-	});
-	$('#prtotqty').val(sumQty);
-	$('#prtotamnt').val(sumTotalAt);
-	prtotword.value= parseFloat(prtotamnt.value) - parseFloat(prdiscamnt.value);
-	proutstand.value=parseFloat(prtotword.value) - parseFloat(prpaidamnt.value);
-*/
-		
-		
+	
 	// Get Nb of rows after delete 
 	var rowCount = $("#bisotab >tbody tr").length;	   	 
 	rowindx--;
@@ -704,8 +673,8 @@ function insertRowAbove(){
 }// End Delete fct  
   
 function getContextPath() {
-	   return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
-	}      
+	return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+}      
    
 
 $(function(){
@@ -714,8 +683,6 @@ var ctx = getContextPath();
  // Item model autocomplete
  $("#popupItemModel").autocomplete({
 	source: function(request, response) {
-
-				
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
@@ -740,12 +707,12 @@ var ctx = getContextPath();
 		document.getElementById("popupItem").value= ui.item[1] + ":" + ui.item[2] ;
 		document.getElementById("popupItemPart").value= ui.item[3];
 		document.getElementById("popupBarcode").value= ui.item[4];
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});		
 		return false;
 	}
-
 	}).autocomplete("instance")._renderItem = function(ul, item) {
-		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-					
+		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +				
 		item[0] + "</span><br><span class='desc'>" +
 		item[1] + "</span><span class='desc'>"+"," +
 		item[2] + "</span><span class='desc'>";
@@ -767,8 +734,6 @@ var ctx = getContextPath();
 	// Item Code&Name autocomplete 
 $("#popupItem").autocomplete({
 	source: function(request, response) {
-				
-
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
@@ -783,7 +748,6 @@ $("#popupItem").autocomplete({
 				if (data != null) {
 					response(data.ListItemDetails);
 				}
-							 		                            
 		},
 			error: function(result) {
 				alert("Error");
@@ -795,12 +759,12 @@ $("#popupItem").autocomplete({
 		document.getElementById("popupItemModel").value= ui.item[2];
 		document.getElementById("popupItemPart").value= ui.item[3];
 		document.getElementById("popupBarcode").value= ui.item[4];
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
 		return false;
 	}
-
 	}).autocomplete("instance")._renderItem = function(ul, item) {
 		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-                
 		item[0] + "</span><br><span class='desc'>" +
 		item[1] + "</span><span class='desc'>";
 		if(item[2] != '-')
@@ -812,8 +776,7 @@ $("#popupItem").autocomplete({
 
 		appendString += "</span></div>";
 		return $("<li class='each'>").append(appendString).appendTo(ul);
-	};
-					
+	};					
 	$("#popupItem").focus(function(){
 		if (this.value == ""){
 			$(this).autocomplete("search");
@@ -824,7 +787,6 @@ $("#popupItem").autocomplete({
 	  			    
 $("#popupItemPart").autocomplete({
 	source: function(request, response) {
-
 	$.ajax({
 		type: "GET",
 		contentType: "application/json; charset=utf-8",
@@ -849,12 +811,12 @@ $("#popupItemPart").autocomplete({
 			document.getElementById("popupItem").value= ui.item[1] + ":" + ui.item[2] ;
 			document.getElementById("popupItemModel").value= ui.item[3];
 			document.getElementById("popupBarcode").value= ui.item[4];
+			$("#formStatus").text("Not Saved");
+			$('.dot').css({"background-color" : "orange"});
 			return false;
-		}
-		
+		}		
 		}).autocomplete("instance")._renderItem = function(ul, item) {
 			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-									                
 			item[0] + "</span><br><span class='desc'>" +
 			item[1] + "</span><span class='desc'>" +","+ 
 			item[2] + "</span><span class='desc'>";
@@ -866,20 +828,16 @@ $("#popupItemPart").autocomplete({
 			appendString += "</span></div>";
 			return $("<li class='each'>").append(appendString).appendTo(ul);
 		};
-
 	$("#popupItemPart").focus(function(){
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}						
 	});
-		
-		
    
 // Resize and drag the popup 
 
 	$('.modal-content').resizable({
 	 	handles: "e" ,
-
     });
 
    $('.modal-dialog').draggable({
@@ -906,8 +864,7 @@ $("#popupItemPart").autocomplete({
 				      
 // Minimize and Maximize fct for popup
     		        
-    $(".modalMinimize").on("click", function(){
-    		        
+    $(".modalMinimize").on("click", function(){    		        
      $(".modal-body").slideToggle();
      $(".modal-footer").slideToggle();
   //Toggle between minimize/maximize icons
@@ -925,29 +882,23 @@ $("#popupItemPart").autocomplete({
    
  //Send input values from popup to boq when any popup input change
  $('#popupItem,#popupItemModel, #popupItemPart, #popupQty,#popupRate,#popupTax,#popupDiscount,#popupBarcode,#popupSeq,#popupCat1,#popupCat2,#popupCat3,#popupCat4').on('focusout', function() {
-      
    sendValPopupToBoq(rowindx);
    getTotalAT_SumQty();
    amountsUpdate();  
-      });
+});
    
 // Close popup function  				
-  $("button[name='closePopup']").on("click", function(){
-	 
-	
+$("button[name='closePopup']").on("click", function(){
   //  Send input values from popup to boq table using close button 
-  	sendValPopupToBoq(rowindx);
-	    					
-	  $("#preqModal").modal("hide");
-	  
-	   getTotalAT_SumQty();
-	   amountsUpdate();
-		 	
-	});   // end close fct
+  	sendValPopupToBoq(rowindx);	    					
+	$("#preqModal").modal("hide");
+	getTotalAT_SumQty();
+	amountsUpdate();
+});   // end close fct
 	
 // Close popup using ESC
-	document.addEventListener('keydown', function(event){
-	  if(event.key === "Escape"){
+document.addEventListener('keydown', function(event){
+	if(event.key === "Escape"){
 		if($("#preqModal").hasClass("show")){
 			// Send input values from popup to boq table and close the popup using ESC 
 			sendValPopupToBoq(rowindx);
@@ -957,8 +908,7 @@ $("#popupItemPart").autocomplete({
 		}
 	   }
    });// end close fct using esc
-   
-   
+      
  function getTotalAT_SumQty(){
   var sumQty =0;
   var sumTotalAt=0;	
@@ -976,52 +926,48 @@ $("#popupItemPart").autocomplete({
     if (prpaidamnt.value == ''){
 	    prpaidamnt.value=0;
 	}
- 
   
- $("#bisotab > tbody > tr").each(function(i, row){
-	sumQty = sumQty + parseFloat($(this).children('td[name="prQty"]').children('input').val());
-	sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="prTotalAt"]').children('input').val());
-		});
-	 $('#prtotqty').val(sumQty);
-	 $('#prtotamnt').val(sumTotalAt);
-		     	            	
- } 
+ 	$("#bisotab > tbody > tr").each(function(i, row){
+		sumQty = sumQty + parseFloat($(this).children('td[name="prQty"]').children('input').val());
+		sumTotalAt = sumTotalAt + parseFloat($(this).children('td[name="prTotalAt"]').children('input').val());
+	});
+	$('#prtotqty').val(sumQty);
+	$('#prtotamnt').val(sumTotalAt);
+ }
  
- function amountsUpdate(){
-  prtotword.value= parseFloat(prtotamnt.value) - parseFloat(prdiscamnt.value);
-  proutstand.value=parseFloat(prtotword.value) - parseFloat(prpaidamnt.value);	                
-} 
-   				
+function amountsUpdate(){
+	prtotword.value= parseFloat(prtotamnt.value) - parseFloat(prdiscamnt.value);
+	proutstand.value=parseFloat(prtotword.value) - parseFloat(prpaidamnt.value);	                
+}  				
 						
 // Calculate netRate, total, totalAt, sum of TotalAt in popup 
-  $('#popupRate, #popupDiscount,#popupQty,#popupNetrate,#popupTax').on('change  ', function()  {
+$('#popupRate, #popupDiscount,#popupQty,#popupNetrate,#popupTax').on('change  ', function()  {
 	if ($('#popupDiscount').val() == '') {
 		$('#popupDiscount').val(0);
-	 }
-	 if ($('#popupTax').val() == '') {
+	}
+	if ($('#popupTax').val() == '') {
 	     $('#popupTax').val(0);
-	 }
-	 if ($('#popupRate').val() == '') {
+	}
+	if ($('#popupRate').val() == '') {
 	     $('#popupRate').val(0);
-	  }
-	  if ($('#popupQty').val() == '') {
-	      $('#popupQty').val(0);
-	  }
-	  if ($('#popupTotalat').val() == '') {
-	      $('#popupTotalat').val(0);
-      }
-      var popupNetRate = parseFloat($('#popupRate').val()) - parseFloat($('#popupDiscount').val());
-	  $('#popupNetrate').val(popupNetRate);
+	}
+	if ($('#popupQty').val() == '') {
+		$('#popupQty').val(0);
+	}
+	if ($('#popupTotalat').val() == '') {
+		$('#popupTotalat').val(0);
+	}
+	var popupNetRate = parseFloat($('#popupRate').val()) - parseFloat($('#popupDiscount').val());
+	$('#popupNetrate').val(popupNetRate);
 
-	   var popupTotal = parseFloat($('#popupQty').val()) * (popupNetRate);
-	   $('#popupTotal').val(popupTotal);
+	var popupTotal = parseFloat($('#popupQty').val()) * (popupNetRate);
+	$('#popupTotal').val(popupTotal);
 
-	   var popupTax = ((parseFloat($('#popupTax').val()) * popupNetRate)/100);
+	var popupTax = ((parseFloat($('#popupTax').val()) * popupNetRate)/100);
 
-	   var popupTotalAt = parseFloat($('#popupQty').val()) * (popupNetRate+popupTax);
-	   $('#popupTotalat').val(popupTotalAt);
-	    
-	});
+	var popupTotalAt = parseFloat($('#popupQty').val()) * (popupNetRate+popupTax);
+	$('#popupTotalat').val(popupTotalAt);
+});
 
 // Prev fct in popup
  $("button[name='previousRow']").on("click", function(){
@@ -1030,8 +976,6 @@ $("#popupItemPart").autocomplete({
 		rowindx-- ;
 	    var PrevIndex = parseInt(rowindx);
 	    sendValBoqToPopup(PrevIndex);
-
-	   
 	 }
    
    // Close popup on row 0 (end of prev)
@@ -1102,7 +1046,6 @@ $("#prpaidamnt").on("input", function(){
        		}
        		$(this).toggleClass('allChecked');
 })
-
 	
 //remove selected rows from boq
 $(".delete-row").click(function(){
@@ -1151,7 +1094,6 @@ $("#popupBarcode").autocomplete({
 		$("#popupItem").val(ui.item[1] + ":" + ui.item[2]);
 		$("#popupItemModel").val(ui.item[3]);
 		$("#popupItemPart").val(ui.item[4]);
-
 		$("#popupCat1").val("");
 		$("#popupCat2").val("");
 		$("#popupCat3").val("");
@@ -1188,7 +1130,6 @@ $("#popupBarcode").autocomplete({
 	
 	$("#popupCat1").autocomplete({
 		source: function(request, response) {
-
 		 var cat1 =($("#popupCat1").val().split(":"))[0];
 		 var cat2 = ($("#popupCat2").val().split(":"))[0];
 		 var cat3 = ($("#popupCat3").val().split(":"))[0];
@@ -1267,16 +1208,13 @@ $("#popupBarcode").autocomplete({
              alert("Error");
          }
      });
-         }, minLength:0, maxShowItems: 40, scroll:true,		
-    
-	select: function(event, data) {
-	
+         }, minLength:0, maxShowItems: 40, scroll:true,
+	select: function(event, data) {	
          $(this).val(data.item[0]+":"+data.item[1]);
 		 $("#popupBarcode").val("");
 	
 			return false;
-				}
-
+		}
 		}).autocomplete("instance")._renderItem = function(ul, item) {
 			return $("<li class='each'>")
 			.append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
@@ -1297,7 +1235,7 @@ $("#popupBarcode").autocomplete({
 		var cat2 = ($("#popupCat2").val().split(":"))[0];
 		var cat3 = ($("#popupCat3").val().split(":"))[0];
 		var cat4 = ($("#popupCat4").val().split(":"))[0];
-			        	
+
          $.ajax({
              type: "GET",
              contentType: "application/json; charset=utf-8",
@@ -1320,12 +1258,10 @@ $("#popupBarcode").autocomplete({
 			             });
 			         }, minLength:0, maxShowItems: 40, scroll:true,	
 					select: function(event, data) {
-			         $(this).val(data.item[0]+":"+data.item[1]);
-					 $("#popupBarcode").val("");
-					
-							return false;
-								}
-
+			        	$(this).val(data.item[0]+":"+data.item[1]);
+					 	$("#popupBarcode").val("");
+						return false;
+					}
 			}).autocomplete("instance")._renderItem = function(ul, item) {
 		        return $("<li class='each'>")
 					.append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
@@ -1455,8 +1391,6 @@ $("#popupSeq").autocomplete({
 			       	if (this.value == ""){
 			           	$(this).autocomplete("search");
 			       	}						
-				});	
-
-//End autocomplete in popup									
-
+				});
+//End autocomplete in popup
   });  
