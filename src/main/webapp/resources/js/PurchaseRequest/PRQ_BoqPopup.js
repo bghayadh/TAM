@@ -13,7 +13,8 @@ function openPop(element) {
 }// end open popup fct
 
 function sendValBoqToPopup(indxRow){
-      
+	console.log("Sending values from Boq from Popup");
+	console.log("item code is " , $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val());
 	$('#popupItem').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val());
 	$('#popupItemModel') .val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemModel"]').children('input').val()); 
 	$('#popupItemPart').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemPartNo"]').children('input').val());
@@ -35,15 +36,12 @@ function sendValBoqToPopup(indxRow){
 	$('#popupArQty').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="arQty"]').children('input').val());
 	$('#popupCipQty').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="cipQty"]').children('input').val());
 	$('#popupFarQty').val($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="farQty"]').children('input').val());
-							 
 
 	var element = document.getElementById("popupNb");
     	element.innerHTML = "Item # " +(indxRow+1);
-
 }
 
 function sendValPopupToBoq(indxRow){
-
       
 	 $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemCode"]').children('input').val($('#popupItem').val());
 	  $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="prItemModel"]').children('input').val($('#popupItemModel').val());
@@ -71,12 +69,13 @@ function sendValPopupToBoq(indxRow){
 }
 function boqRowInsrt(newRowCount, itmName, model, partNum, barcode){
 	
-	var markup = "<tr><td><input type='checkbox' name='record'><span class='dotStatus' id='dotStatus'></span><button type='button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td><td name='prItemCode'>"
-				+"<input name='itmCode' type='text' id = 'itmCode"+newRowCount+"' value='"+ itmName +"' style='width:300px;' class='form-control text-input'/></td>"
+	var markup = "<tr><td><input type='checkbox' name='record'><span class='dotStatus' id='dotStatus'></span><button type='button' href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default'  style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
+				+"<td name='prItemCode'>"
+				+"<input name='prItemCode' type='text' value='"+ itmName +"' style='width:300px;' class='form-control text-input'/></td>"
 				+"<td name='prItemModel'>"
-				+"<input name='itmModel' type='text' id = 'itmModel"+newRowCount+"' value='"+ model +"' style='width:200px;' class='form-control text-input'/></td>"
+				+"<input name='prItemModel' type='text' value='"+ model +"' style='width:200px;' class='form-control text-input'/></td>"
 				+"<td name='prItemPartNo'>"
-				+"<input name='itmPartNo' type='text' id = 'itmPartNo"+newRowCount+"' value='"+ partNum +"' style='width:200px;' class='form-control text-input'/></td>"
+				+"<input name='prItemPartNo' type='text' value='"+ partNum +"' style='width:200px;' class='form-control text-input'/></td>"
 				+"<td hidden name='prBarCode'>"
 				+"<input name='barcode' type='text' value ='"+ barcode +"' style='width:200px;' class='form-control text-input'/></td>"
 				+"<td name='prQty'><input type='text' value= 1 style='width:200px;' class='form-control text-input'></td>"
@@ -92,11 +91,12 @@ function boqRowInsrt(newRowCount, itmName, model, partNum, barcode){
 				+"<td name='cipQty'><input type='text' readonly style='width:200px;' class='form-control text-input'></td>"
 				+"<td name='farQty'><input type='text' readonly value='0' style='width:200px;' class='form-control text-input'></td>"
 				+"<td name='prqItemId'><input type='text' readonly value= 0 style='width:200px;' class='form-control text-input'><input type='text' name='prqPoStatus' hidden value= '0'></td></tr>";
-return markup;
+	return markup;
 }
 function addNewRow(position){ 
 	////////HTML row drawing
-		var markup = boqRowInsrt('', '', '', '', '');		
+		var markup = boqRowInsrt('', '', '', '', '');
+/*				
 		if (position == "next"){
 			RowCount =  $("#bisotab >tbody tr").length;
 			$("#bisotab > tbody").append(markup);
@@ -127,6 +127,29 @@ function addNewRow(position){
 			$('table#bisotab tr:eq('+rowindx+') td:nth-child(2) input').focus();
 			boqInputsListenerWhileAdding(rowindx+1);	
 		}
+*/		
+					
+		if (position == "next"){
+			$("#bisotab > tbody").append(markup);
+			newRowIndx =  parseInt($("#bisotab >tbody tr").length-1);
+		  	boqAutocomplete(newRowIndx);
+			$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(2) input').focus();
+		 }
+		 if (position =="below"){
+			$("#bisotab > tbody tr").eq(rowindx).after(markup);
+			newRowIndx = parseInt(rowindx+1);
+			//belowRowCount =  $("#bisotab >tbody tr").length;
+		  	boqAutocomplete(newRowIndx);
+			$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(1) input').focus();
+		}
+		if (position =="above"){
+			$("#bisotab > tbody tr").eq(rowindx).before(markup);
+			newRowIndx =  rowindx;
+		  	boqAutocomplete(newRowIndx);
+			$('table#bisotab tr:eq('+(newRowIndx+1)+') td:nth-child(1) input').focus();
+		}
+
+		boqInputsListenerWhileAdding(rowindx+1);
 		getSumQty_totalAT();		
 					   
 } // end add new row  	
@@ -141,19 +164,18 @@ function calculateParam(){
 		$(this).parent().parent().children('td[name="prTotalAt"]').children('input').val(amountAT);
 		getSumQty_totalAT();
 }
+
 // to check if the inserted barcode has a similar boq result , if exist , qty ++ .
 function checkItemCodeBoqRow(bc){
-		$("#bisotab > tbody").find('td[name="prItemCode"]').each(function(){	
+	$("#bisotab > tbody").find('td[name="prItemCode"]').each(function(){
 		var index =  $(this).parent().closest("tr").index();
 		var itemCode = 	($("#bisotab >tbody").find("tr").eq(index).find('td[name="prItemCode"]').children('input').val().split(":"))[0];
-		if (itemCode == bc){
-		var qty = $("#bisotab >tbody").find("tr").eq(index).find('td[name="prQty"]').children('input').val();
-		qty++;
-		$("#bisotab >tbody").find("tr").eq(index).find('td[name="prQty"]').children('input').val(qty);
-		//$('#barcode').val("");
-
-							}
-							 });
+		if (itemCode == bc) {
+			var qty = $("#bisotab >tbody").find("tr").eq(index).find('td[name="prQty"]').children('input').val();
+			qty++;
+			$("#bisotab >tbody").find("tr").eq(index).find('td[name="prQty"]').children('input').val(qty);
+		}
+	});
 }
 
 function getSumQty_totalAT (){
@@ -293,13 +315,13 @@ function calcFooterDataOnChangeListener(){
 //////////////////////////////////
 
 					 
-function boqAutocomplete(rowCnt,tableIndx){
-
+function boqAutocomplete(rowCnt){
+	console.log("rowCnt is " ,rowCnt);
 	var ctx=getContextPath();
-	var tableID=tableIndx;
+	//var tableID=tableIndx;
 	
 	//ITEM CODE autocomplete
-	$('#itmCode'+rowCnt).autocomplete({
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemCode"]').autocomplete({
 	source: function(request, response) {
 			$.ajax({
 			type: "GET",
@@ -323,8 +345,8 @@ function boqAutocomplete(rowCnt,tableIndx){
 		}, minLength:0, maxShowItems: 4, scroll:true,
 		select: function(event, ui) {
 			this.value = (ui.item ? ui.item[0] + ":" + ui.item[1] : '');  // 0 is itemCode,  1 is itemName, 2 is model, 3 partNo , 4 Barcode
-			$(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[2]);
-			$(this).parents("tr").find('input[name ="itmPartNo"]').val(ui.item[3]);
+			$(this).parents("tr").find('input[name ="prItemModel"]').val(ui.item[2]);
+			$(this).parents("tr").find('input[name ="prItemPartNo"]').val(ui.item[3]);
 					 	 
 			return false;
 		}
@@ -345,114 +367,113 @@ function boqAutocomplete(rowCnt,tableIndx){
 			return $("<li class='each'>").append(appendString).appendTo(ul);			
 	  	};
 	  	
-	  	$('#itmCode'+rowCnt).focus(function(){
-	  		if (this.value == ""){
-	  			$(this).autocomplete("search");
-			}
-		}); // end ITEM CODE autocomplete
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemCode"]').focus(function(){
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
+		if (this.value == ""){
+			$(this).autocomplete("search");
+		}
+	}); // end ITEM CODE autocomplete
 		
 	//ITEM MODEL AUTOCOMPLETE
-	$('#itmModel'+rowCnt).autocomplete({
-				  
-	source: function(request, response) {
-	
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url:  ctx+'/getModel',
-		data: {
-			requestValue : request.term,
-			barcode : $("#barcode").val(),
-		 },
-		 dataType: "json",
-		 success: function (data) {
-		 	if (data != null) {
-		 		response(data.ListModels);
-		 	}
-		 },
-		 error: function(result) {
-		 	alert("Error");
-		 }
-	});
-	}, minLength:0, maxShowItems: 4, scroll:true,
-		 select: function(event, ui) {
-				this.value = (ui.item ? ui.item[0] : '');
-				$(this).parents("tr").find('input[name ="itmCode"]').val(ui.item[1]+ ":" + ui.item[2]);
-				$(this).parents("tr").find('input[name ="itmPartNo"]').val(ui.item[3]);
-								
-			return false;
-		}
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemModel"]').autocomplete({
+		source: function(request, response) {
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url:  ctx+'/getModel',
+			data: {
+				requestValue : request.term,
+				barcode : $("#barcode").val(),
+			 },
+			 dataType: "json",
+			 success: function (data) {
+			 	if (data != null) {
+			 		response(data.ListModels);
+			 	}
+			 },
+			 error: function(result) {
+			 	alert("Error");
+			 }
+		});
+		}, minLength:0, maxShowItems: 4, scroll:true,
+			 select: function(event, ui) {
+					this.value = (ui.item ? ui.item[0] : '');
+					$(this).parents("tr").find('input[name ="prItemCode"]').val(ui.item[1]+ ":" + ui.item[2]);
+					$(this).parents("tr").find('input[name ="prItemPartNo"]').val(ui.item[3]);
+				return false;
+			}
 		}).autocomplete("instance")._renderItem = function(ul, item) {
 			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-					
+				item[0] + "</span><br><span class='desc'>" +
+				item[1] + "</span><span class='desc'>"+"," +
+				item[2] + "</span><span class='desc'>";
+				if(item[3] != '-')
+					appendString += ","+item[3] + "</span><span class='desc'>";
+				if(item[4] != '-')
+					appendString += ","+item[4];
+	
+				appendString += "</span></div>";
+				return $("<li class='each'>").append(appendString).appendTo(ul);
+		};
+		
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemModel"]').focus(function(){
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
+
+		if (this.value == ""){
+			$(this).autocomplete("search");
+		}
+	}); // end ITEM MODEL autocomplete
+		
+	//ITEM PARTNO autocomplete
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemPartNo"]').autocomplete({
+		source: function(request, response) {	
+		$.ajax({
+			type: "GET",
+			contentType: "application/json; charset=utf-8",
+			url:  ctx+'/getPartNo',
+			data: {
+	        	requestValue : request.term,
+	        	barcode : $("#barcode").val()
+			 },
+			 dataType: "json",
+			 success: function (data) {
+			 	if (data != null) {
+			 		response(data.ListPartNos);
+			 	}
+			 },
+			 error: function(result) {
+			 	alert("Error");
+			 }
+			 
+		 });
+		 }, minLength:0, maxShowItems: 40, scroll:true,
+		 select: function(event, ui) {
+		 			this.value = (ui.item ? ui.item[0] : '');
+					$(this).parents("tr").find('input[name ="prItemCode"]').val(ui.item[1]+ ":" + ui.item[2]);
+					$(this).parents("tr").find('input[name ="prItemModel"]').val(ui.item[3]);
+										
+		return false;
+		}
+		}).autocomplete("instance")._renderItem = function(ul, item) {
+		
+			var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
+										                
 			item[0] + "</span><br><span class='desc'>" +
-			item[1] + "</span><span class='desc'>"+"," +
+			item[1] + "</span><span class='desc'>" +","+ 
 			item[2] + "</span><span class='desc'>";
 			if(item[3] != '-')
 				appendString += ","+item[3] + "</span><span class='desc'>";
 			if(item[4] != '-')
 				appendString += ","+item[4];
-
+	
 			appendString += "</span></div>";
 			return $("<li class='each'>").append(appendString).appendTo(ul);
 			
 		};
-		
-		$('#itmModel'+rowCnt).focus(function(){
-			if (this.value == ""){
-				$(this).autocomplete("search");
-			}
-		}); // end ITEM MODEL autocomplete
-		
-	//ITEM PARTNO autocomplete
-	$('#itmPartNo'+rowCnt).autocomplete({
-	source: function(request, response) {
 	
-	$.ajax({
-		type: "GET",
-		contentType: "application/json; charset=utf-8",
-		url:  ctx+'/getPartNo',
-		data: {
-        	requestValue : request.term,
-        	barcode : $("#barcode").val()
-		 },
-		 dataType: "json",
-		 success: function (data) {
-		 	if (data != null) {
-		 		response(data.ListPartNos);
-		 	}
-		 },
-		 error: function(result) {
-		 	alert("Error");
-		 }
-		 
-	 });
-	 }, minLength:0, maxShowItems: 40, scroll:true,
-	 select: function(event, ui) {
-	 			this.value = (ui.item ? ui.item[0] : '');
-				$(this).parents("tr").find('input[name ="itmCode"]').val(ui.item[1]+ ":" + ui.item[2]);
-				$(this).parents("tr").find('input[name ="itmModel"]').val(ui.item[3]);
-									
-	return false;
-	}
-	}).autocomplete("instance")._renderItem = function(ul, item) {
-	
-		var appendString = "<div class='acItem'><span class='name' style='font-weight:bold'>" +
-									                
-		item[0] + "</span><br><span class='desc'>" +
-		item[1] + "</span><span class='desc'>" +","+ 
-		item[2] + "</span><span class='desc'>";
-		if(item[3] != '-')
-			appendString += ","+item[3] + "</span><span class='desc'>";
-		if(item[4] != '-')
-			appendString += ","+item[4];
-
-		appendString += "</span></div>";
-		return $("<li class='each'>").append(appendString).appendTo(ul);
-		
-	};
-	
-	$('#itmPartNo'+rowCnt).focus(function(){
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="prItemPartNo"]').focus(function(){
 		if (this.value == ""){
 			$(this).autocomplete("search");
 		}
@@ -462,35 +483,31 @@ function boqAutocomplete(rowCnt,tableIndx){
 } // end boqAutocomplete fct
 //////////////////////////
 //function to  get selected rows for save
-				function getselectedrows () {
-					dict = [];
-					
-					$("#bisotab > tbody").find('input[name="record"]').each(function(){
-						    dict.push({
-						    	 "prItemCode" : $(this).parent().parent().children('td[name="prItemCode"]').children('input').val(),
-						    	 "prItemModel" : $(this).parent().parent().children('td[name="prItemModel"]').children('input').val(),
-						    	 "prItemPartNo" : $(this).parent().parent().children('td[name="prItemPartNo"]').children('input').val(),
-						    	 "prBarCode" : $(this).parent().parent().children('td[name="prBarCode"]').children('input').val(),
-								 "prQty" : $(this).parent().parent().children('td[name="prQty"]').children('input').val(),
-								 "prRate" : $(this).parent().parent().children('td[name="prRate"]').children('input').val(),
-								 "prDiscountAmount" : $(this).parent().parent().children('td[name="prDiscountAmount"]').children('input').val(),
-								 "prTax1" : $(this).parent().parent().children('td[name="prTax1"]').children('input').val(),
-								 "prNetRate" : $(this).parent().parent().children('td[name="prNetRate"]').children('input').val(),
-								 "prTotal" : $(this).parent().parent().children('td[name="prTotal"]').children('input').val(),
-								 "prTotalAt" : $(this).parent().parent().children('td[name="prTotalAt"]').children('input').val(),
-								 "poQty" : $(this).parent().parent().children('td[name="poQty"]').children('input').val(),
-								 "grQty" : $(this).parent().parent().children('td[name="grQty"]').children('input').val(),
-								"arQty" : $(this).parent().parent().children('td[name="arQty"]').children('input').val(),
-								 "cipQty" : $(this).parent().parent().children('td[name="cipQty"]').children('input').val(),
-								 "farQty" : $(this).parent().parent().children('td[name="farQty"]').children('input').val(),
-								 "prqItemId" : $(this).parent().parent().children('td[name="prqItemId"]').children('input').val(),
-								 "prqPoStatus" : $(this).parent().parent().children('td[name="prqItemId"]').children("input[name='prqPoStatus']").val()
-							    });
-					
-		             
-					});
-		              
-				}//end of selectedrows
+function getselectedrows () {
+	dict = [];
+	$("#bisotab > tbody").find('input[name="record"]').each(function(){
+		dict.push({
+			"prItemCode" : $(this).parent().parent().children('td[name="prItemCode"]').children('input').val(),
+			"prItemModel" : $(this).parent().parent().children('td[name="prItemModel"]').children('input').val(),
+			"prItemPartNo" : $(this).parent().parent().children('td[name="prItemPartNo"]').children('input').val(),
+			"prBarCode" : $(this).parent().parent().children('td[name="prBarCode"]').children('input').val(),
+			"prQty" : $(this).parent().parent().children('td[name="prQty"]').children('input').val(),
+			"prRate" : $(this).parent().parent().children('td[name="prRate"]').children('input').val(),
+			"prDiscountAmount" : $(this).parent().parent().children('td[name="prDiscountAmount"]').children('input').val(),
+			"prTax1" : $(this).parent().parent().children('td[name="prTax1"]').children('input').val(),
+			"prNetRate" : $(this).parent().parent().children('td[name="prNetRate"]').children('input').val(),
+			"prTotal" : $(this).parent().parent().children('td[name="prTotal"]').children('input').val(),
+			"prTotalAt" : $(this).parent().parent().children('td[name="prTotalAt"]').children('input').val(),
+			"poQty" : $(this).parent().parent().children('td[name="poQty"]').children('input').val(),
+			"grQty" : $(this).parent().parent().children('td[name="grQty"]').children('input').val(),
+			"arQty" : $(this).parent().parent().children('td[name="arQty"]').children('input').val(),
+			"cipQty" : $(this).parent().parent().children('td[name="cipQty"]').children('input').val(),
+			"farQty" : $(this).parent().parent().children('td[name="farQty"]').children('input').val(),
+			"prqItemId" : $(this).parent().parent().children('td[name="prqItemId"]').children('input').val(),
+			"prqPoStatus" : $(this).parent().parent().children('td[name="prqItemId"]').children("input[name='prqPoStatus']").val()
+		});
+	});		              
+}//end of selectedrows
 //////////////////////////////////////////////////
 
 			function checkedDataOnAction(){
@@ -628,24 +645,20 @@ function nextRow(){
 
 // Insert row below fct
 
- function insertRowBelow(){
-		addNewRow("below");
-		
-		rowindx++;
-		var belowIndex = parseInt(rowindx);   
-		
-		sendValBoqToPopup(belowIndex);
-		 
-		
-   } 
+function insertRowBelow(){
+	addNewRow("below");	
+	rowindx++;
+	var belowIndex = parseInt(rowindx);   
+	sendValBoqToPopup(belowIndex);
+} 
 // End insertRowBelow fct in popup
    
 // Insert Row Above fct
 
- function insertRowAbove(){
- 	addNewRow("above");
- 	sendValBoqToPopup(rowindx);        
-   }
+function insertRowAbove(){
+	addNewRow("above");
+	sendValBoqToPopup(rowindx);        
+}
 // End insertRowAbove fct in popup
    
 // Delete row fct

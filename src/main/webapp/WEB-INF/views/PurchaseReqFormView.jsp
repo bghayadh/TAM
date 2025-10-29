@@ -777,23 +777,10 @@ max-width: 100%;
 
 </div>
 
-
-
-
-
  <div class="tab-pane fade" id="custom-tabs-one-overview" role="tabpanel" aria-labelledby="custom-tabs-overview">
 
 <div class="row container" style="display:flex;">
-			
-			
-			
-			
-				
            <div id="one" class="  mx-auto  ">
-	 
-																												   
-																													 
-				   
                 <div class="card-header divv1"><i class="fas fa-file-invoice-dollar" style="font-size:20px;"></i><b> PURCHASE ORDER</b></div>
                 <div class="card-body mycard divv2">
                    
@@ -834,19 +821,8 @@ max-width: 100%;
                     </ul>-->
                 </div>
             </div>
-       
-   
-        
-        
-    
-	  
             <div id="two" class="mx-auto " >
-	 
-																												   
-																													 
-				   
-                <div class="card-header divv1"><i class="fas fa-sign-in-alt" style="font-size:20px;"></i><b> GOODS RECEIVED </b></div>
-               
+                <div class="card-header divv1"><i class="fas fa-sign-in-alt" style="font-size:20px;"></i><b> GOODS RECEIVED </b></div>               
                 <div class="card-body mycard divv2">
                    
                  <table>
@@ -866,24 +842,13 @@ max-width: 100%;
                		<td class="TD">	<b>Net Total Amount</b>	
                		<td id="netGrCom" class="TD">	
                		<td id="netGRNotCom" class="TD">
-               		
                		</tr>
-                 
                    <tr>
-                   
                    <td>	<b>Total Quantity</b>	
                    <td id="totQtyGrCom">	
-                   <td id="totqtyGRNotCom">	
-                   
-                   </tr>
-                  
+                   <td id="totqtyGRNotCom">	                   
+                   </tr>                  
                    </table>
-														 
-																												  
-						
-																																 
-
-							
                 </div>
             </div>
 		
@@ -1381,31 +1346,24 @@ max-width: 100%;
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-times"></i> Cancel
 				</button>
-								</div>
-								</div>
+				</div>
+	</div>
 	</div>
 	</div>	
  </body>
  <script>
- $(document).on("triggerBoqListenersEvent", function () {
+$(document).on("triggerBoqListenersEvent", function () {
      // Fires LAST
      ////////
-     $(function(){
-    	 var start = performance.now();
-         
-    	 boqArray = ${ListPRqItem};
-    	 for(i = 0; i< boqArray.length; i++){
-        	 
-    		 boqAutocomplete(i,"bisotab");
-		 					 
-    		 }
-    	 calcFooterDataOnChangeListener(); //to put listener for calculating the footer data(total amount, )			
-    	 var end = performance.now();
-    	 console.log("time needed for autoComplete & focusing on the boq already saved: " +((end-start)/1000) + " seconds");
-						   
-         });
-     						  
- });
+	$(function(){         
+		boqArray = ${ListPRqItem};
+		for(i = 0; i< boqArray.length; i++){        	 
+    		 //boqAutocomplete(i,"bisotab");
+    		 boqAutocomplete(i);
+    	}
+	calcFooterDataOnChangeListener(); //to put listener for calculating the footer data(total amount, )
+     });
+});
  </script>
  <script>
  if ('${ListPRqItem}' != "addNew") {
@@ -1449,9 +1407,9 @@ max-width: 100%;
 
 	c+="<tr>"+
 	"<td><input type='checkbox' name='record' >"+span+"<button type='button'  href='#' name='popUpMenu' onclick='openPop(this)' class='btn btn-default' style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"+
-	"<td name='prItemCode'><input name='itmCode' type='text' id = 'itmCode"+i+"'   value='" + boqArray[i].prItemCode +":"+ boqArray[i].prItemName + "' style='width:300px;' class='form-control text-input'/></td>"+
-	"<td name='prItemModel'><input name='itmModel' type='text' id = 'itmModel"+i+"' value='" + itemModel + "' style='width:200px;' class='form-control text-input'/></td>"+
-	"<td name='prItemPartNo'><input name='itmPartNo' type='text' id = 'itmPartNo"+i+"' value='" + itemPartNumber + "' style='width:200px;' class='form-control text-input'/></td>"+
+	"<td name='prItemCode'><input name='prItemCode' type='text' value='" + boqArray[i].prItemCode +":"+ boqArray[i].prItemName + "' style='width:300px;' class='form-control text-input'/></td>"+
+	"<td name='prItemModel'><input name='prItemModel' type='text' value='" + itemModel + "' style='width:200px;' class='form-control text-input'/></td>"+
+	"<td name='prItemPartNo'><input name='prItemPartNo' type='text' value='" + itemPartNumber + "' style='width:200px;' class='form-control text-input'/></td>"+
 	"<td hidden name='prBarCode'><input name='barcode' type='text' hidden value='" + barcode + "' style='width:200px;' class='form-control text-input'/></td>"+
 	"<td name='prQty'><input type='text' value='" + boqArray[i].prQty +"'style='width:200px;' class='form-control text-input'></td>"+
 	"<td name='prRate'><input type='text' value='" + boqArray[i].prRate +"'style='width:200px;' class='form-control text-input'></td>"+
@@ -1469,98 +1427,22 @@ max-width: 100%;
 	"</tr>";
 											  
 }
- $("#bisotab").append(c);  
- $(document).trigger("triggerBoqListenersEvent");
-										
+ $("#bisotab").append(c);
+ console.log("Just before calling triggerBoqListenersEvent")
+ $(document).trigger("triggerBoqListenersEvent");										
  }
  </script>
 <script>
-//  if('${docStatus}' != "addNew"){
 
-
-
-
-	 $(document).ready(function() {
-		 $(function(){
-			var pRqAppFlag = 0;
-			var pRqCnclFlg = 0;
-		////////////////////////////////autocomplete from EmailAccounts /////////////////////////////////////////////////////
-//		 		$("#email").autocomplete({
-//		 		    source: function(request, response) {
-				         
-//		 		    	var password=$("#password").val();
-//		 		           $.ajax({
-//		 		                 type: "GET",
-//		 		                 contentType: "application/json; charset=utf-8",
-//		 		                 url: '${pageContext.request.contextPath}/GetAllEmailAccounts',
-//		 		                 data: {
-//		 								"email" : request.term,
-//		 								//"password":request.value,
-//		 						 },
-//		 		                 dataType: "json",
-//		 		                 success: function (data) {
-//		 		                     if (data != null) {
-//		 		                         response(data.ListItemEmailAccounts);
-//		 		                         console.log('data in $("#email").autocomplete is :  '+ data.ListItemEmailAccounts);
-
-//		 		                     }
-//		 		                 },
-//		 		                 error: function(result) {
-//		 		                     alert("Error");
-//		 		                 }
-//		 		             });
-				            
-//		 		         }, minLength:0, maxShowItems: 40, scroll:true,
-						
-//		 		         select: function(event, ui) {
-				        	 
-//		 		             this.value = (ui.item ? ui.item[0]  : '');
-//		 		             password.value = ui.item[1];
-				             
-//		 		             return false;
-				            
-//		 		         }
-				        
-//		 		     }).autocomplete("instance")._renderItem = function(ul, item) {
-//		 		         return $("<li class='each'>")
-//		 		         .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-//		 		             item[0] + "</span></div>")
-//		 		         .appendTo(ul);
-//		 		 	};
-				 	
-				     
-//		 					$("#email").focus(function(){
-//		 		   	        	if (this.value == ""){
-//		 		   	            	$(this).autocomplete("search");
-//		 		   	        	}						
-//		 					});
-//		 					$("#password").focus(function(){
-//		 		   	        	if (this.value == ""){
-//		 		   	            	$(this).autocomplete("search");
-//		 		   	        	}						
-//		 					});
-						
-				 //////////////////////////////////////////////////////////////////////////////		  	
-
-
-	var FormSave=new Array();	
-	FormSave=[];
-	var checkSave="";
- 
-											 
-				  
-																			   
-	   
-	 
-
-												
-					 
-	 
-				
-				var readForm = ${readForm}; var writeForm = ${writeForm}; var delForm = ${delForm}; var saveForm = ${saveForm};
-				
-				function getInput ( checkRead, get ){
-					
+$(document).ready(function() {
+	$(function(){
+		var pRqAppFlag = 0;
+		var pRqCnclFlg = 0;
+		var FormSave=new Array();	
+		FormSave=[];
+		var checkSave="";
+		var readForm = ${readForm}; var writeForm = ${writeForm}; var delForm = ${delForm}; var saveForm = ${saveForm};		
+		function getInput ( checkRead, get ){
 					var statusInput = '<select onchange="prstatCheck()" id="prstat" class="form-control">'
 						+'<option value="draft" <c:if test = "${prStatus =='draft'}" > selected </c:if> >Draft</option>'
 						+'<option value="approved" <c:if test = "${prStatus =='approved'}" > selected </c:if>>Approved</option>'
@@ -1719,87 +1601,6 @@ max-width: 100%;
 					 $("#Buttons").append(saveButton);
 					 $("#prstat").val('draft').trigger('change');
 					});
-				// this code is for changing from saved to not saved if any changes happened
-				
-// 				$("input").change(function() {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 					});
-		   
-// 					 $("#datetimepicker3").click(function() {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-						
-// 					$("#datetimepicker4").click(function() {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-						
-						
-// 					$("#prsuppid").on('keyup change', function () {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"}
-// 						);
-// 						});
-
-					
-// 					$("#supplierName").on('keyup change', function () {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-						
-						
-// 					$("#wareid").on('keyup change', function () {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-
-// 					$("#warename").on('keyup change', function () {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-// 					$("#siteid").on('keyup change', function () {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-
-// 					$("#barcode").on('keyup change', function () {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-
-// 					$("#seq").on('keyup change', function () {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 						});
-					
-// 					$(".add-row").click(function() {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 					});
-						
-// 					$(".delete-row").click(function() {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 					});	
-					
-// 					$("#bisotab > tbody").change(function() {
-// 						$("#formStatus").text("Not Saved");
-// 						$('.dot').css({"background-color" : "orange"});
-// 					});	
-
-					//end for code if any changes happened, change from saved to not saved
-				
-  
-
-
-						   
-	
-													
-								 
-   
-
 
 				$("#wareid").autocomplete({
 					
@@ -1849,8 +1650,6 @@ max-width: 100%;
 				   	            	$(this).autocomplete("search");
 				   	        	}						
 							});
-
-
 
 			   
 							$("#barcode").autocomplete({
@@ -2390,61 +2189,17 @@ max-width: 100%;
 						$("#btnNexta").hasClass("disabled");
 						
 						}else{
-																																				   
-							
 							if(!$("#btnNexta").hasClass("disabled")){
-																																  
-																														
-																																	
-																																  
-																																	
-																														
-																														
-																														
-																														 
-																																   
-																																																   
-													  
-								
 								$("#btnNext").click(function(){
-														  
-									
 									var param ="${pageContext.request.contextPath}/PurchaseReqFormView?ID="+$("#prcode").val()+"&NavAction=1";
-														   
-									 
-							   
-							   
-								  
-									   
-									   
-																 
-
-									window.location.href =param;
-						
+									window.location.href =param;						
 								});
-															 
-					
-									  
-														   
-															
-												 
-													
-											 
-							 
-							  
-					  
-											 
 							}
-							if(!$("#btnLst").hasClass("disabled")){
-		        				
-		        				$("#btnLst").click(function(){
-		        					
+							if(!$("#btnLst").hasClass("disabled")){		        				
+		        				$("#btnLst").click(function(){		        					
 									var param ="${pageContext.request.contextPath}/PurchaseReqFormView?ID="+$("#prcode").val()+"&NavAction=4";
-		        					window.location.href =param;
-		        		
+		        					window.location.href =param;		        		
 		        				});
-											
-		        	
 		        			}
 						}
 					
@@ -2477,61 +2232,24 @@ max-width: 100%;
         						
         				}
         				 });
-
 			}
 					
 					}}
 				}
 					$("#label-1").text((SelectedIndex)+"/"+prCount);
-
-				
-  
-	
-							
-			  
-						   
-															   
-													 
-												   
-											
-					 
-							 
-					 
-									   
-			    	
 					$(document).trigger("triggerPageListenersEvent");		
  		 });
-		}); //end ready document
-
-	 
+		}); //end ready document	 
  </script>
- 
-				
-		
-
-					 
-	
- 
+  
  <script>
  $(document).on("triggerPageListenersEvent", function () {
 	 $(function(){
-							 
-		   
-
-				  
-												   
-										  
-		
 	var unsaved = false;				 
 	var FormSave=new Array();
 	$(window).bind('beforeunload', function() {
 	    if(unsaved){
 	        return "You have unsaved changes. Do you want to leave and discard?";
-
-																		
-												
-																								  
-																	 
 	    }
 	});
 			
@@ -2879,24 +2597,6 @@ source: function(request, response) {
 	        	}						
 		});
 	
-										  
-									  
-												   
-					   
-		 
-		
-	  
-										   
-
-
-
-			
-
-
-					   
-
-
-
 	
 	 $("#closePRq").click(  function() {	
 		 var prStatus=$("#prstat").val();
@@ -3010,168 +2710,13 @@ source: function(request, response) {
 					console.log("The error is " + error);
 				}
 			});	 
-		
-			
 		 
 	 });// end of main delete button
 
 	// save Data in DB
-   
-	
-	
-								 
-   
-
-					  
-															
-										
-				   
-							
-
-							   
-	
-				   
-				
-						 
-   
-						  
-					   
-		  
-									 
-										 
-		
-											
-	   
-
-													
-														
-								 
-		
-										   
-								
-											   
-										
-						
-						 
-				 
-										
-			
-		 
-										 
-							 
-											  
-										
-					   
-						 
-				
-									   
-
-		   
-		
-													
-								 
-											  
-											
-					   
-						
-				
-									   
-
-		   
-		
-										
-								 
-											  
-									   
-					   
-						
-				
-									   
-		   
-		
-
-		   
-		
-	  
-		 
-			 
-														 
-										
 	  var prStatus = $("#prstat").val();
-						  
-	
-		   
-	 
-		
-									
-								
-												   
-										 
-										  
-										
-									 
-									 
-																   
-	 
-									
-													
-										   
-									   
-									   
-																	
-	  
-	  
-								  
-													
-										   
-										 
-									   
-									   
-																	
-	  
-									 
-													
-										   
-										 
-									   
-									   
-																	
-	  
- 
-											  
-							   
-			 
-   
-																	  
-				   
-																											 
-																											   
-																												 
-																										   
-																								
-																								  
-																								  
-																								  
-																								  
-																								  
-																								  
-																													  
-																								  
-																										
-																									
-																										
-																								
-																								
-																							   
-																								  
-																								  
-																										
-																															 
-			
-   
-			 
-     function saverowsintables (){
-         			
+						  			 
+     function saverowsintables (){         			
 		     var token =  $('input[name="csrfToken"]').attr('value'); 
 		    
 	        //save rowsin tables
@@ -3268,26 +2813,6 @@ source: function(request, response) {
 	 $("#closePRq").addClass('disabled');
 	 $("#Newpo").addClass('disabled');
 	 $("#Newgr").addClass('disabled');
-	 
-																  
-
-								 
-	
-																 
-											 
-																		  
-		  
-																  
-																		   
-
-	
-										
-	
-		  
-	 
-											  
-	  
-									 
 	   
  }
  else if (prStatus == 'completed'){
@@ -3313,42 +2838,7 @@ source: function(request, response) {
 	 $("#approvePRq").removeClass('disabled');
 	 $("#closePRq").addClass('disabled');
 	 }
-
-			
-	
-			 
-		   
-	 
-   
-													  
-	
-																  
-											  
-																		   
-		  
-																 
-											 
-																		 
-   
-		 
-											
 });
-								   
-	  
-																												
-								  
-	  
-		 
-	 
-								   
-
-												   
-			 
-																												
-										
-			  
-			 
-				
 
  $("#selectnav").autocomplete({
 		
@@ -3475,20 +2965,7 @@ function prstatCheck(){
 		$("#Newpo").addClass('disabled'); 
 		$("#completePrq").addClass('disabled');
 		
-		}
- 	
+		} 	
 }
-
-
-	
-	
-	
-
 </script>
- 
-
-	
- </html>
- 
- 
-
+</html>

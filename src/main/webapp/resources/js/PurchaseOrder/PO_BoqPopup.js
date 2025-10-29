@@ -143,7 +143,8 @@ function htmlBOQRowInsertion(name, model, partnum, barcode){
 return markup;	   
 				
 }
-function addNewRow(position){ 
+function addNewRow(position){
+	console.log("Adding new Row"); 
 	var markup = htmlBOQRowInsertion('', '', '', '');
 	if (position == "next"){
 		$("#bisotab > tbody").append(markup);
@@ -459,9 +460,8 @@ function boqAutocomplete(rowCnt){
 	  	};
 	  	
 	  	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmCode"]').focus(function(){
-		  $("#formStatus").text("Not Saved");
+			$("#formStatus").text("Not Saved");
 			$('.dot').css({"background-color" : "orange"});
-				
 	  		if (this.value == ""){
 	  			$(this).autocomplete("search");
 			}
@@ -513,15 +513,14 @@ function boqAutocomplete(rowCnt){
 			return $("<li class='each'>").append(appendString).appendTo(ul);
 		};
 		
-		$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmModel"]').focus(function(){
-		 
-		 $("#formStatus").text("Not Saved");
-		 $('.dot').css({"background-color" : "orange"});
+	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmModel"]').focus(function(){
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
 				
-			if (this.value == ""){
-				$(this).autocomplete("search");
-			}
-		}); // end ITEM MODEL autocomplete
+		if (this.value == ""){
+			$(this).autocomplete("search");
+		}
+	}); // end ITEM MODEL autocomplete
 		
 	//ITEM PARTNO autocomplete
 	$('#bisotab > tbody > tr:eq('+rowCnt+')').find('input[name ="itmPartNo"]').autocomplete({
@@ -733,7 +732,6 @@ function nextRow(){
 
 // Insert Row Above fct
 function insertRowAbove(){
-
 	addNewRow("above");
  	sendValBoqToPopup(rowindx);
 
