@@ -601,7 +601,7 @@ button:focus { outline: none; }
 						                <th>CIP</th>
 						                <th>FAR</th>
 						                <th>PO Item ID</th>
-										<th hidden> Serial Number</th>
+										<th> Serial Number</th>
 						            </tr>
 						        </thead>
 						        <tbody>
@@ -726,26 +726,9 @@ button:focus { outline: none; }
 						                <th>Discrepancy Price %</th>
 						                   <th><input id="price%" style="width:220px;" type="text" readonly /></th>
 						                   </tr></thead></table>
-
-
-
-
-
-
 </div>
-
-
-
-
-
-
 <div class="tab-pane fade" id="custom-tabs-one-overview" role="tabpanel" aria-labelledby="custom-tabs-overview">
-
 <div class="row container" style="display:flex;">
-			
-			
-			
-			
 				
            <div id="one" class="mx-auto ">
 <!-- 
@@ -755,59 +738,34 @@ button:focus { outline: none; }
                 <div class="card-header divv1"><i class="fas fa-receipt"style="font-size:20px;"></i><b> PURCHASE REQUEST</b></div>
                 <div class="card-body mycard divv2">
                    
-                  <table>
-                   
-                  <th style="width:50%;align:left;margin:5px;"></th> <th id="ordStatus" style="width:50%;margin:5px;height:35px;"> </th>
-                 
-                   <tr>
-                   
+                  <table>                   
+                  <th style="width:50%;align:left;margin:5px;"></th> <th id="ordStatus" style="width:50%;margin:5px;height:35px;"> </th>                 
+                   <tr>                   
                    <td class="TD">	<b>Purchase Request ID</b>	
                    <td id="PurchReqId" class="TD">		
-                   
-                   
                    </tr>
-               		
                		<tr>
-               		
                		<td class="TD">	<b>Net Total Amount</b>	
                		<td id="prNetTot" class="TD">	
-               		
-               		
                		</tr>
-                 
                    <tr >
-                   
                    <td>	<b>Total Quantity</b>	
                    <td id="prTotQty">		
-                   	
-                   
                    </tr>
-                  
                    </table>
-
                 </div>
             </div>
-       
-   
-        
             <div id="two" class=" mx-auto">   
                 <div class="card-header divv1"><i class="fas fa-search-plus"style="font-size:20px;"></i><b> DISCOVERY NEW</b></div>
-                <div class="card-body mycard divv2">
-                   
-                 <table >
-                   
-                  <th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>
-                 
-                   <tr>
-                   
+                <div class="card-body mycard divv2">                   
+                 <table >                   
+                  <th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>                 
+                   <tr>                   
                    <td  class="TD">	<b>No of DNs </b>	
                    <td id="dnComp" class="TD">	
-                   <td id="dnNotComp" class="TD">
-                   
-                   </tr>
-               		
-               		<tr >
-               		
+                   <td id="dnNotComp" class="TD">                   
+                   </tr>               		
+               		<tr >               		
                		<td class="TD">	<b>Net Total Amount</b>	
                		<td id="dnNetTotComp" class="TD">		
                		<td id="dnNetTotNotComp" class="TD">
@@ -825,20 +783,14 @@ button:focus { outline: none; }
                    </table>
                 </div>
             </div>
-        
-   
-	  
 	  
             <div id="three" class="mx-auto  " >
                 <div class="card-header divv1"><i class="fas fa-sign-in-alt"style="font-size:20px;"></i><b> GOODS RECEIVED</b></div>
-                <div class="card-body mycard divv2">
-                   
+                <div class="card-body mycard divv2">                   
                  <table >
                    
-                  <th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>
-                 
-                   <tr >
-                   
+                  <th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>                 
+                   <tr >                   
                    <td  class="TD">	<b>No of GRs </b>	
                    <td id="goodsrCom" class="TD">	
                    <td id="goodsrNotCom" class="TD">
@@ -891,12 +843,7 @@ button:focus { outline: none; }
                		
                		<td>	<b>Total Quantity</b>	
                		<td id="cipTootQtyAll">	
-               		
-               		
                		</tr>
-                 
-              
-                  
                    </table>
                 </div>
        </div>
@@ -907,32 +854,21 @@ button:focus { outline: none; }
                 <div class="card-body mycard divv2">    
                 <table>
                    
-                  <th style="width:50%;align:left;margin:5px;"></th> <th style="width:50%;margin:5px;"></th>
-                 
-                   <tr >
-                   
+                  <th style="width:50%;align:left;margin:5px;"></th> <th style="width:50%;margin:5px;"></th>                 
+                   <tr >                   
                    <td  class="TD">	<b>No of ARs</b>	
                    <td id="arCountAll" class="TD">	
-                   
-                   
-                   </tr>
-               		
-               		<tr>
-               		
+                   </tr>               		
+               		<tr>               		
                		<td><b>Sum of Rate</b>	
                		<td id="arValRateAll">	
-               		
-               		
-               		</tr>
-                 
+
+               		</tr>                 
                  <tr  ></tr>
                   
                    </table>
                 </div>
             </div>
-        
-        
-		
 		
            <div id="six" class="mx-auto">
                 <div class="card-header divv1"><i class="fas fa-money-check-alt"style="font-size:20px;"></i><b> FIXED ASSET REGISTRY</b></div>
@@ -1463,7 +1399,9 @@ else
 
 	var serialArrays = [];
   if (boqArray[i].serial_obj != null) {
-  serialArrays.push(boqArray[i].serial_obj);
+	serialArrays.push(JSON.parse(boqArray[i].serial_obj));
+	console.log("i is : " , i + " boqArray[i].serial_obj is " , boqArray[i].serial_obj);
+	console.log("serialArrays is " , serialArrays);
   }
   else{
   serialArrays.push(null);
@@ -1488,11 +1426,10 @@ else
 	 + "<td name='cipQty'><input type='text' style='width:200px;' value='" + boqArray[i].cipQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 	 + "<td name='farQty'><input type='text' style='width:200px;' value='" + boqArray[i].farQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 	 + "<td name='porItemId'><input type='text' style='width:200px;' value='" + boqArray[i].pordItemId +"'readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'><input name='poItemStatus' type='text' value='" + (boqArray[i].poItemStatus !== null ? boqArray[i].poItemStatus : "0") + "'hidden class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
-	 + "<td name='serialNo'><input type='text'  style='width:200px;' value=" + serialArrays[0] +" hidden class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"		
-	 + "</tr>";
-    
-
-}   
+	 + "<td name='serialNo'><input type='text'  style='width:200px;' value='" + boqArray[i].serial_obj +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"		
+	 + "</tr>";    
+}
+ 
 $("#bisotab > tbody").append(itemRow);
 updateContainerHeight();
 

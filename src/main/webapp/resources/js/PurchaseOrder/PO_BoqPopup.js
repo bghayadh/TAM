@@ -41,7 +41,11 @@ function sendValBoqToPopup(indxRow){
 	
 	// Send hidden concatenated value of serial/Model/PartNum from Boq to Serial table in popup
 	var serial;
-	serial = JSON.parse($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNo"]').children('input').val());
+	//serial = JSON.parse($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNo"]').children('input').val());
+	serial = $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNo"]').children('input').val();
+	console.log("serial is ", serial);
+	serial = JSON.parse(serial);
+	
 		$("#serialNoTable > tbody").html(" ");
 		if(serial != null){
 		var serNum, itmModel, itmPartNo;
