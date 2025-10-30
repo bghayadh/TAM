@@ -626,7 +626,7 @@ z-index: 9003;
 			success : function(data) {
 				$('#slstmodifdate').val(data.slastModifieddate);
 				$("#suppcode").val(data.supplierID);
-				var param ="${pageContext.request.contextPath}/SupplierFormView?supplierID="+$("#suppcode").val()+"&NavAction=4";
+				var param ="${pageContext.request.contextPath}/SupplierFormView?supplierID="+$("#suppcode").val()+"&NavAction=2";
 				location.replace(param);
 			},
 			error : function(error) {

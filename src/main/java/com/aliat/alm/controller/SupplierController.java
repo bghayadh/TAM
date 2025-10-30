@@ -328,13 +328,12 @@ public class SupplierController {
 
 					if (StringUtils.equalsIgnoreCase(SupplierID, "")) {
 						synchronized (this) {
-							SupplierID = "SUP_" + year + "_" + Integer.parseInt(session
+							SupplierID = "SUPP_" + year + "_" + Integer.parseInt(session
 									.createNativeQuery("SELECT SUPPLIER FROM SEQ_TABLE").uniqueResult().toString());
 							query = session.createNativeQuery("UPDATE SEQ_TABLE SET SUPPLIER = SUPPLIER + 1 ");
 							query.executeUpdate();
 							session.createNativeQuery("commit").executeUpdate();
 						}
-						// SupplierID = "SUP_" + year + "_" + appConfig.getSequenceNbr(11);
 					}
 
 					supp.setSupplierID(SupplierID);
