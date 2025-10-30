@@ -458,7 +458,6 @@ button:focus { outline: none; }
 		</div>
   	
   	</div>
-    
 
 <div class="row">
 		<div class="col-md-4">
@@ -470,7 +469,6 @@ button:focus { outline: none; }
 					</div>
 			</div>
 			
-			
 			 <div class="col-md-4">
 					<div class="form-group">
 						<div class="input-group-prepend">
@@ -480,8 +478,6 @@ button:focus { outline: none; }
 					</div>
 			</div>
 			
-			
-			
 			 <div class="col-md-4">
 					<div class="form-group">
 						<div class="input-group-prepend">
@@ -490,11 +486,7 @@ button:focus { outline: none; }
 						</div>
 					</div>
 			</div>
-	
-	
- </div>
-	
-	
+ </div>		
 	<hr>
 
 	<div class="row">
@@ -506,8 +498,7 @@ button:focus { outline: none; }
 						</div>
 					</div>
 			</div>
-			
-			
+
 			 <div class="col-md-3">
 					<div class="form-group">
 						<div id="cat2Input" class="input-group-prepend">
@@ -516,8 +507,6 @@ button:focus { outline: none; }
 						</div>
 					</div>
 			</div>
-			
-			
 			
 			 <div class="col-md-3">
 					<div class="form-group">
@@ -539,8 +528,6 @@ button:focus { outline: none; }
 			</div>
 		</div>
 
-
-
 		<div class="row">
 		<div class="col-md-5">
 					<div class="form-group">
@@ -557,61 +544,51 @@ button:focus { outline: none; }
 								<input type="text" id="barcode" value="${barcode}" style="width:430px; height:37px;" class="ui-widget ui-widget-content ui-corner-all form-control text-input" />	
 						</div>
 					</div>
-
-
 			</div>
-
  		</div>
-
 
     	<!--  create table purchaserequestItem    -->
 
 		<div> 
-				<form>
-				
-								
-					    <div class="table-responsive-sm" id="tableContainer"> 
-						    <table id ="bisotab" class="table table-striped table-bordered table-sm" style="display:block; height:200px; overflow-y: auto;">
-						        <thead>
-						            <tr id="bisotr" class="fixed-headerr">
-						                <th>
-						                <div class="container">                
+			<form>
+				<div class="table-responsive-sm" id="tableContainer"> 
+					<table id ="bisotab" class="table table-striped table-bordered table-sm" style="display:block; height:200px; overflow-y: auto;">
+						<thead>
+							<tr id="bisotr" class="fixed-headerr">
+								<th>
+						        	<div class="container">                
 								          <button type="button" id="selectAll" class="main">								          
 								          <span class="sub"></span>Select</button>
-								        </th>
-						                <th>Item</th>
-						                <th>Item Model</th>
-						                <th>Item Part Number</th>
-						                <th hidden>Barcode</th>
-						                <th>Qty</th>
-						                <th hidden>Category1</th>
-						                <th hidden>Category2</th>
-						                <th hidden>Category3</th>
-						                <th hidden>Category4</th>
-						                <th hidden>Sequence</th>
-						                <th>Rate</th>
-						                <th>Discount Amount</th>
-						                <th>Tax (%)</th>
-						                <th>Net Rate</th>
-						                <th>Total</th>
-						                <th>Total AT</th>
-						                <th>GR</th>
-						                <th>PR</th>
-						                <th>AR</th>
-						                <th>CIP</th>
-						                <th>FAR</th>
-						                <th>PO Item ID</th>
-										<th hidden> Serial Number</th>
-						            </tr>
-						        </thead>
-						        <tbody>
-						            
-									
-						        </tbody>
-						        
-						    </table>
-					    </div>
-					    
+								</th>
+						        <th>Item</th>
+						        <th>Item Model</th>
+						        <th>Item Part Number</th>
+						        <th hidden>Barcode</th>
+						        <th>Qty</th>
+						        <th hidden>Category1</th>
+						        <th hidden>Category2</th>
+						        <th hidden>Category3</th>
+						        <th hidden>Category4</th>
+						        <th hidden>Sequence</th>
+						        <th>Rate</th>
+						        <th>Discount Amount</th>
+						        <th>Tax (%)</th>
+						        <th>Net Rate</th>
+						        <th>Total</th>
+						        <th>Total AT</th>
+						        <th>GR</th>
+						        <th>PR</th>
+						        <th>AR</th>
+						        <th>CIP</th>
+						        <th>FAR</th>
+						        <th>PO Item ID</th>
+								<th hidden> Serial Number</th>
+						    </tr>
+						</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
 					      <input type="text" id="RowIndex" value="" hidden>
 						<input type="button" class="add-row" value="Add Row" onClick="addNewRow('next')">
 					    <button type="button" class="delete-row">Delete Row</button>
@@ -619,8 +596,6 @@ button:focus { outline: none; }
 		</div>
 
 <p></p>
-
-
 
 <div class="row">
 
@@ -707,10 +682,7 @@ button:focus { outline: none; }
 						            </tr>
 						        </thead>
 						        <tbody>
-						            
-									
 						        </tbody>
-						        
 						    </table>
 
   <table id ="disctab"  class="table table-striped table-bordered table-sm" style="display:block;  overflow-y: auto;">
@@ -1199,24 +1171,15 @@ button:focus { outline: none; }
 						<button type="button" class="add-row-serial" onclick="addRowSerial()">Add Row</button>
 						<button type="button" class="delete-row-serial">Delete Row</button>
 					</form>
-					</div> 
-					
-					
+					</div>
  </div>
+</div>  
 </div>
-
-  
-  </div>
 					
 <div class="modal-footer">
-	
 </div>	
-								                
-	</div>
-			
+	</div>			
 		 </div> </div></div>
-        
-
   <div id="popUpDiv" style="display:none;">
   <div class="sendEmail" style="margin-top:50px;" >
  <div class="col-md-12">
