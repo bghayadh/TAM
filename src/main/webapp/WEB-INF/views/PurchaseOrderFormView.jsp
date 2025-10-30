@@ -1363,8 +1363,6 @@ else
 	var serialArrays = [];
   if (boqArray[i].serial_obj != null) {
 	serialArrays.push(JSON.parse(boqArray[i].serial_obj));
-	console.log("i is : " , i + " boqArray[i].serial_obj is " , boqArray[i].serial_obj);
-	console.log("serialArrays is " , serialArrays);
   }
   else{
   serialArrays.push(null);
@@ -1820,14 +1818,15 @@ $(document).trigger("triggerBoqListenersEvent");
 			 pRqCnclFlg = 0;
 			 FormSave.push("Complete");											   
 			 //var prStatus=$("#prstat").val();
-			 $("#ordstat").val('completed').trigger('change');
+			 //$("#ordstat").val('completed').trigger('change');
+			 $("#ordstat").val('completed');
 			var checkSaving = true;
 			 
 			 $(function(){
 		 		checkSaving = checkedDataOnAction();
 		 		if(checkSaving !== false){
-		 			getselectedrows();
-					saverowsintables(); 
+		 			getSelectedRows();
+					saveRowsInTables(); 
 		 		}
 			 	});
 			 

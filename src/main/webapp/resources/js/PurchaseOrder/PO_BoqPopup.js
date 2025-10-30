@@ -43,7 +43,6 @@ function sendValBoqToPopup(indxRow){
 	var serial;
 	//serial = JSON.parse($("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNo"]').children('input').val());
 	serial = $("#bisotab >tbody").find("tr").eq(indxRow).find('td[name="serialNo"]').children('input').val();
-	console.log("serial is ", serial);
 	serial = JSON.parse(serial);
 	
 		$("#serialNoTable > tbody").html(" ");
@@ -687,7 +686,6 @@ var Data = {};
 	    	
 
  function addRowSerial(){
- 
 	checkSerial();
 	rowcountSerial =  $("#serialNoTable >tbody tr").length;
 	console.log("rowcountSerial:" +rowcountSerial);
@@ -856,7 +854,9 @@ $(".delete-row-serial").click(function () {
 		itm_partno = itemPartnum;
 		Data.serialArray.push({serial_no:serNum, itm_model:itemMod, itm_partno:itemPartnum});
 	}); 
-	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);	    	
+	$("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="serialNo"]').children('input')[0].value = JSON.stringify(Data);
+	$("#formStatus").text("Not Saved");
+	$('.dot').css({"background-color" : "orange"});	
 }); // end delete row fct
  
  //Select all checkbox in serialNo table
