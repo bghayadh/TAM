@@ -601,7 +601,7 @@ button:focus { outline: none; }
 						                <th>CIP</th>
 						                <th>FAR</th>
 						                <th>PO Item ID</th>
-										<th> Serial Number</th>
+										<th hidden> Serial Number</th>
 						            </tr>
 						        </thead>
 						        <tbody>
@@ -1426,7 +1426,7 @@ else
 	 + "<td name='cipQty'><input type='text' style='width:200px;' value='" + boqArray[i].cipQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 	 + "<td name='farQty'><input type='text' style='width:200px;' value='" + boqArray[i].farQty +"' readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 	 + "<td name='porItemId'><input type='text' style='width:200px;' value='" + boqArray[i].pordItemId +"'readonly class='ui-widget ui-widget-content ui-corner-all form-control text-input'><input name='poItemStatus' type='text' value='" + (boqArray[i].poItemStatus !== null ? boqArray[i].poItemStatus : "0") + "'hidden class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
-	 + "<td name='serialNo'><input type='text'  style='width:200px;' value='" + boqArray[i].serial_obj +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"		
+	 + "<td hidden name='serialNo'><input type='text'  style='width:200px;' value='" + boqArray[i].serial_obj +"' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"		
 	 + "</tr>";    
 }
  
