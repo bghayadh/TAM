@@ -26,7 +26,6 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
     <script src="${pageContext.request.contextPath}/resources/js/PurchaseOrder/PO_BoqPopup.js"></script>
     <style>
-
     
 #popUpDiv {
 	position:fixed;
@@ -252,11 +251,9 @@ button:focus { outline: none; }
 						</div> 
 			
 			</div>
-
 	
 			<div class ="row">
-			
-			
+						
 			<div class="col-md-3">
 		<div class="form-group">
 			<div class="input-group-prepend" id="datetimepicker1" data-target-input="nearest">
@@ -303,8 +300,6 @@ button:focus { outline: none; }
 					</ul>
 				</nav>
 		</div>
-			
-			
 			
 			
 			<div class="col-md-3" >
@@ -372,8 +367,7 @@ button:focus { outline: none; }
     	         
     	        <button type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </button>
                        </div>	
-                
-                        
+                                        
 				<button type="button" id="deleteButton"
 				class="btn btn-primary BtnActive">
 				<i class="fa fa-trash"></i> Delete
@@ -437,7 +431,7 @@ button:focus { outline: none; }
 		<div class="col-md-4">
 			<div class="input-group-prepend">
 					<span style="width:170px;" class="input-group-text">Supplier Name</span>
-					<input type="text" id="ordsuppname" value="${ordsupplierName}" style="width:500px"; class="form-control text-input"/>
+					<input type="text" id="ordsuppname" value="${ordsupplierName}" style="width:500px;" class="form-control text-input"/>
 				</div>							
 		</div>
 			
@@ -710,8 +704,12 @@ button:focus { outline: none; }
                 <div class="card-header divv1"><i class="fas fa-receipt"style="font-size:20px;"></i><b> PURCHASE REQUEST</b></div>
                 <div class="card-body mycard divv2">
                    
-                  <table>                   
-                  <th style="width:50%;align:left;margin:5px;"></th> <th id="ordStatus" style="width:50%;margin:5px;height:35px;"> </th>                 
+                  <table>
+					<thead>
+                		<tr>
+                  			<th style="width:50%;align:left;margin:5px;"></th>
+                  			<th id="ordStatus" style="width:50%;margin:5px;height:35px;"> </th>
+                  		</tr>                 
                    <tr>                   
                    <td class="TD">	<b>Purchase Request ID</b>	
                    <td id="PurchReqId" class="TD">		
@@ -728,10 +726,14 @@ button:focus { outline: none; }
                 </div>
             </div>
             <div id="two" class=" mx-auto">   
-                <div class="card-header divv1"><i class="fas fa-search-plus"style="font-size:20px;"></i><b> DISCOVERY NEW</b></div>
-                <div class="card-body mycard divv2">                   
-                 <table >                   
-                  <th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>                 
+				<div class="card-header divv1"><i class="fas fa-search-plus"style="font-size:20px;"></i><b> DISCOVERY NEW</b></div>
+                	<div class="card-body mycard divv2">                   
+                 		<table>
+                 			<thead>
+                 				<tr>
+				 					<th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>
+				 				</tr>
+                 			</thead>                 
                    <tr>                   
                    <td  class="TD">	<b>No of DNs </b>	
                    <td id="dnComp" class="TD">	
@@ -759,22 +761,22 @@ button:focus { outline: none; }
             <div id="three" class="mx-auto  " >
                 <div class="card-header divv1"><i class="fas fa-sign-in-alt"style="font-size:20px;"></i><b> GOODS RECEIVED</b></div>
                 <div class="card-body mycard divv2">                   
-                 <table >
-                   
-                  <th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>                 
+                 <table>
+                 <thead>
+                 <tr>
+                 	<th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:35%;margin:5px;"> Not Completed</th>
+                 </tr>
+                 </thead>                 
                    <tr >                   
                    <td  class="TD">	<b>No of GRs </b>	
                    <td id="goodsrCom" class="TD">	
-                   <td id="goodsrNotCom" class="TD">
-                   
+                   <td id="goodsrNotCom" class="TD">                   
                    </tr>
                		
-               		<tr>
-               		
+               		<tr>               		
                		<td  class="TD">	<b>Net Total Amount</b>	
                		<td id="netGoodsrCom" class="TD">		
-               		<td id="netGoodsrNotCom" class="TD">
-               		
+               		<td id="netGoodsrNotCom" class="TD">               		
                		</tr>
                  
                    <tr>
@@ -794,25 +796,24 @@ button:focus { outline: none; }
 		<div class="row container" style="display:flex;">
             <div id="four" class="mx-auto  " >
                 <div class="card-header divv1"><i class="fas fa-road"style="font-size:20px;"></i><b> CAPITAL IN PROGRESS</b></div>
-                <div class="card-body mycard divv2">
-                   
-                 <table >
-                   
-                  <th style="width:50%;align:left;margin:5px;"></th> <th style="width:50%;margin:5px;"></th>
+                <div class="card-body mycard divv2">                   
+                 <table>
+                 <thead>
+                 <tr>                   
+                 	<th style="width:50%;align:left;margin:5px;"></th> <th style="width:50%;margin:5px;"></th>
+                 </tr>
+                 </thead>
                  
                    <tr >
                    <td class="TD">	<b>No of CIPs</b>	
                    <td id="cipCouuntAll" class="TD">		
-                   </tr>
-               		
-               		     <tr >
+                   </tr>               		
+               	   <tr >
                    <td  class="TD">	<b>Total Amount</b>	
-                   <td id="cipNeetTotAll" class="TD">		
-                   
+                   <td id="cipNeetTotAll" class="TD">                   
                    </tr>
                		
-               		<tr >
-               		
+               		<tr >               		
                		<td>	<b>Total Quantity</b>	
                		<td id="cipTootQtyAll">	
                		</tr>
@@ -825,8 +826,12 @@ button:focus { outline: none; }
                 <div class="card-header divv1"><i class="fas fa-registered"style="font-size:20px;"></i><b> ASSET REGISTRY</b></div>
                 <div class="card-body mycard divv2">    
                 <table>
-                   
-                  <th style="width:50%;align:left;margin:5px;"></th> <th style="width:50%;margin:5px;"></th>                 
+                	<thead>
+                		<tr>                   
+                  			<th style="width:50%;align:left;margin:5px;"></th>
+                  			<th style="width:50%;margin:5px;"></th>
+                  		</tr>
+                  </thead>                 
                    <tr >                   
                    <td  class="TD">	<b>No of ARs</b>	
                    <td id="arCountAll" class="TD">	
@@ -836,8 +841,7 @@ button:focus { outline: none; }
                		<td id="arValRateAll">	
 
                		</tr>                 
-                 <tr  ></tr>
-                  
+                 	<tr></tr>
                    </table>
                 </div>
             </div>
@@ -845,19 +849,18 @@ button:focus { outline: none; }
            <div id="six" class="mx-auto">
                 <div class="card-header divv1"><i class="fas fa-money-check-alt"style="font-size:20px;"></i><b> FIXED ASSET REGISTRY</b></div>
                 <div class="card-body mycard divv2">
-                   
-                   <table>
-                   
- 	<th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:25%;margin:5px;"> Not Running</th>   
-   
-    			<tr>
-                   
+                    <table>
+                    <thead>
+                    <tr>
+						<th style="width:40%;align:left;margin:5px;"></th> <th style="width:25%;margin:5px;">All </th><th style="width:25%;margin:5px;"> Not Running</th>
+				    </tr>
+				    </thead>
+    			<tr>                   
                    <td  class="TD">	<b>No of FARs </b>	
                    <td id="farCount" class="TD">	
                    <td id="farNotRunCount" class="TD">
                    
-                </tr>
-               		
+                </tr>               		
                	<tr>
                		
                		<td  class="TD"><b>Initial Cost</b>	
