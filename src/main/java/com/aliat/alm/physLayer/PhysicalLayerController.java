@@ -3331,9 +3331,9 @@ public class PhysicalLayerController {
 	
 	
 	
-	@RequestMapping(value = "/getDbRowNum", method = RequestMethod.GET)
+	@RequestMapping(value = "/getPanelInfo", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, Object> getDbRowNum(Locale locale, Model model, HttpServletRequest request,
+	public Map<String, Object> getPanelInfo(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
@@ -3348,7 +3348,7 @@ public class PhysicalLayerController {
 			try {
 				// Execute native query to get NUM_ROWS and NUM_COLUMNS
 				Object[] result = (Object[]) session.createNativeQuery(
-				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
 				    )
 				    .setParameter("dbId", selectedDistBoardContext)
 				    .getSingleResult();
@@ -3356,16 +3356,20 @@ public class PhysicalLayerController {
 				// Cast to BigDecimal
 				BigDecimal numRows = (BigDecimal) result[0];
 				BigDecimal numColumns = (BigDecimal) result[1];
+				String dbName= (String) result[2];
+				String controllerID= (String) result[3];
+				String controllerName= (String) result[4];
 
-				// Calculate product
-				BigDecimal totalPorts = numRows.multiply(numColumns);
-
-				// Convert to String
-				String totalPortsStr = totalPorts.toPlainString();
-
-				System.out.println("Total ports: " + totalPortsStr);
+			System.out.println(dbName);
+				rtn.put("numRows", numRows);
+				rtn.put("numColumns", numColumns);
 				
-				rtn.put("totalPortsStr", totalPortsStr);
+				rtn.put("dbId", selectedDistBoardContext);
+				rtn.put("dbName", dbName);
+				
+				rtn.put("controllerID", controllerID);
+				rtn.put("controllerName", controllerName);
+				
 				session.flush();
 				session.clear();
 				tx.commit();
@@ -3386,7 +3390,6 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
-
 	
 	
 	
@@ -15296,6 +15299,8 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
+	
+	
 	@RequestMapping(value = "/getManholeData", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getManholeData(Locale locale, Model model, HttpServletRequest request,
