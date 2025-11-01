@@ -653,6 +653,7 @@
 						    <th>Class Name</th>
 						    <th>Cron Expression</th>
 						    <th>Calendar Cron</th>
+						    <th>Run Manually</th>
 						    <th>Process ID</th>
 						</tr>
 					</thead>

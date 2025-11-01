@@ -66,7 +66,7 @@ function htmlBOQRowInsertion(rowParams){
     	     	+"<input name='procClassName' type='text' value='"+ rowParams.className +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
  				+"<td name='procCronExpr'>"
 				+"<input name='procCronExpr' type='text' value='"+  rowParams.cronExpr +"'style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
-				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-desktop'></i></button></td>"
+				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-calendar-alt'></i></button></td>"
 				+"<td name='procRunManual' style='text-align:center;'><button type='button' name='procRunManual' href = '#' onclick='runProc(this)' class='btn btn-primary BtnActive' style='margin:0;'>Run Now</button></td>"				
 				+"<td name='procID'><input type='text' style='width:200px;' readonly value= 0 class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>"; 
 	return markup;
