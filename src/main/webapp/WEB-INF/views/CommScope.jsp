@@ -32,8 +32,8 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/almgrid.class.js"></script>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
-	
 	<script src="${pageContext.request.contextPath}/resources/js/CommScope/boqPopup.js"></script>
+
 <style>
 
 .hide-row { visibility: hidden; }
@@ -646,7 +646,7 @@
 				<p></p> 
 				<table id ="boqTable" class="table table-striped table-bordered table-sm" style="display:block; height:200px; overflow-y: auto;">
 					<thead>
-						<tr id="bisotr" class="fixed-headerr">
+						<tr id="boq_tr" class="fixed-headerr">
 							<th><button type="button" id="selectAll" class="main"><span class="sub"></span>Select</button></th>
 						    <th>Name</th>
 						    <th>Status</th>
@@ -686,7 +686,7 @@
 					<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold;">Insert Below </button>
 					<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold;">Insert Above </button>
 					<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold;">Delete</button>
-					<button  name ="previousRow" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold;">Previous</button>
+					<button  name ="previousRow" onclick="prevRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 0px; font-weight: bold;">Previous</button>
 	            	<button  name="nextRow" onclick="nextRow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: 10px; font-weight: bold;">Next</button> 
 					<button type="button" name="closeModPartPopup" class="close" data-dismiss="modal"><i class='fa fa-times'></i></button>
 					<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>

@@ -149,6 +149,7 @@ function prevRow(){
 
 function updateContainerHeight() {
 	// Get the table and container elements
+	console.log("Updating table height");
 	var table = document.getElementById("boqTable");
 	console.log(table.offsetHeight);
   	var tr = document.getElementById("boq_tr");
