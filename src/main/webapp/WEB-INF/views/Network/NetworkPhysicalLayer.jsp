@@ -43,7 +43,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/findNearest.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/findNearestMulty.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/DBCreation.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/konva.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/konva.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/panel.js"></script>
 
 
