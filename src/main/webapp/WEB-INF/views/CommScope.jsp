@@ -33,7 +33,7 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
 	
-	<script src="${pageContext.request.contextPath}/resources/boqTable/boqPopup.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/CommScope/boqPopup.js"></script>
 <style>
 
 .hide-row { visibility: hidden; }
