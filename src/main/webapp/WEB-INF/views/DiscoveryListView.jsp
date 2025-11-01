@@ -230,7 +230,7 @@ z-index: 9003;
 									style="color: gold;text-align:center;line-height:2.75em; padding-left:5px;">DISCOVERY PROCESS LIST
 									
 							</li>
-
+<!--
 							<li class="nav-item ml-auto">
 								<button type="button" id="deleteButton" class="btn btn-primary BtnActive">
 									<i class="fa fa-trash"></i> Delete
@@ -242,6 +242,7 @@ z-index: 9003;
 									<i class="fa fa-plus"></i> Add
 								</button>
 							</li>
+-->							
 
 						</ul>
 

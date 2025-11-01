@@ -171,8 +171,9 @@
 		<div class="col-md-3">
 			<div class="input-group-prepend">
 				<span  class="input-group-text" style="width:210px;">Status</span>
-					<select id="ordstat" class="form-control">
-								<option value="Enabled" selected>Enabled</option>
+					<select id="procStat" class="form-control" disabled>
+						<option value="Enabled" selected>Enabled</option>
+						<option value="Disabled" <c:if test = "${procStatus =='Disabled'}" > selected </c:if> >Disabled</option>
 <!--								
 								<option value="Draft" <c:if test = "${ordStatus =='Draft'}" > selected </c:if> >Draft</option>
 								<option value="Activated" <c:if test = "${ordStatus =='Activated'}" > selected </c:if>>Activated</option>
@@ -284,11 +285,8 @@
 						<button class="btn btn-secondary dropdown-toggle" type="button" id="notifactionDropdown" data-toggle="dropdown" 
 		            	aria-haspopup="true" aria-expanded="true">Actions</button>	
 		            	<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-		             		<a class="dropdown-item"  type="button" id="Activatewh" >Activate</a>
-		             		<a class="dropdown-item" type="button" id="Deactivatewh" >Deactivate</a>
-		             		<a class="dropdown-item" type="button" id="Cancelwh" >Cancel</a>
-					 		<a class="dropdown-item" type="button" id="Blockwh" >Block</a>
-	    	    	 		<a class="dropdown-item" type="button" id="sendEmail" class="btn btn-primary BtnActive"><i class="fa fa-envelope"></i> Send Email </a>
+		             		<a class="dropdown-item"  type="button" id="enableMain" onclick="enableMain()">Enable</a>
+		             		<a class="dropdown-item" type="button" id="disableMain" onclick="disableMain()">Disable</a>
 	           			</div> 
 	       			</div>                        
 					<button type="button" id="saveButton" class="btn btn-primary BtnActive">
