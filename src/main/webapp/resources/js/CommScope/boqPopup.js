@@ -7,7 +7,7 @@ function openPop(element){
     rowindx = (buttonRowIndx[0].rowIndex - 1);    
     //Send input values from Boq table  to popup
 	sendValBoqToPopup(rowindx);
-    $("#processModal").modal("show");
+    $("#popupModal").modal("show");
 }// end open popup fct
 
 function sendValBoqToPopup(indxRow){
@@ -104,7 +104,7 @@ function deleteBoqRow() {
 	console.log("rowCount in BoQ:" +rowCount);
 	rowindx--;
 	if (rowindx == 0 && rowCount ==0) {
-		$("#processModal").modal("hide");
+		$("#popupModal").modal("hide");
 	}
   
 	else if(rowindx >= 0 && rowindx < rowCount) {
@@ -150,7 +150,7 @@ function prevRow(){
 	}
 	// Close popup on row 0 (end of prev fct)
 	else if (rowindx == 0) {
-		$("#processModal").modal("hide");
+		$("#popupModal").modal("hide");
 	}
 }// end prev fct
     
@@ -208,14 +208,14 @@ $(function(){
 		handle: ".modal-header, .modal-footer"
 	});
 	   
-	$('#processModal').on('show.bs.modal', function() {
+	$('#popupModal').on('show.bs.modal', function() {
 		$(this).find('.modal-body').css({
 			'max-height': '100%',
 		});
 	});
 	 
 	//Reset the popup to original size after resizing 
-	$('#processModal').on('hidden.bs.modal', function() {
+	$('#popupModal').on('hidden.bs.modal', function() {
 		$(this).find('.modal-content').css({'width': '', 'height': ''});
 	})
 	 
@@ -238,7 +238,7 @@ $(function(){
 	
 	$("button[name='closeModPartPopup']").on("click", function(){	  
 		sendValPopupToBoq(rowindx);
-		$("#processModal").modal("hide");
+		$("#popupModal").modal("hide");
 	}); // end close fct
 		
 	$('#popupProcName,#popupProcStatus, #popupProcClassName, #popupProcCronExpr').on('focusout', function() {

@@ -679,7 +679,7 @@
 	</div>
 </div>
 
-<div id ="processModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+<div id ="popupModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 	<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header" style="background-color: #2678CC ; height: 55px; display:flex; align-items:center;">
@@ -754,29 +754,6 @@
 </body>
 <script>
 
-/*
-$("input, select, textarea, button").on("change click", function() {
-    $("#formStatus").text("Not Saved");
-    $(".dot").css({"background-color": "orange"});
-});
-*/
-
-/*
-$("input").change(function() {
-	$("#formStatus").text("Not Saved");
-	$('.dot').css({"background-color" : "orange"});
-});
-
-
-$("#saveButton").click(  function() {
-	
-});
-
-
-$('#dateTimePickerID').datetimepicker({
-    format: 'MM/DD/YYYY hh:mm:ss A'   // include seconds here
-});
-*/
 function validation (extraFields) {
 	var fields = {"#ipAddress": "IP Address", "#username": "Username", "#password": "Password"};
     if (extraFields && typeof extraFields === "object") {
@@ -791,8 +768,6 @@ function validation (extraFields) {
 	}
 	return true;	
 }
-
-
     
 </script>
 </html>
