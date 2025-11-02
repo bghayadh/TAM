@@ -53,6 +53,11 @@ function addNewRow(position){
 		$('table#boqTable tr:eq('+(newRowIndx+1)+') td:nth-child(2) input').focus();
 	}
 		updateContainerHeight();
+		
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
+		
+		
 		//rowInputListener((newRowIndx+1));
 } // end add new row
 
@@ -112,6 +117,9 @@ function deleteBoqRow() {
 		sendValBoqToPopup(rowindx);
 	}
 	updateContainerHeight();
+	$("#formStatus").text("Not Saved");
+	$('.dot').css({"background-color" : "orange"});
+
 } // End delete fct
 
 // Next Fct in popup
@@ -163,19 +171,6 @@ function updateContainerHeight() {
   	console.log("new height : "+table.offsetHeight)
 }
 
-function enableMain() {
-	$("#procStat").val('Enabled');
-	$("#formStatus").text("Not Saved");
-	$('.dot').css({"background-color" : "orange"});
-}
-
-
-function disableMain() {
-	$("#procStat").val('Disabled');
-	$("#formStatus").text("Not Saved");
-	$('.dot').css({"background-color" : "orange"});
-}
-
 
 $(function(){
 	
@@ -199,6 +194,8 @@ $(function(){
 			return false;
 		}
 		updateContainerHeight();
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
 	});	// end delete row
 	
 	

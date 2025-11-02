@@ -26,13 +26,16 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
 	
+	<script src="${pageContext.request.contextPath}/resources/js/CommScope/boqPopup.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/CommScope/formStandard.js"></script>
+	
 	<!-- ALM GRID Scripts -->
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/almgrid.css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/almgrid.class.js"></script>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/js/CommScope/boqPopup.js"></script>
+	
 
 <style>
 
@@ -754,11 +757,18 @@ function getContextPath() {
 	   return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 }
 
+/*
+$("input, select, textarea, button").on("change click", function() {
+    $("#formStatus").text("Not Saved");
+    $(".dot").css({"background-color": "orange"});
+});
+*/
 
 $("input").change(function() {
 	$("#formStatus").text("Not Saved");
 	$('.dot').css({"background-color" : "orange"});
 });
+
 
 $("#saveButton").click(  function() {
 	
