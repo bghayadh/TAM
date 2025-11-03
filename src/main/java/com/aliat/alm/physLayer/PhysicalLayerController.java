@@ -3348,7 +3348,7 @@ public class PhysicalLayerController {
 			try {
 				// Execute native query to get NUM_ROWS and NUM_COLUMNS
 				Object[] result = (Object[]) session.createNativeQuery(
-				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME, B.ROW_PER_MODULE, B.ROW_COUNTING FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
 				    )
 				    .setParameter("dbId", selectedDistBoardContext)
 				    .getSingleResult();
@@ -3359,6 +3359,8 @@ public class PhysicalLayerController {
 				String dbName= (String) result[2];
 				String controllerID= (String) result[3];
 				String controllerName= (String) result[4];
+				BigDecimal rowPerModule= (BigDecimal) result[5];
+				String rowCounting= (String) result[6];
 
 			System.out.println(dbName);
 				rtn.put("numRows", numRows);
@@ -3369,6 +3371,10 @@ public class PhysicalLayerController {
 				
 				rtn.put("controllerID", controllerID);
 				rtn.put("controllerName", controllerName);
+				
+				rtn.put("rowPerModule", rowPerModule);
+				rtn.put("rowCounting", rowCounting);
+
 				
 				session.flush();
 				session.clear();
