@@ -8515,10 +8515,12 @@ singleHandhole = new ContextMenu({
 					       success: function (data) {
 							const container = document.getElementById("panelStage");
 							container.innerHTML = "";
+							console.log(data);
 							
 							var numRowsFromDb = Number(data.numRows || 1);
 							 var numColumnsFromDb = Number(data.numColumns || 1);
-							     drawPanelDiagram(numRowsFromDb, numColumnsFromDb, data.controllerID, data.controllerName, data.dbId, data.dbName);
+							     drawPanelDiagram(numRowsFromDb, numColumnsFromDb, data.controllerID, data.controllerName, data.dbId, 
+									data.dbName,data.rowPerModule, data.rowCounting);
 						
 						/*	// Create wrapper div to hold info + canvas
 							const wrapper = document.createElement("div");
