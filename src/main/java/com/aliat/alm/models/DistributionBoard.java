@@ -28,6 +28,10 @@ public class DistributionBoard {
 	private String rowCounting;
 	
 	
+	@Column(name = "ROW_PER_MODULE")
+	private int rowPerModule;
+	
+	
 	@Column(name = "SERIAL_NUMB")
 	private String distributionBoardSerialNum;
 	
@@ -106,12 +110,13 @@ public class DistributionBoard {
 			Float distributionBoardRowsNum, Float distributionBoardColsNum, Float distributionBoardFront,
 			Float distributionBoardBack, String distributionBoardProjectId, Timestamp boardCreationDate,
 			Timestamp boardLastModifiedDate, String dbNetLevel, String dBEngineerName, String dBInstaller,
-			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName,String rowCounting, String distributionBoardControllerId) {
+			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName,String rowCounting, String distributionBoardControllerId, int rowPerModule) {
 		super();
 		DistributionBoardId = distributionBoardId;
 		this.distributionBoardName = distributionBoardName;
 		this.distributionBoardLong = distributionBoardLong;
 		this.distributionBoardLat = distributionBoardLat;
+		this.rowPerModule =rowPerModule;
 		this.distributionBoardSerialNum=distributionBoardSerialNum;
 		this.distributionBoardCity = distributionBoardCity;
 		this.rowCounting=rowCounting;
@@ -134,6 +139,18 @@ public class DistributionBoard {
 		DBInstaller = dBInstaller;
 		DBDeploymentType = dBDeploymentType;
 		DBAdaptorPanelType = dBAdaptorPanelType;
+	}
+
+
+
+	public int getRowPerModule() {
+		return rowPerModule;
+	}
+
+
+
+	public void setRowPerModule(int rowPerModule) {
+		this.rowPerModule = rowPerModule;
 	}
 
 
