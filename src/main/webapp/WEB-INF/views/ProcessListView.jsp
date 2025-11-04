@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <head>
 <meta charset="utf-8">
-    <title>Discovery List View</title>
+    <title>Process List View</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="shortcut icon" href="">
 		<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
@@ -227,7 +227,7 @@ z-index: 9003;
 							style="background-color: #007b7c; margin-top: 0px;">
 							<li class="nav-item">
 								<class="nav-link inactive" id="custom-tabs-one-home-tab"
-									style="color: gold;text-align:center;line-height:2.75em; padding-left:5px;">DISCOVERY PROCESS LIST
+									style="color: gold;text-align:center;line-height:2.75em; padding-left:5px;">PROCESS LIST
 									
 							</li>
 <!--
@@ -282,8 +282,8 @@ z-index: 9003;
 								
 <!--------------------------------------------------  END card-header ------------------------------------------>
 		
-								<div id="discoveryGridTable" class="table-responsive almgrid-table-div">
-									<table id="DiscoveryTable" class="table table-striped table-bordered almgrid-table">
+								<div id="GridTable" class="table-responsive almgrid-table-div">
+									<table id="ListViewTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header">
 												<th class="table-select-all">
@@ -374,17 +374,17 @@ z-index: 9003;
 				</div>
 <script> 
 
-var DiscoveryData = ${ListGridTable};	
+var ProcessData = ${ListGridTable};	
 var almgrid = new Almgrid({
-	tableId: "DiscoveryTable",
-	dataArray: DiscoveryData,
+	tableId: "ListViewTable",
+	dataArray: ProcessData,
 	columnLinkNb: [1],
 	selectCheckbox: true
 });
 
 //////////////////////////////////////////////////////////////////////////form button
 $( "#Fview" ).click(function() {	
-	var id =  $('#DiscoveryTable tbody tr:eq(0) td:eq(1)').text();
+	var id =  $('#ListViewTable tbody tr:eq(0) td:eq(1)').text();
 	
 	location.href="${pageContext.request.contextPath}/PurchaseOrderFormView?ID="+id+"&NavAction=2";
 });  
@@ -393,7 +393,7 @@ $( "#Fview" ).click(function() {
 	$(".almgrid-table").on("click", ".almgrid-link", function (e) {
 		var param1 = $(this).attr('id');
 		console.log("param1 is ", param1);
-		var param = "${pageContext.request.contextPath}/DiscoveryProcess?ID=" + param1 +"&NavAction=2";
+		var param = "${pageContext.request.contextPath}/Process?ID=" + param1 +"&NavAction=2";
 		window.location.href = param;
 		e.preventDefault();
 	});
@@ -401,45 +401,7 @@ $( "#Fview" ).click(function() {
 $( "#Lview" ).click(function() {
 	location.reload();
 });
-//////////////////////////////////////////////////////////////////////////delete button
-$("#deleteButton").click(function () {
 
-	var deleteArray = [];
-
-	$("#DiscoveryTable").find(".table-select-checkbox").each(function () {
-		if ($(this).is(":checked")) {
-
-			var checkboxVal = $(this).closest('tr').find('td:nth-child(2)').text();
-				deleteArray.push(checkboxVal);
-			
-		}
-
-	});
-
-	deleteArray = deleteArray.filter(function (elem, index, self) {
-		console.log(deleteArray);
-		return index === self.indexOf(elem);
-	});
-	console.log('delete now');
-	$.ajax({
-		
-		type: "GET",
-		url: "${pageContext.request.contextPath}/DeletePO",
-		dataType: "json",
-		data: {
-			"ID": deleteArray
-		},
-		success: function (data) {
-			
-			location.reload();
-	    	
-		},
-		error: function (error) {
-			console.log("The error is " + error);
-		}
-	});
-
-});
 //////////////////////////////////////////////////////////////////////////export button
 var exportArrayGrid=[];
 //method to export the data into excel sheet
@@ -447,7 +409,7 @@ function exportGrid() {
 	var csv_file, download_link;
 	csv_file = new Blob([exportArrayGrid], {type: "text/csv"});
 	download_link = document.createElement("a");
-	download_link.download = "Discovery_List_Export";
+	download_link.download = "Process_List_Export";
 	download_link.href = window.URL.createObjectURL(csv_file);
 	download_link.style.display = "none";
 	document.body.appendChild(download_link);
@@ -470,7 +432,7 @@ function fillGrid(filledGrid){
 $("#export").click(function() {
 	//check if the data is filtered or not
     if(almgrid.filteredArray.length == 0 ){
-    	fillGrid(DiscoveryData);	
+    	fillGrid(ProcessData);	
 	}else{
 		fillGrid(almgrid.filteredArray);
 	}
@@ -499,8 +461,8 @@ $("#export").click(function() {
 
   	$("#popUpSubmit").click(function() {
   		$("#poModal").modal("show");
- 		$("#DiscoveryTable").remove();
- 		$("#discoveryGridTable").append('<table id="DiscoveryTable" class="table table-striped table-bordered almgrid-table"><thead>'
+ 		$("#ListViewTable").remove();
+ 		$("#GridTable").append('<table id="ListViewTable" class="table table-striped table-bordered almgrid-table"><thead>'
  				+'<tr class="header">'
  				+'<th class="table-select-all"></th>'
  				+'<th>Purchase Ord ID<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i></button>'
@@ -548,7 +510,7 @@ $("#export").click(function() {
 				console.log("filtered success");
 				if(data!=null){
 					almgrid = new Almgrid({
-					tableId: "DiscoveryTable",
+					tableId: "ListViewTable",
 					dataArray: data.listPOrder,
 					columnLinkNb: [1],
 					selectCheckbox: true

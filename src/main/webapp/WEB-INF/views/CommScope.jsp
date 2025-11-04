@@ -234,9 +234,11 @@ td[name="procStatus"] {
 		<div class="col-md-3">
 			<div class="input-group-prepend">
 				<span  class="input-group-text" style="width:210px;">Status</span>
-					<select id="procStat" class="form-control" disabled>
-						<option value="Enabled" selected>Enabled</option>
-						<option value="Disabled" <c:if test = "${procStatus =='Disabled'}" > selected </c:if> >Disabled</option>
+					<select id="docStatus" class="form-control" disabled>
+						<option value="Enabled" <c:if test = "${processParams.status =='Enabled'}" > selected </c:if> >Enabled</option>
+						<option value="Disabled" <c:if test = "${processParams.status =='Disabled'}" > selected </c:if> >Disabled</option>
+<!--  						<option value="Enabled" selected>Enabled</option> -->						
+<!--  						<option value="Disabled" <c:if test = "${docStatus =='Disabled'}" > selected </c:if> >Disabled</option> -->
 <!--								
 								<option value="Draft" <c:if test = "${ordStatus =='Draft'}" > selected </c:if> >Draft</option>
 								<option value="Activated" <c:if test = "${ordStatus =='Activated'}" > selected </c:if>>Activated</option>
@@ -271,7 +273,7 @@ td[name="procStatus"] {
 			<div class="form-group">
 				<div class="input-group-prepend" id="datetimepicker1" data-target-input="nearest">
 					<span class="input-group-text">Created Date</span>
-						<input type="text" id="dateClient" readonly value="" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1"/>
+						<input type="text" id="createDate" readonly value="${processParams.creationDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker1"/>
 					  	<div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker"></div>
 				</div>
 			</div>
@@ -280,7 +282,7 @@ td[name="procStatus"] {
 			<div class="form-group">
 				<div class="input-group-prepend" id="datetimepicker2" data-target-input="nearest">
 					<span class="input-group-text">Last Modify Date</span>
-					<input type="text" id="lstmodifdate" readonly value="" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" />
+					<input type="text" id="lstmodifyDate" readonly value="${processParams.lastModificationDate}" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#datetimepicker2" />
 					   <div class="input-group-append" data-target="#datetimepicker2" data-toggle="datetimepicker"></div>
 				</div>
 			</div>
@@ -315,7 +317,7 @@ td[name="procStatus"] {
 			 			<i class="fa fa-edit"></i>
 			        </button>
 			        <button type="button" id="Lview"  class="btn btn-light" data-toggle="tooltip"
-			        	onclick='window.location.href = "${pageContext.request.contextPath}/DiscoveryListView"'
+			        	onclick='window.location.href = "${pageContext.request.contextPath}/ProcessListView"'
 			        	data-placement="top" title="List View"> 
 			        	<i class="fa fa-bars"></i>
 			        </button>			
@@ -352,7 +354,7 @@ td[name="procStatus"] {
 		             		<a class="dropdown-item" type="button" id="disableMain" onclick="disableMain()">Disable</a>
 	           			</div> 
 	       			</div>                        
-					<button type="button" id="saveButton" class="btn btn-primary BtnActive">
+					<button type="button" id="saveButton" class="btn btn-primary BtnActive" onclick="formSave()">
 						<i class="fas fa-save"></i> Save
 					</button>
 				</li>

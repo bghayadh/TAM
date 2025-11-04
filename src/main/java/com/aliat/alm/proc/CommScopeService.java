@@ -1,4 +1,4 @@
-package com.aliat.alm.discoveryProc;
+package com.aliat.alm.proc;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -50,7 +50,7 @@ import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
-import com.aliat.alm.models.DiscoveryProcess;
+import com.aliat.alm.models.Process;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;

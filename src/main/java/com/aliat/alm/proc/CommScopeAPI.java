@@ -1,4 +1,4 @@
-package com.aliat.alm.discoveryProc;
+package com.aliat.alm.proc;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 @Controller
-public class CommScope {
+public class CommScopeAPI {
 
 	@Autowired
 	Notify notifications;
@@ -44,7 +44,7 @@ public class CommScope {
 	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 
-	private static final Logger logger = LoggerFactory.getLogger(CommScope.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommScopeAPI.class);
 
 	@RequestMapping(value = "/CommScopeNewToken", method = RequestMethod.GET)
 	@ResponseBody

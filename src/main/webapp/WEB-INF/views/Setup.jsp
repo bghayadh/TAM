@@ -175,7 +175,7 @@ a{
 		</div>
 		<div class="col-md-3 showMethod">				
 			<div class="card bg-c-blue  order-card">
-				<a href="${pageContext.request.contextPath}/DiscoveryListView" style="text-decoration: none">
+				<a href="${pageContext.request.contextPath}/ProcessListView" style="text-decoration: none">
 					<div class="card-block">
 <!--  						<i class="fas fa-hand-paper" style="color:gold; width:40px; height:40px"></i> -->
 						<i class="fas fa-life-ring fa-spin" style="color:gold; width:40px; height:40px"></i>						

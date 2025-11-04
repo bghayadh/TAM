@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "DISCOVERY_PROCESS")
-public class DiscoveryProcess {
+@Table(name = "PROCESS")
+public class Process {
 
 	@Id
 	@Column(name = "ID", nullable = false)
@@ -30,12 +30,12 @@ public class DiscoveryProcess {
 	@Column(name = "NEXT_RUNNING_TIME")
 	private Timestamp nextRunningTime;
 	
-	public DiscoveryProcess() {
+	public Process() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DiscoveryProcess(String iD, String linkName, String processName, String status, Timestamp lastRunningTime,
+	public Process(String iD, String linkName, String processName, String status, Timestamp lastRunningTime,
 			Timestamp nextRunningTime) {
 		super();
 		ID = iD;

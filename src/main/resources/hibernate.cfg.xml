@@ -39,7 +39,7 @@
   <mapping class="com.aliat.alm.models.AssetRegistry"/>
   <mapping class="com.aliat.alm.models.FixedAssetRegistry"/>
   <mapping class="com.aliat.alm.models.CapitalInProgress"/>
-  <mapping class="com.aliat.alm.models.DiscoveryProcess"/>
+  <mapping class="com.aliat.alm.models.Process"/>
   <mapping class="com.aliat.alm.models.DiscoveryNew"/>
   <mapping class="com.aliat.alm.models.DiscoveryNewItem"/>
   <mapping class="com.aliat.alm.models.Message"/>

@@ -4,20 +4,20 @@ function getContextPath() {
 
 cx = getContextPath();
 
-$("#saveButton").click(  function() {
+/*$("#saveButton").click(  function() {
 	
-});
+});*/
 
 
 function enableMain() {
-	$("#procStat").val('Enabled');
+	$("#docStatus").val('Enabled');
 	$("#formStatus").text("Not Saved");
 	$('.dot').css({"background-color" : "orange"});
 }
 
 
 function disableMain() {
-	$("#procStat").val('Disabled');
+	$("#docStatus").val('Disabled');
 	$("#formStatus").text("Not Saved");
 	$('.dot').css({"background-color" : "orange"});
 }
@@ -32,3 +32,30 @@ $("input").change(function() {
 $('#dateTimePickerID').datetimepicker({
     format: 'MM/DD/YYYY hh:mm:ss A'   // include seconds here
 });
+
+function formSave() {	
+	var token =  $('input[name="csrfToken"]').attr('value');
+	console.log("formSave");   		     
+	$.ajax({
+		type : "POST",
+		url : cx+"/CommScopeFormSave",
+		dataType : "json",
+	    headers: {
+	     'X-CSRFToken': token 
+	 },
+		data : {
+		    "docStatus": $("#docStatus").val(), //'${docStatus}',
+			"createDate" : $("#createDate").val(),
+			"lstmodifyDate" : $("#lstmodifyDate").val(),			
+/*			"dictParameter": dict,
+			"slctDelOrd":slctDelOrd, */
+		},
+		success : function(data) {			
+			param =cx+"/Process?ID=CommScope&NavAction=2";
+			location.replace(param);			
+		},
+		error : function(error) {
+			console.log("The error is " + error);
+		}
+	});
+}
