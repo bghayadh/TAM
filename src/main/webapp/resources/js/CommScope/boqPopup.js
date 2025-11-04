@@ -65,22 +65,23 @@ function addNewRow(position){
 } // end add new row
 
 function handleSwitchClick(el) {
-  const isChecked = el.checked;
-  const isPopup = el.id && el.id.startsWith("popup");
+	const isChecked = el.checked;
+	const isPopup = el.id && el.id.startsWith("popup");
 
-  // Update clicked switch label (plain DOM)
-  const label = el.nextElementSibling;
-  label.textContent = isChecked ? "Enabled" : "Disabled"; // We used .textContent because we used e1.nextElementSibling which return plain DOM element
+	// Update clicked switch label (plain DOM)
+	const label = el.nextElementSibling;
+	label.textContent = isChecked ? "Enabled" : "Disabled"; // We used .textContent because we used e1.nextElementSibling which return plain DOM element
 
-  if (isPopup) {
-    // Update corresponding row label (jQuery)
-    const $rowLabel = $("#boqTable >tbody") // By using $rowLabel, it returns jQuery Object, so we can use .text instead of .textContent
-      .find("tr").eq(rowindx)
-      .find('td[name="procStatus"] input[type="checkbox"]')
-      .next('label');
-    $rowLabel.text(isChecked ? "Enabled" : "Disabled");
-  }
-  console.log("Switch clicked:", el.id, "Checked:", isChecked);
+	if (isPopup) {
+		// Update corresponding row label (jQuery)
+		const $rowLabel = $("#boqTable >tbody") // By using $rowLabel, it returns jQuery Object, so we can use .text instead of .textContent
+		.find("tr").eq(rowindx)
+		.find('td[name="procStatus"] input[type="checkbox"]')
+		.next('label');
+		$rowLabel.text(isChecked ? "Enabled" : "Disabled");
+	}
+	$("#formStatus").text("Not Saved");
+	$('.dot').css({"background-color" : "orange"});  
 }
 
 
