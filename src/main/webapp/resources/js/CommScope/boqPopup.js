@@ -32,7 +32,6 @@ function sendValPopupToBoq(indxRow){
     	element.innerHTML = "Process # " +(indxRow+1); */
 }
 
-
 function addNewRow(position){
 	rowParams = {"name" : "", "status" : 0, "className" : "", "cronExpr": ""}; 	
 	var markup = htmlBOQRowInsertion(rowParams);
@@ -59,8 +58,7 @@ function addNewRow(position){
 		
 		$("#formStatus").text("Not Saved");
 		$('.dot').css({"background-color" : "orange"});
-		
-		
+				
 		//rowInputListener((newRowIndx+1));
 } // end add new row
 
@@ -83,7 +81,6 @@ function handleSwitchClick(el) {
 	$("#formStatus").text("Not Saved");
 	$('.dot').css({"background-color" : "orange"});  
 }
-
 
 function htmlBOQRowInsertion(rowParams){
 	//name, model, partnum, barcode
@@ -207,9 +204,7 @@ function updateContainerHeight() {
   	console.log("new height : "+table.offsetHeight)
 }
 
-
-$(function(){
-	
+$(function(){	
 	//remove selected rows from boq
 	$(".delete-row").click(function(){	
 		slctDelOrd =[];
