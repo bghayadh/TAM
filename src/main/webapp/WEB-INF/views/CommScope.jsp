@@ -113,6 +113,32 @@
 	border-color: #8696A0 !important;
 }
 
+/* Wider switch */
+.custom-control-label::before {
+    width: 60px !important;   /* track width */
+    height: 20px;  /* track height */
+    border-radius: 30px;
+}
+
+/* Knob size */
+.custom-control-label::after {
+    width: 15px !important;    /* knob diameter */
+    height: 15px !important;
+    top: 2px;       /* vertical centering = (track height - knob height) / 2 */
+    left: 2px;      /* start position */
+}
+
+/* Checked position */
+.custom-control-input:checked ~ .custom-control-label::after {
+    transform: translateX(42px) !important; /* track width - knob width - 2*padding = 80-26-4 = 50px */
+}
+
+/* Space between switch and text */
+.custom-control-label {
+    padding-left: 40px;  /* slightly more than track width to separate text */
+}
+
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
 	.modal-content, .modal-dialog {
@@ -673,6 +699,10 @@
 		
 			<!-- Log form -->
 		<div class="tab-pane fade" id="custom-tabs-one-logs" role="tabpanel" aria-labelledby="logs-tab">
+			<div class="custom-control custom-switch">
+  				<input type="checkbox" class="custom-control-input" id="mySwitch">
+  				<label class="custom-control-label" for="mySwitch">Enable Feature</label>
+			</div>
 			<p></p>
 		</div>
 		
@@ -715,12 +745,21 @@
 									</div>
 								</div>
 								<div class="col-sm-6">
+									<div class="custom-control custom-switch">
+  										<input type="checkbox" class="custom-control-input" id="popupProcStatus">
+  										<label class="custom-control-label" for="popupProcStatus"></label>
+									</div>																
+								
+<!-- 								
 									<div class="form-group">
 									<div class="input-group-prepend">
 									<span class="input-group-text">Process Status</span>
 									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupProcStatus" style="width:674px; height:37px"/>
 									</div>
 									</div>
+ -->									
+									
+									
 								</div>
 							</div>							
 							<div class="row">

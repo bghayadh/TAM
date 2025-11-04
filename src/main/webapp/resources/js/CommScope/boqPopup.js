@@ -12,7 +12,9 @@ function openPop(element){
 
 function sendValBoqToPopup(indxRow){
 	$('#popupProcName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procName"]').children('input').val());
-	$('#popupProcStatus') .val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').children('input').val()); 
+	console.log("the status of the switch at indxRow: " ,indxRow + " is: " ,$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').prop('checked'));
+	$('#popupProcStatus').prop('checked', $("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').prop('checked'));
+	$('#popupProcStatus').next('label').text($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text()); 
 	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());
 	$('#popupProcCronExpr').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val());							 
 	var element = document.getElementById("popupNb");
@@ -20,8 +22,9 @@ function sendValBoqToPopup(indxRow){
 }
 
 function sendValPopupToBoq(indxRow){	
-	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procName"]').children('input').val($('#popupProcName').val());
-	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').children('input').val($('#popupProcStatus').val());	
+	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procName"]').children('input').val($('#popupProcName').val());	
+	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').prop('checked',$('#popupProcStatus').prop('checked'));
+	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text($('#popupProcStatus').next('label').text());		
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val($('#popupProcClassName').val());
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val($('#popupProcCronExpr').val());
 /*	
@@ -61,12 +64,44 @@ function addNewRow(position){
 		//rowInputListener((newRowIndx+1));
 } // end add new row
 
+function handleSwitchClick(el) {
+  const isChecked = el.checked;
+  const isPopup = el.id && el.id.startsWith("popup");
+
+  // Update clicked switch label (plain DOM)
+  const label = el.nextElementSibling;
+  label.textContent = isChecked ? "Enabled" : "Disabled"; // We used .textContent because we used e1.nextElementSibling which return plain DOM element
+
+  if (isPopup) {
+    // Update corresponding row label (jQuery)
+    const $rowLabel = $("#boqTable >tbody") // By using $rowLabel, it returns jQuery Object, so we can use .text instead of .textContent
+      .find("tr").eq(rowindx)
+      .find('td[name="procStatus"] input[type="checkbox"]')
+      .next('label');
+    $rowLabel.text(isChecked ? "Enabled" : "Disabled");
+  }
+  console.log("Switch clicked:", el.id, "Checked:", isChecked);
+}
+
+
 function htmlBOQRowInsertion(rowParams){
 	//name, model, partnum, barcode
+
+	function generateSwitchId() {
+		return "switch_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+	}
+				
+	var switchId = generateSwitchId();
+	var statusSwitch = "<div class='custom-control custom-switch'><input type='checkbox' class='custom-control-input' id='" + switchId + "'"
+					   + (rowParams.status === "Enabled" ? " checked" : "") + " onclick='handleSwitchClick(this)'>"
+					   +"<label class='custom-control-label' for='" + switchId + "'>" 
+					   + (rowParams.status === "Enabled" ? "Enabled" : "Disabled") + "</label></div>";
+					  
 	var markup = "<tr><td><input type='checkbox' name='record'><span class='dotStatus'></span><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
 				+"<td name='procName'><input name='procName' type='text' value='"+ rowParams.name +"' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
             	+"<td name='procStatus'>"
-    			+"<input name='procStatus' type='text' value='"+ rowParams.status +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
+				+statusSwitch+"</td>"				
+    			//+"<input name='procStatus' type='text' value='"+ rowParams.status +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"												
     			+"<td name='procClassName'>"
     	     	+"<input name='procClassName' type='text' value='"+ rowParams.className +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
  				+"<td name='procCronExpr'>"
@@ -240,12 +275,18 @@ $(function(){
 		sendValPopupToBoq(rowindx);
 		$("#popupModal").modal("hide");
 	}); // end close fct
-		
-	$('#popupProcName,#popupProcStatus, #popupProcClassName, #popupProcCronExpr').on('focusout', function() {
+
+	$('#popupProcName,#popupProcClassName, #popupProcCronExpr').on('focusout', function() {
 		$("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procName"]').children('input').val($('#popupProcName').val());
-		$("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procStatus"]').children('input').val($('#popupProcStatus').val());
 		$("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procClassName"]').children('input').val($('#popupProcClassName').val());
 		$("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procCronExpr"]').children('input').val($('#popupProcCronExpr').val());
+	});
+	
+	$('#popupProcStatus').on('change', function() {		
+		$("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procStatus"]').find('input[type="checkbox"]').prop('checked',$('#popupProcStatus').prop('checked'));
+		handleSwitchClick(this);
+		//handleSwitchClick($("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procStatus"]').find('input[type="checkbox"]'));
+				
 	});
 			      
 	// Minimize and Maximize fct for popup
