@@ -113,30 +113,63 @@
 	border-color: #8696A0 !important;
 }
 
-/* Wider switch */
-.custom-control-label::before {
-    width: 60px !important;   /* track width */
-    height: 20px;  /* track height */
-    border-radius: 30px;
-}
 
-/* Knob size */
-.custom-control-label::after {
-    width: 15px !important;    /* knob diameter */
-    height: 15px !important;
-    top: 2px;       /* vertical centering = (track height - knob height) / 2 */
-    left: 2px;      /* start position */
-}
-
-/* Checked position */
-.custom-control-input:checked ~ .custom-control-label::after {
-    transform: translateX(42px) !important; /* track width - knob width - 2*padding = 80-26-4 = 50px */
-}
-
-/* Space between switch and text */
+/* --- Switch Base --- */
 .custom-control-label {
-    padding-left: 40px;  /* slightly more than track width to separate text */
+  position: relative;
+  display: inline-block;
+  width: 80px;            /* fixed width for stable layout */
+  padding-left: 37px;     /* push text right of switch */
+  bottom: 3px !important;
+  white-space: nowrap;
 }
+
+/* --- Switch Track --- */
+.custom-control-label::before {
+  position: absolute;
+  width: 60px !important;
+  height: 20px !important;
+  top: 2px !important;
+  border-radius: 30px;
+  background-color: #ccc;  
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* --- Switch Knob --- */
+.custom-control-label::after {  
+  position: absolute;
+  width: 15px !important;
+  height: 15px !important;
+  top: 4.75px !important;
+  border-radius: 50%;
+  background-color: white;
+  transition: transform 0.2s ease-in-out;
+}
+
+/* --- Checked state --- */
+.custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #28a745; /* green background when ON */
+}
+
+.custom-control-input:checked ~ .custom-control-label::after {
+  transform: translate(40px) !important;
+}
+
+/* --- Cell layout --- */
+td[name="procStatus"] {
+  white-space: nowrap;
+  text-align: center;
+  min-width: 150px;
+  padding-left: 10px;
+}
+
+
+/* Optional: same for modal for consistent look */
+#popupProcStatus.custom-control-input + .custom-control-label {
+  width: 80px;
+  padding-left: 40px;
+}
+
 
 
 /* Extra small devices (phones, 600px and down) */
