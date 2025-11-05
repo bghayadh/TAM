@@ -14061,21 +14061,27 @@ function DBMappingData(DistBoardMappingPts){
 						}
 						let backKitVal   = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
 						let backPortVal  = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
-
+						const numRows = parseInt($("#DistributionBoardRowsNum").val());
+						  const numCols = parseInt($("#DistributionBoardColsNum").val());
+						  const direction = $("#rowCounting").val().toLowerCase();
 					var markup = "<tr id='"+DistBoardMappingPts[i][3]+"''><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
 					    +"<td name='Index'><input name='Index' value='"+DistBoardMappingPts[i][0]+"' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 						
 						+"<td name='nearModule'><input name='nearModule' value='"+DistBoardMappingPts[i][48]+"' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
-						+"<td name='nearPortNum'><input name='nearPortNum' value='"+DistBoardMappingPts[i][49]+"' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
-																   
-						
-						
-						
-						
-						+"<td name='RowIndex'><input name='rowIndex' value='"+DistBoardMappingPts[i][1]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-						+"<td name='ColIndex'><input name='colIndex' value='"+DistBoardMappingPts[i][2]+"'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-						
-						+"<td name='patchType'><input name='patchType' value='"+DistBoardMappingPts[i][50]+"' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
+						+"<td name='nearPortNum'> <input id='nearPortNum" + i + "' name='nearPortNum' value='" + DistBoardMappingPts[i][49] +
+						         "' class='form-control text-input' type='text' style='width:70px;position:relative;'/>" +
+						       "</td>" +
+
+						       "<td name='RowIndex'>" +
+						         "<input id='rowIndex" + i + "' name='rowIndex' value='" + DistBoardMappingPts[i][1] +
+						         "' class='form-control text-input rowIndex' type='text' style='width:60px;position:relative;'/>" +
+						       "</td>" +
+
+						       "<td name='ColIndex'>" +
+						         "<input id='colIndex" + i + "' name='colIndex' value='" + DistBoardMappingPts[i][2] +
+						         "' class='form-control text-input colIndex' type='text' style='width:60px;position:relative;'/>" +
+						       "</td>" 	
+						+"<td name='patchType'><input name='patchType' value='"+DistBoardMappingPts[i][50]+"' class='form-control text-input portIndex' type='text' style='width:70px;position:relative;'/></td>"
 												
 						+"<td style='background-color:#00757C' width='-10px'></td>"
 						+"<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status"+dBBoqIndex+"'>"+f_statusOption+"</select></td>"
@@ -14159,6 +14165,40 @@ function DBMappingData(DistBoardMappingPts){
 						+"<td name='BP_FiberName'><input name='BP_fiberName' value='"+DistBoardMappingPts[i][20]+"' id='BP_fiberName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
 						$("#DbMappingTable > tbody").append(markup);
 				
+						const portInput = document.getElementById("nearPortNum" + i);
+						   const rowInput  = document.getElementById("rowIndex" + i);
+						   const colInput  = document.getElementById("colIndex" + i);
+
+						   // ⚙️ Handle Port Change
+						   portInput.addEventListener("input", () => {
+						     const port = parseInt(portInput.value.trim(), 10);
+						     if (isNaN(port)) {
+						       rowInput.value = "";
+						       colInput.value = "";
+						       return;
+						     }
+
+						     const { row, col } = calculateRowColFromPort(port, numRows, numCols, direction);
+						     rowInput.value = row;
+						     colInput.value = col;
+						   });
+
+						   // ⚙️ Handle Row / Column Change
+						   const updatePort = () => {
+						     const row = parseInt(rowInput.value.trim(), 10);
+						     const col = parseInt(colInput.value.trim(), 10);
+
+						     if (isNaN(row) || isNaN(col)) {
+						       portInput.value = "";
+						       return;
+						     }
+
+						     const port = calculatePortFromRowCol(row, col, numRows, numCols, direction);
+						     portInput.value = port;
+						   };
+
+						   rowInput.addEventListener("input", updatePort);
+						   colInput.addEventListener("input", updatePort);	
 						let backKitModule = $("#backKitModule" + dBBoqIndex);
 						let backPortNumInput   = $("#backPortNum" + dBBoqIndex);
 
@@ -15281,3 +15321,43 @@ function viewOnMap(checkbox, ptList, ptData) {
 						     }
 						 }
 						 
+						 function calculateRowColFromPort(port, numRows, numCols, direction) {
+						   const totalPorts = numRows * numCols;
+						   if (port < 1 || port > totalPorts) {
+						     alert(` Invalid Port: ${port}. Must be between 1 and ${totalPorts}.`);
+						     return { row: "", col: "" };
+						   }
+
+						   direction = direction.toLowerCase();
+						   if (direction === "uptodown") {
+						     const row = Math.ceil(port / numCols);
+						     const col = port % numCols || numCols;
+						     return { row, col };
+						   } else {
+						     const reversedRow = Math.ceil(port / numCols);
+						     const reversedCol = port % numCols || numCols;
+						     const row = numRows - reversedRow + 1;
+						     const col = reversedCol;
+						     return { row, col };
+						   }
+						 }
+
+						 function calculatePortFromRowCol(row, col, numRows, numCols, direction) {
+						   direction = direction.toLowerCase();
+
+						   if (row < 1 || row > numRows) {
+						     alert(` Invalid Row: ${row}. Must be between 1 and ${numRows}.`);
+						     return "";
+						   }
+						   if (col < 1 || col > numCols) {
+						     alert(` Invalid Column: ${col}. Must be between 1 and ${numCols}.`);
+						     return "";
+						   }
+
+						   if (direction === "uptodown") {
+						     return (row - 1) * numCols + col;
+						   } else {
+						     const reversedRow = numRows - row + 1;
+						     return (reversedRow - 1) * numCols + col;
+						   }
+						 }

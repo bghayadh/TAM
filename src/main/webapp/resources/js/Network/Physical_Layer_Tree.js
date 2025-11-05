@@ -9182,8 +9182,8 @@ singleHandhole = new ContextMenu({
 											var numRows=data.DistBoardMappingPts[0][5];
 										}
 									
-									var minWidth="1000";									
-									var width = (numCols+2.2)*103.5, height =(numRows+2)*100;
+									var minWidth="500";									
+									var width = (numCols+2.2)*103.5, height =(numRows+2)*50;
 									var totWidth=width;
 									if(totWidth>1366.1999999999998){
 										totWidth-=110;
@@ -9383,7 +9383,8 @@ singleHandhole = new ContextMenu({
 										newText.setAttributeNS(null,"font-size","15");
 										newText.setAttributeNS(null,"stroke","#00757C");
 	
-	
+										// ===== add number text BELOW back port =====
+										                  
 										textNode = document.createTextNode("Connected");
 										newText.appendChild(textNode);
 										document.getElementById("mysvg").appendChild(newText);
@@ -9396,8 +9397,7 @@ singleHandhole = new ContextMenu({
 										newImg.setAttributeNS(null,"width","20");
 										newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/red.png");	
 										document.getElementById("mysvg").appendChild(newImg);
-	
-										newText = document.createElementNS(svgNS,"text");
+										ewText = document.createElementNS(svgNS,"text");
 										newText.setAttributeNS(null,"x","499");     
 										newText.setAttributeNS(null,"y","30");  
 										newText.setAttributeNS(null,"font-size","15");
@@ -9453,7 +9453,17 @@ singleHandhole = new ContextMenu({
 											
 											}						
 											document.getElementById("mysvg").appendChild(newImg);
-											
+											if (data.DistBoardMappingPts[i] && data.DistBoardMappingPts[i].length > 40) {
+																					    // Draw number text below the port (from column 40)
+																					    var numText = document.createElementNS(svgNS, "text");
+																					    numText.setAttributeNS(null, "x", (data.DistBoardMappingPts[i][1] * 100) + 64);
+																					    numText.setAttributeNS(null, "y", (data.DistBoardMappingPts[i][0] * 100) + 75);
+																					    numText.setAttributeNS(null, "font-size", "10");
+																					    numText.setAttributeNS(null, "fill", "#00757C");
+																					    var numNode = document.createTextNode(data.DistBoardMappingPts[i][40] || '');
+																					    numText.appendChild(numNode);
+																					    document.getElementById("mysvg").appendChild(numText);
+																					}
 											
 											var newImg = document.createElementNS(svgNS,"image");
 											//newImg.setAttributeNS(null,"x",(data.DistBoardMappingPts[i][1]*100)+100);     
@@ -18166,13 +18176,11 @@ console.log(locNum);
 					    +"<td name='Index'><input name='Index'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 					
 						+"<td name='nearModule'><input name='nearModule'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
-						+"<td name='nearPortNum'><input name='nearPortNum'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
-										
-						
-						
-						+"<td name='RowIndex'><input name='rowIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-						+"<td name='ColIndex'><input name='colIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+						+"<td name='nearPortNum'><input id='nearPortNum"+dBBoqIndex+"' name='nearPortNum'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
 
+						+"<td name='RowIndex'><input id='rowIndex"+dBBoqIndex+"' name='rowIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+
+						+"<td name='ColIndex'><input id='colIndex"+dBBoqIndex+"' name='colIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 						+"<td name='patchType'><input name='patchType'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 
 						
@@ -18271,7 +18279,79 @@ console.log(locNum);
 					
 					$("#DbMappingTable > tbody").append(markup);
 
-				
+					const numRows = parseInt($("#DistributionBoardRowsNum").val());
+					const numCols = parseInt($("#DistributionBoardColsNum").val());
+					const direction = $("#rowCounting").val();
+
+					const portInput = document.getElementById("nearPortNum" + dBBoqIndex);
+					const rowInput  = document.getElementById("rowIndex" + dBBoqIndex);
+					const colInput  = document.getElementById("colIndex" + dBBoqIndex);
+
+					// 🔹 Handle Port Input
+					portInput.addEventListener("input", () => {
+					  const portVal = portInput.value.trim();
+					  const totalPorts = numRows * numCols;
+
+					  // empty → clear
+					  if (portVal === "") {
+					    rowInput.value = "";
+					    colInput.value = "";
+					    return;
+					  }
+
+					  const port = parseInt(portVal, 10);
+
+					  if (isNaN(port) || port < 1 || port > totalPorts) {
+					    alert(` Invalid Port: ${port}. Must be between 1 and ${totalPorts}.`);
+					    portInput.value = "";
+					    rowInput.value = "";
+					    colInput.value = "";
+					    return;
+					  }
+
+					  // ✅ use global function
+					  const { row, col } = calculateRowColFromPort(port, numRows, numCols, direction);
+
+					  if (row && col) {
+					    rowInput.value = row;
+					    colInput.value = col;
+					  } else {
+					    rowInput.value = "";
+					    colInput.value = "";
+					  }
+					});
+
+					// 🔹 Handle Row/Column Input
+					const updatePort = () => {
+					  const rowVal = rowInput.value.trim();
+					  const colVal = colInput.value.trim();
+
+					  // empty → clear port
+					  if (rowVal === "" || colVal === "") {
+					    portInput.value = "";
+					    return;
+					  }
+
+					  const row = parseInt(rowVal, 10);
+					  const col = parseInt(colVal, 10);
+
+					  if (isNaN(row) || isNaN(col)) {
+					    portInput.value = "";
+					    return;
+					  }
+
+					  // ✅ use global function
+					  const port = calculatePortFromRowCol(row, col, numRows, numCols, direction);
+
+					  if (port) {
+					    portInput.value = port;
+					  } else {
+					    portInput.value = "";
+					  }
+					};
+
+					rowInput.addEventListener("input", updatePort);
+					colInput.addEventListener("input", updatePort);
 				
 				$("#FP_LocationType"+dBBoqIndex).change(function(){
 					var thisID = $(this).attr("id");
