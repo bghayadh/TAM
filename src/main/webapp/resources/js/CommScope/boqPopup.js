@@ -33,7 +33,7 @@ function sendValPopupToBoq(indxRow){
 }
 
 function addNewRow(position){
-	rowParams = {"name" : "", "status" : 0, "className" : "", "cronExpr": ""}; 	
+	rowParams = {"name" : "", "status" : 0, "className" : "", "cronExpr": "", "procID" : 0}; 	
 	var markup = htmlBOQRowInsertion(rowParams);
 	if (position == "next"){
 		$("#boqTable > tbody").append(markup);			
@@ -84,13 +84,15 @@ function handleSwitchClick(el) {
 
 function htmlBOQRowInsertion(rowParams){
 	//name, model, partnum, barcode
+	
+	console.log("rowParams is " ,rowParams);
 
 	function generateSwitchId() {
 		return "switch_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
 	}
 				
 	var switchId = generateSwitchId();
-	var statusSwitch = "<div class='custom-control custom-switch'><input type='checkbox' class='custom-control-input' id='" + switchId + "'"
+	var statusSwitch = "<div class='custom-control custom-switch'><input name='procStatus' type='checkbox' class='custom-control-input' id='" + switchId + "'"
 					   + (rowParams.status === "Enabled" ? " checked" : "") + " onclick='handleSwitchClick(this)'>"
 					   +"<label class='custom-control-label' for='" + switchId + "'>" 
 					   + (rowParams.status === "Enabled" ? "Enabled" : "Disabled") + "</label></div>";
@@ -106,7 +108,7 @@ function htmlBOQRowInsertion(rowParams){
 				+"<input name='procCronExpr' type='text' value='"+  rowParams.cronExpr +"'style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-calendar-alt'></i></button></td>"
 				+"<td name='procRunManual' style='text-align:center;'><button type='button' name='procRunManual' href = '#' onclick='runProc(this)' class='btn btn-primary BtnActive' style='margin:0;'>Run Now</button></td>"				
-				+"<td name='procID'><input type='text' style='width:200px;' readonly value= 0 class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>"; 
+				+"<td name='procID'><input type='text' style='width:200px;' readonly value='" + rowParams.procID + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>"; 
 	return markup;
 }
 
@@ -128,6 +130,11 @@ function insertRowAbove(){
 
  // Delete row fct
 function deleteBoqRow() {
+	proc_Pk = $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="porItemId"]').children('input').val();
+	if( proc_Pk !=0){
+		slctDel.push($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="porItemId"]').children('input').val());
+	}
+	
 	console.log("RowIndx" +rowindx);
 	rowindx++;
 	$("tr").eq(rowindx).remove();
@@ -185,29 +192,32 @@ function prevRow(){
 	else if (rowindx == 0) {
 		$("#popupModal").modal("hide");
 	}
-}// end prev fct
-    
+}// end prev fct    
 
 function updateContainerHeight() {
-	// Get the table and container elements
-	console.log("Updating table height");
-	var table = document.getElementById("boqTable");
-	console.log(table.offsetHeight);
-  	var tr = document.getElementById("boq_tr");
-	var rowCount = $("#boqTable >tbody tr").length;
-  	console.log(tr.offsetHeight);
-	console.log(rowCount);
-  	//console.log(boqArray.length);
-	if (rowCount > 8)
-		rowCount = 8;
-  	table.style.height = (120 + tr.offsetHeight * rowCount) + "px";
-  	console.log("new height : "+table.offsetHeight)
+    const table = document.getElementById("boqTable");
+    const rows = table.querySelectorAll("tbody tr");
+    const rowCount = rows.length;
+
+    if (rowCount === 0) {
+        table.style.height = "auto";
+        return;
+    }
+
+    // Delay height measurement until after the DOM renders
+    setTimeout(() => {
+        const rowHeight = rows[0].offsetHeight || 47; // fallback in case 0
+        const maxRowsVisible = 8;
+        const maxHeight = 53 + rowHeight * maxRowsVisible;
+        const newHeight = 60 + rowCount * rowHeight;
+        table.style.height = (newHeight > maxHeight ? maxHeight : newHeight) + "px";
+    }, 0);
 }
+
 
 $(function(){	
 	//remove selected rows from boq
-	$(".delete-row").click(function(){	
-		slctDelOrd =[];
+	$(".delete-row").click(function(){
 		var checked="false"; //when no checkbox is checked
 		var proc_Pk ="";
 		$("#boqTable > tbody").find('input[name="record"]').each(function(){
@@ -215,7 +225,7 @@ $(function(){
 				checked="true"; //when 1 or more checkbox is checked		 
 				proc_Pk=$(this).parent().parent().children('td[name="procID"]').children('input').val();
 	        	if( proc_Pk !=0) {
-	        		slctDelOrd.push(proc_Pk);
+	        		slctDel.push(proc_Pk);
 	      		}   
 				$(this).parents("tr").remove();  
 	      	} 

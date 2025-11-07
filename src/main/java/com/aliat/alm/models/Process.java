@@ -1,7 +1,6 @@
 package com.aliat.alm.models;
 
 import java.sql.Timestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -14,13 +13,13 @@ public class Process {
 	@Id
 	@Column(name = "ID", nullable = false)
 	private String ID;
-	
+
 	@Column(name = "LINK_NAME")
 	private String linkName;
-	
+
 	@Column(name = "PROCESS_NAME")
 	private String processName;
-	
+
 	@Column(name = "STATUS")
 	private String status;
 
@@ -29,7 +28,7 @@ public class Process {
 
 	@Column(name = "NEXT_RUNNING_TIME")
 	private Timestamp nextRunningTime;
-	
+
 	public Process() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -92,5 +91,5 @@ public class Process {
 
 	public void setNextRunningTime(Timestamp nextRunningTime) {
 		this.nextRunningTime = nextRunningTime;
-	}	
+	}
 }

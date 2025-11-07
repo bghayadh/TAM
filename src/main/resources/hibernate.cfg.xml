@@ -40,6 +40,7 @@
   <mapping class="com.aliat.alm.models.FixedAssetRegistry"/>
   <mapping class="com.aliat.alm.models.CapitalInProgress"/>
   <mapping class="com.aliat.alm.models.Process"/>
+  <mapping class="com.aliat.alm.models.ProcessOperation"/>
   <mapping class="com.aliat.alm.models.DiscoveryNew"/>
   <mapping class="com.aliat.alm.models.DiscoveryNewItem"/>
   <mapping class="com.aliat.alm.models.Message"/>

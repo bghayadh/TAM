@@ -38,6 +38,7 @@ import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.Process;
+import com.aliat.alm.models.ProcessOperation;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,7 +71,7 @@ public class Processing {
 			return "Login";
 			// return "redirect:/";
 		}
-		List<Processing> listDiscovery = new ArrayList<Processing>();
+		List<Process> listDiscovery = new ArrayList<Process>();
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -105,12 +106,12 @@ public class Processing {
 
 		Map<String, Object> processParams = new HashMap<>();
 		String processName = request.getParameter("ID");
+		List<ProcessOperation> listProcessOperation = new ArrayList<ProcessOperation>();;
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			try {
-
 				row = (Object[]) session.createNativeQuery(
 						"select LINK_NAME, STATUS, TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as CREATION_DATE, "
 								+ "TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as LAST_MODIFICATION_DATE from PROCESS "
@@ -124,7 +125,6 @@ public class Processing {
 				 */
 
 				System.out.println("row[0] is " + row[0] + " row[1] is " + row[1]);
-
 				if (row != null) {
 					processParams.put("linkName", row[0]);
 					processParams.put("status", row[1]);
@@ -132,8 +132,13 @@ public class Processing {
 					processParams.put("lastModificationDate", row[3]);
 				}
 
-				model.addAttribute("processParams", processParams);
+				model.addAttribute("processParams", processParams);				
 				System.out.println("linkName is " + processParams.get("linkName").toString());
+				
+				listProcessOperation = session.createQuery("from ProcessOperation where linkName = :param1 order by creation_date desc").setParameter("param1", processParams.get("linkName").toString()).list();
+				model.addAttribute("listProcessOperation", mapper.writeValueAsString(listProcessOperation));
+				System.out.println("listProcessOperation is " + mapper.writeValueAsString(listProcessOperation));				
+				
 			} catch (Exception e) {
 				logger.info("Error on the level of Discovery Process with a message : " + e + "\n" + e.getMessage());
 				model.addAttribute("linkName", "");
