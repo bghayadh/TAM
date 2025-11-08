@@ -1,12 +1,15 @@
+$(document).ready(function() {
+	$("input").change(function() {
+		$("#formStatus").text("Not Saved");
+		$('.dot').css({"background-color" : "orange"});
+	});
+})
+
 function getContextPath() {
 	   return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 }
 
 cx = getContextPath();
-
-/*$("#saveButton").click(  function() {
-	
-});*/
 
 
 function enableMain() {
@@ -23,22 +26,11 @@ function disableMain() {
 }
 
 
-$("input").change(function() {
-	$("#formStatus").text("Not Saved");
-	$('.dot').css({"background-color" : "orange"});
-});
-
-
-$('#dateTimePickerID').datetimepicker({
-    format: 'MM/DD/YYYY hh:mm:ss A'   // include seconds here
-});
 
 function formSave() {	
 	var token =  $('input[name="csrfToken"]').attr('value');
-	console.log("formSave");
 	dict = [];
 	getBoq(dict);
-	console.log("dict is " , dict);
 	$.ajax({
 		type : "POST",
 		url : cx+"/CommScopeFormSave",
@@ -72,21 +64,23 @@ function getBoq (boqDict) {
 			"procStatus" : $row.find('td[name="procStatus"] input[type="checkbox"]').next('label').text(),
 			"procClassName" : $row.find('td[name="procClassName"] input').val(),
 			"procCronExpr" : $row.find('td[name="procCronExpr"] input').val(),
-			"procID" : $row.find('td[name="procID"] input').val()
+			"procID" : $row.find('td[name="procID"] input').val(),
+			"procStartDateTime" : $row.find('td[name="procStartDateTime"] input').val()
 		});
 	});
-	console.log("the dict array is " , dict);
 }  // end of getBoq
 
 
 function formLoad(boqArray) {
 	var markup = "";
 	for (i = 0; i < boqArray.length; i++){
-		console.log("operation name is " , boqArray[i].operationName);
-		rowParams = {"name" : boqArray[i].operationName, "status" : boqArray[i].status, "className" : boqArray[i].className, "cronExpr": boqArray[i].cronExpression, "procID" : boqArray[i].id};	
+		rowParams = {"name" : boqArray[i].operationName, "status" : boqArray[i].status, "className" : boqArray[i].className, "startDateTime" : boqArray[i].startDateTime, "cronExpr": boqArray[i].cronExpression, "procID" : boqArray[i].id};	
 		markup += htmlBOQRowInsertion(rowParams);
 	}
 	$("#boqTable > tbody").append(markup);
+	// 🔹 THEN initialize flatpickr AFTER DOM update
+	setTimeout(initBOQFlatpickr, 0);
+	//initBOQFlatpickr(); // 🔹 initialize Flatpickr for all rows
 	$('table#boqTable tr:eq('+(boqArray.length)+') td:nth-child(2) input').focus();
 	updateContainerHeight();
 }

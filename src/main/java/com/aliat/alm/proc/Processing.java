@@ -136,6 +136,7 @@ public class Processing {
 				System.out.println("linkName is " + processParams.get("linkName").toString());
 				
 				listProcessOperation = session.createQuery("from ProcessOperation where linkName = :param1 order by creation_date desc").setParameter("param1", processParams.get("linkName").toString()).list();
+				mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 				model.addAttribute("listProcessOperation", mapper.writeValueAsString(listProcessOperation));
 				System.out.println("listProcessOperation is " + mapper.writeValueAsString(listProcessOperation));				
 				

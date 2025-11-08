@@ -29,6 +29,9 @@ public class ProcessOperation {
 	@Column(name = "CLASS_NAME")
 	private String className;
 	
+	@Column(name = "START_DATE_TIME")
+	private Timestamp startDateTime;
+	
 	@Column(name = "CRON_EXPRESSION")
 	private String cronExpression;
 	
@@ -38,24 +41,26 @@ public class ProcessOperation {
 	@Column(name = "LAST_MODIFICATION_DATE")
 	private Timestamp lastModificationDate;	
 	
+	
 	public ProcessOperation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public ProcessOperation(String iD, String linkName, String operationName, String status, String className,
-			String cronExpression, Timestamp creationDate, Timestamp lastModificationDate) {
+			Timestamp startDateTime, String cronExpression, Timestamp creationDate, Timestamp lastModificationDate) {
 		super();
 		ID = iD;
 		this.linkName = linkName;
 		this.operationName = operationName;
 		this.status = status;
 		this.className = className;
+		this.startDateTime = startDateTime;
 		this.cronExpression = cronExpression;
 		this.creationDate = creationDate;
 		this.lastModificationDate = lastModificationDate;
 	}
-	
+
 	@PrePersist
 	protected void onCreate() {
 	    creationDate = new Timestamp(System.currentTimeMillis());
@@ -65,7 +70,7 @@ public class ProcessOperation {
 	@PreUpdate
 	protected void onUpdate() {
 	    lastModificationDate = new Timestamp(System.currentTimeMillis());
-	}	
+	}
 
 	public String getID() {
 		return ID;
@@ -105,6 +110,14 @@ public class ProcessOperation {
 
 	public void setClassName(String className) {
 		this.className = className;
+	}
+
+	public Timestamp getStartDateTime() {
+		return startDateTime;
+	}
+
+	public void setStartDateTime(Timestamp startDateTime) {
+		this.startDateTime = startDateTime;
 	}
 
 	public String getCronExpression() {

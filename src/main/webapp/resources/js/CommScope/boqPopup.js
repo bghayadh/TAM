@@ -1,6 +1,11 @@
 var slctDel= [];
 var rowindx =0;
 var rowParams = {};
+//let startPicker; // declare in a scope accessible to the button
+
+function openPopTest(){
+	$("#popupModal").modal("show");
+}
 
 function openPop(element){	
 	var buttonRowIndx = $(element).closest("tr");
@@ -12,7 +17,6 @@ function openPop(element){
 
 function sendValBoqToPopup(indxRow){
 	$('#popupProcName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procName"]').children('input').val());
-	console.log("the status of the switch at indxRow: " ,indxRow + " is: " ,$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').prop('checked'));
 	$('#popupProcStatus').prop('checked', $("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').prop('checked'));
 	$('#popupProcStatus').next('label').text($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text()); 
 	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());
@@ -33,7 +37,7 @@ function sendValPopupToBoq(indxRow){
 }
 
 function addNewRow(position){
-	rowParams = {"name" : "", "status" : 0, "className" : "", "cronExpr": "", "procID" : 0}; 	
+	rowParams = {"name" : "", "status" : 0, "className" : "", "startDateTime": "", "cronExpr": "", "procID" : 0}; 	
 	var markup = htmlBOQRowInsertion(rowParams);
 	if (position == "next"){
 		$("#boqTable > tbody").append(markup);			
@@ -54,6 +58,7 @@ function addNewRow(position){
     	//boqAutocomplete(newRowIndx);
 		$('table#boqTable tr:eq('+(newRowIndx+1)+') td:nth-child(2) input').focus();
 	}
+		initBOQFlatpickr(); // 🔹 initialize Flatpickr for the new row	
 		updateContainerHeight();
 		
 		$("#formStatus").text("Not Saved");
@@ -85,8 +90,6 @@ function handleSwitchClick(el) {
 function htmlBOQRowInsertion(rowParams){
 	//name, model, partnum, barcode
 	
-	console.log("rowParams is " ,rowParams);
-
 	function generateSwitchId() {
 		return "switch_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
 	}
@@ -97,19 +100,41 @@ function htmlBOQRowInsertion(rowParams){
 					   +"<label class='custom-control-label' for='" + switchId + "'>" 
 					   + (rowParams.status === "Enabled" ? "Enabled" : "Disabled") + "</label></div>";
 					  
-	var markup = "<tr><td><input type='checkbox' name='record'><span class='dotStatus'></span><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='position:relative;left:3px;'><i class='fas fa-desktop'></i></button></td>"
+	var markup = "<tr><td><input type='checkbox' name='record'><span class='dotStatus'></span><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default'><i class='fas fa-desktop'></i></button></td>"
 				+"<td name='procName'><input name='procName' type='text' value='"+ rowParams.name +"' style='width:300px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
             	+"<td name='procStatus'>"
 				+statusSwitch+"</td>"				
     			//+"<input name='procStatus' type='text' value='"+ rowParams.status +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"												
     			+"<td name='procClassName'>"
     	     	+"<input name='procClassName' type='text' value='"+ rowParams.className +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
+				+"<td name='procStartDateTime'>"
+				+"<div class='input-group'>"
+				+"<input type='text' name='procStartDateTime' value='"+ (rowParams.startDateTime || "") +"'class='form-control proc-start-time' placeholder='Select start date/time' style='width:200px;' />"
+				+"<div class='input-group-append'>"
+				+"<button class='btn btn-outline-secondary calendar-btn' type='button'><i class='fa fa-calendar'></i></button>"
+				+"</div></div></td>"				
  				+"<td name='procCronExpr'>"
 				+"<input name='procCronExpr' type='text' value='"+  rowParams.cronExpr +"'style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-calendar-alt'></i></button></td>"
 				+"<td name='procRunManual' style='text-align:center;'><button type='button' name='procRunManual' href = '#' onclick='runProc(this)' class='btn btn-primary BtnActive' style='margin:0;'>Run Now</button></td>"				
 				+"<td name='procID'><input type='text' style='width:200px;' readonly value='" + rowParams.procID + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>"; 
 	return markup;
+}
+
+function initBOQFlatpickr() {
+	$("#boqTable .proc-start-time").each(function() {
+		// Skip if already initialized
+		if (this._flatpickr) return;
+
+		flatpickr(this, {
+			enableTime: true,
+			dateFormat: "Y-m-d H:i:S",
+			time_24hr: true,
+			allowInput: true,
+			minuteIncrement: 1,
+			appendTo: document.body
+		});
+	});
 }
 
 
@@ -135,13 +160,11 @@ function deleteBoqRow() {
 		slctDel.push($("#bisotab >tbody").find("tr").eq(rowindx).find('td[name="porItemId"]').children('input').val());
 	}
 	
-	console.log("RowIndx" +rowindx);
 	rowindx++;
 	$("tr").eq(rowindx).remove();
 	
 	// Get Nb of rows after delete 
 	var rowCount = $("#boqTable >tbody tr").length;
-	console.log("rowCount in BoQ:" +rowCount);
 	rowindx--;
 	if (rowindx == 0 && rowCount ==0) {
 		$("#popupModal").modal("hide");
@@ -206,14 +229,21 @@ function updateContainerHeight() {
 
     // Delay height measurement until after the DOM renders
     setTimeout(() => {
-        const rowHeight = rows[0].offsetHeight || 47; // fallback in case 0
+        const rowHeight = rows[0].offsetHeight || 50; // fallback in case 0
         const maxRowsVisible = 8;
-        const maxHeight = 53 + rowHeight * maxRowsVisible;
-        const newHeight = 60 + rowCount * rowHeight;
+        const maxHeight = 40 + rowHeight * maxRowsVisible;
+        const newHeight = 55 + rowCount * rowHeight;
         table.style.height = (newHeight > maxHeight ? maxHeight : newHeight) + "px";
     }, 0);
 }
 
+
+$(document).on("click", ".calendar-btn", function() {
+	var input = $(this).closest(".input-group").find(".proc-start-time")[0];
+	if (input && input._flatpickr) {
+		input._flatpickr.open();
+	}
+});
 
 $(function(){	
 	//remove selected rows from boq
@@ -253,8 +283,63 @@ $(function(){
 		$(this).find('.modal-body').css({
 			'max-height': '100%',
 		});
+		$(this).data('oldEnforceFocus', $.fn.modal.Constructor.prototype._enforceFocus);
+		$.fn.modal.Constructor.prototype._enforceFocus = function() {};		
 	});
-	 
+	
+	// Restore focus enforcement after modal closes
+	$('#popupModal').on('hidden.bs.modal', function() {
+	    const oldEnforceFocus = $(this).data('oldEnforceFocus');
+	    $.fn.modal.Constructor.prototype._enforceFocus = oldEnforceFocus;
+	});
+
+	// Initialize Flatpickr ONCE
+	const startPicker = flatpickr("#popupProcStartTime", {
+	    allowInput: true,
+	    enableTime: true,
+	    enableSeconds: true,
+	    dateFormat: "Y-m-d H:i:S",
+	    clickOpens: false, // manual open only
+/*		
+	    onChange: function(selectedDates, dateStr) {
+	        $("#formStatus").text("Not Saved");
+	        $('.dot').css({"background-color": "orange"});
+	    }
+*/		
+	});
+
+	// Open calendar via button click
+	$('#calendarButton').on('click', function() {
+	    startPicker.open();
+	});
+
+	// Open calendar when input gets focus (e.g., click or tab)
+	$('#popupProcStartTime').on('focus', function() {
+	    startPicker.open();
+	});
+	
+	$(document).on("click", ".calendar-btn", function(e) { // // $(document) is used because we need to confirm that the event will still work for the DOM that will be created after loading the page, because the event is listening on the document
+		e.preventDefault();
+		e.stopPropagation();
+
+		var row = $(this).closest("tr");
+		var input = row.find(".proc-start-time")[0];
+
+		if (input && input._flatpickr) {
+			input._flatpickr.open();
+		} else if (input) {
+			// In case something removed _flatpickr (rare)
+			flatpickr(input, {
+				enableTime: true,
+				dateFormat: "Y-m-d H:i:S",
+				time_24hr: true,
+				allowInput: true,
+				minuteIncrement: 1
+			}).open();
+		}
+	});
+			
+		 
 	//Reset the popup to original size after resizing 
 	$('#popupModal').on('hidden.bs.modal', function() {
 		$(this).find('.modal-content').css({'width': '', 'height': ''});
@@ -311,4 +396,21 @@ $(function(){
 			             .removeClass('fa-minus')
 		}    		         
 	}); // end minimize/maximize fct
+
+
+	// jqCron for recurrence
+	$('#popupProcCronPicker').jqCron({
+		enabled_minute: true,
+		multiple_dom: true,
+		multiple_month: true,
+		multiple_mins: true,
+		multiple_dow: true,
+		default_value: '0 0 * * *',
+		bind_to: $('#popupProcCronExpr'),
+		bind_method: {
+			set: function($el, val) { $el.val(val); },
+			get: function($el) { return $el.val(); }
+		},
+		no_reset_button: false
+	});
 });

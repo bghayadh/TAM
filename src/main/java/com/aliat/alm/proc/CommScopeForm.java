@@ -57,7 +57,8 @@ public class CommScopeForm {
 	@RequestMapping(value = "/CommScopeFormSave", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> CommScopeFormSave(Locale locale, Model model, HttpServletRequest request,
-			HttpServletResponse response, @ModelAttribute ItemParameters itemParameters) throws JsonProcessingException {
+			HttpServletResponse response, @ModelAttribute ItemParameters itemParameters)
+			throws JsonProcessingException {
 
 		System.out.println("Welcome to CommScopeFormSave.");
 		Map<String, Object> rtn = new LinkedHashMap<>();
@@ -70,19 +71,12 @@ public class CommScopeForm {
 		String[] slctDel;
 		String id;
 		ProcessOperation procOperation = new ProcessOperation();
-		
-		System.out.println("Dict is " +mapper.writeValueAsString(itemParameters.getDictParameterProcess()));
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
 
-		/*
-		 * String token = request.getParameter("status"); String ipAddress =
-		 * request.getParameter("ipAddress"); System.out.println("ipAddress is " +
-		 * ipAddress + " and token is " + token);
-		 */
 		session = AlmDbSession.getInstance().getSession();
 
 		if (session != null && session.isOpen()) {
@@ -131,13 +125,19 @@ public class CommScopeForm {
 						} else {
 							id = itemParameters.getDictParameterProcess().get(i).get("procID");
 						}
-						System.out.println("id is " +id);
+						System.out.println("id is " + id);
 						procOperation.setID(id);
-						procOperation.setLinkName(request.getParameter("linkName"));						
+						procOperation.setLinkName(request.getParameter("linkName"));
 						procOperation.setOperationName(itemParameters.getDictParameterProcess().get(i).get("procName"));
 						procOperation
 								.setClassName(itemParameters.getDictParameterProcess().get(i).get("procClassName"));
 						procOperation.setStatus(itemParameters.getDictParameterProcess().get(i).get("procStatus"));
+						procOperation.setStartDateTime(
+							    (itemParameters.getDictParameterProcess().get(i).get("procStartDateTime") != null &&
+							     !itemParameters.getDictParameterProcess().get(i).get("procStartDateTime").isEmpty())
+							    ? new Timestamp(formatter.parse(itemParameters.getDictParameterProcess().get(i).get("procStartDateTime")).getTime())
+							    : null
+							);
 						procOperation
 								.setCronExpression(itemParameters.getDictParameterProcess().get(i).get("procCronExpr"));
 						session.saveOrUpdate(procOperation);

@@ -5,38 +5,56 @@
 <meta charset="utf-8">
     <title>CommScope</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<script src="${pageContext.request.contextPath}/resources/js/popper.min.js"></script>
+	<!-- jQuery core first -->
 	<script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />	
+	<script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
+	
+	<!-- Bootstrap core (depends on Popper) -->
+	<script src="${pageContext.request.contextPath}/resources/js/popper.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 	<link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
-	<script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
-	<script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>	
-	<script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>	 
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet"/>
-
-	<!--  <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css"> -->
-		
-    <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>	
+	
+	<!-- jQuery UI (for autocomplete, dialogs, etc.) -->
+	<script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" />
+	
+	<!-- Font Awesome and general layout -->
+	<script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
 	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/bootstrap-datetimepicker.min.css">
+
+<!--  	
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/tempusdominus-bootstrap-4.min.css" />
+-->
+
 	
+	<!-- Flatpickr (must come before custom scripts that initialize it) -->
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/flatpickr.min.css">
+	<script src="${pageContext.request.contextPath}/resources/js/flatpickr.min.js"></script>
+	
+	<!-- jqCron -->
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jqCron.css">
+	<script src="${pageContext.request.contextPath}/resources/js/jqCron.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/js/jqCron.en.js"></script>
+	
+	<!-- ALM GRID Scripts -->
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/almgrid.css" />
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
+	<script src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/almgrid/almgrid.class.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
+	
+	<!-- Platform (if it depends on jQuery, it must be here) -->
+	<script src="${pageContext.request.contextPath}/resources/js/platform.js"></script>
+	
+	<!-- Your custom CommScope scripts should be LAST -->
 	<script src="${pageContext.request.contextPath}/resources/js/CommScope/boqPopup.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/CommScope/formStandard.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/js/CommScope/commScope.js"></script>
-	
-	<!-- ALM GRID Scripts -->
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/pagination.class.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/almgrid.css" />
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/almgrid.class.js"></script>
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/almgrid/clusterize.css" />
-	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/almgrid/clusterize.js"></script>
-	
 
 <style>
 
@@ -164,12 +182,92 @@ td[name="procStatus"] {
 }
 
 
-/* Optional: same for modal for consistent look */
-#popupProcStatus.custom-control-input + .custom-control-label {
-  width: 80px;
-  padding-left: 40px;
+/* Row and cell alignment */
+#boqTable tbody tr {
+    height: 42px; /* adjust as needed */
 }
 
+#boqTable td {
+    vertical-align: middle; /* center content vertically */
+}
+
+/* Flatpickr input and button */
+#boqTable td[name="procStartDateTime"] .input-group {
+    width: 230px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+#boqTable .proc-start-time {
+    height: 38px;
+    margin: 0;
+    padding: 6px 10px;
+    box-sizing: border-box;
+}
+
+#boqTable .calendar-btn {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 10px;
+}
+
+/* Run Now button */
+#boqTable button[name="procRunManual"] {
+    white-space: nowrap;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    margin: 0;
+}
+
+/* PopUpMenu button */
+#boqTable button[name="popUpMenu"] {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 10px;
+}
+
+
+#boqTable td[name="procCalend"] {
+    display: flex;
+    align-items: center;       /* vertical center */
+    justify-content: center;   /* horizontal center */
+}
+
+/* Remove extra margin/padding from all controls */
+#boqTable .form-control,
+#boqTable .input-group,
+#boqTable button {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#boqTable th {
+    vertical-align: middle;   /* vertical center */
+    white-space: nowrap;      /* optional: prevents wrapping */
+    padding: 6px 8px;         /* adjust spacing as needed */
+    text-align: center;       /* optional: horizontally center header text */
+}
+
+/* First column: checkbox + dot + PopUp button */
+#boqTable td:first-child {
+    display: flex;               /* arrange children in a row */
+    align-items: center;         /* vertical center */
+    justify-content: center;     /* horizontal center */
+    gap: 4px;                    /* space between checkbox, dot, button */
+    white-space: nowrap;         /* prevent wrapping */
+    padding: 0 6px;              /* optional: adjust left/right padding */
+}
 
 
 /* Extra small devices (phones, 600px and down) */
@@ -714,6 +812,7 @@ td[name="procStatus"] {
 						    <th>Name</th>
 						    <th>Status</th>
 						    <th>Class Name</th>
+						    <th>Start Date Time</th>
 						    <th>Cron Expression</th>
 						    <th>Calendar Cron</th>
 						    <th>Run Manually</th>
@@ -808,13 +907,46 @@ td[name="procStatus"] {
 								</div>
 								<div class="col-sm-6">
 									<div class="form-group">
+									<div class="input-group-prepend"><span class="input-group-text">Start Date / Time</span>
+									<input type="text" id="popupProcStartTime" class="form-control" placeholder="Select start date/time" style="width:675px; height:37px"/>
+									<div class="input-group-append"><button class="btn btn-outline-secondary" type="button" id="calendarButton">
+									<i class="fa fa-calendar"></i></button></div>
+									</div></div>
+<!--
+									<div class="form-group">
+									<div class="input-group-prepend" id="dateTimePickerPopup" data-target-input="nearest">
+									<span style="width:140px;" class="input-group-text">Start Date / Time</span>
+									<input type="text" id="popupProcStartTime" style="width:500px;" class="form-control datetimepicker-input" data-toggle="datetimepicker" data-target="#dateTimePickerPopup" />
+					   				<div class="input-group-append" data-target="#dateTimePickerPopup" data-toggle="datetimepicker">
+									<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+									</div>
+									</div>
+									</div>
+ -->									
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
 									<div class="input-group-prepend">
-									<span class="input-group-text">Process Cron Expression</span>
-									<input type="text" class="ui-widget ui-widget-content ui-corner-all form-control text-input" id="popupProcCronExpr" style="width:675px; height:37px"/>
+									<span class="input-group-text">Repeat Pattern (Cron)</span>
+									<div id="popupProcCronPicker" style = "margin-left: 15px;"></div>
+									<!-- 
+									<input id="popupProcCronExpr" class="ui-widget ui-widget-content ui-corner-all form-control text-input" style="width:675px; height:37px"/>
+									 -->
 									</div>
 									</div>
 								</div>
-							</div>							
+								<div class="col-sm-6">
+									<div class="form-group">
+									<div class="input-group-prepend">
+									<span class="input-group-text">Cron Expression</span>									
+									<input id="popupProcCronExpr" class="ui-widget ui-widget-content ui-corner-all form-control text-input" style="width:675px; height:37px"/>
+									</div>
+									</div>
+								</div>
+							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -827,6 +959,8 @@ td[name="procStatus"] {
 
 </body>
 <script>
+
+formLoad(${listProcessOperation});
 
 function validation (extraFields) {
 	var fields = {"#ipAddress": "IP Address", "#username": "Username", "#password": "Password"};

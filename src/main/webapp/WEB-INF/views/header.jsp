@@ -1386,10 +1386,8 @@ display:none;
             contentType: "application/json; charset=utf-8",
             url: '${pageContext.request.contextPath}/PhysicalPerm',
             success: function(data) {
-                console.log("Success response:", data); // Log the entire response object
 
-                if (data.hasOwnProperty("readTree")) {
-                    console.log("readTree:", data.readTree); 
+                if (data.hasOwnProperty("readTree")) { 
                     if (data.readTree == 1) {
                         // If data.readTree is 1, show the elements
                         $('#physicalLayer').css('display', 'block');
