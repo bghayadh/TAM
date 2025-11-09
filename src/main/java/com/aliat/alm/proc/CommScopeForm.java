@@ -96,7 +96,6 @@ public class CommScopeForm {
 						+ lastModifiedDate + "', 'YYYY-MM-DD HH24:MI:SS.FF'), " + "status = '" + docStatus
 						+ "' where LINK_NAME = 'CommScope'";
 
-				System.out.println("str is " + str);
 				query = session.createNativeQuery(str);
 				query.executeUpdate();
 				session.createNativeQuery("commit").executeUpdate();
@@ -125,7 +124,6 @@ public class CommScopeForm {
 						} else {
 							id = itemParameters.getDictParameterProcess().get(i).get("procID");
 						}
-						System.out.println("id is " + id);
 						procOperation.setID(id);
 						procOperation.setLinkName(request.getParameter("linkName"));
 						procOperation.setOperationName(itemParameters.getDictParameterProcess().get(i).get("procName"));

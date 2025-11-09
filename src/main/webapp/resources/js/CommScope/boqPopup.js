@@ -1,6 +1,8 @@
 var slctDel= [];
 var rowindx =0;
 var rowParams = {};
+var fpInput; // It is used for selecting flatpickr input field element in the boq table or in the popup modal, the flatpickr is calendar.
+var newValue; // It is used to get the new value of the flatpickr input field in the boq table or popup modal.
 //let startPicker; // declare in a scope accessible to the button
 
 function openPopTest(){
@@ -19,8 +21,20 @@ function sendValBoqToPopup(indxRow){
 	$('#popupProcName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procName"]').children('input').val());
 	$('#popupProcStatus').prop('checked', $("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').prop('checked'));
 	$('#popupProcStatus').next('label').text($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text()); 
-	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());
-	$('#popupProcCronExpr').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val());							 
+	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());	
+	$('#popupProcCronExpr').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val());
+		
+	newValue = $("#boqTable > tbody").find("tr").eq(indxRow).find('td[name="procStartDateTime"] input.proc-start-time').val();
+	fpInput= $('#popupProcStartTime');
+
+	// Update the input value
+	fpInput.val(newValue);
+
+	// Update Flatpickr internal date so the calendar opens correctly
+	if (fpInput[0]._flatpickr) {
+	    fpInput[0]._flatpickr.setDate(newValue, true); // true triggers onChange
+	}
+		
 	var element = document.getElementById("popupNb");
     	element.innerHTML = "Process # " +(indxRow+1);
 }
@@ -31,6 +45,18 @@ function sendValPopupToBoq(indxRow){
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text($('#popupProcStatus').next('label').text());		
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val($('#popupProcClassName').val());
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val($('#popupProcCronExpr').val());
+	
+	fpInput = $("#boqTable > tbody").find("tr").eq(indxRow).find('td[name="procStartDateTime"] input.proc-start-time');
+	newValue = $('#popupProcStartTime').val();
+
+	// Update the input value
+	fpInput.val(newValue);
+
+	// Update Flatpickr internal date so the calendar opens correctly
+	if (fpInput[0]._flatpickr) {
+	    fpInput[0]._flatpickr.setDate(newValue, true); // true triggers onChange
+	}
+	
 /*	
 	var element = document.getElementById("popupNb");
     	element.innerHTML = "Process # " +(indxRow+1); */
@@ -129,6 +155,7 @@ function initBOQFlatpickr() {
 		flatpickr(this, {
 			enableTime: true,
 			dateFormat: "Y-m-d H:i:S",
+			enableSeconds: true,
 			time_24hr: true,
 			allowInput: true,
 			minuteIncrement: 1,
@@ -299,6 +326,8 @@ $(function(){
 	    enableTime: true,
 	    enableSeconds: true,
 	    dateFormat: "Y-m-d H:i:S",
+		time_24hr: true,
+		minuteIncrement: 1,
 	    clickOpens: false, // manual open only
 /*		
 	    onChange: function(selectedDates, dateStr) {
@@ -332,6 +361,7 @@ $(function(){
 			flatpickr(input, {
 				enableTime: true,
 				dateFormat: "Y-m-d H:i:S",
+				enableSeconds: true,
 				time_24hr: true,
 				allowInput: true,
 				minuteIncrement: 1

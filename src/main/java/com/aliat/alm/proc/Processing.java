@@ -106,7 +106,8 @@ public class Processing {
 
 		Map<String, Object> processParams = new HashMap<>();
 		String processName = request.getParameter("ID");
-		List<ProcessOperation> listProcessOperation = new ArrayList<ProcessOperation>();;
+		List<ProcessOperation> listProcessOperation = new ArrayList<ProcessOperation>();
+		;
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
@@ -117,14 +118,7 @@ public class Processing {
 								+ "TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as LAST_MODIFICATION_DATE from PROCESS "
 								+ "WHERE PROCESS_NAME = :param")
 						.setParameter("param", processName).getResultStream().findFirst().orElse(null);
-				System.out.println("ProcessParams is " + mapper.writeValueAsString(row));
-				/*
-				 * processParams = (row == null) ? Collections.emptyMap() : Map.of("linkName",
-				 * row[0], "status", row[1], "creationDate", row[2], "lastModificationDate",
-				 * row[3]);
-				 */
 
-				System.out.println("row[0] is " + row[0] + " row[1] is " + row[1]);
 				if (row != null) {
 					processParams.put("linkName", row[0]);
 					processParams.put("status", row[1]);
@@ -132,14 +126,15 @@ public class Processing {
 					processParams.put("lastModificationDate", row[3]);
 				}
 
-				model.addAttribute("processParams", processParams);				
-				System.out.println("linkName is " + processParams.get("linkName").toString());
-				
-				listProcessOperation = session.createQuery("from ProcessOperation where linkName = :param1 order by creation_date desc").setParameter("param1", processParams.get("linkName").toString()).list();
+				model.addAttribute("processParams", processParams);
+
+				listProcessOperation = session
+						.createQuery("from ProcessOperation where linkName = :param1 order by creation_date desc")
+						.setParameter("param1", processParams.get("linkName").toString()).list();
 				mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 				model.addAttribute("listProcessOperation", mapper.writeValueAsString(listProcessOperation));
-				System.out.println("listProcessOperation is " + mapper.writeValueAsString(listProcessOperation));				
-				
+				System.out.println("listProcessOperation is " + mapper.writeValueAsString(listProcessOperation));
+
 			} catch (Exception e) {
 				logger.info("Error on the level of Discovery Process with a message : " + e + "\n" + e.getMessage());
 				model.addAttribute("linkName", "");
