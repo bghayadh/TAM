@@ -22,7 +22,8 @@ function sendValBoqToPopup(indxRow){
 	$('#popupProcStatus').next('label').text($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text()); 
 	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());	
 	$('#popupProcCronExpr').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val());
-
+	
+	initPopupCron($('#popupProcCronExpr').val());
 
 	newValue = $("#boqTable > tbody").find("tr").eq(indxRow).find('td[name="procStartDateTime"] input.proc-start-time').val();
 	fpInput= $('#popupProcStartTime');
@@ -61,6 +62,24 @@ function sendValPopupToBoq(indxRow){
 /*	
 	var element = document.getElementById("popupNb");
     	element.innerHTML = "Process # " +(indxRow+1); */
+}
+
+
+function initPopupCron(cronVal) {
+    $('#popupProcCronPicker').empty().jqCron({
+        enabled_minute: true,
+        multiple_dom: true,
+        multiple_month: true,
+        multiple_mins: true,
+        multiple_dow: true,
+        default_value: cronVal || '0 0 * * *',
+        bind_to: $('#popupProcCronExpr'),
+        bind_method: {
+            set: function($el, val) { $el.val(val); },
+            get: function($el) { return $el.val(); }
+        },
+        no_reset_button: false
+    });
 }
 
 function addNewRow(position){
@@ -428,7 +447,7 @@ $(function(){
 		}    		         
 	}); // end minimize/maximize fct
 
-
+/*
 	// jqCron for recurrence
 	$('#popupProcCronPicker').jqCron({
 		enabled_minute: true,
@@ -444,4 +463,5 @@ $(function(){
 		},
 		no_reset_button: false
 	});
+*/	
 });
