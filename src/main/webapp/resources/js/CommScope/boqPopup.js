@@ -3,7 +3,6 @@ var rowindx =0;
 var rowParams = {};
 var fpInput; // It is used for selecting flatpickr input field element in the boq table or in the popup modal, the flatpickr is calendar.
 var newValue; // It is used to get the new value of the flatpickr input field in the boq table or popup modal.
-//let startPicker; // declare in a scope accessible to the button
 
 function openPopTest(){
 	$("#popupModal").modal("show");
