@@ -23,7 +23,8 @@ function sendValBoqToPopup(indxRow){
 	$('#popupProcStatus').next('label').text($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text()); 
 	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());	
 	$('#popupProcCronExpr').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val());
-		
+
+
 	newValue = $("#boqTable > tbody").find("tr").eq(indxRow).find('td[name="procStartDateTime"] input.proc-start-time').val();
 	fpInput= $('#popupProcStartTime');
 
@@ -32,8 +33,9 @@ function sendValBoqToPopup(indxRow){
 
 	// Update Flatpickr internal date so the calendar opens correctly
 	if (fpInput[0]._flatpickr) {
-	    fpInput[0]._flatpickr.setDate(newValue, true); // true triggers onChange
+	    fpInput[0]._flatpickr.setDate(newValue, false); // false will not triggers onChange but true triggers onChange
 	}
+
 		
 	var element = document.getElementById("popupNb");
     	element.innerHTML = "Process # " +(indxRow+1);
@@ -45,7 +47,7 @@ function sendValPopupToBoq(indxRow){
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text($('#popupProcStatus').next('label').text());		
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val($('#popupProcClassName').val());
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val($('#popupProcCronExpr').val());
-	
+		
 	fpInput = $("#boqTable > tbody").find("tr").eq(indxRow).find('td[name="procStartDateTime"] input.proc-start-time');
 	newValue = $('#popupProcStartTime').val();
 
@@ -54,7 +56,7 @@ function sendValPopupToBoq(indxRow){
 
 	// Update Flatpickr internal date so the calendar opens correctly
 	if (fpInput[0]._flatpickr) {
-	    fpInput[0]._flatpickr.setDate(newValue, true); // true triggers onChange
+	    fpInput[0]._flatpickr.setDate(newValue, false); // false will not triggers onChange while true triggers onChange
 	}
 	
 /*	
