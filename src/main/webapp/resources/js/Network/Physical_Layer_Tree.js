@@ -1490,7 +1490,7 @@ if (readHandhole === '1') {
 					         'icon': 'map-marker',
 					         'name': 'Update Cities',
 					         action: () => {
-					  		updateCities("manhole");
+					  		//updateCities("manhole");
 					     }
 					     }
 ];
@@ -1669,7 +1669,7 @@ if (addManhole === '1') {
 								         'icon': 'map-marker',
 								         'name': 'Update Cities',
 								         action: () => {
-								  		updateCities("handhole");
+								  		//updateCities("handhole");
 								     }
 								     }
 			  
@@ -2505,7 +2505,7 @@ if (addFiber === '1') {
 	},
 	{'icon': 'map-marker', 'name': 'Update Cities', action: () => {
 				
-		updateCities("fiber");
+		//updateCities("fiber");
 		}
 		}	
 
