@@ -849,7 +849,7 @@ td[name="procStatus"] {
 			<div class="modal-header" style="background-color: #2678CC ; height: 55px; display:flex; align-items:center;">
 				<h5 id ="popupNb" class="modal-title" style="font-weight:bold; color: #E9ECEF ;position: relative;"></h5>
 				<div style="float: right;">
-					<button  name="runProcBtn"  onclick="runProc(this)" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -40px; font-weight: bold;">Run Now </button>				
+					<button  name="runProcBtn"  onclick="popupRunProc()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -40px; font-weight: bold;">Run Now </button>				
 					<button  name="insertBelow"  onclick="insertRowBelow()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -30px; font-weight: bold;">Insert Below </button>
 					<button  name="insertAbove"  onclick="insertRowAbove()" class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -20px; font-weight: bold;">Insert Above </button>
 					<button  name="deleteBoqRow" onclick="deleteBoqRow()"   class ="btn btn-default btn-primary BtnActive btn-pop" style="color:black;position:relative;left: -10px; font-weight: bold;">Delete</button>

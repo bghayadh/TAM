@@ -4,14 +4,11 @@ var rowParams = {};
 var fpInput; // It is used for selecting flatpickr input field element in the boq table or in the popup modal, the flatpickr is calendar.
 var newValue; // It is used to get the new value of the flatpickr input field in the boq table or popup modal.
 
-function openPopTest(){
-	$("#popupModal").modal("show");
-}
-
 function openPop(element){	
 	var buttonRowIndx = $(element).closest("tr");
     rowindx = (buttonRowIndx[0].rowIndex - 1);    
     //Send input values from Boq table  to popup
+	console.log("openPopUp");
 	sendValBoqToPopup(rowindx);
     $("#popupModal").modal("show");
 }// end open popup fct
@@ -66,6 +63,8 @@ function sendValPopupToBoq(indxRow){
 
 
 function initPopupCron(cronVal) {
+	let initializing = true; // flag to ignore first automatic set
+	console.log("initPopupCron");
     $('#popupProcCronPicker').empty().jqCron({
         enabled_minute: true,
         multiple_dom: true,
@@ -75,12 +74,95 @@ function initPopupCron(cronVal) {
         default_value: cronVal || '0 0 * * *',
         bind_to: $('#popupProcCronExpr'),
         bind_method: {
-            set: function($el, val) { $el.val(val); },
+            set: function($el, val) { 
+				// Always set the value
+				const oldVal = $el.val();
+				console.log("oldVal is ", oldVal);
+				console.log("newVal is ", val);
+				$el.val(val);
+
+				// Ignore automatic initialization
+				if (initializing) {
+					return;
+				}
+				else {
+					$("#formStatus").text("Not Saved");
+					$('.dot').css({ "background-color": "orange" });
+				}
+
+/*
+				// Mark as Not Saved only if value actually changed
+				if (oldVal !== val) {
+					console.log("New value");
+				    $("#formStatus").text("Not Saved");
+				    $('.dot').css({ "background-color": "orange" });
+				} 
+*/				
+				//$el.val(val); 
+			},
             get: function($el) { return $el.val(); }
         },
         no_reset_button: false
     });
+	initializing = false;
 }
+
+function popupRunProc () {
+	console.log("row index is " , rowindx);	
+	let procID = $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procID"]').children('input').val();
+	console.log("row procID is " , procID);
+	
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url : cx+"/CommScopeRunProc",
+		data : {
+			"procID" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procID"]').children('input').val(),
+		    "docStatus": $("#docStatus").val(), //'${docStatus}',
+			"procStatus" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procStatus"] input[type="checkbox"]').next('label').text(),
+			"procName" :  $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procName"]').children('input').val(),
+			"popupProcClassName" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procClassName"]').children('input').val(),
+			"procCronExpr" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procCronExpr"]').children('input').val(),
+			"linkName" : "CommScope"
+		},
+		success : function(data) {
+			console.log("The result is", data.Result);
+			alert(' The process successfully executed.');
+		},
+		error : function(error) {
+			console.log("Error happened while executing the process, there is error  error is " + error);
+		}
+	});
+}
+
+
+function runProc (element) {	
+	let procID = $(element).closest("tr").find('td[name="procID"] input').val();
+	console.log("row procID is " , procID);
+	
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url : cx+"/CommScopeRunProc",
+		data : {
+			"procID" : $(element).closest("tr").find('td[name="procID"] input').val(),
+		    "docStatus": $("#docStatus").val(), //'${docStatus}',			
+			"procStatus" : $(element).closest("tr").find('td[name="procStatus"] input[type="checkbox"]').next('label').text(),
+			"procName" : $(element).closest("tr").find('td[name="procName"] input').val(),
+			"procClassName" : $(element).closest("tr").find('td[name="procClassName"] input').val(),
+			"procCronExpr" : $(element).closest("tr").find('td[name="procCronExpr"] input').val(),
+			"linkName" : "CommScope"
+		},
+		success : function(data) {
+			console.log("The result is", data.Result);
+			alert(' The process successfully executed.');
+		},
+		error : function(error) {
+			console.log("Error happened while executing the process, there is error  error is " + error);
+		}
+	});
+}
+
 
 function addNewRow(position){
 	rowParams = {"name" : "", "status" : 0, "className" : "", "startDateTime": "", "cronExpr": "", "procID" : 0}; 	

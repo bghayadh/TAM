@@ -52,6 +52,8 @@ public class CommScopeForm {
 	@SuppressWarnings("rawtypes")
 	private static Query query = null;
 
+	Map<String, Object> rtn = new LinkedHashMap<>();
+
 	private static final Logger logger = LoggerFactory.getLogger(CommScopeForm.class);
 
 	@RequestMapping(value = "/CommScopeFormSave", method = RequestMethod.POST)
@@ -61,7 +63,6 @@ public class CommScopeForm {
 			throws JsonProcessingException {
 
 		System.out.println("Welcome to CommScopeFormSave.");
-		Map<String, Object> rtn = new LinkedHashMap<>();
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(new Date());
 		int year = calendar.get(Calendar.YEAR);
@@ -76,9 +77,7 @@ public class CommScopeForm {
 			rtn.put("Login", LoginServices.checkSession(request, response));
 			return rtn;
 		}
-
 		session = AlmDbSession.getInstance().getSession();
-
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
@@ -131,11 +130,15 @@ public class CommScopeForm {
 								.setClassName(itemParameters.getDictParameterProcess().get(i).get("procClassName"));
 						procOperation.setStatus(itemParameters.getDictParameterProcess().get(i).get("procStatus"));
 						procOperation.setStartDateTime(
-							    (itemParameters.getDictParameterProcess().get(i).get("procStartDateTime") != null &&
-							     !itemParameters.getDictParameterProcess().get(i).get("procStartDateTime").isEmpty())
-							    ? new Timestamp(formatter.parse(itemParameters.getDictParameterProcess().get(i).get("procStartDateTime")).getTime())
-							    : null
-							);
+								(itemParameters.getDictParameterProcess().get(i).get("procStartDateTime") != null
+										&& !itemParameters.getDictParameterProcess().get(i).get("procStartDateTime")
+												.isEmpty())
+														? new Timestamp(
+																formatter
+																		.parse(itemParameters.getDictParameterProcess()
+																				.get(i).get("procStartDateTime"))
+																		.getTime())
+														: null);
 						procOperation
 								.setCronExpression(itemParameters.getDictParameterProcess().get(i).get("procCronExpr"));
 						session.saveOrUpdate(procOperation);
@@ -150,6 +153,43 @@ public class CommScopeForm {
 				}
 			}
 		}
+		return rtn;
+	}
+
+	@RequestMapping(value = "/CommScopeRunProc", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> CommScopeRunProc(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+		System.out.println("Welcome to CommScopeRunProc");
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				Class<?> clazz = Class.forName(request.getParameter("procClassName"));
+				Object instance = clazz.getDeclaredConstructor().newInstance();
+
+				if (instance instanceof ExecutableOperation job) {
+					// Pass arguments dynamically
+					job.execute(request.getParameter("procName"), request.getParameter("procCronExpr"));
+				} else {
+					throw new IllegalArgumentException(
+							"Class " + request.getParameter("procClassName") + " does not implement ExecutableOperation");
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		rtn.put("Result", "Success");
 		return rtn;
 	}
 }
