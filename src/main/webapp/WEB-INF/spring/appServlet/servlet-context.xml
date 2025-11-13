@@ -68,5 +68,6 @@
     <context:component-scan base-package="com.aliat.alm.physLayer" />
     <context:component-scan base-package="com.aliat.alm.discoveryNew" />
     <context:component-scan base-package="com.aliat.alm.proc" />
+    <context:component-scan base-package="com.aliat.alm.config" />
 
 </beans>

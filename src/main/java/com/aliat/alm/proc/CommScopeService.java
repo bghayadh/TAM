@@ -60,9 +60,6 @@ import com.google.gson.GsonBuilder;
 @Service
 public class CommScopeService {
 
-	@Autowired
-	Notify notifications;
-
 	private static Session session = null;
 	private static Transaction tx = null;
 	private static ObjectMapper mapper = new ObjectMapper();
@@ -99,7 +96,6 @@ public class CommScopeService {
 		});
 
 		String url = "http://" + ipAddress + "/api/v1/users/login";
-		session = AlmDbSession.getInstance().getSession();
 
 		Map<String, Object> credentials = new HashMap<>();
 		credentials.put("username", username);
@@ -109,56 +105,46 @@ public class CommScopeService {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Object>> request = new HttpEntity<>(credentials, headers);
 
-		if (session != null && session.isOpen()) {
-			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
-				logger.info("Port is opened.");
-			} catch (IOException e) {
-				System.out.println("Port is closed.");
-				logger.info("Port is closed.");
+		try (Socket socket = new Socket(ipAddress, 80)) {
+			System.out.println("Port is opened.");
+			logger.info("Port is opened.");
+		} catch (IOException e) {
+			System.out.println("Port is closed.");
+			logger.info("Port is closed.");
+			rtn.put("status", "Failed");
+			rtn.put("reason", "Port is closed");
+			System.out.println("Port is closed.");
+			return rtn;
+		}
+		try {
+			ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
+			System.out.println("response status code is " + response.getStatusCode());
+			if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+				Map<String, Object> body = response.getBody();
+				String token = (String) body.get("accessToken");
+				logger.info("Login successful. Token: {}", token);
+				System.out.println("Token: " + token);
+				rtn.put("responseBody", body);
+				rtn.put("accessToken", token);
+				rtn.put("responseCode", response.getStatusCode());
+				rtn.put("responseCodeValue", response.getStatusCodeValue());
+				rtn.put("status", "Success");
+			} else {
+				System.out.println("Login failed: " + response.getStatusCode());
+				logger.warn("Login failed: {}", response.getStatusCode());
 				rtn.put("status", "Failed");
-				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
-				return rtn;
+				rtn.put("responseCode", response.getStatusCode());
+				rtn.put("responseCodeValue", response.getStatusCodeValue());
 			}
-			try {
-				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
-				System.out.println("response status code is " + response.getStatusCode());
-				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-					Map<String, Object> body = response.getBody();
-					String token = (String) body.get("accessToken");
-					logger.info("Login successful. Token: {}", token);
-					System.out.println("Token: " + token);
-					rtn.put("responseBody", body);
-					rtn.put("accessToken", token);
-					rtn.put("responseCode", response.getStatusCode());
-					rtn.put("responseCodeValue", response.getStatusCodeValue());
-					rtn.put("status", "Success");
-				} else {
-					System.out.println("Login failed: " + response.getStatusCode());
-					logger.warn("Login failed: {}", response.getStatusCode());
-					rtn.put("status", "Failed");
-					rtn.put("responseCode", response.getStatusCode());
-					rtn.put("responseCodeValue", response.getStatusCodeValue());
-				}
-				tx.commit();
-			} catch (HttpClientErrorException ex) {
-				if (tx != null)
-					tx.rollback();
-				logger.error("Error during CommScope login", ex);
-				logger.info("Error on the level of CommScope Login API request with a message : " + ex + "\n"
-						+ ex.getMessage());
-				rtn.put("status", "Error");
-				rtn.put("responseCode", ex.getStatusCode());
-				rtn.put("responseCodeValue", ex.getRawStatusCode());
-				rtn.put("message", ex.getMessage());
+		} catch (HttpClientErrorException ex) {
+			logger.error("Error during CommScope login", ex);
+			logger.info("Error on the level of CommScope Login API request with a message : " + ex + "\n"
+					+ ex.getMessage());
+			rtn.put("status", "Error");
+			rtn.put("responseCode", ex.getStatusCode());
+			rtn.put("responseCodeValue", ex.getRawStatusCode());
+			rtn.put("message", ex.getMessage());
 
-			} finally {
-				if (session != null && session.isOpen()) {
-					session.close();
-				}
-			}
 		}
 		return rtn;
 	}

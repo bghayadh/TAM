@@ -14,14 +14,16 @@ import org.hibernate.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
 import com.aliat.alm.models.ProcessOperation;
@@ -29,8 +31,7 @@ import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -53,8 +54,17 @@ public class CommScopeForm {
 	private static Query query = null;
 
 	Map<String, Object> rtn = new LinkedHashMap<>();
+	private final SchedulerService schedulerService;
+
+	@Autowired
+	private ApplicationContext appContext;
 
 	private static final Logger logger = LoggerFactory.getLogger(CommScopeForm.class);
+
+	@Autowired
+	public CommScopeForm(SchedulerService schedulerService) {
+		this.schedulerService = schedulerService;
+	}
 
 	@RequestMapping(value = "/CommScopeFormSave", method = RequestMethod.POST)
 	@ResponseBody
@@ -72,6 +82,7 @@ public class CommScopeForm {
 		String[] slctDel;
 		String id;
 		ProcessOperation procOperation = new ProcessOperation();
+		List<ProcessOperation> processOperations = new ArrayList<ProcessOperation>();
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -142,6 +153,10 @@ public class CommScopeForm {
 						procOperation
 								.setCronExpression(itemParameters.getDictParameterProcess().get(i).get("procCronExpr"));
 						session.saveOrUpdate(procOperation);
+						processOperations.add(procOperation);
+					}
+					for (ProcessOperation op : processOperations) {
+						trySchedule(op, docStatus);
 					}
 				}
 			} catch (Exception e) {
@@ -169,17 +184,12 @@ public class CommScopeForm {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				Class<?> clazz = Class.forName(request.getParameter("procClassName"));
-				Object instance = clazz.getDeclaredConstructor().newInstance();
-
-				if (instance instanceof ExecutableOperation job) {
-					// Pass arguments dynamically
-					job.execute(request.getParameter("procName"), request.getParameter("procCronExpr"));
-				} else {
-					throw new IllegalArgumentException(
-							"Class " + request.getParameter("procClassName") + " does not implement ExecutableOperation");
+				String beanName = request.getParameter("procClassName");
+				if (!appContext.containsBean(beanName)) {
+					throw new IllegalArgumentException("No Spring bean found with name: " + beanName);
 				}
-
+				ExecutableOperation job = (ExecutableOperation) appContext.getBean(beanName);
+				job.execute(request.getParameter("procName"), request.getParameter("procCronExpr"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -191,5 +201,14 @@ public class CommScopeForm {
 		}
 		rtn.put("Result", "Success");
 		return rtn;
+	}
+
+	private void trySchedule(ProcessOperation operation, String procStatus) {
+		try {
+			schedulerService.scheduleJob(operation, procStatus);
+			logger.info("Needed scheduling action done for operation: {}", operation.getOperationName());
+		} catch (Exception e) {
+			logger.warn("Failed to schedule operation: {} - {}", operation.getOperationName(), e.getMessage());
+		}
 	}
 }
