@@ -31,6 +31,8 @@ public class DistributionBoard {
 	@Column(name = "ROW_PER_MODULE")
 	private int rowPerModule;
 	
+	@Column(name = "TOTAL_NUM_MODULE")
+	private int totalNumModule;
 	
 	@Column(name = "SERIAL_NUMB")
 	private String distributionBoardSerialNum;
@@ -110,7 +112,7 @@ public class DistributionBoard {
 			Float distributionBoardRowsNum, Float distributionBoardColsNum, Float distributionBoardFront,
 			Float distributionBoardBack, String distributionBoardProjectId, Timestamp boardCreationDate,
 			Timestamp boardLastModifiedDate, String dbNetLevel, String dBEngineerName, String dBInstaller,
-			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName,String rowCounting, String distributionBoardControllerId, int rowPerModule) {
+			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName,String rowCounting, String distributionBoardControllerId, int rowPerModule, int totalNumModule) {
 		super();
 		DistributionBoardId = distributionBoardId;
 		this.distributionBoardName = distributionBoardName;
@@ -124,6 +126,7 @@ public class DistributionBoard {
 		this.distributionBoardSiteName = distributionBoardSiteName;
 		this.distributionBoardWarehouse = distributionBoardWarehouse;
 		DistributionBoardCapacity = distributionBoardCapacity;
+		this.totalNumModule=totalNumModule;
 		this.distributionBoardControllerName=distributionBoardControllerName;
 		this.distributionBoardControllerId=distributionBoardControllerId;
 		this.distributionBoardRowsNum = distributionBoardRowsNum;
@@ -139,6 +142,18 @@ public class DistributionBoard {
 		DBInstaller = dBInstaller;
 		DBDeploymentType = dBDeploymentType;
 		DBAdaptorPanelType = dBAdaptorPanelType;
+	}
+
+
+
+	public int getTotalNumModule() {
+		return totalNumModule;
+	}
+
+
+
+	public void setTotalNumModule(int totalNumModule) {
+		this.totalNumModule = totalNumModule;
 	}
 
 
