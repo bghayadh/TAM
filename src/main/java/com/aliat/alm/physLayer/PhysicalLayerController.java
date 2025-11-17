@@ -3348,7 +3348,7 @@ public class PhysicalLayerController {
 			try {
 				// Execute native query to get NUM_ROWS and NUM_COLUMNS
 				Object[] result = (Object[]) session.createNativeQuery(
-				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME, B.ROW_PER_MODULE, B.ROW_COUNTING FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME, B.ROW_PER_MODULE, B.ROW_COUNTING, B.TOTAL_NUM_MODULE FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
 				    )
 				    .setParameter("dbId", selectedDistBoardContext)
 				    .getSingleResult();
@@ -3361,7 +3361,8 @@ public class PhysicalLayerController {
 				String controllerName= (String) result[4];
 				BigDecimal rowPerModule= (BigDecimal) result[5];
 				String rowCounting= (String) result[6];
-
+				BigDecimal totalNumModule= (BigDecimal) result[7];
+				
 			System.out.println(dbName);
 				rtn.put("numRows", numRows);
 				rtn.put("numColumns", numColumns);
@@ -3375,6 +3376,7 @@ public class PhysicalLayerController {
 				rtn.put("rowPerModule", rowPerModule);
 				rtn.put("rowCounting", rowCounting);
 
+				rtn.put("totalNumModule", totalNumModule);
 				
 				session.flush();
 				session.clear();
@@ -3615,6 +3617,16 @@ public class PhysicalLayerController {
 						.getResultList();
 
 				rtn.put("DistBoardMappingPts", DistBoardMappingPts);
+				
+				Object[] panelInfo = (Object[]) session.createNativeQuery(
+					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE " +
+					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+					)
+					.setParameter("dbId", selectedDistBoardContext)
+					.getSingleResult();
+				
+				rtn.put("panelInfo", panelInfo);
+				
 				session.flush();
 				session.clear();
 				tx.commit();
@@ -3664,9 +3676,20 @@ public class PhysicalLayerController {
 								+ "'),BP_STATUS,BP_STRAND_ID,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_EQUIPMENT_TYPE,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,ROW_COL_INDEX,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_NB,FP_TUBE_NB,BP_STRAND_NB,BP_TUBE_NB, NEAR_PORT_NUM FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
+				
+				Object[] panelInfo = (Object[]) session.createNativeQuery(
+					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE " +
+					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+					)
+					.setParameter("dbId", selectedDistBoardContext)
+					.getSingleResult();
+				
+				rtn.put("panelInfo", panelInfo);
 
 				if (DistBoardMappingPts.size() > 0) {
 					rtn.put("DistBoardMappingPts", DistBoardMappingPts);
+					
+					
 				}
 				session.flush();
 				session.clear();
