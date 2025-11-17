@@ -49,7 +49,7 @@
 	   mapBtn.className += " active";
 	 }
 
-function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, controllerName, dbId, dbName, rowPerModule, rowCounting) {
+function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, controllerName, dbId, dbName, rowPerModule, rowCounting, totalModule) {
   const container = document.getElementById("panelStage");
   container.innerHTML = "";
 
@@ -313,6 +313,76 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
       }
     }
   }
+  // SECOND CASE: rowPerModule specified (Modules numbering logic)
+ else
+  if ((rowPerModule > 0 && rowPerModule !== "null") && totalModule > 0) {
+      numberingArray = [];
+      let tmp = [];
+      for (let r = 0; r < numRowsFromDb; r++) {
+          tmp[r] = new Array(numColumnsFromDb).fill(null);
+      }
+
+      let n = 1; // numbering counter
+
+      // Check module orientation
+      const dividesRows = (rowPerModule * totalModule === numRowsFromDb);
+      const dividesCols = (numColumnsFromDb % totalModule === 0);
+
+      if (dividesRows) {
+          // ✅ Modules are stacked by ROWS
+          for (let m = 0; m < totalModule; m++) {
+              let startRow = m * rowPerModule;
+              let endRow = startRow + rowPerModule - 1;
+
+              if (rc === "Up To Down") {
+                  for (let r = startRow; r <= endRow; r++) {
+                      for (let c = 0; c < numColumnsFromDb; c++) {
+                          tmp[r][c] = n++;
+                      }
+                  }
+              } else { // Down To Up
+                  for (let r = endRow; r >= startRow; r--) {
+                      for (let c = 0; c < numColumnsFromDb; c++) {
+                          tmp[r][c] = n++;
+                      }
+                  }
+              }
+          }
+      } 
+      
+      else if (dividesCols) {
+          // ✅ Modules are stacked by COLUMNS
+          let colsPerModule = Math.floor(numColumnsFromDb / totalModule);
+
+          for (let m = 0; m < totalModule; m++) {
+              let startCol = m * colsPerModule;
+              let endCol = startCol + colsPerModule - 1;
+
+              if (rc === "Up To Down") {
+                  for (let r = 0; r < rowPerModule; r++) {
+                      for (let c = startCol; c <= endCol; c++) {
+                          tmp[r][c] = n++;
+                      }
+                  }
+              } else { // Down To Up
+                  for (let r = rowPerModule - 1; r >= 0; r--) {
+                      for (let c = startCol; c <= endCol; c++) {
+                          tmp[r][c] = n++;
+                      }
+                  }
+              }
+          }
+      }
+
+      // ✅ Flatten into numberingArray (same draw order you currently use)
+      for (let r = 0; r < numRowsFromDb; r++) {
+          for (let c = 0; c < numColumnsFromDb; c++) {
+              numberingArray.push(tmp[r][c]);
+          }
+      }
+  }
+
+
 
   // populate ports inside the panel (modified only to use numberingArray when present)
   var portSpacingX = 35;
