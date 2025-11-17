@@ -171,13 +171,13 @@ public class DistributionBoardMapping {
 	@Column(name = "NEAR_PATCH_TYPE")
 	private String nearPatchType;
 	
-	@Column(name = "FAR_KIT_SERIAL_NUM")
+	@Column(name = "FAR_NEAR_KIT_SERIAL_NUM")
 	private String farKitSerialNum;
 	
-	@Column(name = "FAR_MODULE")
+	@Column(name = "FAR_NEAR_MODULE")
 	private String farModule;
 	
-	@Column(name = "FAR_PORT_NUM")
+	@Column(name = "FAR_NEAR_PORT_NUM")
 	private String farPortNum;
 	
 	@Column(name = "BACK_KIT_MODULE")
