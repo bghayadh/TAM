@@ -32,6 +32,7 @@ import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -108,10 +109,10 @@ public class CommScopeForm {
 
 				query = session.createNativeQuery(str);
 				query.executeUpdate();
-				session.createNativeQuery("commit").executeUpdate();
 
 				slctDel = request.getParameterValues("slctDel[]");
 				if (slctDel != null) {
+					schedulerService.deleteJobs(Arrays.asList(slctDel));
 					str = "delete ProcessOperation t where t.ID IN (:param1)";
 					query = session.createQuery(str);
 					query.setParameterList("param1", slctDel);

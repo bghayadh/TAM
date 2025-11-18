@@ -28,6 +28,9 @@ public class CommScopeScan implements Job, ExecutableOperation {
 
 	@Autowired
 	CommScopeService commscopeService;
+	
+	@Autowired
+	SnglCmCntrl snglCmCntrl;
 
 	@Override
 	public void execute(JobExecutionContext context) {
@@ -43,15 +46,27 @@ public class CommScopeScan implements Job, ExecutableOperation {
 		if (session != null && session.isOpen()) {
 			Transaction tx = session.beginTransaction();
 			try {
-				cntrls_login = session.createNativeQuery("select ip_address, user_name, password from controller")
+				cntrls_login = session
+						.createNativeQuery(
+								"select controller_id, ip_address, user_name, password, serial_numb from controller")
 						.list();
 				System.out.println("controllers_IP size is " + cntrls_login.size());
-				System.out.println("The controllers_IP is " + mapper.writeValueAsString(cntrls_login));
+				System.out.println("The controllers_IP is " + mapper.writeValueAsString(cntrls_login));				
 				for (Object[] cntrl_login : cntrls_login) {
-					cntrl_info = commscopeService.loginAPI((String) cntrl_login[0], (String) cntrl_login[1],
-							(String) cntrl_login[2], 900);
+					snglCmCntrl.login((String) cntrl_login[0], (String) cntrl_login[1], (String) cntrl_login[2],
+							(String) cntrl_login[3], 900, (String) cntrl_login[4], session);
+					
+					/*
+					cntrl_info = commscopeService.loginAPI((String) cntrl_login[1], (String) cntrl_login[2],
+							(String) cntrl_login[3], 900);
 					System.out
 							.println("Obtained Information for the panel is " + mapper.writeValueAsString(cntrl_info));
+					if (cntrl_info.containsKey("accessToken")) {
+
+					} else {
+
+					}
+					*/
 				}
 
 				// This is for manual or dynamic execution

@@ -3,9 +3,8 @@ package com.aliat.alm.utils;
 public class CronExpressionAdapter {
 
     /**
-     * Converts 5-field cron expressions (UNIX/qjcron) to Quartz 6-field expressions.
-     * Supports day-of-week lists and ranges like 1-3,1,5-7.
-     * Leaves 6 or 7 field Quartz expressions unchanged.
+     * Converts 5-field cron expressions (UNIX/jqcron) to Quartz 6-field expressions.
+     * Ensures Quartz rules: day-of-month and day-of-week cannot both be set.
      */
     public static String toQuartzFormat(String cronExpr) {
         if (cronExpr == null || cronExpr.trim().isEmpty()) {
@@ -15,12 +14,12 @@ public class CronExpressionAdapter {
         String expr = cronExpr.trim().replaceAll("\\s+", " ");
         String[] parts = expr.split(" ");
 
-        // ✅ Already Quartz (6 or 7 fields)
+        // Already Quartz (6 or 7 fields)
         if (parts.length == 6 || parts.length == 7) {
             return expr;
         }
 
-        // ✅ qjcron / UNIX (5 fields)
+        // jqCron / UNIX (5 fields)
         if (parts.length == 5) {
             String minute = parts[0];
             String hour = parts[1];
@@ -28,48 +27,52 @@ public class CronExpressionAdapter {
             String month = parts[3];
             String dayOfWeek = parts[4];
 
-            // Convert numeric/range/list dayOfWeek to Quartz names
+            // Convert numeric DOW (1,3,5-7) to Quartz names
             dayOfWeek = convertDayOfWeekField(dayOfWeek);
 
-            // Adjust day-of-month vs day-of-week rules
-            if (!dayOfWeek.equals("*") && !dayOfWeek.equals("?")) {
+            // ---------- FIXED QUARTZ RULES ----------
+            boolean domAny = dayOfMonth.equals("*");
+            boolean dowAny = dayOfWeek.equals("*");
+            boolean dowList = !dayOfWeek.equals("*") && !dayOfWeek.equals("?");
+
+            if (!domAny && dowAny) {
+                // Case: DOM has a value, DOW is "*"
+                dayOfWeek = "?";
+            } else if (domAny && dowList) {
+                // Case: DOM "*", DOW has specific days
                 dayOfMonth = "?";
-            } else if (dayOfMonth.equals("*") && dayOfWeek.equals("*")) {
+            } else if (domAny && dowAny) {
+                // Case: both are "*"
                 dayOfWeek = "?";
             }
 
-            return String.format("0 %s %s %s %s %s", minute, hour, dayOfMonth, month, dayOfWeek);
+            return String.format("0 %s %s %s %s %s",
+                    minute, hour, dayOfMonth, month, dayOfWeek);
         }
 
         throw new IllegalArgumentException("Invalid cron expression format: " + cronExpr);
     }
 
     /**
-     * Converts a numeric or mixed day-of-week field (1,2,5-7) into Quartz names (MON,TUE,FRI-SUN).
+     * Converts numeric day-of-week (1,2,5-7) into Quartz names (MON,TUE,FRI-SUN)
      */
     private static String convertDayOfWeekField(String dowField) {
         if (dowField.equals("*") || dowField.equals("?")) return dowField;
 
         StringBuilder result = new StringBuilder();
-
-        // Split by comma first (for lists)
         String[] segments = dowField.split(",");
+
         for (int i = 0; i < segments.length; i++) {
             String seg = segments[i].trim();
-            if (seg.isEmpty()) continue;
 
             if (seg.contains("-")) {
-                // Handle ranges like 1-3 or 6-7
                 String[] range = seg.split("-");
                 if (range.length == 2) {
                     result.append(numToDay(range[0]))
                           .append("-")
                           .append(numToDay(range[1]));
-                } else {
-                    result.append(numToDay(seg));
                 }
             } else {
-                // Single day
                 result.append(numToDay(seg));
             }
 
@@ -82,19 +85,19 @@ public class CronExpressionAdapter {
     }
 
     /**
-     * Maps numeric day values (0-7) to Quartz day names.
+     * Maps numeric DOW values to Quartz day names.
      */
     private static String numToDay(String num) {
         num = num.trim();
         switch (num) {
-            case "0": case "7": return "SUN"; // both 0 and 7 are Sunday in UNIX
+            case "0": case "7": return "SUN";
             case "1": return "MON";
             case "2": return "TUE";
             case "3": return "WED";
             case "4": return "THU";
             case "5": return "FRI";
             case "6": return "SAT";
-            default: return num; // already text (e.g., MON)
+            default: return num; // Already text
         }
     }
 }
