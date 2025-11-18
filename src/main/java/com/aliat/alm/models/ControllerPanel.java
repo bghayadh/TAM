@@ -44,7 +44,7 @@ public class ControllerPanel {
 	    @Column(name = "PASSWORD")
 	    private String password;
 
-	    @Column(name = "NUMB_OF_PANNELS")
+	    @Column(name = "NUM_OF_PANELS")
 	    private String numberOfPanels;
 
 	    @Column(name = "NUMB_OF_PORTS")
