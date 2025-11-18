@@ -20,6 +20,7 @@ import com.aliat.alm.models.ControllerKit;
 import com.aliat.alm.models.ControllerModule;
 import com.aliat.alm.models.ControllerPanel;
 import com.aliat.alm.models.DistributionBoard;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -36,11 +37,24 @@ public class SnglCmCntrl {
 	private List<String> dbID_NeedUpdate = new ArrayList<>();
 	private ObjectMapper mapper = new ObjectMapper();
 	private final Logger logger = LoggerFactory.getLogger(SnglCmCntrl.class);
+	
+	public SnglCmCntrl() {
+	    cntrlRecord.put("serial_numb", "");
+	    cntrlRecord.put("mac_address", "");
+	    cntrlRecord.put("subnet_mask", "");
+	    cntrlRecord.put("default_gateway", "");
+	    cntrlRecord.put("status", "");
+	    cntrlRecord.put("num_of_panels", "0");
+	    cntrlRecord.put("numb_of_ports", "0");
+	    cntrlRecord.put("controller_id", "");		
+	}
 
 	public void login(String controllerID, String ipAddress, String username, String password, int requestedDuration,
 			String serialNo, Session session) {
 		Map<String, Object> rtn = new LinkedHashMap<>();
+		cntrlRecord.put("controller_id", controllerID);		
 		try {
+			System.out.println("Welcome to login at SnglCmCntrl, the cntrlRecord is " +mapper.writeValueAsString(cntrlRecord));
 			rtn = commscopeService.loginAPI(ipAddress, username, password, requestedDuration);
 			System.out.println("rtn is " + mapper.writeValueAsString(rtn));
 			if (rtn.containsKey("accessToken")) {
@@ -97,7 +111,7 @@ public class SnglCmCntrl {
 				 * cntrl.setMacAddress(cntrlRecord.get("mac_address"));
 				 */
 				str = "update controller set SERIAL_NUMB = :serial_numb, mac_address = :mac_address, subnet_mask = :subnet_mask, "
-						+ "default_gateway = :dgw, last_scan_date = sysdate, status = :status, numb_of_pannels = :numb_of_pannels, "
+						+ "default_gateway = :dgw, last_scan_date = sysdate, status = :status, num_of_panels = :num_of_panels, "
 						+ "numb_of_ports = :numb_of_ports where controller_id = :ID";
 
 				session.createNativeQuery(str).setParameter("serial_numb", cntrlRecord.get("serial_numb"))
@@ -105,7 +119,7 @@ public class SnglCmCntrl {
 						.setParameter("subnet_mask", cntrlRecord.get("subnet_mask"))
 						.setParameter("dgw", cntrlRecord.get("default_gateway"))
 						.setParameter("status", cntrlRecord.get("status"))
-						.setParameter("numb_of_pannels", cntrlRecord.get("numb_of_pannels"))
+						.setParameter("num_of_panels", cntrlRecord.get("num_of_panels"))
 						.setParameter("numb_of_ports", cntrlRecord.get("numb_of_ports"))
 						.setParameter("ID", cntrlRecord.get("controller_id")).executeUpdate();
 			}
@@ -124,17 +138,23 @@ public class SnglCmCntrl {
 			str = "select kit_serial_num from controller_kit where db_id in (select db_id from distribution_board where controller_id ='"
 					+ controllerID + "')";
 			kitNeedCheck = session.createNativeQuery(str).getResultList();
+			System.out.println("kitNeedCheck is " +mapper.writeValueAsString(kitNeedCheck));
 			rtn = commscopeService.getPanelAPI(token, ipAddress, rackID);
+			System.out.println("rtn of getPanelAPI is " +mapper.writeValueAsString(rtn));
 			if (rtn.containsKey("responseBody")
 					&& !StringUtils.equalsIgnoreCase(rtn.get("status").toString(), "Failed")) {
 				Map<String, Object> rtnBody = new LinkedHashMap<>();
 				rtnBody = (Map<String, Object>) rtn.get("responseBody");
+				System.out.println("responseBody of getPanelAPI is " +mapper.writeValueAsString(rtnBody));
 				if (rtnBody.containsKey("panels")) {
 					panelList = (List<Map<String, Object>>) rtnBody.get("panels");
+					System.out.println("panelList is " +mapper.writeValueAsString(panelList));
 					for (Map<String, Object> panel : panelList) {
+						System.out.println("panel is " +mapper.writeValueAsString(panel));
 						if ((Integer) (panel.get("panelNumber")) != null && (Integer) (panel.get("panelNumber")) > 0) {
 							panelCount++;
 							kitsTreatment((List<Map<String, Object>>) panel.get("kits"), session);
+							System.out.println("After kitsTreatment and before updating DB's for the controller ID");
 							session.createNativeQuery(
 									"update distribution_board set controller_id = :id where db_id in (:db_IDs)")
 									.setParameter("id", controllerID).setParameterList("db_IDs", dbID_NeedUpdate)
@@ -142,10 +162,11 @@ public class SnglCmCntrl {
 							insertPanel(controllerID, newPanelKits, session);
 						}
 					}
-					cntrlRecord.put("numb_of_pannels", Integer.toString(panelCount));
-					cntrlRecord.put("numb_of_ports", Integer.toString(totalPorts));
 				}
 			}
+			cntrlRecord.put("num_of_panels", Integer.toString(panelCount));
+			cntrlRecord.put("numb_of_ports", Integer.toString(totalPorts));
+			System.out.println("cntrlRecord hashmap in the end of the panel method is " +mapper.writeValueAsString(cntrlRecord));
 		} catch (Exception e) {
 			logger.info("Error in panel method of class SnglCmCntrl which call panelAPI with a message : " + e
 					+ "\n\" + e.getMessage()", e);
@@ -153,9 +174,11 @@ public class SnglCmCntrl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void kitsTreatment(List<Map<String, Object>> kitList, Session session) {
+	public void kitsTreatment(List<Map<String, Object>> kitList, Session session) throws JsonProcessingException {
 		List<Map<String, Object>> modules = new ArrayList<>();
-		for (Map<String, Object> kit : kitList) {
+		System.out.println("Welcome to kitsTreatment");
+		System.out.println("kitList is " +mapper.writeValueAsString(kitList));
+		for (Map<String, Object> kit : kitList) {			
 			if (kitNeedCheck.contains(kit.get("kitId").toString())) {
 				kitNeedCheck.remove(kit.get("kitId").toString());
 				modules = (List<Map<String, Object>>) kit.get("Modules");
@@ -175,7 +198,7 @@ public class SnglCmCntrl {
 						dbID_NeedUpdate.add(otherDbID.get(0).toString());
 					}
 				} else {
-					modules = (List<Map<String, Object>>) kit.get("Modules");
+					modules = (List<Map<String, Object>>) kit.get("modules");
 					for (Map<String, Object> module : modules) {
 						totalPorts += Integer.parseInt(module.get("sensorCount").toString());
 					}
@@ -187,28 +210,26 @@ public class SnglCmCntrl {
 
 	@SuppressWarnings("unchecked")
 	public void insertPanel(String controllerID, List<Map<String, Object>> newKits, Session session) {
+		System.out.println("Welcome to insertPanel");		
 		String dbID = "", kitID = "", moduleID = "";
-		int rowPerModule = 0;
+		int rowPerModule = 0, seq = 0;
 		DistributionBoard distributionBoard = new DistributionBoard();
 		Timestamp creationDate = new Timestamp(new Timestamp(System.currentTimeMillis()).getTime());
 		Date date = new Date();
 		Calendar calendar = new GregorianCalendar();
-		int year = 0;
+		calendar.setTime(date);
+		int year = calendar.get(Calendar.YEAR);
 		ControllerPanel cntrl = new ControllerPanel();
 		ControllerKit panelKit = new ControllerKit();
 		ControllerModule kitModule = new ControllerModule();
 		List<Map<String, Object>> modules = new ArrayList<>();
 		cntrl = session.get(ControllerPanel.class, controllerID);
-		synchronized (this) {
-			Transaction dbPkTx = session.beginTransaction();
-			calendar.setTime(date);
-			year = calendar.get(Calendar.YEAR);
-			dbID = "DB_" + year + "_"
-					+ Integer.parseInt(session.createNativeQuery("SELECT DB FROM SEQ_TABLE").uniqueResult().toString());
-			session.createNativeQuery("UPDATE SEQ_TABLE SET DB = DB + 1 ").executeUpdate();
-			session.createNativeQuery("commit").executeUpdate();
-			dbPkTx.commit();
-		}
+		
+		seq = ((Number) session.createNativeQuery("SELECT DB_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
+		dbID = "DB_" + year + "_" + seq;
+		
+		System.out.println("dbID is " +dbID);
+
 		distributionBoard.setDistributionBoardId(dbID);
 		distributionBoard.setBoardCreationDate(creationDate);
 		distributionBoard.setBoardLastModifiedDate(creationDate);
@@ -256,16 +277,10 @@ public class SnglCmCntrl {
 		session.saveOrUpdate(distributionBoard);
 
 		for (Map<String, Object> kit : newKits) {
-			synchronized (this) {
-				Transaction kitPkTx = session.getTransaction();
-				calendar.setTime(date);
-				year = calendar.get(Calendar.YEAR);
-				kitID = "KIT_" + year + "_" + Integer.parseInt(
-						session.createNativeQuery("SELECT CONTROLLER_KIT FROM SEQ_TABLE").uniqueResult().toString());
-				session.createNativeQuery("UPDATE SEQ_TABLE SET CONTROLLER_KIT = CONTROLLER_KIT + 1 ").executeUpdate();
-				session.createNativeQuery("commit").executeUpdate();
-				kitPkTx.commit();
-			}
+			
+			seq = ((Number) session.createNativeQuery("SELECT KIT_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
+			kitID = "KIT_" + year + "_" + seq;
+			System.out.println("kitID is " +kitID);
 			panelKit.setKitId(kitID);
 			panelKit.setDbId(dbID);
 			panelKit.setKitSerialNum(kit.get("kitId").toString());
@@ -275,15 +290,9 @@ public class SnglCmCntrl {
 			session.saveOrUpdate(panelKit);
 			modules = (List<Map<String, Object>>) kit.get("modules");
 			for (Map<String, Object> module : modules) {
-				synchronized (this) {
-					calendar.setTime(date);
-					year = calendar.get(Calendar.YEAR);
-					moduleID = "MODULE__" + year + "_" + Integer.parseInt(session
-							.createNativeQuery("SELECT CONTROLLER_MODULE FROM SEQ_TABLE").uniqueResult().toString());
-					session.createNativeQuery("UPDATE SEQ_TABLE SET CONTROLLER_MODULE = CONTROLLER_MODULE + 1 ")
-							.executeUpdate();
-					session.createNativeQuery("commit").executeUpdate();
-				}
+				seq = ((Number) session.createNativeQuery("SELECT MODULE_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
+				moduleID = "KIT_" + year + "_" + seq;
+				System.out.println("moduleID is " +moduleID);
 				kitModule.setModuleId(moduleID);
 				kitModule.setDbId(dbID);
 				kitModule.setKitSerialNum(kit.get("kitId").toString());
@@ -310,12 +319,14 @@ public class SnglCmCntrl {
 
 	@SuppressWarnings("unchecked")
 	public void networkInterface(String token, String ipAddress) {
+		System.out.println("Welcome to networkInterface");
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		Map<String, Object> rtnBody = new LinkedHashMap<>();
 		// Map<String, Object> rtnStaticIpSettings = new LinkedHashMap<>();
 		Map<String, Object> rtnIPv4Settings = new LinkedHashMap<>();
-		rtn = commscopeService.getNetworkInterfaceAPI(token, ipAddress);
+		rtn = commscopeService.getNetworkInterfaceAPI(token, ipAddress);		
 		try {
+			System.out.println("rtn from getNetworkInterfaceAPI is " +mapper.writeValueAsString(rtn));
 			if (rtn.containsKey("responseBody")
 					&& !StringUtils.equalsIgnoreCase(rtn.get("status").toString(), "Failed")) {
 				rtnBody = (Map<String, Object>) rtn.get("responseBody");
@@ -325,6 +336,7 @@ public class SnglCmCntrl {
 						.get("ipv4Settings");
 				cntrlRecord.put("subnet_mask", rtnIPv4Settings.get("ipv4SubnetMask").toString());
 				cntrlRecord.put("default_gateway", rtnIPv4Settings.get("ipv4Gateway").toString());
+				System.out.println("cntrlRecord at networkInterface method is " +mapper.writeValueAsString(cntrlRecord));
 			}
 		} catch (Exception e) {
 			logger.info(
