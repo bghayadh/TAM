@@ -52,7 +52,21 @@ public class SnglCmCntrl {
 	public void login(String controllerID, String ipAddress, String username, String password, int requestedDuration,
 			String serialNo, Session session) {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		cntrlRecord.put("controller_id", controllerID);		
+		System.out.println("controllerID is " +controllerID);
+	    cntrlRecord.put("serial_numb", "");
+	    cntrlRecord.put("mac_address", "");
+	    cntrlRecord.put("subnet_mask", "");
+	    cntrlRecord.put("default_gateway", "");
+	    cntrlRecord.put("status", "");
+	    cntrlRecord.put("num_of_panels", "0");
+	    cntrlRecord.put("numb_of_ports", "0");
+		cntrlRecord.put("controller_id", controllerID);
+		str = "";
+		totalPorts = 0;
+		kitNeedCheck = new ArrayList<>();
+		newPanelKits = new ArrayList<>();
+		dbID_NeedUpdate = new ArrayList<>();
+		
 		try {
 			System.out.println("Welcome to login at SnglCmCntrl, the cntrlRecord is " +mapper.writeValueAsString(cntrlRecord));
 			rtn = commscopeService.loginAPI(ipAddress, username, password, requestedDuration);
@@ -110,6 +124,8 @@ public class SnglCmCntrl {
 				 * cntrl.setSerialNumber(cntrlRecord.get("serial_numb"));
 				 * cntrl.setMacAddress(cntrlRecord.get("mac_address"));
 				 */
+				
+				System.out.println("Just before updating controller information, the cntrlRecord is " +mapper.writeValueAsString(cntrlRecord));
 				str = "update controller set SERIAL_NUMB = :serial_numb, mac_address = :mac_address, subnet_mask = :subnet_mask, "
 						+ "default_gateway = :dgw, last_scan_date = sysdate, status = :status, num_of_panels = :num_of_panels, "
 						+ "numb_of_ports = :numb_of_ports where controller_id = :ID";
@@ -122,6 +138,11 @@ public class SnglCmCntrl {
 						.setParameter("num_of_panels", cntrlRecord.get("num_of_panels"))
 						.setParameter("numb_of_ports", cntrlRecord.get("numb_of_ports"))
 						.setParameter("ID", cntrlRecord.get("controller_id")).executeUpdate();
+				if (!kitNeedCheck.isEmpty()) {
+					str = "update distribution_board set \"TYPE\" = 'passive', controller_id = null where DB_ID in (select DB_ID from controller_kit "
+							+ "where kit_serial_num in (:serial_num))";
+					session.createNativeQuery(str).setParameterList("serial_num", kitNeedCheck).executeUpdate();
+				}
 			}
 		} catch (Exception e) {
 			logger.info("Error in controllerX method of class SnglCmCntrl which call controllerxAPI with a message : "
@@ -135,6 +156,7 @@ public class SnglCmCntrl {
 		List<Map<String, Object>> panelList = new ArrayList<>();
 		int panelCount = 0;
 		try {
+			System.out.println("controllerID is " +controllerID);
 			str = "select kit_serial_num from controller_kit where db_id in (select db_id from distribution_board where controller_id ='"
 					+ controllerID + "')";
 			kitNeedCheck = session.createNativeQuery(str).getResultList();
@@ -156,10 +178,13 @@ public class SnglCmCntrl {
 							kitsTreatment((List<Map<String, Object>>) panel.get("kits"), session);
 							System.out.println("After kitsTreatment and before updating DB's for the controller ID");
 							session.createNativeQuery(
-									"update distribution_board set controller_id = :id where db_id in (:db_IDs)")
+									"update distribution_board set controller_id = :id, \"TYPE\" = 'active' where db_id in (:db_IDs)")
 									.setParameter("id", controllerID).setParameterList("db_IDs", dbID_NeedUpdate)
 									.executeUpdate();
-							insertPanel(controllerID, newPanelKits, session);
+							if (newPanelKits.size() > 0) {
+								System.out.println("newPanelKits is " +mapper.writeValueAsString(newPanelKits));
+								insertPanel(controllerID, newPanelKits, session);
+							}
 						}
 					}
 				}
@@ -178,19 +203,24 @@ public class SnglCmCntrl {
 		List<Map<String, Object>> modules = new ArrayList<>();
 		System.out.println("Welcome to kitsTreatment");
 		System.out.println("kitList is " +mapper.writeValueAsString(kitList));
+		System.out.println("kitNeedCheck is " +mapper.writeValueAsString(kitNeedCheck));
 		for (Map<String, Object> kit : kitList) {			
 			if (kitNeedCheck.contains(kit.get("kitId").toString())) {
-				kitNeedCheck.remove(kit.get("kitId").toString());
-				modules = (List<Map<String, Object>>) kit.get("Modules");
+				System.out.println("Index of kit serial number: " +kit.get("kitId").toString() + " is " +kitNeedCheck.indexOf(kit.get("kitId").toString()));
+				kitNeedCheck.remove(kitNeedCheck.get(kitNeedCheck.indexOf(kit.get("kitId").toString())));
+				modules = (List<Map<String, Object>>) kit.get("modules");
 				for (Map<String, Object> module : modules) {
 					totalPorts += Integer.parseInt(module.get("sensorCount").toString());
 				}
 			} else {
 				List<Object> otherDbID = new ArrayList<>();
+				System.out.println("******************* kitID is " +kit.get("kitId").toString());
 				str = "select db_id from controller_kit where kit_serial_num = '" + kit.get("kitId").toString() + "'";
+				System.out.println("str is " +str);
 				otherDbID = session.createNativeQuery(str).list();
+				System.out.println("otherDbID is " +otherDbID.size());
 				if (otherDbID.size() > 0) {
-					modules = (List<Map<String, Object>>) kit.get("Modules");
+					modules = (List<Map<String, Object>>) kit.get("modules");
 					for (Map<String, Object> module : modules) {
 						totalPorts += Integer.parseInt(module.get("sensorCount").toString());
 					}
@@ -198,6 +228,7 @@ public class SnglCmCntrl {
 						dbID_NeedUpdate.add(otherDbID.get(0).toString());
 					}
 				} else {
+					System.out.println("The kit is new, kit serial number is " +kit.get("kitId").toString());
 					modules = (List<Map<String, Object>>) kit.get("modules");
 					for (Map<String, Object> module : modules) {
 						totalPorts += Integer.parseInt(module.get("sensorCount").toString());
@@ -210,7 +241,7 @@ public class SnglCmCntrl {
 
 	@SuppressWarnings("unchecked")
 	public void insertPanel(String controllerID, List<Map<String, Object>> newKits, Session session) {
-		System.out.println("Welcome to insertPanel");		
+		System.out.println("Welcome to insertPanel, newKits size if " +newKits.size());
 		String dbID = "", kitID = "", moduleID = "";
 		int rowPerModule = 0, seq = 0;
 		DistributionBoard distributionBoard = new DistributionBoard();
@@ -220,8 +251,8 @@ public class SnglCmCntrl {
 		calendar.setTime(date);
 		int year = calendar.get(Calendar.YEAR);
 		ControllerPanel cntrl = new ControllerPanel();
-		ControllerKit panelKit = new ControllerKit();
-		ControllerModule kitModule = new ControllerModule();
+		//ControllerKit panelKit = new ControllerKit();
+		//ControllerModule kitModule = new ControllerModule();
 		List<Map<String, Object>> modules = new ArrayList<>();
 		cntrl = session.get(ControllerPanel.class, controllerID);
 		
@@ -277,7 +308,7 @@ public class SnglCmCntrl {
 		session.saveOrUpdate(distributionBoard);
 
 		for (Map<String, Object> kit : newKits) {
-			
+			ControllerKit panelKit = new ControllerKit();
 			seq = ((Number) session.createNativeQuery("SELECT KIT_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
 			kitID = "KIT_" + year + "_" + seq;
 			System.out.println("kitID is " +kitID);
@@ -290,6 +321,7 @@ public class SnglCmCntrl {
 			session.saveOrUpdate(panelKit);
 			modules = (List<Map<String, Object>>) kit.get("modules");
 			for (Map<String, Object> module : modules) {
+				ControllerModule kitModule = new ControllerModule();
 				seq = ((Number) session.createNativeQuery("SELECT MODULE_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
 				moduleID = "KIT_" + year + "_" + seq;
 				System.out.println("moduleID is " +moduleID);
