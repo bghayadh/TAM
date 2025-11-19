@@ -88,6 +88,10 @@
 .tablinks.active {
  	width: 16%;
 }
+#DbModule th {
+    vertical-align: middle !important;
+    text-align: center; /* optional: centers horizontally */
+}
 </style>
 </head>
 <%@ include file="/WEB-INF/views/Network/FiberSearch.jsp" %> 
@@ -118,8 +122,8 @@
 						</div>
 					</div>
 					<div class='col-sm-7' style='padding-right: 0px;'>
-						<input type='text' id='autoCompleteHeaderSearch' style='height: 35px; width: 100%;' placeholder='Search within the Network'> <input type='text' id='headerSearchLong' hidden="hidden">
-						<input type='text' id='headerSearchLat' hidden="hidden">
+						<input type='text' id='autoCompleteHeaderSearch' style='height: 35px; width: 100%;' placeholder='Search within the Network'> <input type='text' id='headerSearchLong' hidden>
+						<input type='text' id='headerSearchLat' hidden>
 					</div>
 					<div class='col-sm-1' style='padding-left: 0px;'>
 						<button type='submit' id='searchHeaderButton' class='searchButton searchHeaderButton' style='height: 35px;
@@ -223,38 +227,20 @@
 							<td class="title">View</td>
 						</tr>
 						<tr>
-						<c:if test="${readFiber == 1}">
-    <tr>
-        <td class="Icon">
-            <img src="${pageContext.request.contextPath}/resources/NetworkImages/fiber.png">
-            <span id="definition">FIBER CABLE</span>
-        </td>
-        <td>
-            <input type="checkbox" class="AllFiberCables" id="fiberCheckAllBoq" style="margin-left: 10px;">
-        </td>
-    </tr>
-
-    <tr>
-        <td class="Icon">
-            <img src="${pageContext.request.contextPath}/resources/NetworkImages/core.png">
-            <span id="definition">FIBER TUBE</span>
-        </td>
-        <td>
-            <input type="checkbox" id="tubeCheckAllBoq" style="margin-left: 10px;">
-        </td>
-    </tr>
-
-    <tr>
-        <td class="Icon">
-            <img src="${pageContext.request.contextPath}/resources/NetworkImages/strand.png">
-            <span id="definition">FIBER STRAND</span>
-        </td>
-        <td>
-            <input type="checkbox" id="strandCheckAllBoq" style="margin-left: 10px;">
-        </td>
-    </tr>
-</c:if>
-
+						 <c:if test="${readFiber == 1}">
+							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/fiber.png">
+							<span id="definition">FIBER CABLE</span></td>
+							<td><input type="checkbox" class="AllFiberCables" id="fiberCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
+							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/core.png">
+							<span id="definition">FIBER TUBE</span></td>
+							<td><input type="checkbox" id="tubeCheckAllBoq" style="margin-left: 10px;"></td>
+						</tr>
+						<tr>
+							<td class="Icon "><img src="${pageContext.request.contextPath}/resources/NetworkImages/strand.png">
+							<span id="definition">FIBER STRAND</span></td>
+							<td><input type="checkbox" id="strandCheckAllBoq" style="margin-left: 10px;"></td> </c:if>
 						</tr>
 						<tr>
 							<td class="Icon "><img class="image" src="${pageContext.request.contextPath}/resources/NetworkImages/trench.png"
@@ -723,8 +709,6 @@
 					<div class="modal-body">
 						<div class="tab-content">
 							<p></p>
-						
-							<div class="row">
 							
 								<div class="row">
 										<div class="col-sm-2">
@@ -951,7 +935,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
 	</div>
 <!-- Nodes Model -->
 	<div class="container">
@@ -2846,7 +2829,7 @@
 											</div>	
 										</div>
 									</div>
-									
+									<form>
 										<div class="table-responsive-sm" id="auxiliaryDivStrand">
 											<table id="auxiliaryTableStrands" class="table table-striped table-bordered table-sm" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
@@ -3472,7 +3455,7 @@
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
 						<h5 class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Distribution Boards Details</h5>
-						<div style="float:right;">
+						<div style=float:right;">
 						<button type="button" name="closePopup" class="close" data-dismiss="modal"> <i class='fa fa-times'></i></button>
 						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
 						</a>
@@ -7108,11 +7091,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														
 													
 													<th width="118px" style=" text-align: center" >Module Position</th>
-													<th width="118px" style=" text-align: center" >Kit Serial # </th>
-													<th width="118px" style=" text-align: center" >Orientation</th>
-													<th width="118px" style=" text-align: center" >Lowest Port #</th>
-												    <th width="120px" style=" text-align: center" >Sensors Per Port #</th>
-													<th width="118px" style=" text-align: center" >Sensor Count</th>
+													<th width="200px" style=" text-align: center" >Kit Serial # </th>
+													<th width="200px" style=" text-align: center" >Orientation</th>
+													<th width="90px" style=" text-align: center" >Lowest Port #</th>
+												    <th width="90px" style=" text-align: center" >Sensors Per Port #</th>
+													<th width="90px" style=" text-align: center" >Sensor Count</th>
 													<th width="120px" style=" text-align: center" >Occupied Sensor Mask </th>
 															</tr>
 												</thead>
