@@ -3477,7 +3477,7 @@ public class PhysicalLayerController {
 					    "A.SITE, " +
 					    "A.SITE_NAME, " +
 					    "A.WAREHOUSE, " +
-					    "A.NUMB_OF_PANNELS, " +
+					    "A.NUM_OF_PANELS, " +
 					    "A.NUMB_OF_PORTS, " +
 					    "A.NETWORK_LAYER, " +
 					    "A.LONGITUDE, " +
