@@ -110,7 +110,7 @@ public class SnglCmCntrl {
 						.setParameter("numb_of_ports", cntrlRecord.get("numb_of_ports"))
 						.setParameter("ID", cntrlRecord.get("controller_id")).executeUpdate();
 				if (!kitNeedCheck.isEmpty()) {
-					str = "update distribution_board set DB_TYPE = 'passive', controller_id = null where DB_ID in (select DB_ID from controller_kit "
+					str = "update distribution_board set DB_TYPE = 'passive', controller_id = null where DB_ID in (select DB_ID from panel_kit "
 							+ "where kit_serial_num in (:serial_num))";
 					session.createNativeQuery(str).setParameterList("serial_num", kitNeedCheck).executeUpdate();
 				}
@@ -128,7 +128,7 @@ public class SnglCmCntrl {
 		List<Map<String, Object>> panelList = new ArrayList<>();
 		int panelCount = 0;
 		try {
-			str = "select kit_serial_num from controller_kit where db_id in (select db_id from distribution_board where controller_id ='"
+			str = "select kit_serial_num from panel_kit where db_id in (select db_id from distribution_board where controller_id ='"
 					+ controllerID + "')";
 			kitNeedCheck = session.createNativeQuery(str).getResultList();
 			rtn = commscopeService.getPanelAPI(token, ipAddress, rackID);
@@ -177,7 +177,7 @@ public class SnglCmCntrl {
 			if (kitNeedCheck.contains(kit.get("kitId").toString())) {
 				kitNeedCheck.remove(kitNeedCheck.get(kitNeedCheck.indexOf(kit.get("kitId").toString())));
 				kits.add(kit.get("kitId").toString());
-				str = "select db_id from controller_kit where KIT_SERIAL_NUM = :serial_num";
+				str = "select db_id from panel_kit where KIT_SERIAL_NUM = :serial_num";
 				dbIDs = session.createNativeQuery(str).setParameter("serial_num", kit.get("kitId").toString())
 						.getResultList();
 				kitInfo.add(dbIDs.get(0));
@@ -194,7 +194,7 @@ public class SnglCmCntrl {
 				kitModule.put(kit.get("kitId").toString(), moduleNumber);
 			} else {
 				List<Object> otherDbID = new ArrayList<>();
-				str = "select db_id from controller_kit where kit_serial_num = '" + kit.get("kitId").toString() + "'";
+				str = "select db_id from panel_kit where kit_serial_num = '" + kit.get("kitId").toString() + "'";
 				otherDbID = session.createNativeQuery(str).list();
 				if (otherDbID.size() > 0) {
 					kitInfo.add(otherDbID.get(0));
