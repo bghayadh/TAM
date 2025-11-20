@@ -1169,13 +1169,13 @@ function deleteKit(){
 
 			 		     const markup = `<tr>
 			 		         <td style='text-align:center;'><input  name='record' type='checkbox' style='vertical-align: middle; width:70px'></td>
-			 		         <td name='modulePos'><input  class='form-control' type='text' style='width:200px;'/></td>
-			 				 <td name='kitSerialNum'><input  class='form-control' type='text' style='width:200px;'/></td>
-			 				 <td name='orientation'><input  class='form-control' type='text' style='width:200px;'/></td>
-			 				 <td name='lowestPortNum'><input  class='form-control' type='text' style='width:200px;'/></td>
-			 				 <td name='sensorsPerPortNum'><input  class='form-control' type='text' style='width:200px;'/></td>
-			 				 <td name='sensorCount'><input  class='form-control' type='text' style='width:200px;'/></td>
-			 				 <td name='occupiedSensorMask'><input  class='form-control' type='text' style='width:200px;'/></td>
+			 		         <td name='modulePos'><input  class='form-control' type='text' style='width:80px;'/></td>
+			 				 <td name='kitSerialNum'><input  class='form-control' type='text' style='width:300px;'/></td>
+			 				 <td name='orientation'><input  class='form-control' type='text' style='width:300px;'/></td>
+			 				 <td name='lowestPortNum'><input  class='form-control' type='text' style='width:800px;'/></td>
+			 				 <td name='sensorsPerPortNum'><input  class='form-control' type='text' style='width:80px;'/></td>
+			 				 <td name='sensorCount'><input  class='form-control' type='text' style='width:80px;'/></td>
+			 				 <td name='occupiedSensorMask'><input  class='form-control' type='text' style='width:100px;'/></td>
 			 				 							 			
 			 				 		 			        
 			 		          </tr>`;
