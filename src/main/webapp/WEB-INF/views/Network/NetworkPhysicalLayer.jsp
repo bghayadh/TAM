@@ -7127,13 +7127,13 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														</th>
 														
 													
-													<th width="118px" style=" text-align: center" >Module Position</th>
-													<th width="200px" style=" text-align: center" >Kit Serial # </th>
-													<th width="200px" style=" text-align: center" >Orientation</th>
-													<th width="90px" style=" text-align: center" >Lowest Port #</th>
-												    <th width="90px" style=" text-align: center" >Sensors Per Port #</th>
-													<th width="90px" style=" text-align: center" >Sensor Count</th>
-													<th width="120px" style=" text-align: center" >Occupied Sensor Mask </th>
+													<th width="80px" style=" text-align: center" >Module Position</th>
+													<th width="300px" style=" text-align: center" >Kit Serial # </th>
+													<th width="300px" style=" text-align: center" >Orientation</th>
+													<th width="80px" style=" text-align: center" >Lowest Port #</th>
+												    <th width="80px" style=" text-align: center" >Sensors Per Port #</th>
+													<th width="80px" style=" text-align: center" >Sensor Count</th>
+													<th width="100px" style=" text-align: center" >Occupied Sensor Mask </th>
 															</tr>
 												</thead>
 												<tbody>
