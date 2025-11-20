@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CONTROLLER_MODULE")
-public class ControllerModule {
+@Table(name = "PANEL_MODULE")
+public class PanelModule {
 
 
 	    @Id
@@ -54,9 +54,9 @@ public class ControllerModule {
 
 	  
 	    // Constructors
-	    public ControllerModule() {}
+	    public PanelModule() {}
 
-	    public ControllerModule(String moduleId, String modulePosition, String kitSerialNum, String sesorsPerPortNum, 
+	    public PanelModule(String moduleId, String modulePosition, String kitSerialNum, String sesorsPerPortNum, 
 	    		 String lowestPortNum, String sensorCount, String occupiedSensorMask, String dbId, Timestamp createDate, Timestamp lastModifiedDate) {
 	        this.moduleId = moduleId;
 	        this.modulePosition = modulePosition;
