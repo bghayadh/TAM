@@ -745,6 +745,19 @@
 										</div>
 									</div>
 								</div>
+								<!--    -->
+								<div class="col-md-6 nextprvItems">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 150px;" class="input-group-text"><b>Status</b></span>
+											<input type="text" id="ControllerStatus"  class="form-control text-input"  />
+										</div>
+									</div>
+								</div></div>
+							</div>
+							
+							
+								<div class="row">
 								<div class="col-md-6 nextprvItems">
 									<div class="form-group">
 										<div class="input-group-prepend">
@@ -753,7 +766,49 @@
 										</div>
 									</div>
 								</div>
+												<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 175px;" class="input-group-text"><b>Last Scan Date </b></span>
+												 <input type="text" id="controllerLastScanDate" class="form-control text-input" readonly />
+											</div></div></div> </div>
+							
+						
+							<div class="row">
+							  	<div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Longitude</b></span>
+											<input type="text" id="ControllerLong" class="form-control text-input"  />
+										</div>
+									</div>
+								</div>
+	                         
+								<!-- -->
+								 <div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
+									<span class="input-group-text"  style="width: 160px;"><b>Last Modified Date</b></span>
+									<input type="text" id="controllerLastModifiedDate" class="form-control text-input" value="" readonly />
+								</div></div></div>
 							</div>
+							
+							
+							<div class="row">
+							 <div class="col-md-6">
+									<div class="form-group">
+										<div class="input-group-prepend">
+											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
+											<input type="text" id="ControllerLat" class="form-control text-input"  />
+										</div>
+									</div>
+								</div> 
+							
+								
+								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
+									<span style="width: 140px;" class="input-group-text"><b>Creation Date</b></span>
+									<input type="text" id="controllerCreateDate" class="form-control text-input" value="" readonly />
+									</div></div></div>
+							</div>
+							
 							<div class="row">
 									<div class="col-md-6" id="ContSite">
 										<div class="form-group">
@@ -767,6 +822,8 @@
 												<span style="width: 140px;" class="input-group-text"><b>Site Name </b></span> 
 												<input type="text" id="ControllerSiteName" class="form-control text-input" />
 											</div></div></div>
+											
+										
 									<div class="col-md-6" id="ContClientId" >
 										<div class="form-group">
 											<div class="input-group-prepend">
@@ -780,8 +837,10 @@
 												<span style="width: 140px;" class="input-group-text"><b>Client Name </b></span> 
 												<input type="text" id="ControllerClientName" class="form-control text-input" />
 											</div></div></div></div>
-							
-								<div class="row">
+											
+											
+											<div class="row">
+								
 									<div class="col-md-6" id="ContWarehouse" >
 										<div class="form-group">
 											<div class="input-group-prepend">
@@ -794,34 +853,17 @@
 												<span style="width: 140px;" class="input-group-text"><b>Client Phone# </b></span> 
 												<input type="text" id="ControllerClientPhoneNb" class="form-control text-input" />
 											</div></div></div>
-								<div class="col-md-6">
+							 	<div class="col-md-6">
 										<div class="form-group">
 											<div class="input-group-prepend">
 												<span style="width: 175px;" class="input-group-text"><b>City </b></span>
 												 <input type="text" id="controllerCity" class="form-control text-input" readonly />
-											</div></div></div></div>
+											</div></div></div>
+								
+								</div>
+								
+								<div class="row">
 							
-						
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="width: 140px;" class="input-group-text"><b>Longitude</b></span>
-											<input type="text" id="ControllerLong" class="form-control text-input"  />
-										</div>
-									</div>
-								</div>
-
-								<div class="col-md-6">
-									<div class="form-group">
-										<div class="input-group-prepend">
-											<span style="width: 140px;" class="input-group-text"><b>Latitude</b></span>
-											<input type="text" id="ControllerLat" class="form-control text-input"  />
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
 										<div class="input-group-prepend">
@@ -830,7 +872,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="col-md-6">
+							<div class="col-md-6">
 									<div class="form-group">
 										<div class="input-group-prepend">
 											<span style="width: 140px;" class="input-group-text"><b>MAC Address</b></span>
@@ -838,16 +880,11 @@
 										</div>
 									</div>
 								</div>
+							
 							</div>
-							<div class="row">
-								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span style="width: 140px;" class="input-group-text"><b>Creation Date</b></span>
-									<input type="text" id="controllerCreateDate" class="form-control text-input" value="" readonly />
-									</div></div></div>
-								<div class="col-sm-6"><div class="form-group"><div class="input-group-prepend">
-									<span class="input-group-text"  style="width: 160px;"><b>Last Modified Date</b></span>
-									<input type="text" id="controllerLastModifiedDate" class="form-control text-input" value="" readonly />
-								</div></div></div></div>
+								
+								
+						
 						
 							<div class="row">
 								<div class="col-md-6" id="projectIdManhole">
@@ -935,7 +972,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	
 <!-- Nodes Model -->
 	<div class="container">
 		<div id="nodesModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
@@ -8282,6 +8319,7 @@ $("#saveController").click(function () {
         let macAddress = document.getElementById("macAddress").value;
         let createDate = document.getElementById("controllerCreateDate").value;
         let lastModifiedDate = document.getElementById("controllerLastModifiedDate").value;
+        let lastScanDate = document.getElementById("controllerLastScanDate").value;
         let ipAddress = document.getElementById("ipAddress").value;
         let subnetMask = document.getElementById("subnetMask").value;
         let gateway = document.getElementById("gateWay").value;
@@ -8297,6 +8335,7 @@ $("#saveController").click(function () {
 		let ControllerClientName = document.getElementById("ControllerClientName").value;
 		let ControllerClientPhoneNb = document.getElementById("ControllerClientPhoneNb").value;
 		let ControllerCity = document.getElementById("controllerCity").value;
+		let status = document.getElementById("ControllerStatus").value;
 		
 		var locationId =""; 
 		var locationName = ""; 
@@ -8352,6 +8391,8 @@ $("#saveController").click(function () {
                 "latitude": latitude,
                 "city": ControllerCity,
                 "createDate": createDate,
+                "lastScanDate" : lastScanDate,
+                "status" : status,
                 "actiondistControllerContext": actiondistControllerContext,
                 "updateModfUser": updateModfUser
             },
@@ -8886,6 +8927,14 @@ let singleControllerMenu = [
 					}
 					if(data.ControllerDetails[0][18]!=null){
 						$("#controllerCreateDate").val(""+data.ControllerDetails[0][18]);
+					}
+
+					if(data.ControllerDetails[0][20]!=null){
+						$("#controllerLastScanDate").val(""+data.ControllerDetails[0][20]);
+					}
+
+					if(data.ControllerDetails[0][21]!=null){
+						$("#ControllerStatus").val(""+data.ControllerDetails[0][21]);
 					}
 					if(data.ControllerDetails[0][19]!=null){
 						$("#controllerLastModifiedDate").val(""+data.ControllerDetails[0][19]);
