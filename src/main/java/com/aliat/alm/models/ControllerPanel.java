@@ -73,7 +73,13 @@ public class ControllerPanel {
 
 	    @Column(name = "LAST_MODIFIED_DATE")
 	    private Timestamp lastModifiedDate;
-
+	    
+	    @Column(name = "LAST_SCAN_DATE")
+	    private Timestamp lastScanDate;
+	    
+	    @Column(name = "STATUS")
+	    private String status;
+	    
 	    // Constructors
 	    public ControllerPanel() {}
 
@@ -81,12 +87,14 @@ public class ControllerPanel {
 	                           String ipAddress, String subnetMask, String defaultGateway, String userName, String password,
 	                           String numberOfPanels, String numberOfPorts, String networkLayer, String longitude,
 	                           String latitude, String site, String siteName, String warehouse,
-	                           Timestamp creationDate, Timestamp lastModifiedDate, String controllerCity) {
+	                           Timestamp creationDate, Timestamp lastModifiedDate, String controllerCity, Timestamp lastScanDate, String status) {
 	        this.controllerId = controllerId;
 	        this.controllerName = controllerName;
 	        this.serialNumber = serialNumber;
 	        this.macAddress = macAddress;
 	        this.ipAddress = ipAddress;
+	        this.status= status;
+	        this.lastScanDate= lastScanDate;
 	        this.controllerCity= controllerCity;
 	        this.subnetMask = subnetMask;
 	        this.defaultGateway = defaultGateway;
@@ -104,7 +112,23 @@ public class ControllerPanel {
 	        this.lastModifiedDate = lastModifiedDate;
 	    }
 
-	    public String getControllerCity() {
+	    public Timestamp getLastScanDate() {
+			return lastScanDate;
+		}
+
+		public void setLastScanDate(Timestamp lastScanDate) {
+			this.lastScanDate = lastScanDate;
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public void setStatus(String status) {
+			this.status = status;
+		}
+
+		public String getControllerCity() {
 			return controllerCity;
 		}
 

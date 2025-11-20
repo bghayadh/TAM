@@ -16,7 +16,7 @@ public class DistributionBoard {
 	@Column(name = "DB_NAME")
 	private String distributionBoardName;
 	
-	@Column(name = "TYPE")
+	@Column(name = "DB_TYPE")
 	private String distributionBoardType;
 	
 	
