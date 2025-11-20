@@ -57,7 +57,7 @@ import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.AccessCableJunction;
 import com.aliat.alm.models.AttachmentUpload;
 import com.aliat.alm.models.PanelKit;
-import com.aliat.alm.models.ControllerModule;
+import com.aliat.alm.models.PanelModule;
 import com.aliat.alm.models.DistributionBoard;
 import com.aliat.alm.models.DistributionBoardMapping;
 import com.aliat.alm.models.DistributionBoardSurvey;
@@ -3297,7 +3297,7 @@ public class PhysicalLayerController {
 
 				List<Object[]> ModuleData = session
 						.createNativeQuery("SELECT  MODULE_ID, MODULE_POSITION, KIT_SERIAL_NUM, SENSORS_PER_PORT_NUM, LOWEST_PORT_NUM, SENSOR_COUNT,"
-								+ "OCCUPIED_SENSOR_MASK, ORIENTATION  FROM CONTROLLER_MODULE  WHERE DB_ID='"
+								+ "OCCUPIED_SENSOR_MASK, ORIENTATION  FROM PANEL_MODULE  WHERE DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
 				
@@ -9601,8 +9601,8 @@ public class PhysicalLayerController {
 				List<PanelKit> kitDataList = gson.fromJson(
 				        kitDataJson, new TypeToken<List<PanelKit>>(){}.getType()
 				);
-				List<ControllerModule> moduleDataList = gson.fromJson(
-				        moduleDataJson, new TypeToken<List<ControllerModule>>(){}.getType()
+				List<PanelModule> moduleDataList = gson.fromJson(
+				        moduleDataJson, new TypeToken<List<PanelModule>>(){}.getType()
 				);
 
 				// === Save Kits ===
@@ -9638,7 +9638,7 @@ public class PhysicalLayerController {
 				}
 				}
 				// === Save Modules ===
-				for (ControllerModule mod : moduleDataList) {
+				for (PanelModule mod : moduleDataList) {
 				    System.out.println("Module => Id: " + mod.getModuleId() +
 				                       ", ModulePos: " + mod.getModulePosition() +
 				                       ", Orientation: " + mod.getOrientation());
@@ -9656,7 +9656,7 @@ public class PhysicalLayerController {
 				        System.out.println("jkj");
 					  
 
-				    ControllerModule modEntity = new ControllerModule();
+				    PanelModule modEntity = new PanelModule();
 				    modEntity.setModulePosition(mod.getModulePosition());
 				    modEntity.setKitSerialNum(mod.getKitSerialNum());
 				    modEntity.setOrientation(mod.getOrientation());
@@ -9669,8 +9669,8 @@ public class PhysicalLayerController {
 
 				    if (mod.getModuleId() == null) {
 				    	String moduleId = "MODULE_" + year + "_" + Integer.parseInt( ((Query) session.createNativeQuery
-				    			("SELECT CONTROLLER_MODULE FROM SEQ_TABLE")) .getSingleResult().toString()); 
-				    	query = (Query) session.createNativeQuery("UPDATE SEQ_TABLE SET CONTROLLER_MODULE = CONTROLLER_MODULE + 1 "); 
+				    			("SELECT PANEL_MODULE FROM SEQ_TABLE")) .getSingleResult().toString()); 
+				    	query = (Query) session.createNativeQuery("UPDATE SEQ_TABLE SET PANEL_MODULE = PANEL_MODULE + 1 "); 
 				    	query.executeUpdate(); 
 				    	session.createNativeQuery("commit").executeUpdate();  
 				    	modEntity.setModuleId(moduleId);
@@ -9698,7 +9698,7 @@ public class PhysicalLayerController {
 				if (deletedModuleIds != null) {
 				    for (String moduleId : deletedModuleIds) {
 				        if (moduleId != null && !moduleId.trim().isEmpty()) {
-				            session.createNativeQuery("DELETE FROM CONTROLLER_MODULE WHERE MODULE_ID = :moduleId")
+				            session.createNativeQuery("DELETE FROM PANEL_MODULE WHERE MODULE_ID = :moduleId")
 				                   .setParameter("moduleId", moduleId)
 				                   .executeUpdate();
 				        }
