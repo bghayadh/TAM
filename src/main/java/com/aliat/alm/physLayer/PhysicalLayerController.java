@@ -56,7 +56,7 @@ import com.aliat.alm.common.Notify;
 import com.aliat.alm.common.Permissions;
 import com.aliat.alm.models.AccessCableJunction;
 import com.aliat.alm.models.AttachmentUpload;
-import com.aliat.alm.models.ControllerKit;
+import com.aliat.alm.models.PanelKit;
 import com.aliat.alm.models.ControllerModule;
 import com.aliat.alm.models.DistributionBoard;
 import com.aliat.alm.models.DistributionBoardMapping;
@@ -554,7 +554,7 @@ public class PhysicalLayerController {
 						if ("1".equals(readDB)) {
 //get db
 							distribBoardList = session.createNativeQuery(
-									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,TYPE FROM DISTRIBUTION_BOARD where DB_ID LIKE '%"
+									"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,DB_TYPE FROM DISTRIBUTION_BOARD where DB_ID LIKE '%"
 											+ request.getParameter("FilteredDistribution_Board")
 											+ "%' OR DB_NAME LIKE '%"
 											+ request.getParameter("FilteredDistribution_Board")
@@ -3275,7 +3275,7 @@ public class PhysicalLayerController {
 								+ selectedDistBoardContext
 								+ "'),(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS='Active' AND B.DB_ID='"
 								+ selectedDistBoardContext
-								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE,TYPE,SERIAL_NUMB,CONTROLLER_ID,CONTROLLER_NAME,ROW_COUNTING  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
+								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE,DB_TYPE,SERIAL_NUMB,CONTROLLER_ID,CONTROLLER_NAME,ROW_COUNTING  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
 				/*
@@ -3291,7 +3291,7 @@ public class PhysicalLayerController {
 				rtn.put("DistBoardDetails", DistBoardDetails);
 				
 				List<Object[]> KitData = session
-						.createNativeQuery("SELECT  KIT_ID, KIT_SERIAL_NUM, KIT_TYPE FROM CONTROLLER_KIT  WHERE DB_ID='"
+						.createNativeQuery("SELECT  KIT_ID, KIT_SERIAL_NUM, KIT_TYPE FROM PANEL_KIT  WHERE DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
 
@@ -3477,14 +3477,16 @@ public class PhysicalLayerController {
 					    "A.SITE, " +
 					    "A.SITE_NAME, " +
 					    "A.WAREHOUSE, " +
-					    "A.NUMB_OF_PANNELS, " +
+					    "A.NUM_OF_PANELS, " +
 					    "A.NUMB_OF_PORTS, " +
 					    "A.NETWORK_LAYER, " +
 					    "A.LONGITUDE, " +
 					    "A.LATITUDE,"
 					    + "A.CITY, " +
 					    "TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'), " +
-					    "TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM') " +
+					    "TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),"
+					    + "TO_CHAR(A.LAST_SCAN_DATE, 'MM/dd/YYYY HH:MI AM'),"
+					    + "A.STATUS " +
 					    "FROM CONTROLLER A " +
 					    "WHERE A.CONTROLLER_ID = '" + selectedControllerContext + "'"
 					).getResultList();
@@ -6374,6 +6376,8 @@ public class PhysicalLayerController {
 	        controller.setSiteName(request.getParameter("ControllerSiteName"));
 	        controller.setWarehouse(request.getParameter("ControllerWarehouse"));
 
+	        controller.setStatus(request.getParameter("status"));
+
 	        
 	        String createDateStr = request.getParameter("createDate");
 	        if (createDateStr != null && !createDateStr.trim().isEmpty()) {
@@ -6385,6 +6389,22 @@ public class PhysicalLayerController {
 	            }
 	        }
 
+	        String lastScanDate = request.getParameter("lastScanDate");
+	        System.out.println(lastScanDate);
+	        if (lastScanDate != null && !lastScanDate.trim().isEmpty()) {
+	            try {
+	                DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+	                controller.setLastScanDate(new Timestamp(formatter.parse(lastScanDate).getTime()));
+	            } catch (ParseException e) {
+	                controller.setLastScanDate(now);
+	            }
+	        } 
+	        else {
+	        	
+	        	 controller.setLastScanDate(now);
+	        	
+	        }
+	        System.out.println(lastScanDate);
 	        controller.setLastModifiedDate(now);
 	        session.saveOrUpdate(controller);
 	        session.flush();
@@ -6423,7 +6443,7 @@ public class PhysicalLayerController {
 
 	        	List<Object[]> distribBoardList = new ArrayList<Object[]>();
 				distribBoardList = session.createNativeQuery(
-						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,TYPE,CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE (PROJECT_ID='CurrentPhysicalLayer') AND CONTROLLER_ID =:param1")
+						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,DB_TYPE,CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE (PROJECT_ID='CurrentPhysicalLayer') AND CONTROLLER_ID =:param1")
 						.setParameter("param1", controllerId).getResultList();
 		
 				rtn.put("DBList", distribBoardList);
@@ -9578,15 +9598,15 @@ public class PhysicalLayerController {
 				Timestamp now = new Timestamp(System.currentTimeMillis());
 
 				// Parse JSON into lists
-				List<ControllerKit> kitDataList = gson.fromJson(
-				        kitDataJson, new TypeToken<List<ControllerKit>>(){}.getType()
+				List<PanelKit> kitDataList = gson.fromJson(
+				        kitDataJson, new TypeToken<List<PanelKit>>(){}.getType()
 				);
 				List<ControllerModule> moduleDataList = gson.fromJson(
 				        moduleDataJson, new TypeToken<List<ControllerModule>>(){}.getType()
 				);
 
 				// === Save Kits ===
-				for (ControllerKit kit : kitDataList) {
+				for (PanelKit kit : kitDataList) {
 				    System.out.println("Kit => SerialNum: " + kit.getKitSerialNum() +
 				                       ", Type: " + kit.getKitType() +
 				                       ", Id: " + kit.getKitId());
@@ -9595,7 +9615,7 @@ public class PhysicalLayerController {
 				    	    
 				    	    // both fields are filled
 				    	
-				    ControllerKit kitEntity = new ControllerKit();
+				    PanelKit kitEntity = new PanelKit();
 				    kitEntity.setKitType(kit.getKitType());
 				    kitEntity.setKitSerialNum(kit.getKitSerialNum());
 				    kitEntity.setLastModifiedDate(now);
@@ -9603,8 +9623,8 @@ public class PhysicalLayerController {
 
 				    if (kit.getKitId() == null) {
 				    	String kitId = "KIT_" + year + "_" + Integer.parseInt( ((Query) session.createNativeQuery
-				    			("SELECT CONTROLLER_KIT FROM SEQ_TABLE")) .getSingleResult().toString()); 
-				    	query = (Query) session.createNativeQuery("UPDATE SEQ_TABLE SET CONTROLLER_KIT = CONTROLLER_KIT + 1 "); 
+				    			("SELECT PANEL_KIT FROM SEQ_TABLE")) .getSingleResult().toString()); 
+				    	query = (Query) session.createNativeQuery("UPDATE SEQ_TABLE SET PANEL_KIT = PANEL_KIT + 1 "); 
 				    	query.executeUpdate(); 
 				    	session.createNativeQuery("commit").executeUpdate();  
 				        kitEntity.setKitId(kitId);
@@ -9668,7 +9688,7 @@ public class PhysicalLayerController {
 				if (deletedKitIds != null) {
 				    for (String kitId : deletedKitIds) {
 				        if (kitId != null && !kitId.trim().isEmpty()) {
-				            session.createNativeQuery("DELETE FROM CONTROLLER_KIT WHERE KIT_ID = :kitId")
+				            session.createNativeQuery("DELETE FROM PANEL_KIT WHERE KIT_ID = :kitId")
 				                   .setParameter("kitId", kitId)
 				                   .executeUpdate();
 				        }
@@ -10395,7 +10415,7 @@ public class PhysicalLayerController {
 				
 				List<Object[]> distribBoardList = new ArrayList<Object[]>();
 				distribBoardList = session.createNativeQuery(
-						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,TYPE,CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE (PROJECT_ID='CurrentPhysicalLayer')")
+						"SELECT DISTINCT DB_ID,DB_LONGITUDE,DB_LATITUDE,DB_NAME,MAX_CAPACITY,SITE,PROJECT_ID ,CITY,DB_NETWORK_LEVEL,DB_TYPE,CONTROLLER_ID FROM DISTRIBUTION_BOARD WHERE (PROJECT_ID='CurrentPhysicalLayer')")
 						.getResultList();
 		
 				rtn.put("DBList", distribBoardList);
