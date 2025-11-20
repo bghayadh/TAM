@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.aliat.alm.models.ControllerKit;
+import com.aliat.alm.models.PanelKit;
 import com.aliat.alm.models.ControllerModule;
 import com.aliat.alm.models.ControllerPanel;
 import com.aliat.alm.models.DistributionBoard;
@@ -195,7 +195,7 @@ public class SnglCmCntrl {
 		Calendar calendar = new GregorianCalendar();
 		int year = 0;
 		ControllerPanel cntrl = new ControllerPanel();
-		ControllerKit panelKit = new ControllerKit();
+		PanelKit panelKit = new PanelKit();
 		ControllerModule kitModule = new ControllerModule();
 		List<Map<String, Object>> modules = new ArrayList<>();
 		cntrl = session.get(ControllerPanel.class, controllerID);
