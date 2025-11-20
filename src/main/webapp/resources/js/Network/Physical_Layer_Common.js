@@ -15438,3 +15438,5 @@ function viewOnMap(checkbox, ptList, ptData) {
 						     console.log(`→ Direction=${direction}, PortInModule=${portInModule}, GlobalPort=${port}`);
 						     return port;
 						 }
+
+						 
