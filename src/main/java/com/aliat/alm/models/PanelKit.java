@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "CONTROLLER_KIT")
-public class ControllerKit {
+@Table(name = "PANEL_KIT")
+public class PanelKit {
 
 
 	    @Id
@@ -37,9 +37,9 @@ public class ControllerKit {
 
 	  
 	    // Constructors
-	    public ControllerKit() {}
+	    public PanelKit() {}
 
-	    public ControllerKit(String kitId, String kitSerialNum, String kitType,String dbId, Timestamp createDate, Timestamp lastModifiedDate) {
+	    public PanelKit(String kitId, String kitSerialNum, String kitType,String dbId, Timestamp createDate, Timestamp lastModifiedDate) {
 	        this.kitId = kitId;
 	        this.kitSerialNum = kitSerialNum;
 	        this.kitType = kitType;

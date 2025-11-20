@@ -163,7 +163,7 @@
 <mapping class="com.aliat.alm.models.RolePermissionException"/>
 <mapping class="com.aliat.alm.models.NodePortMapping"/>
 <mapping class="com.aliat.alm.models.ControllerPanel"/>
-<mapping class="com.aliat.alm.models.ControllerKit"/>
+<mapping class="com.aliat.alm.models.PanelKit"/>
 <mapping class="com.aliat.alm.models.ControllerModule"/>
    </session-factory>
 </hibernate-configuration>
