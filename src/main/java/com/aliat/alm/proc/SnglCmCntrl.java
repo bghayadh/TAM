@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.aliat.alm.models.PanelKit;
-import com.aliat.alm.models.ControllerModule;
+import com.aliat.alm.models.PanelModule;
 import com.aliat.alm.models.ControllerPanel;
 import com.aliat.alm.models.DistributionBoard;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -303,7 +303,7 @@ public class SnglCmCntrl {
 			session.saveOrUpdate(panelKit);
 			modules = (List<Map<String, Object>>) kit.get("modules");
 			for (Map<String, Object> module : modules) {
-				ControllerModule kitModule = new ControllerModule();
+				PanelModule kitModule = new PanelModule();
 				seq = ((Number) session.createNativeQuery("SELECT MODULE_SEQ.NEXTVAL FROM DUAL").uniqueResult())
 						.intValue();
 				moduleID = "KIT_" + year + "_" + seq;
