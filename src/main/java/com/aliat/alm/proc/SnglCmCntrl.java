@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.slf4j.Logger;
@@ -39,6 +42,7 @@ public class SnglCmCntrl {
 	private Map<String, List<String>> panelKit = new LinkedHashMap<>();
 	private List<String> dbIDs = new ArrayList<>();
 	private Map<String, Map<String, Integer>> kitModule = new LinkedHashMap<>();
+	private List<Map<String, Object>> patches = new ArrayList<>();
 	private ObjectMapper mapper = new ObjectMapper();
 	private final Logger logger = LoggerFactory.getLogger(SnglCmCntrl.class);
 
@@ -114,7 +118,11 @@ public class SnglCmCntrl {
 							+ "where kit_serial_num in (:serial_num))";
 					session.createNativeQuery(str).setParameterList("serial_num", kitNeedCheck).executeUpdate();
 				}
-				patches(token, ipAddress, cntrlRecord.get("serial_numb"));
+				System.out.println("kits is " + mapper.writeValueAsString(kits) + " kitsInfo is "
+						+ mapper.writeValueAsString(kitsInfo) + " panelKit is " + mapper.writeValueAsString(panelKit)
+						+ " kitModule is " + mapper.writeValueAsString(kitModule));
+				portsTreatment(token, ipAddress, cntrlRecord.get("controller_id"), session);
+				// patches(token, ipAddress, cntrlRecord.get("serial_numb"));
 			}
 		} catch (Exception e) {
 			logger.info("Error in controllerX method of class SnglCmCntrl which call controllerxAPI with a message : "
@@ -168,12 +176,13 @@ public class SnglCmCntrl {
 
 	@SuppressWarnings("unchecked")
 	public void kitsTreatment(List<Map<String, Object>> kitList, Session session) throws JsonProcessingException {
-		List<Map<String, Object>> modules = new ArrayList<>();		
+		List<Map<String, Object>> modules = new ArrayList<>();
 		Map<String, Integer> moduleNumber = new LinkedHashMap<>();
 		int i = 0, totalKitPorts = 0;
 		for (Map<String, Object> kit : kitList) {
 			totalKitPorts = 0;
 			kitInfo = new ArrayList<>();
+			moduleNumber = new LinkedHashMap<>();
 			if (kitNeedCheck.contains(kit.get("kitId").toString())) {
 				kitNeedCheck.remove(kitNeedCheck.get(kitNeedCheck.indexOf(kit.get("kitId").toString())));
 				kits.add(kit.get("kitId").toString());
@@ -193,9 +202,10 @@ public class SnglCmCntrl {
 				kitsInfo.put(kit.get("kitId").toString(), kitInfo);
 				kitModule.put(kit.get("kitId").toString(), moduleNumber);
 			} else {
-				List<Object> otherDbID = new ArrayList<>();
+				List<String> otherDbID = new ArrayList<>();
 				str = "select db_id from panel_kit where kit_serial_num = '" + kit.get("kitId").toString() + "'";
 				otherDbID = session.createNativeQuery(str).list();
+				dbIDs = otherDbID;
 				if (otherDbID.size() > 0) {
 					kitInfo.add(otherDbID.get(0));
 					modules = (List<Map<String, Object>>) kit.get("modules");
@@ -241,7 +251,7 @@ public class SnglCmCntrl {
 
 		seq = ((Number) session.createNativeQuery("SELECT DB_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
 		dbID = "DB_" + year + "_" + seq;
-		
+
 		dbIDs.add(dbID);
 		distributionBoard.setDistributionBoardId(dbID);
 		distributionBoard.setBoardCreationDate(creationDate);
@@ -321,6 +331,89 @@ public class SnglCmCntrl {
 				session.saveOrUpdate(kitModule);
 			} // End for loop for modules.
 		} // End for loop for kits.
+	}
+
+	@SuppressWarnings("unchecked")
+	public void portsTreatment(String token, String ipAddress, String ID, Session session) {
+		List<Object[]> panelsID = new ArrayList<>();
+		List<Object[]> dbPorts = new ArrayList<>();
+		Map<String, Object[]> portsMap = new HashMap<>();
+		List<Object[]> panelModules = new ArrayList<>();
+		Map<String, Map<String, Object>> patchMap = new HashMap<>();
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		Map<String, Object> rtnBody = new LinkedHashMap<>();
+		int portIndex = 0, portNum = 0, dbPortNum, dbPortIndex;
+		try {
+			str = "SELECT DB_ID, NUM_ROWS, NUM_COLUMNS, MAX_CAPACITY FROM DISTRIBUTION_BOARD WHERE CONTROLLER_ID = '"
+					+ ID + "'";
+			panelsID = session.createNativeQuery(str).list();
+
+			rtn = commscopeService.patchesAPI(token, ipAddress, ID);
+			if (rtn.containsKey("responseBody")
+					&& !StringUtils.equalsIgnoreCase(rtn.get("status").toString(), "Failed")) {
+				rtnBody = (Map<String, Object>) rtn.get("responseBody");
+				if (rtnBody.containsKey("patches")) {
+					patches = (List<Map<String, Object>>) rtnBody.get("patches");
+					// Build patch lookup map
+
+					for (Map<String, Object> p : patches) {
+
+						// Start side:
+						String sm = p.get("sModule") != null ? p.get("sModule").toString() : "null";
+						String sp = p.get("sPort") != null ? p.get("sPort").toString() : null;
+
+						if (p.get("sKitId") != null && sp != null) {
+							String keyStart = p.get("sKitId") + "-" + sm + "-" + sp;
+							patchMap.put(keyStart, p);
+						}
+					}
+				}
+			}
+
+			for (Object[] panelID : panelsID) {
+				portIndex = 0;
+				str = "SELECT DB_PORT_ID, DB_ID, ROW_COL_INDEX, ROW_NUMBER, COLUMN_NUMBER, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, "
+						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE FROM DISTRIBUTION_BOARD_MAP WHERE DB_ID = '"
+						+ panelID[0].toString() + "'";
+				dbPorts = session.createNativeQuery(str).getResultList();
+				str = "SELECT ROW_NUMBER() OVER (ORDER BY MODULE_POSITION ASC) AS ROW_NUM, MODULE_ID, MODULE_POSITION, SERIAL_KIT_NUM, SENSOR_COUNT FROM CONTROLLER_MODULE WHERE DB_ID = '"
+						+ panelID[0].toString() + "' ORDER BY MODULE_POSITION ASC";
+				panelModules = session.createNativeQuery(str).list();
+
+				// Build map for fast lookup
+				portsMap = new HashMap<>();
+				for (Object[] dbPort : dbPorts) {
+					String key = dbPort[5] + "-" + dbPort[6];
+					portsMap.put(key, dbPort);
+				}
+
+				for (Object[] panelModule : panelModules) {
+					int modulePortCount = Integer.parseInt(panelModule[4].toString());
+					portNum = 0;
+					for (int i = 0; i < modulePortCount; i++) {
+						String key = panelModule[2] + "-" + (i + 1);
+						Object[] matchedDbPort = portsMap.get(key);
+						key = panelModule[3] + "-" + key;
+						Map<String, Object> matchedPatchPort = patchMap.get(key);
+						if (matchedDbPort != null) {
+							// Found matching port and will use matchedPatchPort
+							str = "update distribution_board_mapping set ROW_COL_INDEX = :portIndex, "
+								+ "near_patch_type =: nearPatchType";
+						} else {
+							// Insert new port and will use matchedPatchPort
+						}
+					}
+				}
+
+			}
+		} catch (Exception e) {
+			logger.info("Error in updateOrInsertPorts method of class SnglCmCntrl with a message : " + e
+					+ "\n\" + e.getMessage()", e);
+		}
+	}
+
+	public void insertPorts() {
+
 	}
 
 	@SuppressWarnings("unchecked")
