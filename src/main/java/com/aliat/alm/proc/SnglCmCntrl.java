@@ -340,7 +340,7 @@ public class SnglCmCntrl {
 		Map<String, Map<String, Object>> patchMap = new HashMap<>();
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		Map<String, Object> rtnBody = new LinkedHashMap<>();
-		int portIndex = 0, portNum = 0, dbPortNum, dbPortIndex;
+		int portIndex = 0, dbPortNum, dbPortIndex;
 		try {
 			str = "SELECT DB_ID, NUM_ROWS, NUM_COLUMNS, MAX_CAPACITY FROM DISTRIBUTION_BOARD WHERE CONTROLLER_ID = '"
 					+ ID + "'";
@@ -387,16 +387,42 @@ public class SnglCmCntrl {
 
 				for (Object[] panelModule : panelModules) {
 					int modulePortCount = Integer.parseInt(panelModule[4].toString());
-					portNum = 0;
 					for (int i = 0; i < modulePortCount; i++) {
 						String key = panelModule[2] + "-" + (i + 1);
 						Object[] matchedDbPort = portsMap.get(key);
 						key = panelModule[3] + "-" + key;
 						Map<String, Object> matchedPatchPort = patchMap.get(key);
+						portIndex = (i + 1) + (Integer.parseInt(panelModule[0].toString()) - 1) * modulePortCount;
+						str = "update distribution_board_mapping set ROW_COL_INDEX = :portIndex";
 						if (matchedDbPort != null) {
 							// Found matching port and will use matchedPatchPort
-							str = "update distribution_board_mapping set ROW_COL_INDEX = :portIndex, "
-								+ "near_patch_type =: nearPatchType";
+							if (matchedPatchPort != null) {
+								String equipment = "";
+								str = str + ", near_patch_type =: nearPatchType, fp_equipment = :fpEquipment";
+								if (matchedPatchPort.containsKey("eEquipment")) {
+									equipment = "Custom";
+									str = str + " where DB_PORT_ID = :dbPortID";
+									session.createNativeQuery(str).setParameter("portIndex", portIndex)
+											.setParameter("nearPatchType", matchedPatchPort.get("type"))
+											.setParameter("fpEquipment", equipment)
+											.setParameter("DB_PORT_ID", matchedDbPort[0].toString()).executeUpdate();
+								} else {
+									equipment = "DB";
+									str = ", FAR_NEAR_KIT_SERIAL_NUM = :farNearKitSerialNum, FAR_NEAR_MODULE = :farNearModule, "
+											+ "FAR_NEAR_PORT_NUM = :farNearPortNum where DB_PORT_ID = :dbPortID";
+									session.createNativeQuery(str).setParameter("portIndex", portIndex)
+											.setParameter("nearPatchType", matchedPatchPort.get("type"))
+											.setParameter("fpEquipment", equipment)
+											.setParameter("farNearKitSerialNum", matchedPatchPort.get("eKitId"))
+											.setParameter("farNearModule", matchedPatchPort.get("eModule"))
+											.setParameter("farNearPortNum", matchedPatchPort.get("ePort"))
+											.setParameter("DB_PORT_ID", matchedDbPort[0].toString()).executeUpdate();
+								}
+							} else {
+								str = str + " where DB_PORT_ID = :dbPortID";
+								session.createNativeQuery(str).setParameter("portIndex", portIndex)
+										.setParameter("DB_PORT_ID", matchedDbPort[0].toString()).executeUpdate();
+							}
 						} else {
 							// Insert new port and will use matchedPatchPort
 						}
