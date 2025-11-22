@@ -17542,7 +17542,38 @@ console.log(locNum);
 			
 	 	
 		$("#add_RackRow").on('click',function(){
+			var rowPerModule=0;
+			var totalModules=0;
 
+			$.ajax({
+						type: "GET",
+						url: getContext()+'/findModuleDetails',
+						data: {
+							"selectedDistBoardContext":selectedDistBoardContext 
+						},
+						beforeSend: function() {
+							$("#loaderDivDB").show();
+						},
+						dataType: "json",
+						success: function (data) {
+							$("#loaderDivDB").hide();
+
+							console.log("before "+index)
+							index = 0
+
+							if (data != null) {
+								
+								 rowPerModule= data.panelInfo[0];
+								 totalModules= data.panelInfo[1];
+
+						} // end of data != null	
+						},
+						error: function(result) {
+							alert("Error");
+						}
+					});
+			
+			
 			countRackBoq=$("#DbMappingTable > tbody").children().length;
 			var totalPorts=$("#DistributionBoardRowsNum").val()*$("#DistributionBoardColsNum").val();
 			console.log("dBBoqIndex "+dBBoqIndex);
@@ -17562,7 +17593,7 @@ console.log(locNum);
 			if(totalPorts>countRackBoq){
 					
 				var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-					    +"<td name='Index'><input name='Index'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+					    +"<td name='Index'><input name='Index' id='index"+dBBoqIndex+"' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 					
 						+"<td name='nearModule'><input name='nearModule'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
 						+"<td name='nearPortNum'><input id='nearPortNum"+dBBoqIndex+"' name='nearPortNum'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
@@ -17668,80 +17699,75 @@ console.log(locNum);
 					
 					$("#DbMappingTable > tbody").append(markup);
 
+					// -------------------------------------------------------------
+					// READ SETTINGS
+					// -------------------------------------------------------------
 					const numRows = parseInt($("#DistributionBoardRowsNum").val());
 					const numCols = parseInt($("#DistributionBoardColsNum").val());
 					const direction = $("#rowCounting").val();
 
-					const portInput = document.getElementById("nearPortNum" + dBBoqIndex);
-					const rowInput  = document.getElementById("rowIndex" + dBBoqIndex);
-					const colInput  = document.getElementById("colIndex" + dBBoqIndex);
+					const indexInput = document.getElementById("index" + dBBoqIndex);
+					const rowInput   = document.getElementById("rowIndex" + dBBoqIndex);
+					const colInput   = document.getElementById("colIndex" + dBBoqIndex);
 
-					// 🔹 Handle Port Input
-					portInput.addEventListener("input", () => {
-					  const portVal = portInput.value.trim();
-					  const totalPorts = numRows * numCols;
+					// -------------------------------------------------------------
+					// HANDLE INDEX → ROW/COL
+					// -------------------------------------------------------------
+					indexInput.addEventListener("input", () => {
+					    const index = parseInt(indexInput.value.trim(), 10);
 
-					  // empty → clear
-					  if (portVal === "") {
-					    rowInput.value = "";
-					    colInput.value = "";
-					    return;
-					  }
+					    if (isNaN(index)) {
+					        rowInput.value = "";
+					        colInput.value = "";
+					        return;
+					    }
 
-					  const port = parseInt(portVal, 10);
+					    const { row, col } = calculateRowColFromIndex(
+					        index, numRows, numCols, direction, rowPerModule, totalModules
+					    );
 
-					  if (isNaN(port) || port < 1 || port > totalPorts) {
-					    alert(` Invalid Port: ${port}. Must be between 1 and ${totalPorts}.`);
-					    portInput.value = "";
-					    rowInput.value = "";
-					    colInput.value = "";
-					    return;
-					  }
+					    // ❗ Invalid → clear after alert is shown inside function
+					    if (row === "" || col === "") {
+					        indexInput.value = "";
+					        rowInput.value = "";
+					        colInput.value = "";
+					        return;
+					    }
 
-					  // ✅ use global function
-					  const { row, col } = calculateRowColFromPort(port, numRows, numCols, direction);
-
-					  if (row && col) {
 					    rowInput.value = row;
 					    colInput.value = col;
-					  } else {
-					    rowInput.value = "";
-					    colInput.value = "";
-					  }
 					});
 
-					// 🔹 Handle Row/Column Input
-					const updatePort = () => {
-					  const rowVal = rowInput.value.trim();
-					  const colVal = colInput.value.trim();
+					// -------------------------------------------------------------
+					// HANDLE ROW/COL → INDEX
+					// -------------------------------------------------------------
+					const updateIndex = () => {
+					    const row = parseInt(rowInput.value.trim(), 10);
+					    const col = parseInt(colInput.value.trim(), 10);
 
-					  // empty → clear port
-					  if (rowVal === "" || colVal === "") {
-					    portInput.value = "";
-					    return;
-					  }
+					    if (isNaN(row) || isNaN(col)) {
+					        indexInput.value = "";
+					        return;
+					    }
 
-					  const row = parseInt(rowVal, 10);
-					  const col = parseInt(colVal, 10);
+					    const index = calculateIndexFromRowCol(
+					        row, col, numRows, numCols, direction, rowPerModule, totalModules
+					    );
 
-					  if (isNaN(row) || isNaN(col)) {
-					    portInput.value = "";
-					    return;
-					  }
+					    // ❗ Invalid → clear after alert in function
+					    if (index === "") {
+					        indexInput.value = "";
+							rowInput.value = "";
+							colInput.value = "";
+					        return;
+					    }
 
-					  // ✅ use global function
-					  const port = calculatePortFromRowCol(row, col, numRows, numCols, direction);
-
-					  if (port) {
-					    portInput.value = port;
-					  } else {
-					    portInput.value = "";
-					  }
+					    indexInput.value = index;
 					};
 
-					rowInput.addEventListener("input", updatePort);
-					colInput.addEventListener("input", updatePort);
-				
+					rowInput.addEventListener("input", updateIndex);
+					colInput.addEventListener("input", updateIndex);
+						   
 				$("#FP_LocationType"+dBBoqIndex).change(function(){
 					var thisID = $(this).attr("id");
 					//var indexFor = parseInt(thisID.substr(thisID.length-1));

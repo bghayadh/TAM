@@ -14067,7 +14067,7 @@ var totalModules = panelInfo[1];
 						  const numCols = parseInt($("#DistributionBoardColsNum").val());
 						  const direction = $("#rowCounting").val().toLowerCase();
 					var markup = "<tr id='"+DistBoardMappingPts[i][3]+"''><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-					    +"<td name='Index'><input name='Index' value='"+DistBoardMappingPts[i][0]+"' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+					    +"<td name='Index'><input id='index" + i + "' name='Index' value='"+DistBoardMappingPts[i][0]+"' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 						
 						+"<td name='nearModule'><input name='nearModule' value='"+DistBoardMappingPts[i][48]+"' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
 						+"<td name='nearPortNum'> <input id='nearPortNum" + i + "' name='nearPortNum' value='" + DistBoardMappingPts[i][49] +
@@ -14167,40 +14167,70 @@ var totalModules = panelInfo[1];
 						+"<td name='BP_FiberName'><input name='BP_fiberName' value='"+DistBoardMappingPts[i][20]+"' id='BP_fiberName"+dBBoqIndex+"'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
 						$("#DbMappingTable > tbody").append(markup);
 				
-						const portInput = document.getElementById("nearPortNum" + i);
+						   const indexInput = document.getElementById("index" + i);
 						   const rowInput  = document.getElementById("rowIndex" + i);
 						   const colInput  = document.getElementById("colIndex" + i);
 
-						   // ⚙️ Handle Port Change
-						   portInput.addEventListener("input", () => {
-						     const port = parseInt(portInput.value.trim(), 10);
-						     if (isNaN(port)) {
-						       rowInput.value = "";
-						       colInput.value = "";
-						       return;
-						     }
+						   // -------------------------------------------------------------
+						   				// HANDLE INDEX → ROW/COL
+						   				// -------------------------------------------------------------
+						   				indexInput.addEventListener("input", () => {
+						   				    const index = parseInt(indexInput.value.trim(), 10);
 
-						     const { row, col } = calculateRowColFromPort(port, numRows, numCols, direction, rowPerModule, totalModules);
-						     rowInput.value = row;
-						     colInput.value = col;
-						   });
+						   				    if (isNaN(index)) {
+						   				        rowInput.value = "";
+						   				        colInput.value = "";
+						   				        return;
+						   				    }
 
-						   // ⚙️ Handle Row / Column Change
-						   const updatePort = () => {
-						     const row = parseInt(rowInput.value.trim(), 10);
-						     const col = parseInt(colInput.value.trim(), 10);
+						   				    const { row, col } = calculateRowColFromIndex(
+						   				        index, numRows, numCols, direction, rowPerModule, totalModules
+						   				    );
 
-						     if (isNaN(row) || isNaN(col)) {
-						       portInput.value = "";
-						       return;
-						     }
+						   				    // ❗ Invalid → clear after alert is shown inside function
+						   				    if (row === "" || col === "") {
+						   				        indexInput.value = "";
+						   				        rowInput.value = "";
+						   				        colInput.value = "";
+						   				        return;
+						   				    }
 
-						     const port = calculatePortFromRowCol(row, col, numRows, numCols, direction, rowPerModule, totalModules);
-						     portInput.value = port;
-						   };
+						   				    rowInput.value = row;
+						   				    colInput.value = col;
+						   				});
 
-						   rowInput.addEventListener("input", updatePort);
-						   colInput.addEventListener("input", updatePort);	
+						   				// -------------------------------------------------------------
+						   				// HANDLE ROW/COL → INDEX
+						   				// -------------------------------------------------------------
+						   				const updateIndex = () => {
+						   				    const row = parseInt(rowInput.value.trim(), 10);
+						   				    const col = parseInt(colInput.value.trim(), 10);
+
+						   				    if (isNaN(row) || isNaN(col)) {
+						   				        indexInput.value = "";
+						   				        return;
+						   				    }
+
+						   				    const index = calculateIndexFromRowCol(
+						   				        row, col, numRows, numCols, direction, rowPerModule, totalModules
+						   				    );
+
+						   				    // ❗ Invalid → clear after alert in function
+						   				    if (index === "") {
+						   				        indexInput.value = "";
+						   						rowInput.value = "";
+						   						colInput.value = "";
+						   				        return;
+						   				    }
+
+						   				    indexInput.value = index;
+						   				};
+
+						   				rowInput.addEventListener("input", updateIndex);
+						   				colInput.addEventListener("input", updateIndex);
+										
+										
+										
 						let backKitModule = $("#backKitModule" + dBBoqIndex);
 						let backPortNumInput   = $("#backPortNum" + dBBoqIndex);
 
@@ -15322,10 +15352,10 @@ function viewOnMap(checkbox, ptList, ptData) {
 						         }
 						     }
 						 }
-						 function calculateRowColFromPort(port, numRows, numCols, direction, rowPerModule, totalModules) {
+						 function calculateRowColFromIndex(index, numRows, numCols, direction, rowPerModule, totalModules) {
 						     const totalPorts = numRows * numCols;
-						     if (port < 1 || port > totalPorts) {
-						         alert(`Invalid Port: ${port}. Must be between 1 and ${totalPorts}.`);
+						     if (index < 1 || index > totalPorts) {
+						         alert(`Invalid Port: ${index}. Must be between 1 and ${totalPorts}.`);
 						         return { row: "", col: "" };
 						     }
 
@@ -15335,15 +15365,15 @@ function viewOnMap(checkbox, ptList, ptData) {
 						     // --- CASE 1: simple (no modules) ---
 						     if (!rowPerModule || totalModules <= 1) {
 						         if (direction === "uptodown") {
-						             const row = Math.ceil(port / numCols);
-						             const col = (port - 1) % numCols + 1;
-						             console.log(`Simple → Port ${port}: Row=${row}, Col=${col}`);
+						             const row = Math.ceil(index / numCols);
+						             const col = (index - 1) % numCols + 1;
+						             console.log(`Simple → Port ${index}: Row=${row}, Col=${col}`);
 						             return { row, col };
 						         } else if (direction === "downtoup") {
-						             const reversedRow = Math.ceil(port / numCols);
-						             const col = (port - 1) % numCols + 1;
+						             const reversedRow = Math.ceil(index / numCols);
+						             const col = (index - 1) % numCols + 1;
 						             const row = numRows - reversedRow + 1;
-						             console.log(`Simple (Down→Up) → Port ${port}: Row=${row}, Col=${col}`);
+						             console.log(`Simple (Down→Up) → index  ${index}: Row=${row}, Col=${col}`);
 						             return { row, col };
 						         } else {
 						             alert("Invalid direction value.");
@@ -15355,10 +15385,10 @@ function viewOnMap(checkbox, ptList, ptData) {
 						     const colsPerModule = numCols / totalModules;
 						     const portsPerModule = numRows * colsPerModule;
 
-						     const moduleIndex = Math.ceil(port / portsPerModule); // 1-based
-						     const portInModule = port - (moduleIndex - 1) * portsPerModule;
+						     const moduleIndex = Math.ceil(index / portsPerModule); // 1-based
+						     const portInModule = index - (moduleIndex - 1) * portsPerModule;
 
-						     console.log(`\n[DEBUG] Port=${port}, Module=${moduleIndex}, PortInModule=${portInModule}`);
+						     console.log(`\n[DEBUG] Port=${index}, Module=${moduleIndex}, PortInModule=${portInModule}`);
 
 						     let localRow, localCol;
 
@@ -15382,8 +15412,11 @@ function viewOnMap(checkbox, ptList, ptData) {
 						 }
 
 
-						 function calculatePortFromRowCol(row, col, numRows, numCols, direction, rowPerModule, totalModules) {
+						 function calculateIndexFromRowCol(row, col, numRows, numCols, direction, rowPerModule, totalModules) {
 						     // normalize direction
+					
+
+						
 						     direction = direction.toLowerCase().replace(/\s+/g, "");
 
 						     if (row < 1 || row > numRows) {
@@ -15398,14 +15431,14 @@ function viewOnMap(checkbox, ptList, ptData) {
 						     // --- CASE 1: simple (no modules) ---
 						     if (!rowPerModule || totalModules <= 1) {
 						         if (direction === "uptodown") {
-						             const port = (row - 1) * numCols + col;
-						             console.log(`Simple → Row=${row}, Col=${col}, Port=${port}`);
-						             return port;
+						             const index = (row - 1) * numCols + col;
+						             console.log(`Simple → Row=${row}, Col=${col}, Port=${index}`);
+						             return index;
 						         } else if (direction === "downtoup") {
 						             const reversedRow = numRows - row + 1;
-						             const port = (reversedRow - 1) * numCols + col;
-						             console.log(`Simple (Down→Up) → Row=${row}, Col=${col}, Port=${port}`);
-						             return port;
+						             const index = (reversedRow - 1) * numCols + col;
+						             console.log(`Simple (Down→Up) → Row=${row}, Col=${col}, Port=${index}`);
+						             return index;
 						         } else {
 						             alert("Invalid direction value.");
 						             return "";
@@ -15433,10 +15466,9 @@ function viewOnMap(checkbox, ptList, ptData) {
 						         return "";
 						     }
 
-						     const port = (moduleIndex - 1) * portsPerModule + portInModule;
+						     const index = (moduleIndex - 1) * portsPerModule + portInModule;
 
-						     console.log(`→ Direction=${direction}, PortInModule=${portInModule}, GlobalPort=${port}`);
-						     return port;
+					         return index;
 						 }
 
 						 
