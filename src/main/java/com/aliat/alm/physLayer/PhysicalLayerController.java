@@ -3275,9 +3275,11 @@ public class PhysicalLayerController {
 								+ selectedDistBoardContext
 								+ "'),(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS='Active' AND B.DB_ID='"
 								+ selectedDistBoardContext
-								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE,DB_TYPE,SERIAL_NUMB,CONTROLLER_ID,CONTROLLER_NAME,ROW_COUNTING  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
+								+ "'),A.CITY, A.SITE_NAME,A.WAREHOUSE,TO_CHAR(A.CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),TO_CHAR(A.LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'),DB_INSTALLER ,DB_ENGINEER_NAME ,DB_DEPLOYMENT_TYPE ,DB_ADAPTOR_PANEL_TYPE,DB_TYPE,SERIAL_NUMB,CONTROLLER_ID,CONTROLLER_NAME,ROW_COUNTING, TOTAL_NUM_MODULE, ROW_PER_MODULE  FROM DISTRIBUTION_BOARD A WHERE A.DB_ID='"
 								+ selectedDistBoardContext + "' ")
 						.getResultList();
+				
+				System.out.println(mapper.writeValueAsString(DistBoardDetails));
 				/*
 				 * List<Object[]> DistBoardMappingPts = session.createNativeQuery(
 				 * "SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_Nb,FP_TUBE_Nb,BP_STRAND_Nb,BP_TUBE_Nb,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
@@ -9313,6 +9315,9 @@ public class PhysicalLayerController {
 							formatter.parse(request.getParameter("boardCreatedDate")).getTime());
 				}
 				System.out.println("net level" + request.getParameter("dbNetLevel"));
+				
+				int totalModules= Integer.parseInt(request.getParameter("distboardNumModules"));
+				int rowsPerModule= Integer.parseInt(request.getParameter("distboardRowPerModule"));
 
 				distributionBoard.setDistributionBoardId(distributionBoardId);
 				distributionBoard.setBoardCreationDate(boardCreationDate);
@@ -9332,6 +9337,9 @@ public class PhysicalLayerController {
 				distributionBoard.setDistributionBoardControllerId(request.getParameter("controllerId"));
 				distributionBoard.setDistributionBoardControllerName(request.getParameter("controllerName"));
 				distributionBoard.setDistributionBoardSerialNum(request.getParameter("serialNum"));
+				
+				distributionBoard.setRowPerModule(rowsPerModule);
+				distributionBoard.setTotalNumModule(totalModules);
 				
 				distributionBoard.setDBDeploymentType(request.getParameter("DBDeploymentType"));
 				distributionBoard.setDBAdaptorPanelType(request.getParameter("DBAdaptorPanelType"));
@@ -12864,6 +12872,20 @@ public class PhysicalLayerController {
 					} else if (StringUtils.equalsIgnoreCase(physicalLayer, "DistBoard")
 							|| StringUtils.equalsIgnoreCase(physicalLayer, "AllDistBoards")) {
 
+						
+						physicalLayerDeleteQuery = session
+								.createNativeQuery("delete from PANEL_KIT b where b.DB_ID IN (:param1)");
+						physicalLayerDeleteQuery.setParameter("param1", idList);
+						physicalLayerDeleteQuery.executeUpdate(); 
+						
+						
+						physicalLayerDeleteQuery = session
+								.createNativeQuery("delete from PANEL_MODULE b where b.DB_ID IN (:param1)");
+						physicalLayerDeleteQuery.setParameter("param1", idList);
+						physicalLayerDeleteQuery.executeUpdate();
+						
+						
+						
 						physicalLayerDeleteQuery = session
 								.createNativeQuery("delete from distribution_board b where b.DB_ID IN (:param1)");
 						physicalLayerDeleteQuery.setParameter("param1", idList);
