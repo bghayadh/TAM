@@ -95,7 +95,7 @@
 </style>
 </head>
 <%@ include file="/WEB-INF/views/Network/FiberSearch.jsp" %> 
-<body>
+<body style=" overflow-y:hidden;">
 	<c:set var="pg" value="network" scope="session" />
 	<jsp:include page="../header.jsp"></jsp:include><p></p><br>
 	<input type="text" id="fiberAuxFlag" name="fiberAuxFlag" value="" class="form-control text-input" hidden="hidden" />
