@@ -6918,6 +6918,25 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														Number </b></span> <input type="text" id="DistributionBoardColsNum"
 													class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
 											</div></div></div></div>
+											
+											
+											
+												<div class="row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 175px;" class="input-group-text"><b>Number of Modules </b></span>
+												 <input type="text" id="DistributionBoardNumModules" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
+											</div></div></div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 140px;" class="input-group-text"><b>Rows Per Module
+														 </b></span> <input type="text" id="DistributionBoardRowPerModule"
+													class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if>/>
+											</div></div></div></div> 
+											
+											
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
