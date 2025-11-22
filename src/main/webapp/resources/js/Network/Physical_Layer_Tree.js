@@ -18050,12 +18050,23 @@ $("#sortByIndex").click(function () {
 		var fP_JunctionName=$(this).parent().parent().children('td[name="FP_JunctionName"]').children('input').val();
 		var bP_JunctionID=$(this).parent().parent().children('td[name="BP_JunctionID"]').children('input').val();
 		var bP_JunctionName=$(this).parent().parent().children('td[name="BP_JunctionName"]').children('input').val();
+		
+		
+		var nearModule=$(this).parent().parent().children('td[name="nearModule"]').children('input').val();
+		var nearPortNum=$(this).parent().parent().children('td[name="nearPortNum"]').children('input').val();
+		var nearPatchType=$(this).parent().parent().children('td[name="patchType"]').children('input').val();
+			
+		var farKitSerialNum=$(this).parent().parent().children('td[name="farKitSerialNum"]').children('input').val();
+		var farModule=$(this).parent().parent().children('td[name="farModule"]').children('input').val();
+		var farPortNum=$(this).parent().parent().children('td[name="farPortNum"]').children('input').val();
+		
+		var backKitModule=$(this).parent().parent().children('td[name="backKitModule"]').children('input').val();
+		var backPortNum=$(this).parent().parent().children('td[name="backPortNum"]').children('input').val();
 				
-			
-			
-				 dbmappingdata.push([rowColIndex,
-				 rowNum,
-				 colNum,
+				
+				 dbmappingdata.push([Number(rowColIndex),
+				 Number(rowNum),
+				 Number(colNum),
 				 portId,
 				 fP_Status,
 				 fP_LocationType,
@@ -18100,13 +18111,22 @@ $("#sortByIndex").click(function () {
 				 fP_JunctionID,
 				 fP_JunctionName,
 				 bP_JunctionID,
-				 bP_JunctionName]);
+				 bP_JunctionName, 
+			 nearModule, nearPortNum,nearPatchType,
+			 farKitSerialNum,farModule,farPortNum,
+			 backKitModule,backPortNum
+		 ]);
 			});
 			 
+				
+			var totalmodules= $("#DistributionBoardNumModules");
+			var rowsPerModule=$("#DistributionBoardRowPerModule");
+			
+			var panelInfo=[rowsPerModule, totalmodules]; 
 			//dbmappingdata.sort(sortFunction);
 			dbmappingdata = dbmappingdata.sort((a, b) => a[0] - b[0]);
 			$("#DbMappingTable > tbody").empty();
-			DBMappingData(dbmappingdata);
+			DBMappingData(dbmappingdata, panelInfo);
 			
 		});
 		
