@@ -188,6 +188,47 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
   });
   layer.add(panelGroup);
 
+  // ---------------------- RU move sound (insert AFTER panelGroup is created) ----------------------
+  // Uses your RU_PX and railsY variables and your playHeavyClick() function.
+  // It only plays when the panel crosses a new RU while dragging (no sound on grab).
+  let _lastRU = null;
+
+  // initialize baseline when user starts dragging (no sound on grab)
+  panelGroup.on('dragstart', () => {
+    // compute RU index relative to railsY
+    const relY = panelGroup.y() - railsY;
+    _lastRU = Math.round(relY / RU_PX);
+  });
+
+  // during drag, check if RU changed
+  panelGroup.on('dragmove', () => {
+    // relY relative to rails top
+    const relY = panelGroup.y() - railsY;
+    // clamp relY so rounding behaves even if small negative/overflow during dragBound
+    const clampedRelY = Math.max(0, Math.min(railsHeight - panelHeight, relY));
+    const currentRU = Math.round(clampedRelY / RU_PX);
+
+    if (_lastRU === null) {
+      _lastRU = currentRU;
+      return;
+    }
+
+    if (currentRU !== _lastRU) {
+      // Play your existing heavy click sound
+      try {
+        playHeavyClick();
+      } catch (e) {
+        console.warn('playHeavyClick error', e);
+      }
+      _lastRU = currentRU;
+    }
+  });
+
+  // reset on dragend (so next dragstart re-initializes); we DO NOT play sound here
+  panelGroup.on('dragend', () => {
+    _lastRU = null;
+  });
+
   var panelBackground = new Konva.Rect({
     x: 0,
     y: 0,
@@ -779,6 +820,7 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
       }
     }
   });
+
 
   layer.draw();
 }
