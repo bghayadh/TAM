@@ -3649,6 +3649,76 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findModuleDetails", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findModuleDetails(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+		// logger.info("Welcome home! The client locale is {}.", locale);
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedDistBoardContext = request.getParameter("selectedDistBoardContext");
+			try {
+
+					
+				Object[] panelInfo = (Object[]) session.createNativeQuery(
+					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE " +
+					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+					)
+					.setParameter("dbId", selectedDistBoardContext)
+					.getSingleResult();
+				
+				rtn.put("panelInfo", panelInfo);
+				
+				session.flush();
+				session.clear();
+				tx.commit();
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findDistBoardMappingData due to \n " + exceptionAsString);
+				logger.info("Error in findDistBoardMappingData due to \n " + exceptionAsString);
+				rtn.put("DistBoardMappingPts", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findDistBoardMappingDetails", method = RequestMethod.GET)
 	@ResponseBody
