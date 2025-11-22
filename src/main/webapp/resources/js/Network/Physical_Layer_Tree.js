@@ -8329,6 +8329,16 @@ singleHandhole = new ContextMenu({
 											$("#boardCreationDate").val(data.DistBoardDetails[0][12]);
 										}
 										
+										if(data.DistBoardDetails[0][23]!=null){
+											$("#DistributionBoardNumModules").val(data.DistBoardDetails[0][23]);
+																				}
+																				
+																				
+										if(data.DistBoardDetails[0][24]!=null){
+												$("#DistributionBoardRowPerModule").val(data.DistBoardDetails[0][24]);
+													}
+													
+										
 										if(data.DistBoardDetails[0][13]!=null){
 											$("#boardLastModifiedDate").val(data.DistBoardDetails[0][13]);
 										}
@@ -12916,7 +12926,12 @@ $("#saveHandhole").click(function () {
 					distboardControllerId= document.getElementById("DBController").value;
 					distboardControllerName= document.getElementById("DBControllerName").value;
 					distboardSerialNum= document.getElementById("DBSerialNum").value;				
-					distboardRowCount= $("#rowCounting option:selected").text();		
+					distboardRowCount= $("#rowCounting option:selected").text();
+					distboardNumModules= document.getElementById("DistributionBoardNumModules").value;				
+					distboardRowPerModule= document.getElementById("DistributionBoardRowPerModule").value;				
+										
+					
+							
 					if($("#projectIdDB").is(":visible") && $("#projectNameDB").is(":visible")){
 						if($("#DBProjectId").val()==""){
 							IdNodeSelectedTemp="CurrentPhysicalLayer";
@@ -13032,7 +13047,10 @@ let moduleData = [];
 									  "deletedKitIds" : deletedKitIds,
 									  "deletedModuleIds" : deletedModuleIds,
 									  "kitData" :  JSON.stringify(kitData),
-									  "moduleData" :  JSON.stringify(moduleData)
+									  "moduleData" :  JSON.stringify(moduleData),
+									  "distboardNumModules" : distboardNumModules,
+									  "distboardRowPerModule" : distboardRowPerModule
+									
 									   
 							},
 							dataType: "json",
