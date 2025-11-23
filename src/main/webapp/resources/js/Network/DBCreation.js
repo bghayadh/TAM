@@ -192,137 +192,100 @@ function createDB(distribBoardList, transfer){
 	    }, 100);
 	    return; // exit for now
 	}
-
+console.log(distribBoardList);
 
 	 
-		if(distribBoardList!=null){
-					for(i=0;i<distribBoardList.length;i++){
+	if(distribBoardList!=null){
+		for(i=0;i<distribBoardList.length;i++){
+			allDB.push(distribBoardList[i][0]);
+			window[""+distribBoardList[i][0]]=[];
+			window[""+distribBoardList[i][0]]=distribBoardList[i];
 						
-					    allDB.push(distribBoardList[i][0]);
-						window[""+distribBoardList[i][0]]=[];
-						window[""+distribBoardList[i][0]]=distribBoardList[i];
-						var type ="";
-	/*	if (distribBoardList[i][9] !== "passive" && distribBoardList[i][9] !== "active")	{
-			
-			
-			 $.ajax({
-									type: "GET",
-									contentType: "application/json; charset=utf-8",
-									url: getContext()+'/findDbType',
-									data: {
-										"dbId": distribBoardList[i][0],			
-									},
-									dataType: "json",
-									success: function (data) {
-										
-										type=data.dbType;
-										console.log(type);
-										console.log("zzzzzzzzzzzzzzz");
-									},
-									error: function (result) {
-										alert("Error");
-									}
-								});
-							
-						
-			
-		}		*/	
-						
-						
-						
-						if(distribBoardList[i][9] === "passive" || distribBoardList[i][10] === "passive"){
-						
-						if(distribBoardList[i][8]=="backbone") {
-							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-							$("#DistributionBoard_backbone__"+distribBoardList[i][6]).append(str);
-				
-							create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
-							DBCheckFilter(distribBoardList[i][0],markerClusterBackboneDistBoard);
-						}
-						else if(distribBoardList[i][8]=="metro") {
-							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-							$("#DistributionBoard_metro__"+distribBoardList[i][6]).append(str);
-							create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterMetroDistBoard,"","");				
-							DBCheckFilter(distribBoardList[i][0],markerClusterMetroDistBoard);
-																
-						}
-						else if(distribBoardList[i][8]=="access") {
-							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-							$("#DistributionBoard_access__"+distribBoardList[i][6]).append(str);
-							create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterAccessDistBoard,"","");				
-							DBCheckFilter(distribBoardList[i][0],markerClusterAccessDistBoard);
-																
-						}
-						}
-						
-						else if (distribBoardList[i][9] === "active" || distribBoardList[i][10] === "active"){
-							if(distribBoardList[i][8]=="backbone") {
-							
-							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-						
-							if(distribBoardList[i][10] === "active"){
-								$("#"+distribBoardList[i][11]).append(str);
-								}
-								else{
-									$("#"+distribBoardList[i][10]).append(str);
-									
-								}
-							create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
-							DBCheckFilter(distribBoardList[i][0],markerClusterBackboneDistBoard);
-													}
-							
-							else  if(distribBoardList[i][8]=="metro") {
-								str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-								if(distribBoardList[i][10] === "active"){
-																$("#"+distribBoardList[i][11]).append(str);
-																}
-																else{
-																	$("#"+distribBoardList[i][10]).append(str);
-																	
-																}	create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
-								DBCheckFilter(distribBoardList[i][0],markerClusterMetroDistBoard);
-							}							
-							else  if(distribBoardList[i][8]=="access") {
-							str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
-							if(distribBoardList[i][10] === "active"){
-															$("#"+distribBoardList[i][11]).append(str);
-															}
-															else{
-																$("#"+distribBoardList[i][10]).append(str);
-																
-															}     create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
-							DBCheckFilter(distribBoardList[i][0],markerClusterAccessDistBoard);
-																															}
-																								
-						}
-						
-						$(".DistributionBoard > .TreeSpan").contextmenu(function(){
-							menuName=singleDistBoard;
-							IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
-							selectedDistBoardContext=$(this).parents().attr('id');
-							selectedDistBoardName=$(this).text();
-							openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
-												
-						});	
-						
+			if(distribBoardList[i][9] === "passive" || distribBoardList[i][10] === "passive") {
+				if(distribBoardList[i][8]=="backbone") {
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					$("#DistributionBoard_backbone__"+distribBoardList[i][6]).append(str);
+					create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
+					DBCheckFilter(distribBoardList[i][0],markerClusterBackboneDistBoard);
+				}
+				else if(distribBoardList[i][8]=="metro") {
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					$("#DistributionBoard_metro__"+distribBoardList[i][6]).append(str);
+					create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterMetroDistBoard,"","");				
+					DBCheckFilter(distribBoardList[i][0],markerClusterMetroDistBoard);
+				}
+				else if(distribBoardList[i][8]=="access") {
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					$("#DistributionBoard_access__"+distribBoardList[i][6]).append(str);
+					create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterAccessDistBoard,"","");				
+					DBCheckFilter(distribBoardList[i][0],markerClusterAccessDistBoard);
+				}
+			}
+			else if (distribBoardList[i][9] === "active" || distribBoardList[i][10] === "active"){
+				if(distribBoardList[i][8]=="backbone") {
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/backboneDB.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					if(distribBoardList[i][10] === "active") {
+						$("#"+distribBoardList[i][11]).append(str);
 					}
-				
+					else {
+						$("#"+distribBoardList[i][10]).append(str);
+					}
+					create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
+					DBCheckFilter(distribBoardList[i][0],markerClusterBackboneDistBoard);
+				}
+				else if(distribBoardList[i][8]=="metro") {
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/metroDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					if(distribBoardList[i][10] === "active"){
+						$("#"+distribBoardList[i][11]).append(str);
+					}
+					else{
+						$("#"+distribBoardList[i][10]).append(str);
+					}	
+					create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
+					DBCheckFilter(distribBoardList[i][0],markerClusterMetroDistBoard);
+				}							
+				else  if(distribBoardList[i][8]=="access") {
+					str="<ul><li id='"+distribBoardList[i][0]+"'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/accessDb.png'> "+distribBoardList[i][3]+"/"+distribBoardList[i][0]+" </span></li></ul>";
+					if(distribBoardList[i][10] === "active"){
+						$("#"+distribBoardList[i][11]).append(str);
+					}
+					else {
+						$("#"+distribBoardList[i][10]).append(str);
+					}
+					create_DB_Marker_Click(distribBoardList[i][0],distribBoardList[i][3],distribBoardList[i][1],distribBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"","");				
+					DBCheckFilter(distribBoardList[i][0],markerClusterAccessDistBoard);
+				}
+			}
+		}
+					
+		$(".DistributionBoard > .TreeSpan").contextmenu(function(){
+			menuName=singleDistBoard;
+			let label =$(this).parents("li").eq(2).children(".TreeSpan").first().text().trim();
+			if (label.startsWith("Controllers")) {
+				IdNodeSelectedTemp=$(this).parents().eq(4).attr('id').split("__")[1];
+				console.log("It is controller folder");
+				console.log("IdNodeSelectedTemp is " +IdNodeSelectedTemp);
+			}							
+			else {
+				IdNodeSelectedTemp=$(this).parents().eq(2).attr('id').split("__")[1];
+				console.log("It is passive");	
+			}							
+			selectedDistBoardContext=$(this).parents().attr('id');
+			selectedDistBoardName=$(this).text();
+			openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);
+		});	
+						
 		$(".DistBoard  > .TreeSpan").contextmenu(function(){
 			menuName=singleDistBoard;
-			
 			selectedDistBoardContext=$(this).attr('id');
-												selectedDistBoardName=$(this).text();
-												openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);							
-		});	
-		
-		 
-	    //nodeLayerCheckAll();
+			selectedDistBoardName=$(this).text();
+			openContext(selectedDistBoardContext,selectedDistBoardName,singleDistBoard,event);							
+		});
 	}
 	AllDistributionBoardCheckFilter("DistributionBoard_backbone__CurrentPhysicalLayer",markerClusterBackboneDistBoard);
     AllDistributionBoardCheckFilter("DistributionBoard_metro__CurrentPhysicalLayer",markerClusterMetroDistBoard);
     AllDistributionBoardCheckFilter("DistributionBoard_access__CurrentPhysicalLayer",markerClusterAccessDistBoard);
 	AllDistributionBoardCheckFilter("DistributionBoard_f_CurrentPhysicalLayer","");
-   
 }
 
 
@@ -1137,7 +1100,7 @@ function deleteKit(){
 				 							alert("Select Row(s) to Delete");
 				 						 }
 
-			  
+			   console.log(deletedKitIds);
 			 };
 			 	   function selectAllKit(btn) {
 			 		    if ($(btn).hasClass('allChecked')) {
@@ -1209,7 +1172,4 @@ function deleteKit(){
 			 				 }
 
 			 			   
-			 			 };		 
-
-			 			 
-			
+			 			 };
