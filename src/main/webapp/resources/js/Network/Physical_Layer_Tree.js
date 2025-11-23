@@ -8066,7 +8066,7 @@ singleHandhole = new ContextMenu({
 									},
 									dataType: "json",
 									success: function (data) {
-										console.log(data);	
+										
 										
 										
 										$("#DbMappingTable > tbody").empty();
@@ -8124,12 +8124,12 @@ singleHandhole = new ContextMenu({
 																				$("#DbKit > tbody").empty(); // clear old rows
 
 																				kitData.forEach(function(row) {
-																					console.log(kitData);
+																					
 																					var kitId = row[0];       // KIT_ID
 																					        var serialNum = row[1];   // KIT_SERIAL_NUM
 																					        var type = row[2];        // KIT_TYPE
 
-																					        console.log(serialNum);
+																					        
 
 																							// Create markup using string concatenation and double quotes
 																							      var markup = "<tr>"
@@ -8149,7 +8149,6 @@ singleHandhole = new ContextMenu({
 																							      $("#DbKit > tbody").append($row);
 
 																							      // Set values programmatically (just in case)
-																							      console.log("Serial input value:", $row.find(".serial-input").val());
 																							      $row.find(".serial-input").val(serialNum);
 																							      $row.find(".type-input").val(type);
 																								
@@ -8364,13 +8363,12 @@ singleHandhole = new ContextMenu({
 										    $("#distControllerName").show();
 										}
 										var dbTypeValue = $("#DBType").val();
-										console.log("Selected DBType value: " + dbTypeValue); // Log the value to see what it is
+										
 										if (dbTypeValue === "active") {
 										    console.log("DBType is active, disabling DBnetlevel...");
 											$("#DBnetlevel").prop('disabled', true);
 										} else {
-										    console.log("DBType is not active, DBnetlevel remains enabled.");
-											$("#DBnetlevel").prop('disabled', false);
+										    $("#DBnetlevel").prop('disabled', false);
 	}
 
 										$("#DistributionBoardName").on("input",function(){
@@ -13311,7 +13309,6 @@ let moduleData = [];
 				success: function (data) {
 					$("#loaderDivDB").hide();
 
-					console.log("before "+index)
 					index = 0
 
 					if (data != null) {
@@ -18119,8 +18116,8 @@ $("#sortByIndex").click(function () {
 			});
 			 
 				
-			var totalmodules= $("#DistributionBoardNumModules");
-			var rowsPerModule=$("#DistributionBoardRowPerModule");
+			var totalmodules= Number($("#DistributionBoardNumModules"));
+			var rowsPerModule=Number($("#DistributionBoardRowPerModule"));
 			
 			var panelInfo=[rowsPerModule, totalmodules]; 
 			//dbmappingdata.sort(sortFunction);
@@ -21068,7 +21065,7 @@ function tree_prop_general(ManholeId){
 }
 
 function treeCollapseFolder(selector,type,clss){
-console.log("uf");
+
 	if(selector == null) {
 		selector= " .folder";
 	}				
@@ -21077,8 +21074,7 @@ console.log("uf");
 		console.log(id);
 		console.log("id:", id);
 	
-		console.log("Are all '> ul > li' elements hidden?:", $(this).parent().find(' > ul > li').is(":hidden"));
-
+		
 		if(id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && $(this).parent().find(' > ul > li').is(":hidden")){
 			//console.log("passed treeCollapseFolder");
 			getFiberPath();
@@ -21109,7 +21105,7 @@ console.log("uf");
 
 		if (children.length > 0) {
 		    // Has children: toggle their visibility
-			console.log("wooo");
+		
 		    if (children.is(":visible")) {
 		        children.hide(type);
 		        $(this).parent().children(clss).find('> svg')
