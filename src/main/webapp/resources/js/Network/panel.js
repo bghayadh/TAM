@@ -323,12 +323,8 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
         }
       }
     } else if (rc === "Down To Up") {
-		console.log("woww");
-      // start from bottom-left, up
-      // we push numbers in the visual order we'll draw ports so we must map correctly.
-      // To keep drawing loop simple (row 0..N-1), we build a mapping where numberingArray[index] gives label for that drawn port.
-      // Approach: build a 2D array labels[row][col], fill according to Down To Up, then flatten row-major for draw loop.
-      let tmp = [];
+	
+       let tmp = [];
       for (let r = 0; r < numRowsFromDb; r++) {
         tmp[r] = new Array(numColumnsFromDb);
       }

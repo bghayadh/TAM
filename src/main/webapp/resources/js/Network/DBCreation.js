@@ -192,7 +192,7 @@ function createDB(distribBoardList, transfer){
 	    }, 100);
 	    return; // exit for now
 	}
-console.log(distribBoardList);
+
 
 	 
 		if(distribBoardList!=null){
@@ -1137,7 +1137,7 @@ function deleteKit(){
 				 							alert("Select Row(s) to Delete");
 				 						 }
 
-			   console.log(deletedKitIds);
+			  
 			 };
 			 	   function selectAllKit(btn) {
 			 		    if ($(btn).hasClass('allChecked')) {
