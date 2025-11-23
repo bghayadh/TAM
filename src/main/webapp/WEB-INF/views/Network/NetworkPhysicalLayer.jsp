@@ -3492,7 +3492,7 @@
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
 						<h5 class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Distribution Boards Details</h5>
-						<div style=float:right;">
+						<div style="float:right;">
 						<button type="button" name="closePopup" class="close" data-dismiss="modal"> <i class='fa fa-times'></i></button>
 						<a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i>
 						</a>
@@ -6787,8 +6787,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 						<ul class="nav nav-tabs" id="myTabDb" role="tablist" style="background-color: #00757C;">
 							<li class="nav-item"><a class="nav-link active" id="distBoard-tab" style="color: gold;" data-toggle="tab" href="#D_Board" role="tab" aria-controls="D_Board" aria-selected="true">Board </a></li>
 							<li class="nav-item"><a class="nav-link " id="mapping-tab" style="color: gold;" data-toggle="tab" href="#mapping" role="tab" aria-controls="mapping" aria-selected="false">Mapping</a></li>
-							<li class="nav-item"><a class="nav-link " id="mapping-tab" style="color: gold;" data-toggle="tab" href="#Kit" role="tab" aria-controls="Kit" aria-selected="false">Kit</a></li>
-							<li class="nav-item"><a class="nav-link " id="mapping-tab" style="color: gold;" data-toggle="tab" href="#module" role="tab" aria-controls="Module" aria-selected="false">Module</a></li>
+							<li class="nav-item"><a class="nav-link " id="dbKit-tab" style="color: gold;" data-toggle="tab" href="#Kit" role="tab" aria-controls="Kit" aria-selected="false">Kit</a></li>
+							<li class="nav-item"><a class="nav-link " id="dbModule-tab" style="color: gold;" data-toggle="tab" href="#module" role="tab" aria-controls="Module" aria-selected="false">Module</a></li>
 						</ul>
 						<div class="tab-content"><p></p>
 							<div class="tab-pane active" id="D_Board" role="tabpanel" aria-labelledby="distBoard-tab">

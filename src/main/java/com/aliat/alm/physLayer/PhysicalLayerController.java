@@ -2223,7 +2223,7 @@ public class PhysicalLayerController {
 
 							    // Query TYPE for this DB_ID
 							    String dbType = (String) session.createNativeQuery(
-							            "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+							            "SELECT DB_TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
 							        ).setParameter("param1", dbId)
 							         .getSingleResult();
 							    String controllerId = (String) session.createNativeQuery(
@@ -2250,7 +2250,7 @@ public class PhysicalLayerController {
 							    String query = "SELECT DISTINCT CONTROLLER_ID " +
 							                   "FROM DISTRIBUTION_BOARD " +
 							                   "WHERE CONTROLLER_ID IS NOT NULL " +
-							                   "AND TYPE = 'active' " +
+							                   "AND DB_TYPE = 'active' " +
 							                   "AND DB_ID = :dbId";  // Use :dbId as a parameter to avoid SQL injection
 
 							    // Execute the query for the current DB_ID
@@ -2582,7 +2582,7 @@ public class PhysicalLayerController {
 
 						    // Query TYPE for this DB_ID
 						    String dbType = (String) session.createNativeQuery(
-						            "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+						            "SELECT DB_TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
 						        ).setParameter("param1", dbId)
 						         .getSingleResult();
 						    String controllerId = (String) session.createNativeQuery(
@@ -2609,7 +2609,7 @@ public class PhysicalLayerController {
 						    String query = "SELECT DISTINCT CONTROLLER_ID " +
 						                   "FROM DISTRIBUTION_BOARD " +
 						                   "WHERE CONTROLLER_ID IS NOT NULL " +
-						                   "AND TYPE = 'active' " +
+						                   "AND DB_TYPE = 'active' " +
 						                   "AND DB_ID = :dbId";  // Use :dbId as a parameter to avoid SQL injection
 
 						    // Execute the query for the current DB_ID
@@ -3421,7 +3421,7 @@ public class PhysicalLayerController {
 			String dbId = request.getParameter("dbId");
 			try {
 				String dbType = (String) session.createNativeQuery(
-					    "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+					    "SELECT DB_TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
 					).setParameter("param1", dbId)
 					 .getSingleResult();
 	
@@ -5341,6 +5341,7 @@ public class PhysicalLayerController {
 			try {
 
 				String distBoardSel = request.getParameter("DistBoardSel").toString();
+				
 				List<Object[]> DBData = session.createNativeQuery(
 						"Select DB_NAME,DB_LONGITUDE,DB_LATITUDE,CITY FROM DISTRIBUTION_BOARD where" + " DB_ID='"
 								+ distBoardSel + "' and PROJECT_ID='" + request.getParameter("projectID") + "'")
@@ -11442,13 +11443,13 @@ public class PhysicalLayerController {
 				rtn.put("controllerCount", controllerCount);
 
 				Object activeDB = session.createNativeQuery(
-						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE TYPE='active' AND PROJECT_ID='" + request.getParameter("ProjectId")
+						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE DB_TYPE='active' AND PROJECT_ID='" + request.getParameter("ProjectId")
 								+ "' AND DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "'   ")
 						.uniqueResult();
 				rtn.put("activeDB", activeDB);
 				
 				Object passiveDB = session.createNativeQuery(
-						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE TYPE='passive' AND PROJECT_ID='" + request.getParameter("ProjectId")
+						"SELECT count(*) FROM DISTRIBUTION_BOARD WHERE DB_TYPE='passive' AND PROJECT_ID='" + request.getParameter("ProjectId")
 								+ "' AND DB_NETWORK_LEVEL = '" + request.getParameter("networkLevel") + "'   ")
 						.uniqueResult();
 				rtn.put("passiveDB", passiveDB);
@@ -11600,14 +11601,14 @@ public class PhysicalLayerController {
 
 				Object CountActiveDB = session
 					    .createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" 
-					        + request.getParameter("ProjectId") + "' AND TYPE='active'")
+					        + request.getParameter("ProjectId") + "' AND DB_TYPE='active'")
 					    .uniqueResult();
 
 					rtn.put("CountActiveDB", CountActiveDB);
 
 					Object CountPassiveDB = session
 					    .createNativeQuery("SELECT count(*) FROM DISTRIBUTION_BOARD WHERE PROJECT_ID='" 
-					        + request.getParameter("ProjectId") + "' AND TYPE='passive'")
+					        + request.getParameter("ProjectId") + "' AND DB_TYPE='passive'")
 					    .uniqueResult();
 
 					rtn.put("CountPassiveDB", CountPassiveDB);
@@ -11741,6 +11742,8 @@ public class PhysicalLayerController {
 	@ResponseBody
 	public Map<String, Object> findCountfiber(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		
+		System.out.println("Welcome to findCountFiber");
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		// ObjectMapper mapper = new ObjectMapper();
@@ -18039,7 +18042,7 @@ public class PhysicalLayerController {
 
 		    // Query TYPE for this DB_ID
 		    String dbType = (String) findnearest.createNativeQuery(
-		            "SELECT TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
+		            "SELECT DB_TYPE FROM DISTRIBUTION_BOARD WHERE DB_ID = :param1"
 		        ).setParameter("param1", dbId)
 		         .getSingleResult();
 		    String controllerId = (String) findnearest.createNativeQuery(
@@ -18066,7 +18069,7 @@ public class PhysicalLayerController {
 		    String query = "SELECT DISTINCT CONTROLLER_ID " +
 		                   "FROM DISTRIBUTION_BOARD " +
 		                   "WHERE CONTROLLER_ID IS NOT NULL " +
-		                   "AND TYPE = 'active' " +
+		                   "AND DB_TYPE = 'active' " +
 		                   "AND DB_ID = :dbId";  // Use :dbId as a parameter to avoid SQL injection
 
 		    // Execute the query for the current DB_ID

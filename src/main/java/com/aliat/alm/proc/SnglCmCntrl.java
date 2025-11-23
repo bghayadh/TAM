@@ -30,7 +30,7 @@ public class SnglCmCntrl {
 
 	private Map<String, String> cntrlRecord = new LinkedHashMap<>();
 	private String str = "";
-	private int totalPorts = 0, totalPanelPorts = 0;
+	private int totalPorts = 0, totalPanelPorts = 0, totalPanelModules = 0;
 	private List<String> kitNeedCheck = new ArrayList<>();
 	private List<Map<String, Object>> newPanelKits = new ArrayList<>();
 	private List<String> dbID_NeedUpdate = new ArrayList<>();
@@ -117,11 +117,7 @@ public class SnglCmCntrl {
 							+ "where kit_serial_num in (:serial_num))";
 					session.createNativeQuery(str).setParameterList("serial_num", kitNeedCheck).executeUpdate();
 				}
-				System.out.println("kits is " + mapper.writeValueAsString(kits) + " kitsInfo is "
-						+ mapper.writeValueAsString(kitsInfo) + " panelKit is " + mapper.writeValueAsString(panelKit)
-						+ " kitModule is " + mapper.writeValueAsString(kitModule));
 				portsTreatment(token, ipAddress, cntrlRecord.get("controller_id"), session);
-				// patches(token, ipAddress, cntrlRecord.get("serial_numb"));
 			}
 		} catch (Exception e) {
 			logger.info("Error in controllerX method of class SnglCmCntrl which call controllerxAPI with a message : "
@@ -153,10 +149,31 @@ public class SnglCmCntrl {
 							panelCount++;
 							kits = new ArrayList<>();
 							kitsTreatment((List<Map<String, Object>>) panel.get("kits"), session);
-							session.createNativeQuery(
-									"update distribution_board set controller_id = :id, DB_TYPE = 'active' where db_id in (:db_IDs)")
-									.setParameter("id", controllerID).setParameterList("db_IDs", dbID_NeedUpdate)
-									.executeUpdate();
+							// 1. SELECT controller location info
+							String str = "select site, site_name, warehouse, latitude, longitude from controller where controller_id = :id";
+
+							List<Object[]> cntrlLocation = session.createNativeQuery(str)
+									.setParameter("id", controllerID).list();
+
+							Object[] row = cntrlLocation.get(0);
+
+							// Safely convert nullable fields
+							String site = (row[0] == null ? null : row[0].toString());
+							String siteName = (row[1] == null ? null : row[1].toString());
+							String warehouse = (row[2] == null ? null : row[2].toString());
+							String latitude = (row[3] == null ? null : row[3].toString());
+							String longitude = (row[4] == null ? null : row[4].toString());
+
+							// 2. UPDATE distribution_board
+							str = "update distribution_board " + "set controller_id = :id, " + "DB_TYPE = 'active', "
+									+ "site = :site, " + "    site_name = :siteName, "
+									+ "warehouse = :warehouse, db_latitude = :latitude, db_longitude = :longitude where db_id in (:dbIds)";
+
+							session.createNativeQuery(str).setParameter("id", controllerID).setParameter("site", site)
+									.setParameter("siteName", siteName).setParameter("warehouse", warehouse)
+									.setParameter("latitude", latitude).setParameter("longitude", longitude)
+									.setParameterList("dbIds", dbID_NeedUpdate).executeUpdate();
+
 							if (newPanelKits.size() > 0) {
 								insertPanel(controllerID, newPanelKits, session);
 							}
@@ -183,25 +200,29 @@ public class SnglCmCntrl {
 			totalKitPorts = 0;
 			kitInfo = new ArrayList<>();
 			moduleNumber = new LinkedHashMap<>();
-			if (kitNeedCheck.contains(kit.get("kitId").toString())) {
+			if (kitNeedCheck.contains(kit.get("kitId").toString())) { // Checking kits that currently assigned to the controller.
 				kitNeedCheck.remove(kitNeedCheck.get(kitNeedCheck.indexOf(kit.get("kitId").toString())));
 				kits.add(kit.get("kitId").toString());
 				str = "select db_id from panel_kit where KIT_SERIAL_NUM = :serial_num";
 				dbIDs = session.createNativeQuery(str).setParameter("serial_num", kit.get("kitId").toString())
 						.getResultList();
+				if (!dbID_NeedUpdate.contains(dbIDs.get(0))) {
+					dbID_NeedUpdate.add(dbIDs.get(0).toString());
+				}
+
 				kitInfo.add(dbIDs.get(0));
 				modules = (List<Map<String, Object>>) kit.get("modules");
 				for (Map<String, Object> module : modules) {
 					totalPorts += Integer.parseInt(module.get("sensorCount").toString());
 					totalPanelPorts += Integer.parseInt(module.get("sensorCount").toString());
 					totalKitPorts += Integer.parseInt(module.get("sensorCount").toString());
-					moduleNumber.put(module.get("position").toString(), i + 1);
+					moduleNumber.put(module.get("position").toString(), i + 1);					
 					i++;
 				}
 				kitInfo.add(totalKitPorts);
 				kitsInfo.put(kit.get("kitId").toString(), kitInfo);
 				kitModule.put(kit.get("kitId").toString(), moduleNumber);
-			} else {
+			} else { // Checking if the kits are existed with panel assigned to other controller.
 				List<String> otherDbID = new ArrayList<>();
 				str = "select db_id from panel_kit where kit_serial_num = '" + kit.get("kitId").toString() + "'";
 				otherDbID = session.createNativeQuery(str).list();
@@ -222,21 +243,24 @@ public class SnglCmCntrl {
 					if (!dbID_NeedUpdate.contains(otherDbID.get(0))) {
 						dbID_NeedUpdate.add(otherDbID.get(0).toString());
 					}
-				} else {
+				} else { // Case the kit is new.
 					modules = (List<Map<String, Object>>) kit.get("modules");
 					for (Map<String, Object> module : modules) {
 						totalPorts += Integer.parseInt(module.get("sensorCount").toString());
 						totalPanelPorts += Integer.parseInt(module.get("sensorCount").toString());
 						totalKitPorts += Integer.parseInt(module.get("sensorCount").toString());
+						moduleNumber.put(module.get("position").toString(), i + 1);
+						i++;
 					}
 					newPanelKits.add(kit);
 				}
 			}
 		}
+		totalPanelModules = i;
 	}
 
 	@SuppressWarnings("unchecked")
-	public void insertPanel(String controllerID, List<Map<String, Object>> newKits, Session session) {
+	public void insertPanel(String controllerID, List<Map<String, Object>> newKits, Session session) throws JsonProcessingException {
 		String dbID = "", kitID = "", moduleID = "";
 		int rowPerModule = 0, seq = 0;
 		DistributionBoard distributionBoard = new DistributionBoard();
@@ -297,8 +321,10 @@ public class SnglCmCntrl {
 			rowPerModule = 3;
 
 		distributionBoard.setRowPerModule(rowPerModule);
+		distributionBoard.setTotalNumModule(totalPanelModules);
 		distributionBoard.setRowCounting("Down To Up");
 		session.saveOrUpdate(distributionBoard);
+		session.flush();
 
 		for (Map<String, Object> kit : newKits) {
 			PanelKit panelKit = new PanelKit();
@@ -331,6 +357,7 @@ public class SnglCmCntrl {
 				session.saveOrUpdate(kitModule);
 			} // End for loop for modules.
 		} // End for loop for kits.
+		session.flush();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -379,10 +406,10 @@ public class SnglCmCntrl {
 			for (Object[] panel_Info : panelsInfo) {
 				portIndex = 0;
 				str = "SELECT DB_PORT_ID, DB_ID, ROW_COL_INDEX, ROW_NUMBER, COLUMN_NUMBER, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, "
-						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE FROM DISTRIBUTION_BOARD_MAP WHERE DB_ID = '"
+						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_ID = '"
 						+ panel_Info[0].toString() + "'";
 				dbPorts = session.createNativeQuery(str).getResultList();
-				str = "SELECT ROW_NUMBER() OVER (ORDER BY MODULE_POSITION ASC) AS ROW_NUM, MODULE_ID, MODULE_POSITION, SERIAL_KIT_NUM, SENSOR_COUNT FROM CONTROLLER_MODULE WHERE DB_ID = '"
+				str = "SELECT ROW_NUMBER() OVER (ORDER BY MODULE_POSITION ASC) AS ROW_NUM, MODULE_ID, MODULE_POSITION, KIT_SERIAL_NUM, SENSOR_COUNT FROM PANEL_MODULE WHERE DB_ID = '"
 						+ panel_Info[0].toString() + "' ORDER BY MODULE_POSITION ASC";
 				panelModules = session.createNativeQuery(str).list();
 				dbPortCount = Integer.parseInt(panel_Info[3].toString());
@@ -412,7 +439,7 @@ public class SnglCmCntrl {
 					for (int i = 0; i < modulePortCount; i++) {
 						if (i < colPerModule) {
 							rowModuleNum = 1;
-							colModuleNum = i;
+							colModuleNum = i+1;
 						} else if (i < (2 * colPerModule)) {
 							rowModuleNum = 2;
 							colModuleNum = (i + 1) - colPerModule;
@@ -538,7 +565,6 @@ public class SnglCmCntrl {
 
 	@SuppressWarnings("unchecked")
 	public void patches(String token, String ipAddress, String rackID) {
-		System.out.println("Welcome to patches");
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		Map<String, Object> rtnBody = new LinkedHashMap<>();
 		List<Map<String, Object>> patches = new ArrayList<>();
