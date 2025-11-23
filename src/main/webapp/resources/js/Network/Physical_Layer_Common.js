@@ -14310,7 +14310,7 @@ var totalModules = panelInfo[1];
 						$('#FP_LocationID'+indexFor).val('');
 						if($(this).val()=="Customer"){					
 							$('#FP_equipment'+indexFor).children('option').remove();
-							$('#FP_equipment'+indexFor).append("<option value='none'>select an option</option><option value='Custom'>Custom</option><option value='Node'>Node</option><option value='DistBoard'>DB</option>");
+							$('#FP_equipment'+indexFor).append("<option value='none'>Select an Option</option><option value='Custom'>Custom</option><option value='Node'>Node</option><option value='DistBoard'>DB</option>");
 							$('#FP_equipmentType'+indexFor).val('');	
 							$('#FP_Location'+indexFor).prop("readonly", true);					
 						} else if($(this).val()=="Manhole" || $(this).val()=="Handhole"){
