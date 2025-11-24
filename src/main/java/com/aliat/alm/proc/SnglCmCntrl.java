@@ -274,7 +274,10 @@ public class SnglCmCntrl {
 		cntrl = session.get(ControllerPanel.class, controllerID);
 
 		seq = ((Number) session.createNativeQuery("SELECT DB_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
+		System.out.println("seq is " +seq);
 		dbID = "DB_" + year + "_" + seq;
+		System.out.println("dbID is " +dbID);
+		
 
 		dbIDs.add(dbID);
 		distributionBoard.setDistributionBoardId(dbID);
@@ -358,6 +361,7 @@ public class SnglCmCntrl {
 			} // End for loop for modules.
 		} // End for loop for kits.
 		session.flush();
+		System.out.println("In the end of method, the dbID is" +dbID);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -496,7 +500,7 @@ public class SnglCmCntrl {
 							}
 						} else {
 							// Insert new port and will use matchedPatchPort
-							seq = ((Number) session.createNativeQuery("SELECT DB_SEQ.NEXTVAL FROM DUAL").uniqueResult())
+							seq = ((Number) session.createNativeQuery("SELECT DB_PORT_SEQ.NEXTVAL FROM DUAL").uniqueResult())
 									.intValue();
 							dbPortID = "DB_PORT_" + year + "_" + seq;
 							str = "insert into distribution_board_mapping (db_port_id, db_id, row_col_index, row_number, column_number, "
