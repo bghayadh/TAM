@@ -94,12 +94,12 @@ public class updateCitiesController {
 
 	private static final Logger logger = Logger.getLogger(updateCitiesController.class.getName());
 
-	private static Transaction tx = null;
-	private static ObjectMapper mapper = new ObjectMapper();
-	private static Query query = null;
-	private static StringWriter sw;
-	private static String exceptionAsString;
-	  private static final double R = 6371; // Radius of the earth in km
+	private Transaction tx = null;
+	private ObjectMapper mapper = new ObjectMapper();
+	private Query query = null;
+	private StringWriter sw;
+	private String exceptionAsString;
+	private final double R = 6371; // Radius of the earth in km
 
 
 

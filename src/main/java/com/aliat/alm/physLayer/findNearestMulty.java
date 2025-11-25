@@ -93,11 +93,11 @@ public class findNearestMulty {
 
 	private static final Logger logger = Logger.getLogger(findNearestMulty.class.getName());
 
-	private static Transaction tx = null;
-	private static ObjectMapper mapper = new ObjectMapper();
-	private static Query query = null;
-	private static StringWriter sw;
-	private static String exceptionAsString;
+	private Transaction tx = null;
+	private ObjectMapper mapper = new ObjectMapper();
+	private Query query = null;
+	private StringWriter sw;
+	private String exceptionAsString;
 
 //	private EntityManagerFactory emf =null;
 
