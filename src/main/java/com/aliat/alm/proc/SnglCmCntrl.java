@@ -437,19 +437,19 @@ public class SnglCmCntrl {
 					String key = dbPort[5] + "-" + dbPort[6];
 					portsMap.put(key, dbPort);
 				}
-
+				int j = 0;
 				for (Object[] panelModule : panelModules) {
 					int modulePortCount = Integer.parseInt(panelModule[4].toString());
 					for (int i = 0; i < modulePortCount; i++) {
 						if (i < colPerModule) {
 							rowModuleNum = 1;
-							colModuleNum = i+1;
+							colModuleNum = (i+1) + j * colPerModule;
 						} else if (i < (2 * colPerModule)) {
 							rowModuleNum = 2;
-							colModuleNum = (i + 1) - colPerModule;
+							colModuleNum = (i + 1) - colPerModule + (j * colPerModule);
 						} else {
 							rowModuleNum = 3;
-							colModuleNum = (i + 1) - 2 * colPerModule;
+							colModuleNum = (i + 1) - 2 * colPerModule + (j * colPerModule);
 						}
 
 						String key = panelModule[2] + "-" + (i + 1);
@@ -555,6 +555,7 @@ public class SnglCmCntrl {
 							}
 						}
 					}
+					j++;
 				}
 			}
 		} catch (Exception e) {
