@@ -200,7 +200,8 @@ public class SnglCmCntrl {
 			totalKitPorts = 0;
 			kitInfo = new ArrayList<>();
 			moduleNumber = new LinkedHashMap<>();
-			if (kitNeedCheck.contains(kit.get("kitId").toString())) { // Checking kits that currently assigned to the controller.
+			if (kitNeedCheck.contains(kit.get("kitId").toString())) { // Checking kits that currently assigned to the
+																		// controller.
 				kitNeedCheck.remove(kitNeedCheck.get(kitNeedCheck.indexOf(kit.get("kitId").toString())));
 				kits.add(kit.get("kitId").toString());
 				str = "select db_id from panel_kit where KIT_SERIAL_NUM = :serial_num";
@@ -216,7 +217,7 @@ public class SnglCmCntrl {
 					totalPorts += Integer.parseInt(module.get("sensorCount").toString());
 					totalPanelPorts += Integer.parseInt(module.get("sensorCount").toString());
 					totalKitPorts += Integer.parseInt(module.get("sensorCount").toString());
-					moduleNumber.put(module.get("position").toString(), i + 1);					
+					moduleNumber.put(module.get("position").toString(), i + 1);
 					i++;
 				}
 				kitInfo.add(totalKitPorts);
@@ -260,7 +261,8 @@ public class SnglCmCntrl {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void insertPanel(String controllerID, List<Map<String, Object>> newKits, Session session) throws JsonProcessingException {
+	public void insertPanel(String controllerID, List<Map<String, Object>> newKits, Session session)
+			throws JsonProcessingException {
 		String dbID = "", kitID = "", moduleID = "";
 		int rowPerModule = 0, seq = 0;
 		DistributionBoard distributionBoard = new DistributionBoard();
@@ -274,10 +276,9 @@ public class SnglCmCntrl {
 		cntrl = session.get(ControllerPanel.class, controllerID);
 
 		seq = ((Number) session.createNativeQuery("SELECT DB_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
-		System.out.println("seq is " +seq);
+		System.out.println("seq is " + seq);
 		dbID = "DB_" + year + "_" + seq;
-		System.out.println("dbID is " +dbID);
-		
+		System.out.println("dbID is " + dbID);
 
 		dbIDs.add(dbID);
 		distributionBoard.setDistributionBoardId(dbID);
@@ -361,7 +362,7 @@ public class SnglCmCntrl {
 			} // End for loop for modules.
 		} // End for loop for kits.
 		session.flush();
-		System.out.println("In the end of method, the dbID is" +dbID);
+		System.out.println("In the end of method, the dbID is" + dbID);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -443,7 +444,7 @@ public class SnglCmCntrl {
 					for (int i = 0; i < modulePortCount; i++) {
 						if (i < colPerModule) {
 							rowModuleNum = 1;
-							colModuleNum = (i+1) + j * colPerModule;
+							colModuleNum = (i + 1) + j * colPerModule;
 						} else if (i < (2 * colPerModule)) {
 							rowModuleNum = 2;
 							colModuleNum = (i + 1) - colPerModule + (j * colPerModule);
@@ -458,7 +459,7 @@ public class SnglCmCntrl {
 						Map<String, Object> matchedPatchPort = patchMap.get(key);
 						portIndex = (i + 1) + (Integer.parseInt(panelModule[0].toString()) - 1) * modulePortCount;
 						str = "update distribution_board_mapping set ROW_COL_INDEX = :portIndex, ROW_NUMBER = :rowNum, COLUMN_NUMBER = :colNum,"
-								+ " NEAR_MODULE = :nearModule, NEAR_PORT_NUM = :nearPortNum";
+								+ " NEAR_MODULE = :nearModule, NEAR_PORT_NUM = :nearPortNum, fp_status = :fpStatus";
 
 						String equipment = "";
 
@@ -474,7 +475,7 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpEquipment", equipment)
+											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
 											.setParameter("dbPortID", matchedDbPort[0].toString()).executeUpdate();
 								} else {
 									equipment = "DB";
@@ -485,7 +486,7 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpEquipment", equipment)
+											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
 											.setParameter("farNearKitSerialNum", matchedPatchPort.get("eKitId"))
 											.setParameter("farNearModule", matchedPatchPort.get("eModule"))
 											.setParameter("farNearPortNum", matchedPatchPort.get("ePort"))
@@ -496,15 +497,16 @@ public class SnglCmCntrl {
 								session.createNativeQuery(str).setParameter("portIndex", portIndex)
 										.setParameter("rowNum", rowModuleNum).setParameter("colNum", colModuleNum)
 										.setParameter("nearModule", panelModule[2]).setParameter("nearPortNum", i + 1)
+										.setParameter("fpStatus", "InActive")
 										.setParameter("dbPortID", matchedDbPort[0].toString()).executeUpdate();
 							}
 						} else {
 							// Insert new port and will use matchedPatchPort
-							seq = ((Number) session.createNativeQuery("SELECT DB_PORT_SEQ.NEXTVAL FROM DUAL").uniqueResult())
-									.intValue();
+							seq = ((Number) session.createNativeQuery("SELECT DB_PORT_SEQ.NEXTVAL FROM DUAL")
+									.uniqueResult()).intValue();
 							dbPortID = "DB_PORT_" + year + "_" + seq;
 							str = "insert into distribution_board_mapping (db_port_id, db_id, row_col_index, row_number, column_number, "
-									+ "near_module, near_port_num)";
+									+ "near_module, near_port_num, fp_status";
 
 							if (matchedPatchPort != null) { // Case: new port and has patch
 								str = str + ", near_patch_type, fp_equipment";
@@ -512,8 +514,8 @@ public class SnglCmCntrl {
 																					// to equipment.
 									equipment = "Custom";
 									str = str
-											+ " values (:dbPortID, :dbID, :portIndex, :rowNum, :colNum, :nearModule, :nearPortNum, "
-											+ ":nearPatchType, :fpEquipment)";
+											+ ") values (:dbPortID, :dbID, :portIndex, :rowNum, :colNum, :nearModule, :nearPortNum, "
+											+ ":fpStatus, :nearPatchType, :fpEquipment)";
 
 									session.createNativeQuery(str).setParameter("dbPortID", dbPortID)
 											.setParameter("dbID", panel_Info[0].toString())
@@ -522,13 +524,13 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpEquipment", equipment).setParameter("DB_PORT_ID", dbPortID)
-											.executeUpdate();
+											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
+											.setParameter("DB_PORT_ID", dbPortID).executeUpdate();
 								} else { // Case new port and has patch of type that is connected to another DB
 									equipment = "DB";
-									str = ", FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM"
+									str = str + ", FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM)"
 											+ " values (:dbPortID, :dbID, :portIndex, :rowNum, :colNum, :nearModule, :nearPortNum, "
-											+ ":nearPatchType, :fpEquipment, :farNearKitSerialNum, :farNearModule, :farNearPortNum)";
+											+ ":fpStatus, :nearPatchType, :fpEquipment, :farNearKitSerialNum, :farNearModule, :farNearPortNum)";
 
 									session.createNativeQuery(str).setParameter("dbPortID", dbPortID)
 											.setParameter("dbID", panel_Info[0].toString())
@@ -537,7 +539,7 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpEquipment", equipment)
+											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
 											.setParameter("farNearKitSerialNum", matchedPatchPort.get("eKitId"))
 											.setParameter("farNearModule", matchedPatchPort.get("eModule"))
 											.setParameter("farNearPortNum", matchedPatchPort.get("ePort"))
@@ -545,13 +547,13 @@ public class SnglCmCntrl {
 								}
 							} else { // Case new port to be inserted by no patch
 								str = str
-										+ " values (:dbPortID, :dbID, :portIndex, :rowNum, :colNum, :nearModule, :nearPortNum)";
-
+										+ ") values (:dbPortID, :dbID, :portIndex, :rowNum, :colNum, :nearModule, :nearPortNum, :fpStatus)";
 								session.createNativeQuery(str).setParameter("dbPortID", dbPortID)
 										.setParameter("dbID", panel_Info[0].toString())
 										.setParameter("portIndex", portIndex).setParameter("rowNum", rowModuleNum)
 										.setParameter("colNum", colModuleNum).setParameter("nearModule", panelModule[2])
-										.setParameter("nearPortNum", i + 1).executeUpdate();
+										.setParameter("nearPortNum", i + 1).setParameter("fpStatus", "InActive")
+										.executeUpdate();
 							}
 						}
 					}
