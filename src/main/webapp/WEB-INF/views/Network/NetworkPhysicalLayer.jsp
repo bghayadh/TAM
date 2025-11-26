@@ -6770,6 +6770,380 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											 <input type="text" id="HandholeProjectName" class="form-control text-input" />
 										</div></div></div></div></div></div>
 					<div class="modal-footer"></div></div></div></div></div>
+					
+					
+					
+					
+					
+					
+										
+				//portModal 
+	<div class="container">
+    <div id="portModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content" style="width: 970px;">
+                <div class="modal-header" style="background-color: #2678CC; height: 55px">
+                    <h5 class="modal-title" id="" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+                    <div style="float: right;">
+                        <c:if test="${saveDB == 1}">
+                            <button id="savePortMapping" class="btn btn-save" style="color: black; font-weight: bold; margin-top: -6px;">Save</button>
+                        </c:if>
+                        <button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
+                            <i class='fa fa-times'></i>
+                        </button>
+                        <a class="close modalMinimize ml-3"> <i class='fa fa-minus icon-to-change'></i></a>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTabDb" role="tablist" style="background-color: #00757C;">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="nearFar-tab" style="color: gold;" data-toggle="tab" href="#nearFarPort" role="tab" aria-controls="nearFar" aria-selected="true">Near Far Port</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="back-tab" style="color: gold;" data-toggle="tab" href="#backPort" role="tab" aria-controls="back" aria-selected="false">Back Port</a>
+                        </li>
+                    </ul>
+               <div class="tab-content">
+    <div class="tab-pane active" id="nearFarPort" role="tabpanel" aria-labelledby="nearFar-tab">
+        <p></p><p></p>
+        
+        <!-- First Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px; "><b>Index</b></span>
+                        <input type="text" id="portIndex" readonly class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Module</b></span>
+                        <input type="text" id="portModule" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Row Num</b></span>
+                        <input type="text" id="portRowNum" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Column Num</b></span>
+                        <input type="text" id="portColNum" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Third Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Port Num</b></span>
+                        <input type="text" id="portNum" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Patch Type</b></span>
+                        <input type="text" id="portPatchType" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fourth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px; "><b>Front Status</b></span>
+                          <select id="portFrontStatus" class="form-control">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Location Type</b></span>
+                         <select class='form-control' name='FP_locationType' id='portLocationType'>
+	 							<option value='None' selected>Select an Option</option>
+	 							<option value='Customer'>Customer</option>
+	 							<option value='Site'>Site</option>
+	  							<option value='Manhole'>Manhole</option>
+						  		<option value='Handhole'>Handhole</option>
+							</select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fifth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Location ID</b></span>
+                        <input type="text" id="portLocationID" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Location Name</b></span>
+                        <input type="text" id="portLocationName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sixth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Equipment</b></span>
+                        <input type="text" id="portEquipment" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Equipment ID</b></span>
+                        <select class="form-control" id="portEquipmentID">
+                            <!-- Options will be dynamically populated -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seventh Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Equipment Name</b></span>
+                        <input type="text" id="portEquipmentName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Equipment Type</b></span>
+                        <input type="text" id="portEquipmentType" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eighth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 185px;"><b>Far Near Kit Serial Num </b></span>
+                        <input type="text" id="farKitSerialNum" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Far Near Module</b></span>
+                        <input type="text" id="farModule" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ninth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Far Near Port Num</b></span>
+                        <input type="text" id="farPortNum" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Address</b></span>
+                        <input type="text" id="farAddress" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tenth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Junction ID</b></span>
+                        <input type="text" id="farJunctionID" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Junction Name</b></span>
+                        <input type="text" id="farJunctionName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eleventh Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Strand Number</b></span>
+                        <input type="text" id="farStrandNumber" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
+                        <input type="text" id="farStrandColor" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Twelfth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Strand ID</b></span>
+                        <select class="form-control" id="farStrandID">
+                            <!-- Options will be dynamically populated -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Strand Name</b></span>
+                        <input type="text" id="farStrandName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thirteenth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube Number</b></span>
+                        <input type="text" id="farTubeNumber" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
+                        <input type="text" id="farTubeColor" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fourteenth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube ID</b></span>
+                        <select class="form-control" id="farTubeID">
+                            <!-- Options will be dynamically populated -->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube Name</b></span>
+                        <input type="text" id="farTubeName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fifteenth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Fiber ID</b></span>
+                        <input type="text" id="farFiberID" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Fiber Name</b></span>
+                        <input type="text" id="farFiberName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> <!-- End of D_Board tab-pane -->
+ <!-- End of tab-content -->
+
+
+                        <div class="tab-pane" id="backPort" role="tabpanel" aria-labelledby="back-tab">
+                            <!-- Mapping Tab content -->
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
 	<div class="container">
 	<div id="distributionBoardModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
