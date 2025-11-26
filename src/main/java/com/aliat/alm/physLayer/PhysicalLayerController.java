@@ -3623,11 +3623,12 @@ public class PhysicalLayerController {
 				rtn.put("DistBoardMappingPts", DistBoardMappingPts);
 				
 				Object[] panelInfo = (Object[]) session.createNativeQuery(
-					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE " +
+					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE, B.NUM_ROWS, ROW_COUNTING  " +
 					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
 					)
 					.setParameter("dbId", selectedDistBoardContext)
 					.getSingleResult();
+				
 				
 				rtn.put("panelInfo", panelInfo);
 				
@@ -3673,12 +3674,12 @@ public class PhysicalLayerController {
 
 					
 				Object[] panelInfo = (Object[]) session.createNativeQuery(
-					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE " +
+					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE, B.NUM_ROWS, ROW_COUNTING  " +
 					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
 					)
 					.setParameter("dbId", selectedDistBoardContext)
 					.getSingleResult();
-				
+					
 				rtn.put("panelInfo", panelInfo);
 				
 				session.flush();
@@ -3752,7 +3753,7 @@ public class PhysicalLayerController {
 						.getResultList();
 				
 				Object[] panelInfo = (Object[]) session.createNativeQuery(
-					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE " +
+					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE, B.NUM_ROWS, ROW_COUNTING  " +
 					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
 					)
 					.setParameter("dbId", selectedDistBoardContext)
