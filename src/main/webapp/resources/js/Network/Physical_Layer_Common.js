@@ -15351,147 +15351,129 @@ function viewOnMap(checkbox, ptList, ptData) {
 						     }
 						 }
 						 function calculateRowColFromIndex(index, numRows, numCols, direction, rowPerModule, totalModules) {
-						     const totalPorts = numRows * numCols;
-						     if (index < 1 || index > totalPorts) {
-						         alert(`Invalid Port: ${index}. Must be between 1 and ${totalPorts}.`);
-						         return { row: "", col: "" };
-						     }
+						 				     const totalPorts = numRows * numCols;
+						 				     if (index < 1 || index > totalPorts) {
+						 				         alert(`Invalid Port: ${index}. Must be between 1 and ${totalPorts}.`);
+						 				         return { row: "", col: "" };
+						 				     }
 
-						     direction = direction.toLowerCase().replace(/\s+/g, "");
+						 				     direction = direction.toLowerCase().replace(/\s+/g, "");
 
-						     // --- CASE 1: simple (no modules) ---
-						     if (!rowPerModule || totalModules <= 1) {
-						         let row, col;
-						         if (direction === "uptodown") {
-						             row = Math.ceil(index / numCols);
-						             col = (index - 1) % numCols + 1;
-						         } else if (direction === "downtoup") {
-						             const reversedRow = Math.ceil(index / numCols);
-						             col = (index - 1) % numCols + 1;
-						             row = numRows - reversedRow + 1;
-						         } else {
-						             alert("Invalid direction value.");
-						             return { row: "", col: "" };
-						         }
-						         return { row, col };
-						     }
+						 				     // --- CASE 1: simple (no modules) ---
+						 				     if (!rowPerModule || totalModules <= 1) {
+						 				         let row, col;
+						 				         if (direction === "uptodown" || direction === "downtoup") {
+						 				             row = Math.ceil(index / numCols);
+						 				             col = (index - 1) % numCols + 1;
+						 				         }/* else if (direction === "downtoup") {
+						 				             const reversedRow = Math.ceil(index / numCols);
+						 				             col = (index - 1) % numCols + 1;
+						 				             row = numRows - reversedRow + 1;
+						 				         } */else {
+						 				             alert("Invalid direction value.");
+						 				             return { row: "", col: "" };
+						 				         }
+						 				         return { row, col };
+						 				     }
 
-						     // --- CASE 2: module-aware (horizontal modules) ---
-						     const colsPerModule = Math.floor(numCols / totalModules); // ensure integer value
-						     const portsPerModule = numRows * colsPerModule;
+						 				     // --- CASE 2: module-aware (horizontal modules) ---
+						 				     const colsPerModule = Math.floor(numCols / totalModules); // ensure integer value
+						 				     const portsPerModule = numRows * colsPerModule;
 
-						     if (isNaN(portsPerModule) || portsPerModule <= 0) {
-						         console.error("Invalid portsPerModule.");
-						         return { row: "", col: "" };
-						     }
+						 				     if (isNaN(portsPerModule) || portsPerModule <= 0) {
+						 				         console.error("Invalid portsPerModule.");
+						 				         return { row: "", col: "" };
+						 				     }
 
-						     const moduleIndex = Math.ceil(index / portsPerModule); // 1-based
-						     const portInModule = index - (moduleIndex - 1) * portsPerModule;
+						 				     const moduleIndex = Math.ceil(index / portsPerModule); // 1-based
+						 				     const portInModule = index - (moduleIndex - 1) * portsPerModule;
 
-						     if (isNaN(portInModule) || portInModule <= 0) {
-						         console.error("Invalid portInModule.");
-						         return { row: "", col: "" };
-						     }
+						 				     if (isNaN(portInModule) || portInModule <= 0) {
+						 				         console.error("Invalid portInModule.");
+						 				         return { row: "", col: "" };
+						 				     }
 
-						     let localRow, localCol;
+						 				     let localRow, localCol;
 
-						     if (direction === "uptodown") {
-						         localRow = Math.ceil(portInModule / colsPerModule);
-						         localCol = (portInModule - 1) % colsPerModule + 1;
-						     } else if (direction === "downtoup") {
-						         const reversedRow = Math.ceil(portInModule / colsPerModule);
-						         localCol = (portInModule - 1) % colsPerModule + 1;
-						         localRow = numRows - reversedRow + 1;
-						     } else {
-						         alert("Invalid direction value.");
-						         return { row: "", col: "" };
-						     }
+						 				     if (direction === "uptodown" || direction === "downtoup") {
+						 				         localRow = Math.ceil(portInModule / colsPerModule);
+						 				         localCol = (portInModule - 1) % colsPerModule + 1;
+						 				     }/* else if (direction === "downtoup") {
+						 				         const reversedRow = Math.ceil(portInModule / colsPerModule);
+						 				         localCol = (portInModule - 1) % colsPerModule + 1;
+						 				         localRow = numRows - reversedRow + 1;
+						 				     } */else {
+						 				         alert("Invalid direction value.");
+						 				         return { row: "", col: "" };
+						 				     }
 
-						     const globalCol = (moduleIndex - 1) * colsPerModule + localCol;
+						 				     const globalCol = (moduleIndex - 1) * colsPerModule + localCol;
 
-						     return { row: localRow, col: globalCol };
-						 }
+						 				     return { row: localRow, col: globalCol };
+						 				 }
 
+										 function calculateIndexFromRowCol(row, col, numRows, numCols, direction, rowPerModule, totalModules) {
 
-						 function calculateRowColFromIndex(index, numRows, numCols, direction, rowPerModule, totalModules) {
-						     const totalPorts = numRows * numCols;
-						     console.log(`Total Ports: ${totalPorts}`);
+										     // Normalize direction
+										     direction = direction.toLowerCase().replace(/\s+/g, "");
 
-						     if (index < 1 || index > totalPorts) {
-						         alert(`Invalid Port: ${index}. Must be between 1 and ${totalPorts}.`);
-						         return { row: "", col: "" };
-						     }
+										     // Validate row
+										     if (row < 1 || row > numRows) {
+										         alert(`Invalid Row: ${row}. Must be between 1 and ${numRows}.`);
+										         return "";
+										     }
 
-						     direction = direction.toLowerCase().replace(/\s+/g, "");
+										     // Validate column
+										     if (col < 1 || col > numCols) {
+										         alert(`Invalid Column: ${col}. Must be between 1 and ${numCols}.`);
+										         return "";
+										     }
 
-						     // --- CASE 1: simple (no modules) ---
-						     if (!rowPerModule || totalModules <= 1) {
-						         let row, col;
-						         if (direction === "uptodown") {
-						             row = Math.ceil(index / numCols);
-						             col = (index - 1) % numCols + 1;
-						         } else if (direction === "downtoup") {
-						             const reversedRow = Math.ceil(index / numCols);
-						             col = (index - 1) % numCols + 1;
-						             row = numRows - reversedRow + 1;
-						         } else {
-						             alert("Invalid direction value.");
-						             return { row: "", col: "" };
-						         }
-						         console.log(`Simple Mode → Row=${row}, Col=${col}`);
-						         return { row, col };
-						     }
+										     // --- CASE 1: simple (no modules) ---
+										     if (!rowPerModule || totalModules <= 1) {
 
-						     // --- CASE 2: module-aware (horizontal modules) ---
-						     console.log(`numCols: ${numCols}, totalModules: ${totalModules}`);
+										         if (direction === "uptodown") {
+										             const index = (row - 1) * numCols + col;
+										             console.log(`Simple → Row=${row}, Col=${col}, Port=${index}`);
+										             return index;
+										         }
 
-						     if (isNaN(numCols) || numCols <= 0) {
-						         console.error("Invalid numCols:", numCols);
-						         return { row: "", col: "" };  // or return some default values
-						     }
+										         else if (direction === "downtoup") {
+										             const reversedRow = numRows - row + 1;
+										             const index = (reversedRow - 1) * numCols + col;
+										             console.log(`Simple (Down→Up) → Row=${row}, Col=${col}, Port=${index}`);
+										             return index;
+										         }
 
-						     if (isNaN(totalModules) || totalModules <= 0) {
-						         console.error("Invalid totalModules:", totalModules);
-						         return { row: "", col: "" };  // or return some default values
-						     }
+										         else {
+										             alert("Invalid direction value.");
+										             return "";
+										         }
+										     }
 
-						     const colsPerModule = Math.floor(numCols / Math.max(totalModules, 1)); // safeguard against 0 modules
-						     console.log(`Columns per Module: ${colsPerModule}`);
+										     // --- CASE 2: module-aware (horizontal modules) ---
+										     const colsPerModule = numCols / totalModules;
+										     const portsPerModule = numRows * colsPerModule;
+										     const moduleIndex = Math.ceil(col / colsPerModule);
+										     const localCol = col - (moduleIndex - 1) * colsPerModule;
 
-						     const portsPerModule = numRows * colsPerModule;
-						     console.log(`Ports per Module: ${portsPerModule}`);
+										     console.log(`[DEBUG] Row=${row}, Col=${col}, Module=${moduleIndex}, LocalCol=${localCol}`);
 
-						     if (isNaN(portsPerModule) || portsPerModule <= 0) {
-						         console.error("Invalid portsPerModule.");
-						         return { row: "", col: "" };
-						     }
+										     let portInModule;
 
-						     const moduleIndex = Math.ceil(index / portsPerModule); // 1-based
-						     const portInModule = index - (moduleIndex - 1) * portsPerModule;
+										     if (direction === "uptodown"|| direction === "downtoup") {
+										         portInModule = (row - 1) * colsPerModule + localCol;
+										     }
+										    /* else if (direction === "downtoup") {
+										         const reversedRow = numRows - row + 1;
+										         portInModule = (reversedRow - 1) * colsPerModule + localCol;
+										     } */
+										     else {
+										         alert("Invalid direction value.");
+										         return "";
+										     }
 
-						     console.log(`Module Index: ${moduleIndex}, Port in Module: ${portInModule}`);
-
-						     if (isNaN(portInModule) || portInModule <= 0) {
-						         console.error("Invalid portInModule.");
-						         return { row: "", col: "" };
-						     }
-
-						     let localRow, localCol;
-
-						     if (direction === "uptodown") {
-						         localRow = Math.ceil(portInModule / colsPerModule);
-						         localCol = (portInModule - 1) % colsPerModule + 1;
-						     } else if (direction === "downtoup") {
-						         const reversedRow = Math.ceil(portInModule / colsPerModule);
-						         localCol = (portInModule - 1) % colsPerModule + 1;
-						         localRow = numRows - reversedRow + 1;
-						     } else {
-						         alert("Invalid direction value.");
-						         return { row: "", col: "" };
-						     }
-
-						     const globalCol = (moduleIndex - 1) * colsPerModule + localCol;
-
-						     console.log(`Direction=${direction}, LocalRow=${localRow}, GlobalCol=${globalCol}`);
-						     return { row: localRow, col: globalCol };
-						 }
+										     const index = (moduleIndex - 1) * portsPerModule + portInModule;
+										     return index;
+										 }
+						

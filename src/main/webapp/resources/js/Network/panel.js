@@ -121,50 +121,60 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
   var layer = new Konva.Layer();
   stage.add(layer);
 
-  // RU size in px (distance representing 1RU)
-  var RU_PX = 168;
+  // RU size in pixels (1U = 44.45px or 45px)
+  var RU_PX = 45; // 1U = 45px, adjust based on your visual preference
+
   var railsXLeft = 40;
   var railsXRight = stageWidth - railsXLeft - sideRailWidth;
   var railsY = 40;
   var railsHeight = Math.max(stageHeight - 80, panelHeight + 40);
 
-  // helper: create fixed rails with some visual holes (kept as before)
+  // Helper function to create the fixed rails with vertically centered holes
   function createFixedRail(x, y, width, height, id) {
-    var rail = new Konva.Rect({
-      x: x,
-      y: y,
-      width: width,
-      height: height,
-      fill: "black",
-      stroke: "#333",
-      strokeWidth: 2,
-      cornerRadius: 6,
-      id: id
-    });
-    layer.add(rail);
-
-    // keep previous visual holes as before (not used for RU snap)
-    var holesCount = Math.max(4, Math.floor(height / 40));
-    var spacing = height / (holesCount + 1);
-    for (var i = 1; i <= holesCount; i++) {
-      var hole = new Konva.Circle({
-        x: x + width / 2,
-        y: y + i * spacing,
-        radius: 6,
-        fill: "#ecf0f1",
-        stroke: "#444",
-        strokeWidth: 1
+      var rail = new Konva.Rect({
+        x: x,
+        y: y,
+        width: width,
+        height: height,
+        fill: "black",
+        stroke: "#333",
+        strokeWidth: 2,
+        cornerRadius: 6,
+        id: id
       });
-      layer.add(hole);
-    }
+      layer.add(rail);
 
-    rail.holesCount = holesCount;
-    rail.holeSpacing = spacing;
+      // Compute the number of holes that will fit vertically within the rail height
+      var holesCount = Math.floor(height / RU_PX); // One hole for each 1U based on rail height
+
+      // Create holes starting from the top inside the rail
+      for (var i = 0; i < holesCount; i++) {
+        var holeY = y + i * RU_PX + RU_PX / 2; // Start from the top of the rail and center each hole
+
+        var hole = new Konva.Circle({
+          x: x + width / 2, // Place hole at the center of the rail
+          y: holeY,         // Vertically centered based on 1U intervals from the top
+          radius: 6,
+          fill: "#ecf0f1",   // Light fill color for the hole
+          stroke: "#444",
+          strokeWidth: 1
+        });
+
+        layer.add(hole);
+      }
+  
+
+
     return rail;
   }
 
+  // Create the left and right fixed rails with centered holes
   var leftRail = createFixedRail(railsXLeft, railsY, sideRailWidth, railsHeight, "fixedLeftRail");
   var rightRail = createFixedRail(railsXRight, railsY, sideRailWidth, railsHeight, "fixedRightRail");
+
+  // Draw the rails and holes
+  layer.draw();
+
 
   // draw faint RU guide lines across rails (as before)
   for (let i = 0; i < Math.ceil(railsHeight / RU_PX) + 1; i++) {
@@ -202,32 +212,45 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
 
   // during drag, check if RU changed
   panelGroup.on('dragmove', () => {
-    // relY relative to rails top
+    // Relative Y position of the panel from the top of the rails
     const relY = panelGroup.y() - railsY;
-    // clamp relY so rounding behaves even if small negative/overflow during dragBound
-    const clampedRelY = Math.max(0, Math.min(railsHeight - panelHeight, relY));
-    const currentRU = Math.round(clampedRelY / RU_PX);
 
-    if (_lastRU === null) {
+    // Calculate the closest 1U boundary based on RU_PX
+    const currentRU = Math.round(relY / RU_PX);  // Current 1U position based on the Y position
+    
+    // Only trigger sound when the rack crosses a new 1U boundary (relative to the last sound trigger)
+    if (_lastRU !== currentRU) {
       _lastRU = currentRU;
-      return;
+      playHeavyClick(); // Play sound every time the rack crosses a 1U boundary
     }
 
-    if (currentRU !== _lastRU) {
-      // Play your existing heavy click sound
-      try {
-        playHeavyClick();
-      } catch (e) {
-        console.warn('playHeavyClick error', e);
-      }
-      _lastRU = currentRU;
-    }
+    // Optional: Limit movement to 1U increments to ensure precise snapping
+    const snappedY = Math.round(relY / RU_PX) * RU_PX;
+    panelGroup.y(railsY + snappedY);  // Keep the rack position locked to the 1U boundary during dragging
   });
+
+
+
 
   // reset on dragend (so next dragstart re-initializes); we DO NOT play sound here
-  panelGroup.on('dragend', () => {
-    _lastRU = null;
+  panelGroup.on("dragend", function () {
+    // Calculate relative Y position from the rails top
+    const relY = panelGroup.y() - railsY;
+
+    // Snap the position to the nearest 1U (RU_PX)
+    const snappedRelY = Math.round(relY / RU_PX) * RU_PX;
+    panelGroup.y(railsY + snappedRelY);  // Snap to the nearest 1U position
+
+    // Play sound after snap if the position has changed
+    const snappedIndex = Math.round(snappedRelY / RU_PX);
+    if (snappedIndex !== lastSnappedIndex) {
+      lastSnappedIndex = snappedIndex;
+      playHeavyClick(); // Play sound after snapping
+    }
+
+    layer.draw();  // Redraw the layer to reflect the changes
   });
+
 
   var panelBackground = new Konva.Rect({
     x: 0,
@@ -247,24 +270,6 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
   });
 
   // existing connector points (kept for compatibility)
-  function createConnectorRelative(group, x, y, id) {
-    var circ = new Konva.Circle({
-      x: x,
-      y: y,
-      radius: 6,
-      fill: "transparent",
-      stroke: "#111",
-      strokeWidth: 1,
-      id: id
-    });
-    group.add(circ);
-  }
-
-  // existing four connectors (kept)
-  createConnectorRelative(panelGroup, - (sideRailWidth / 2), leftRail.holeSpacing, "leftTopConnector");
-  createConnectorRelative(panelGroup, - (sideRailWidth / 2), railsHeight - leftRail.holeSpacing, "leftBottomConnector");
-  createConnectorRelative(panelGroup, panelWidth + (sideRailWidth / 2), rightRail.holeSpacing, "rightTopConnector");
-  createConnectorRelative(panelGroup, panelWidth + (sideRailWidth / 2), railsHeight - rightRail.holeSpacing, "rightBottomConnector");
 
   // function to create a simple port (kept) — now accepts numberLabel as 4th parameter
   function createPort(group, x, y, id, numberLabel) {
@@ -292,8 +297,18 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
       group.add(slot);
     }
     port.on("click", function (e) {
-      e.cancelBubble = true;
-      alert("Clicked " + this.id());
+
+      console.log("Clicked " + this.id());
+	  
+	  
+	  $("#portModal").modal('show');   
+	  
+	  
+	  
+	  
+	  
+	  
+	  
     });
     group.add(port);
     var label = new Konva.Text({
@@ -537,7 +552,7 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
 
     // compute number of RU slots that fit in the railsHeight
     var slots = Math.floor(railsHeight / RU_PX) + 1;
-    var holePositions = []; // store relative Y positions within panelGroup (so we can snap to them)
+   // store relative Y positions within panelGroup (so we can snap to them)
     for (var i = 0; i < slots; i++) {
       // absolute Y of the RU line on the stage
       var absHoleY = railsY + i * RU_PX;
@@ -547,28 +562,13 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
       var relY = absHoleY - (panelGroup.y());
       // create a small circle hole representation on the bracket (only if inside the panel height)
       var centerY = relY;
-      if (centerY >= 0 && centerY <= panelHeight) {
-        var hole = new Konva.Circle({
-          x: bracketWidth + (side === 'left' ? 10 : 10), // center of the strip
-          y: centerY,
-          radius: 6,
-          fill: "#fff",
-          stroke: "#444",
-          strokeWidth: 1,
-          id: side + "_bracket_hole_" + i
-        });
-        group.add(hole);
-        holePositions.push({ index: i, relY: centerY });
-      } else {
-        // still add the logical position so we can snap modules that are dropped outside initial panel rect
-        holePositions.push({ index: i, relY: centerY });
-      }
+
     }
 
     return {
       side: side,
       strip: strip,
-      holes: holePositions
+      
     };
   }
 

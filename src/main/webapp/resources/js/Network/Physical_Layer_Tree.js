@@ -8571,6 +8571,7 @@ singleHandhole = new ContextMenu({
 										var numRows=0;
 										if(data.DistBoardMappingPts){
 											
+												
 											if(typeof data.DistBoardMappingPts[0][6]!== 'undefined'){
 												var numCols=data.DistBoardMappingPts[0][6];
 											}
@@ -8806,24 +8807,52 @@ singleHandhole = new ContextMenu({
 											document.getElementById("mysvg").appendChild(newText);
 		
 										//////*********** DRAWIN ROWS DAShES *************///////
-										for(j=1;j<=numRows;j++)
-											{
-												svgNS = "http://www.w3.org/2000/svg";
-												newText = document.createElementNS(svgNS,"text");
-												newText.setAttributeNS(null,"x",80);     
-												newText.setAttributeNS(null,"y",(j*100)+40);  
-												newText.setAttributeNS(null,"font-size","10");
-												newText.setAttributeNS(null,"stroke","#00757C");
-												textNode = document.createTextNode(j);
-												newText.appendChild(textNode);
-												document.getElementById("mysvg").appendChild(newText);
-											
-											}									
-		
+										
+										if (data.panelInfo[3] === "Up To Down") {
+										    // Normal order
+										    for (let j = 1; j <= numRows; j++) {
+										        svgNS = "http://www.w3.org/2000/svg";
+										        newText = document.createElementNS(svgNS, "text");
+										        newText.setAttribute("x", 80);
+										        newText.setAttribute("y", (j * 100) + 40);
+										        newText.setAttribute("font-size", "10");
+										        newText.setAttribute("stroke", "#00757C");
+										        newText.appendChild(document.createTextNode(j));
+										        document.getElementById("mysvg").appendChild(newText);
+										    }
+
+										} else {
+										    // Reverse labels but keep positions from top to bottom
+										    for (let pos = 1; pos <= numRows; pos++) {
+										        let label = numRows - pos + 1;   // reversed numbering
+
+										        svgNS = "http://www.w3.org/2000/svg";
+										        newText = document.createElementNS(svgNS, "text");
+										        newText.setAttribute("x", 80);
+										        newText.setAttribute("y", (pos * 100) + 40);  // position moves normally
+										        newText.setAttribute("font-size", "10");
+										        newText.setAttribute("stroke", "#00757C");
+										        newText.appendChild(document.createTextNode(label));
+										        document.getElementById("mysvg").appendChild(newText);
+										    }
+										}
+
 										//////*********** DRAWIN PORTS CONNECTIONS RELATIVE TO EACh ROW AND COLUMN *************///////
 		
 										for(i=0;i<data.DistBoardMappingPts.length;i++)
 										{
+											
+										console.log(data.panelInfo[2]);
+										console.log(data.panelInfo[3]);
+										
+										if(data.panelInfo[3] === "Down To Up"){
+											
+											console.log("old");
+											console.log(data.DistBoardMappingPts[i][0]);
+											data.DistBoardMappingPts[i][0] = (data.panelInfo[2]+1) - data.DistBoardMappingPts[i][0];
+											
+										}
+											
 												window["DB_"+data.DistBoardMappingPts[i][4]]=[];
 												window["DB_"+data.DistBoardMappingPts[i][4]]=data.DistBoardMappingPts[i];	  
 												
@@ -8842,7 +8871,7 @@ singleHandhole = new ContextMenu({
 												if(data.DistBoardMappingPts[i][7]=="Active"){
 													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green_letter-b.png");
 													console.log("b not  nullhhhhhhhhhh");
-														console.log(data.DistBoardMappingPts[i]);
+													
 												}
 										
 												else{
@@ -8850,15 +8879,17 @@ singleHandhole = new ContextMenu({
 												
 												}						
 												document.getElementById("mysvg").appendChild(newImg);
-												if (data.DistBoardMappingPts[i] && data.DistBoardMappingPts[i].length > 40) {
+												if (data.DistBoardMappingPts[i]) {
 																						    // Draw number text below the port (from column 40)
 																						    var numText = document.createElementNS(svgNS, "text");
 																						    numText.setAttributeNS(null, "x", (data.DistBoardMappingPts[i][1] * 100) + 64);
 																						    numText.setAttributeNS(null, "y", (data.DistBoardMappingPts[i][0] * 100) + 75);
 																						    numText.setAttributeNS(null, "font-size", "10");
 																						    numText.setAttributeNS(null, "fill", "#00757C");
-																						    var numNode = document.createTextNode(data.DistBoardMappingPts[i][40] || '');
+																						    var numNode = document.createTextNode(data.DistBoardMappingPts[i][20] || '');
+																							
 																						    numText.appendChild(numNode);
+																							
 																						    document.getElementById("mysvg").appendChild(numText);
 																						}
 												
@@ -8871,7 +8902,7 @@ singleHandhole = new ContextMenu({
 												newImg.setAttributeNS(null,"width","40");
 												newImg.setAttributeNS(null,"class","frontImage");
 												newImg.setAttributeNS(null,"id","F-"+data.DistBoardMappingPts[i][4]);
-												console.log(data.DistBoardMappingPts[i]);
+												
 												if(data.DistBoardMappingPts[i][13]=="Active"){
 									
 													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green_letter-f.png");
