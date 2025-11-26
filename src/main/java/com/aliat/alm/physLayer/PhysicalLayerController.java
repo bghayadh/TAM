@@ -98,13 +98,13 @@ import com.jcraft.jsch.SftpException;
 @Controller
 public class PhysicalLayerController {
 
-	private static final Logger logger = Logger.getLogger(PhysicalLayerController.class.getName());
-	private static Session session = null;
-	private static Transaction tx = null;
-	private static ObjectMapper mapper = new ObjectMapper();
-	private static Query query = null;
-	private static StringWriter sw;
-	private static String exceptionAsString;
+	private final Logger logger = Logger.getLogger(PhysicalLayerController.class.getName());
+	private Session session = null;
+	private Transaction tx = null;
+	private ObjectMapper mapper = new ObjectMapper();
+	private Query query = null;
+	private StringWriter sw;
+	private String exceptionAsString;
 
 //	private EntityManagerFactory emf =null;
 
