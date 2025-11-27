@@ -8580,27 +8580,41 @@ singleHandhole = new ContextMenu({
 												var numRows=data.DistBoardMappingPts[0][5];
 											}
 										
-										var minWidth="500";									
-										var width = (numCols+2.2)*103.5, height =(numRows+2)*50;
-										var totWidth=width;
-										if(totWidth>1366.1999999999998){
-											totWidth-=110;
+											var minWidth = "500";  // Minimum width for SVG
+											var width = (numCols + 2.2) * 103.5;  // Width calculation based on columns
+											var height = (numRows + 2) * 50;     // Height calculation based on rows
+
+											// Calculate total width
+											var totWidth = width;
+
+											// Apply constraint to width: ensure it does not exceed 900px
+											
+
+											// Further reduce total width if it exceeds 1366px
+											if (totWidth > 1366.1999999999998) {
+											    totWidth -= 110;
 											}
-										
-										$("#contentMappingModal" ).width(totWidth);
-										dpWidth=$("#contentMappingModal" ).width();
-										
-										function makeSVG(tag, attrs,val) { // used in View Board Mapping
-											var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
-											for (var k in attrs)
-												el.setAttribute(k, attrs[k]);											
-												$(el).val(val);
-											return el;
-										}
-										
-										svg="<svg id='mysvg' width='"+width+"px' height='"+height+"px' min-width='"+minWidth+"px'></svg>";
-										$("#dB_tabContentPortsMap").append(svg);
-										
+
+											// Set the modal content width to the calculated total width
+											$("#contentMappingModal").width(totWidth);
+
+											// Update dpWidth after setting the modal content width
+											dpWidth = $("#contentMappingModal").width();
+
+											// Function to create SVG elements
+											function makeSVG(tag, attrs, val) {
+											    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+											    for (var k in attrs) {
+											        el.setAttribute(k, attrs[k]);
+											    }
+											    $(el).val(val);
+											    return el;
+											}
+
+											// Append the SVG with the width and height calculated
+											var svg = "<svg id='mysvg' width='" + totWidth + "px' height='" + height + "px' min-width='" + minWidth + "px'></svg>";
+											$("#dB_tabContentPortsMap").append(svg);
+
 										//////*********** DRAWIN BOARDS BORDERS *************///////
 										
 										var line= makeSVG('line', {x1: 50, y1: 50, x2:50,y2:100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
