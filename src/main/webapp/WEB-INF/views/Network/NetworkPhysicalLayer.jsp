@@ -7716,29 +7716,31 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 							</div>
 						</div>
 					</div>
-	<div class="container" style="width: auto">
-		<div id="dB_MappingModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
-			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
-				<div class="modal-content" id="contentMappingModal">
-					<div class="modal-header" style="background-color: #2678CC ; height: 55px; ">
-						<h5 class="modal-title" id="dB_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
-						<div style="float:right">
-							<button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
-								<i class='fa fa-times'></i>
-							</button>	
-							<a class="close modalMinimize ml-3 btn-text-right"> <i class='fa fa-minus icon-to-change'></i></a>
-				 	</div>	
-					</div>
-					<div class="modal-body">
-						<div class="tab-content">
-							<div id="dB_tabContentPortsMap" style="min-width: 700px; min-height: 600px"></div>
-						</div>
-					</div>
-					<div class="modal-footer"></div>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div class="container" style="max-width: 900px; overflow-x: auto;">
+    <div id="dB_MappingModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content" id="contentMappingModal" style="width: 100%; max-width: 900px;">
+                <div class="modal-header" style="background-color: #2678CC; height: 55px;">
+                    <h5 class="modal-title" id="dB_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
+                    <div style="float:right">
+                        <button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
+                            <i class='fa fa-times'></i>
+                        </button>  
+                        <a class="close modalMinimize ml-3 btn-text-right"> <i class='fa fa-minus icon-to-change'></i></a>
+                    </div>  
+                </div>
+                <div class="modal-body">
+                    <div class="tab-content">
+                        <!-- Set overflow-x to auto for horizontal scrolling -->
+                        <div id="dB_tabContentPortsMap" style="min-height: 200px; overflow-x: auto; white-space: nowrap;"></div>
+                    </div>
+                </div>
+                <div class="modal-footer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 	<div id="BackPortAssignedPortsModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
 		<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content" style="width: 750px;">
