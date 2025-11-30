@@ -820,3 +820,101 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
 
   layer.draw();
 }
+document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('portLocationType').addEventListener('change', function() {
+            var locationType = this.value;
+            var equipmentSelect = document.getElementById('portEquipment');
+            
+            // Clear the current options in the Equipment select
+            equipmentSelect.innerHTML = '';
+
+            // Create a new option to add to the Equipment select
+            var optionNone = document.createElement('option');
+            optionNone.value = 'none';
+            optionNone.text = 'Select an Option';
+            equipmentSelect.appendChild(optionNone);
+
+            // Check if the location type is 'Customer'
+            if (locationType === 'Customer') {
+                // Add Customer-specific options
+                var optionCustom = document.createElement('option');
+                optionCustom.value = 'Custom';
+                optionCustom.text = 'Custom';
+                equipmentSelect.appendChild(optionCustom);
+            }
+            
+            // Add the common options (Node and DistBoard)
+            var optionNode = document.createElement('option');
+            optionNode.value = 'Node';
+            optionNode.text = 'Node';
+            equipmentSelect.appendChild(optionNode);
+            
+            var optionDistBoard = document.createElement('option');
+            optionDistBoard.value = 'DistBoard';
+            optionDistBoard.text = 'DB';
+            equipmentSelect.appendChild(optionDistBoard);
+        });
+    });
+
+
+	document.addEventListener('DOMContentLoaded', function() {
+	    var locationTypeElement = document.getElementById('portLocationType');
+	    
+	    if (locationTypeElement) {
+	        locationTypeElement.addEventListener('change', function() {
+	            var locationType = this.value;
+	            var equipmentSelect = document.getElementById('portEquipment');
+	            
+	            // Clear the current options in the Equipment select
+	            equipmentSelect.innerHTML = '';
+
+	            // Create a new option to add to the Equipment select
+	            var optionNone = document.createElement('option');
+	            optionNone.value = 'none';
+	            optionNone.text = 'Select an Option';
+	            equipmentSelect.appendChild(optionNone);
+
+	            // Check if the location type is 'Customer'
+	            if (locationType === 'Customer') {
+	                // Add Customer-specific options
+	                var optionCustom = document.createElement('option');
+	                optionCustom.value = 'Custom';
+	                optionCustom.text = 'Custom';
+	                equipmentSelect.appendChild(optionCustom);
+	            }
+	            
+	            // Add the common options (Node and DistBoard)
+	            var optionNode = document.createElement('option');
+	            optionNode.value = 'Node';
+	            optionNode.text = 'Node';
+	            equipmentSelect.appendChild(optionNode);
+	            
+	            var optionDistBoard = document.createElement('option');
+	            optionDistBoard.value = 'DistBoard';
+	            optionDistBoard.text = 'DB';
+	            equipmentSelect.appendChild(optionDistBoard);
+	        });
+	    } else {
+	        console.error('Element #portLocationType not found!');
+	    }
+	});
+	document.addEventListener('DOMContentLoaded', function() {
+	document.getElementById('farPortStrandColor').addEventListener('change', function() {
+	    tubeStrandSetColor('farPortStrandColor', 'farStrandNumber');
+	});
+
+	document.getElementById('farStrandNumber').addEventListener('change', function() {
+	    strandTubeSetColor(this.value, 'farPortStrandColor');
+	});
+	
+	document.getElementById('farTubeColor').addEventListener('change', function() {
+	    tubeStrandSetColor('farTubeColor', 'farTubeNumber');
+	});
+
+	document.getElementById('farTubeNumber').addEventListener('change', function() {
+	    strandTubeSetColor(this.value, 'farTubeColor');
+	});
+	});
+	
+	
+	

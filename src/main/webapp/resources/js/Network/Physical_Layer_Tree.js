@@ -8582,7 +8582,7 @@ singleHandhole = new ContextMenu({
 										
 											var minWidth = "500";  // Minimum width for SVG
 											var width = (numCols + 2.2) * 103.5;  // Width calculation based on columns
-											var height = (numRows + 2) * 50;     // Height calculation based on rows
+											var height = (numRows + 2) * 100;     // Height calculation based on rows
 
 											// Calculate total width
 											var totWidth = width;
@@ -8610,9 +8610,10 @@ singleHandhole = new ContextMenu({
 											    $(el).val(val);
 											    return el;
 											}
-
+											
+											$("#dB_tabContentPortsMap").height(height);
 											// Append the SVG with the width and height calculated
-											var svg = "<svg id='mysvg' width='" + totWidth + "px' height='" + height + "px' min-width='" + minWidth + "px'></svg>";
+											var svg = "<svg id='mysvg' width='" + totWidth + "px' height='" + height + "px' min-width='" + minWidth + "px' '></svg>";
 											$("#dB_tabContentPortsMap").append(svg);
 
 										//////*********** DRAWIN BOARDS BORDERS *************///////
