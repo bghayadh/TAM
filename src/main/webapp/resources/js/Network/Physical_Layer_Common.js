@@ -13699,7 +13699,10 @@ else if ($("#controllerModal").is(':visible')){
 c=$("#controllerModal");
 
 }
+else if ($("#portModal").is(':visible')){
+c=$("#portModal");
 
+}
 var result= confirm('are you sure you want to close?')
 	if (result== false){
 		c.modal('show');
@@ -14083,7 +14086,7 @@ var totalModules = panelInfo[1];
 						         "<input id='colIndex" + i + "' name='colIndex' value='" + DistBoardMappingPts[i][2] +
 						         "' class='form-control text-input colIndex' type='text' style='width:60px;position:relative;'/>" +
 						       "</td>" 	
-						+"<td name='patchType'><input name='patchType' value='"+DistBoardMappingPts[i][50]+"' class='form-control text-input portIndex' type='text' style='width:70px;position:relative;'/></td>"
+						+"<td name='patchType'><input name='patchType' value='"+DistBoardMappingPts[i][50]+"' class='form-control text-input portIndex' type='text' style='width:240px;position:relative;'/></td>"
 												
 						+"<td style='background-color:#00757C' width='-10px'></td>"
 						+"<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status"+dBBoqIndex+"'>"+f_statusOption+"</select></td>"

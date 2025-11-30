@@ -17662,7 +17662,7 @@ console.log(locNum);
 						+"<td name='RowIndex'><input id='rowIndex"+dBBoqIndex+"' name='rowIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
 
 						+"<td name='ColIndex'><input id='colIndex"+dBBoqIndex+"' name='colIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
-						+"<td name='patchType'><input name='patchType'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+						+"<td name='patchType'><input name='patchType'  class='form-control text-input' type='text' style='width:240px;position:relative;'/></td>"
 
 						
 						+"<td style='background-color:#00757C' width='-10px'></td>"
