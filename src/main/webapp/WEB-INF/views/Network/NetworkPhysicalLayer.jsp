@@ -6777,7 +6777,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 					
 					
 										
-				//portModal 
+				
 	<div class="container">
     <div id="portModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -6919,13 +6919,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
         <!-- Sixth Row -->
         <div class="row">
             <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" style="width: 150px;"><b>Equipment</b></span>
-                        <input type="text" id="portEquipment" class="form-control text-input" />
-                    </div>
-                </div>
-            </div>
+    <div class="form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 150px;"><b>Equipment</b></span>
+            <select class='form-control' name='FP_equipment' id="portEquipment"></select>
+        </div>
+    </div>
+</div>  
+
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
@@ -7019,24 +7020,39 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
         </div>
 
         <!-- Eleventh Row -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" style="width: 150px;"><b>Strand Number</b></span>
-                        <input type="text" id="farStrandNumber" class="form-control text-input" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
-                        <input type="text" id="farStrandColor" class="form-control text-input" />
-                    </div>
-                </div>
+       <div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="width: 150px;"><b>Strand Number</b></span>
+                <input type="text" id="farStrandNumber" class="form-control text-input" />
             </div>
         </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
+                <select id="farPortStrandColor" class="form-control">
+                    <option value="" style="background-color: white;"></option>
+                    <option value="blue" style="background-color: white; color: black;">blue</option>
+                    <option value="orange" style="background-color: white; color: black;">orange</option>
+                    <option value="green" style="background-color: white; color: black;">green</option>
+                    <option value="brown" style="background-color: white; color: black;">brown</option>
+                    <option value="gray" style="background-color: white; color: black;">gray</option>
+                    <option value="white" style="background-color: white; color: black;">white</option>
+                    <option value="red" style="background-color: white; color: black;">red</option>
+                    <option value="black" style="background-color: white; color: black;">black</option>
+                    <option value="yellow" style="background-color: white; color: black;">yellow</option>
+                    <option value="violet" style="background-color: white; color: black;">violet</option>
+                    <option value="pink" style="background-color: white; color: black;">pink</option>
+                    <option value="aqua" style="background-color: white; color: black;">aqua</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
 
         <!-- Twelfth Row -->
         <div class="row">
@@ -7074,7 +7090,22 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
-                        <input type="text" id="farTubeColor" class="form-control text-input" />
+                    
+                <select id="farTubeColor" class="form-control">
+                    <option value="" style="background-color: white;"></option>
+                    <option value="blue" style="background-color: white; color: black;">blue</option>
+                    <option value="orange" style="background-color: white; color: black;">orange</option>
+                    <option value="green" style="background-color: white; color: black;">green</option>
+                    <option value="brown" style="background-color: white; color: black;">brown</option>
+                    <option value="gray" style="background-color: white; color: black;">gray</option>
+                    <option value="white" style="background-color: white; color: black;">white</option>
+                    <option value="red" style="background-color: white; color: black;">red</option>
+                    <option value="black" style="background-color: white; color: black;">black</option>
+                    <option value="yellow" style="background-color: white; color: black;">yellow</option>
+                    <option value="violet" style="background-color: white; color: black;">violet</option>
+                    <option value="pink" style="background-color: white; color: black;">pink</option>
+                    <option value="aqua" style="background-color: white; color: black;">aqua</option>
+                </select>
                     </div>
                 </div>
             </div>
@@ -7716,9 +7747,10 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 							</div>
 						</div>
 					</div>
-	<div class="container" style="max-width: 900px; overflow-x: auto;">
+	<div class="container" style="max-width: 900px; height: 900px; overflow-x: auto;">
     <div id="dB_MappingModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+       <div class="modal-dialog modal-dialog-centered" style="max-width:900px !important;">
+
             <div class="modal-content" id="contentMappingModal" style="width: 100%; max-width: 900px;">
                 <div class="modal-header" style="background-color: #2678CC; height: 55px;">
                     <h5 class="modal-title" id="dB_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
@@ -7732,7 +7764,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="modal-body">
                     <div class="tab-content">
                         <!-- Set overflow-x to auto for horizontal scrolling -->
-                        <div id="dB_tabContentPortsMap" style="min-height: 200px; overflow-x: auto; white-space: nowrap;"></div>
+                        <div id="dB_tabContentPortsMap"
+     style=" overflow-x:auto; overflow-y:auto; white-space:nowrap;"></div>
                     </div>
                 </div>
                 <div class="modal-footer"></div>
