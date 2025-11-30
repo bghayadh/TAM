@@ -7611,7 +7611,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 													<th style="min-width: 90px">Port #</th>
 														<th style="min-width: 80px">Row #</th>
 														<th style="min-width: 80px">Column #</th>
-														<th style="min-width: 90px">Patch Type</th>
+														<th style="min-width: 240px">Patch Type</th>
 														<th style="background-color: #00757C" width="-10px"></th>
 														<th style="min-width: 190px">Front Status</th>
 														<th style="min-width: 190px">Location Type</th>
