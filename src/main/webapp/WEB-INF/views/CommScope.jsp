@@ -269,6 +269,35 @@ td[name="procStatus"] {
     padding: 0 6px;              /* optional: adjust left/right padding */
 }
 
+#loading {
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  opacity: 0.7;
+  background-color: #000;
+  z-index: 2000;
+}
+
+#loading-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2001;
+  
+}
+
+#loading span{
+ position: absolute;
+  top: 52%;
+  left: 57%;
+  z-index: 2001;
+  font-weight: bold;
+  font-size: 21px;
+}
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {

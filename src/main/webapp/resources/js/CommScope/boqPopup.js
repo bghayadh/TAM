@@ -108,7 +108,8 @@ function initPopupCron(cronVal) {
 }
 
 function popupRunProc () {
-	console.log("row index is " , rowindx);	
+	console.log("row index is " , rowindx);
+	$('body').append('<div id="loading"><img id="loading-image" src="'+getContextPath()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')	
 	let procID = $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procID"]').children('input').val();
 	console.log("row procID is " , procID);
 	
@@ -121,12 +122,13 @@ function popupRunProc () {
 		    "docStatus": $("#docStatus").val(), //'${docStatus}',
 			"procStatus" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procStatus"] input[type="checkbox"]').next('label').text(),
 			"procName" :  $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procName"]').children('input').val(),
-			"popupProcClassName" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procClassName"]').children('input').val(),
+			"procClassName" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procClassName"]').children('input').val(),
 			"procCronExpr" : $("#boqTable >tbody").find("tr").eq(rowindx).find('td[name="procCronExpr"]').children('input').val(),
 			"linkName" : "CommScope"
 		},
 		success : function(data) {
 			console.log("The result is", data.Result);
+			$("#loading").remove();
 			alert(' The process successfully executed.');
 		},
 		error : function(error) {
@@ -136,7 +138,8 @@ function popupRunProc () {
 }
 
 
-function runProc (element) {	
+function runProc (element) {
+	$('body').append('<div id="loading"><img id="loading-image" src="'+getContextPath()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')	
 	let procID = $(element).closest("tr").find('td[name="procID"] input').val();
 	console.log("row procID is " , procID);
 	
@@ -155,7 +158,8 @@ function runProc (element) {
 		},
 		success : function(data) {
 			console.log("The result is", data.Result);
-			alert(' The process successfully executed.');
+			$("#loading").remove();
+			alert(' The process successfully executed.');			
 		},
 		error : function(error) {
 			console.log("Error happened while executing the process, there is error  error is " + error);
