@@ -1,6 +1,7 @@
 package com.aliat.alm.proc;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -9,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -37,8 +40,17 @@ public class CommScopeService {
 	public Map<String, Object> loginAPI(String ipAddress, String username, String password, int requestedDuration) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -65,17 +77,16 @@ public class CommScopeService {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<Map<String, Object>> request = new HttpEntity<>(credentials, headers);
 
-		try (Socket socket = new Socket(ipAddress, 80)) {
-			System.out.println("Port is opened.");
+		try (Socket socket = new Socket()) {
+			socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 			logger.info("Port is opened.");
 		} catch (IOException e) {
-			System.out.println("Port is closed.");
 			logger.info("Port is closed.");
 			rtn.put("status", "Failed");
 			rtn.put("reason", "Port is closed");
-			System.out.println("Port is closed.");
 			return rtn;
 		}
+
 		try {
 			ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
 			if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -110,8 +121,17 @@ public class CommScopeService {
 	public Map<String, Object> newTokenAPI(String ipAddress, String oldToken) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -138,15 +158,14 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
 			try {
@@ -190,8 +209,16 @@ public class CommScopeService {
 	public Map<String, Object> getRackAPI(String token, String ipAddress) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -218,17 +245,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -270,8 +297,16 @@ public class CommScopeService {
 	public Map<String, Object> controllerxAPI(String token, String ipAddress) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -298,17 +333,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -351,8 +386,16 @@ public class CommScopeService {
 	public Map<String, Object> getPanelAPI(String token, String ipAddress, String rackID) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -379,17 +422,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -430,8 +473,16 @@ public class CommScopeService {
 	public Map<String, Object> patchesAPI(String token, String ipAddress, String rackID) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -458,17 +509,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -509,8 +560,17 @@ public class CommScopeService {
 	public Map<String, Object> incompletePatchesAPI(String token, String ipAddress, String rackID) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -537,17 +597,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -589,8 +649,17 @@ public class CommScopeService {
 	public Map<String, Object> getNetworkInterfaceAPI(String token, String ipAddress) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -617,17 +686,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -670,8 +739,17 @@ public class CommScopeService {
 			String moduleID, String portID) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -699,17 +777,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -750,8 +828,17 @@ public class CommScopeService {
 	public Map<String, Object> eventNoteAPI(String token, String ipAddress, String eventID, String timeout) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -778,17 +865,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -829,8 +916,16 @@ public class CommScopeService {
 	public Map<String, Object> setDateTimeAPI(String token, String ipAddress, String dateTime) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -860,17 +955,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.PUT, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK) {
@@ -912,9 +1007,17 @@ public class CommScopeService {
 	public Map<String, Object> setCurrentDateTimeAPI(String token, String ipAddress) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
 
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
 
@@ -945,17 +1048,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.PUT, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK) {
@@ -998,9 +1101,17 @@ public class CommScopeService {
 	public Map<String, Object> genWorkOrderAPI(String token, String ipAddress, List<Map<String, Object>> woDetails) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
 
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
 
@@ -1028,17 +1139,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.POST, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK) {
@@ -1079,8 +1190,16 @@ public class CommScopeService {
 	public Map<String, Object> getWorkOrderAPI(String token, String ipAddress, int workOrderTaskId) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -1107,17 +1226,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -1158,8 +1277,16 @@ public class CommScopeService {
 	public Map<String, Object> listWorkOrderAPI(String token, String ipAddress) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -1186,17 +1313,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
@@ -1237,8 +1364,16 @@ public class CommScopeService {
 	public Map<String, Object> deleteWorkOrderAPI(String token, String ipAddress, int workOrderTaskId) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -1265,17 +1400,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.DELETE, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK) {
@@ -1315,8 +1450,17 @@ public class CommScopeService {
 	public Map<String, Object> deleteAllWorkOrderAPI(String token, String ipAddress) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries() // prevent retry issues
-				.build();
+
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(2000) // ms
+				.setConnectionRequestTimeout(2000).setSocketTimeout(3000).build();
+
+		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(config)
+				.disableAutomaticRetries().build();
+
+		/*
+		 * HttpClient httpClient = HttpClientBuilder.create().disableAutomaticRetries()
+		 * // prevent retry issues .build();
+		 */
 
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(httpClient);
 		RestTemplate restTemplate = new RestTemplate(factory);
@@ -1343,17 +1487,17 @@ public class CommScopeService {
 
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
-			try (Socket socket = new Socket(ipAddress, 80)) {
-				System.out.println("Port is opened.");
+
+			try (Socket socket = new Socket()) {
+				socket.connect(new InetSocketAddress(ipAddress, 80), 1500); // 1.5s timeout
 				logger.info("Port is opened.");
 			} catch (IOException e) {
-				System.out.println("Port is closed.");
 				logger.info("Port is closed.");
 				rtn.put("status", "Failed");
 				rtn.put("reason", "Port is closed");
-				System.out.println("Port is closed.");
 				return rtn;
 			}
+
 			try {
 				ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.DELETE, request, Map.class);
 				if (response.getStatusCode() == HttpStatus.OK) {
