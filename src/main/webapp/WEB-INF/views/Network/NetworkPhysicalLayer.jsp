@@ -6786,7 +6786,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     <h5 class="modal-title" id="" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
                     <div style="float: right;">
                         <c:if test="${saveDB == 1}">
-                            <button id="savePortMapping" class="btn btn-save" style="color: black; font-weight: bold; margin-top: -6px;">Save</button>
+                            <button id="savePanelPort" onclick= "savePanelPort()" class="btn btn-save" style="color: black; font-weight: bold; margin-top: -6px;">Save</button>
                         </c:if>
                         <button type="button" name="closePopup" class="close" onclick="ClosingConfirm()">
                             <i class='fa fa-times'></i>
@@ -6833,7 +6833,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 140px;"><b>Row Num</b></span>
-                        <input type="text" id="portRowNum" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                        <input type="text" id="portRowNum" readonly class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
                     </div>
                 </div>
             </div>
@@ -6841,7 +6841,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 140px;"><b>Column Num</b></span>
-                        <input type="text" id="portColNum" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                        <input type="text" id="portColNum" readonly class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
                     </div>
                 </div>
             </div>
@@ -6875,7 +6875,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                         <span class="input-group-text" style="width: 150px; "><b>Front Status</b></span>
                           <select id="portFrontStatus" class="form-control">
                             <option value="Active">Active</option>
-                            <option value="Inactive">Inactive</option>
+                            <option value="Inactive">InActive</option>
                         </select>
                     </div>
                 </div>
@@ -6884,7 +6884,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Location Type</b></span>
-                         <select class='form-control' name='FP_locationType' id='portLocationType'>
+                         <select class='form-control' name='portFron_locationType' id='portFrontLocationType'>
 	 							<option value='None' selected>Select an Option</option>
 	 							<option value='Customer'>Customer</option>
 	 							<option value='Site'>Site</option>
@@ -6902,7 +6902,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Location ID</b></span>
-                        <input type="text" id="portLocationID" class="form-control text-input" />
+                        <input type="text" id="portFrontLocationID" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -6910,7 +6910,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Location Name</b></span>
-                        <input type="text" id="portLocationName" class="form-control text-input" />
+                        <input type="text" id="portFrontLocationName" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -6922,7 +6922,9 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
     <div class="form-group">
         <div class="input-group-prepend">
             <span class="input-group-text" style="width: 150px;"><b>Equipment</b></span>
-            <select class='form-control' name='FP_equipment' id="portEquipment"></select>
+            <select class='form-control' name='FP_equipment' id="portFrontEquipment">
+            <option value='None' selected>Select an Option</option>
+            </select>
         </div>
     </div>
 </div>  
@@ -6931,9 +6933,9 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Equipment ID</b></span>
-                        <select class="form-control" id="portEquipmentID">
+                          <input type="text" id="portFrontEquipmentID" class="form-control text-input" />
                             <!-- Options will be dynamically populated -->
-                        </select>
+                       
                     </div>
                 </div>
             </div>
@@ -6945,7 +6947,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Equipment Name</b></span>
-                        <input type="text" id="portEquipmentName" class="form-control text-input" />
+                        <input type="text" id="portFrontEquipmentName" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -6953,7 +6955,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Equipment Type</b></span>
-                        <input type="text" id="portEquipmentType" class="form-control text-input" />
+                        <input type="text" id="portFrontEquipmentType" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -6965,7 +6967,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 185px;"><b>Far Near Kit Serial Num </b></span>
-                        <input type="text" id="farKitSerialNum" class="form-control text-input" />
+                        <input type="text" id="portFrontKitSerialNum" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -6973,7 +6975,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Far Near Module</b></span>
-                        <input type="text" id="farModule" class="form-control text-input" />
+                        <input type="text" id="portFrontModule" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -6985,7 +6987,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Far Near Port Num</b></span>
-                        <input type="text" id="farPortNum" class="form-control text-input" />
+                        <input type="text" id="PortFrontNum" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -6993,7 +6995,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Address</b></span>
-                        <input type="text" id="farAddress" class="form-control text-input" />
+                        <input type="text" id="portFrontAddress" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7005,7 +7007,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Junction ID</b></span>
-                        <input type="text" id="farJunctionID" class="form-control text-input" />
+                        <input type="text" id="portFrontJunctionID" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7013,7 +7015,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Junction Name</b></span>
-                        <input type="text" id="farJunctionName" class="form-control text-input" />
+                        <input type="text" id="portFrontJunctionName" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7025,7 +7027,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Number</b></span>
-                <input type="text" id="farStrandNumber" class="form-control text-input" />
+                <input type="text" id="portFrontStrandNumber" class="form-control text-input" />
             </div>
         </div>
     </div>
@@ -7034,8 +7036,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
-                <select id="farPortStrandColor" class="form-control">
-                    <option value="" style="background-color: white;"></option>
+                <select id="PortFrontStrandColor" class="form-control">
                     <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -7060,9 +7061,10 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Strand ID</b></span>
-                        <select class="form-control" id="farStrandID">
+                          <input type="text" id="portFrontStrandID" class="form-control text-input" /> 
+                          
                             <!-- Options will be dynamically populated -->
-                        </select>
+                      
                     </div>
                 </div>
             </div>
@@ -7070,7 +7072,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Strand Name</b></span>
-                        <input type="text" id="farStrandName" class="form-control text-input" />
+                        <input type="text" id="portFrontStrandName" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7082,7 +7084,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Tube Number</b></span>
-                        <input type="text" id="farTubeNumber" class="form-control text-input" />
+                        <input type="text" id="portFrontTubeNumber" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7091,9 +7093,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
                     
-                <select id="farTubeColor" class="form-control">
-                    <option value="" style="background-color: white;"></option>
-                    <option value="blue" style="background-color: white; color: black;">blue</option>
+                <select id="portFrontTubeColor" class="form-control">
+                      <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
                     <option value="brown" style="background-color: white; color: black;">brown</option>
@@ -7117,9 +7118,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Tube ID</b></span>
-                        <select class="form-control" id="farTubeID">
+                        
+                        
+                         <input type="text" id="portFrontTubeID" class="form-control text-input" />
                             <!-- Options will be dynamically populated -->
-                        </select>
+                        
                     </div>
                 </div>
             </div>
@@ -7127,7 +7130,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Tube Name</b></span>
-                        <input type="text" id="farTubeName" class="form-control text-input" />
+                        <input type="text" id="portFrontTubeName" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7139,7 +7142,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Fiber ID</b></span>
-                        <input type="text" id="farFiberID" class="form-control text-input" />
+                        <input type="text" id="portFrontFiberID" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7147,7 +7150,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Fiber Name</b></span>
-                        <input type="text" id="farFiberName" class="form-control text-input" />
+                        <input type="text" id="portFrontFiberName" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7157,8 +7160,370 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 
 
                         <div class="tab-pane" id="backPort" role="tabpanel" aria-labelledby="back-tab">
-                            <!-- Mapping Tab content -->
+                            <!-- backPort Tab content -->
                             <p></p>
+                            
+                     <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px; "><b>Index</b></span>
+                        <input type="text" id="portIndex1" readonly class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Module</b></span>
+                        <input type="text" id="portModule1" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Row Num</b></span>
+                        <input type="text" id="portRowNum1" readonly class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Column Num</b></span>
+                        <input type="text" id="portColNum1" readonly class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Third Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Port Num</b></span>
+                        <input type="text" id="portNum1" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 140px;"><b>Patch Type</b></span>
+                        <input type="text" id="portPatchType1" class="form-control text-input" <c:if test="${writeDB == 0}">readonly</c:if> />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fourth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px; "><b>Back Status</b></span>
+                          <select id="portBackStatus" class="form-control">
+                            <option value="Active">Active</option>
+                            <option value="InActive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Location Type</b></span>
+                         <select class='form-control' name='portBack_locationType' id='portBackLocationType'>
+	 							<option value='None' selected>Select an Option</option>
+	 							<option value='Customer'>Customer</option>
+	 							<option value='Site'>Site</option>
+	  							<option value='Manhole'>Manhole</option>
+						  		<option value='Handhole'>Handhole</option>
+							</select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fifth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Location ID</b></span>
+                        <input type="text" id="portBackLocationID" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Location Name</b></span>
+                        <input type="text" id="portBackLocationName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sixth Row -->
+        <div class="row">
+            <div class="col-md-6">
+    <div class="form-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" style="width: 150px;"><b>Equipment</b></span>
+            <select class='form-control' name='FP_equipment' id="portBackEquipment">
+            <option value='None' selected>Select an Option</option>
+            </select>
+        </div>
+    </div>
+</div>  
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Equipment ID</b></span>
+                          <input type="text" id="portBackEquipmentID" class="form-control text-input" />
+                            <!-- Options will be dynamically populated -->
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seventh Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Equipment Name</b></span>
+                        <input type="text" id="portBackEquipmentName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Equipment Type</b></span>
+                        <input type="text" id="portBackEquipmentType" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Eighth Row -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 185px;"><b>Back Kit Serial Num </b></span>
+                        <input type="text" id="portBackKitSerialNum" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Back Port Num</b></span>
+                        <input type="text" id="PortBackNum" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ninth Row -->
+        <div class="row">
+           <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Address</b></span>
+                        <input type="text" id="portBackAddress" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+             <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Junction ID</b></span>
+                        <input type="text" id="portBackJunctionID" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tenth Row -->
+        <div class="row">
+             <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Junction Name</b></span>
+                        <input type="text" id="portBackJunctionName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+           <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="width: 150px;"><b>Strand Number</b></span>
+                <input type="text" id="portBackStrandNumber" class="form-control text-input" />
+            </div>
+        </div>
+    </div>
+        </div>
+
+        <!-- Eleventh Row -->
+       <div class="row">
+    <div class="col-md-6">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
+                <select id="PortBackStrandColor" class="form-control">
+                    <option value="blue" style="background-color: white; color: black;">blue</option>
+                    <option value="orange" style="background-color: white; color: black;">orange</option>
+                    <option value="green" style="background-color: white; color: black;">green</option>
+                    <option value="brown" style="background-color: white; color: black;">brown</option>
+                    <option value="gray" style="background-color: white; color: black;">gray</option>
+                    <option value="white" style="background-color: white; color: black;">white</option>
+                    <option value="red" style="background-color: white; color: black;">red</option>
+                    <option value="black" style="background-color: white; color: black;">black</option>
+                    <option value="yellow" style="background-color: white; color: black;">yellow</option>
+                    <option value="violet" style="background-color: white; color: black;">violet</option>
+                    <option value="pink" style="background-color: white; color: black;">pink</option>
+                    <option value="aqua" style="background-color: white; color: black;">aqua</option>
+                </select>
+            </div>
+        </div>
+    </div>
+ <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Strand ID</b></span>
+                          <input type="text" id="portBackStrandID" class="form-control text-input" /> 
+                          
+                            <!-- Options will be dynamically populated -->
+                      
+                    </div>
+                </div>
+            </div>
+</div>
+
+        <!-- Twelfth Row -->
+        <div class="row">
+      <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Strand Name</b></span>
+                        <input type="text" id="portBackStrandName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+           <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube Number</b></span>
+                        <input type="text" id="portBackTubeNumber" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thirteenth Row -->
+        <div class="row">
+           
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
+                    
+                <select id="portBackTubeColor" class="form-control">
+                    <option value="blue" style="background-color: white; color: black;">blue</option>
+                    <option value="orange" style="background-color: white; color: black;">orange</option>
+                    <option value="green" style="background-color: white; color: black;">green</option>
+                    <option value="brown" style="background-color: white; color: black;">brown</option>
+                    <option value="gray" style="background-color: white; color: black;">gray</option>
+                    <option value="white" style="background-color: white; color: black;">white</option>
+                    <option value="red" style="background-color: white; color: black;">red</option>
+                    <option value="black" style="background-color: white; color: black;">black</option>
+                    <option value="yellow" style="background-color: white; color: black;">yellow</option>
+                    <option value="violet" style="background-color: white; color: black;">violet</option>
+                    <option value="pink" style="background-color: white; color: black;">pink</option>
+                    <option value="aqua" style="background-color: white; color: black;">aqua</option>
+                </select>
+                    </div>
+                </div>
+            </div>
+                 <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube ID</b></span>
+                        
+                        
+                         <input type="text" id="portBackTubeID" class="form-control text-input" />
+                            <!-- Options will be dynamically populated -->
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fourteenth Row -->
+        <div class="row">
+          <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Tube Name</b></span>
+                        <input type="text" id="portBackTubeName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Fiber ID</b></span>
+                        <input type="text" id="portBackFiberID" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fifteenth Row -->
+        <div class="row">
+             <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 150px;"><b>Fiber Name</b></span>
+                        <input type="text" id="portBackFiberName" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>         
+                    
+                            
+              </div>              
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                         </div>
                     </div>
                 </div>
