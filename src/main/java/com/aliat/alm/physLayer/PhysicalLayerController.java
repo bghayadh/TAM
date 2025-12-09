@@ -9952,10 +9952,9 @@ public class PhysicalLayerController {
 	            if (portId == null) {
 	                synchronized (this) {
 	                    portId = "DB_PORT_" + year + "_"
-	                            + Integer.parseInt(session.createNativeQuery("SELECT DB_PORT FROM SEQ_TABLE")
-	                                    .uniqueResult().toString());
+	                            +  ((Number) session.createNativeQuery("SELECT DB_PORT_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
 
-	                    session.createNativeQuery("UPDATE SEQ_TABLE SET DB_PORT = DB_PORT + 1").executeUpdate();
+	                   
 	                }
 	            }
 
