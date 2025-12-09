@@ -6875,6 +6875,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px; "><b>Front Status</b></span>
                           <select id="portFrontStatus" class="form-control">
+                          <option value="">Select an Option</option>
                             <option value="Active">Active</option>
                             <option value="Inactive">InActive</option>
                         </select>
@@ -7230,6 +7231,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px; "><b>Back Status</b></span>
                           <select id="portBackStatus" class="form-control">
+                           <option value="">Select an Option</option>
                             <option value="Active">Active</option>
                             <option value="InActive">Inactive</option>
                         </select>
