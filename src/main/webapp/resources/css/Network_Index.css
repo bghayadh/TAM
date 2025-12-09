@@ -30,6 +30,12 @@
   background-color: #3394FF !important;
 }
 
+/* force dropdown list to stay white */
+.colored-select option {
+    background-color: white !important;
+    color: black !important;
+}
+
 
 #loading {
   position: fixed;
