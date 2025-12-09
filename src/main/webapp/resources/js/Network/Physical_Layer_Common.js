@@ -12682,7 +12682,6 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 						"fP_FiberID":fP_FiberID,
 						"fP_FiberName":fP_FiberName,
 						//
-						"bP_Status":bP_Status,
 						//added
 						"bP_LocationType":bP_LocationType,
 						"bP_LocationID":bP_LocationID,
