@@ -8618,22 +8618,49 @@ singleHandhole = new ContextMenu({
 
 										//////*********** DRAWIN BOARDS BORDERS *************///////
 										
-										var line= makeSVG('line', {x1: 50, y1: 50, x2:50,y2:100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
-										line= makeSVG('line', {x1: 50, y1: 50, x2:100,y2:50, stroke: 'red', 'stroke-width': 1, fill: 'red'});
-										
-										line= makeSVG('line', {x1: 100, y1: 100, x2:(numCols+1.2)*100,y2:100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+										// TOP border (same)
+										// TOP border
+										line = makeSVG('line', {
+										    x1: 100, y1: 100,
+										    x2: (numCols * 100) + 100,
+										    y2: 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
 										document.getElementById('mysvg').appendChild(line);
-										
-										line= makeSVG('line', {x1: 100, y1: 100, x2:100,y2:(numRows+2)*100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+
+										// LEFT border
+										line = makeSVG('line', {
+										    x1: 100, y1: 100,
+										    x2: 100,
+										    y2: (numRows * 100) + 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
 										document.getElementById('mysvg').appendChild(line);
-										
-										line= makeSVG('line', {x1: (numCols+1.2)*100, y1: 100, x2:(numCols+1.2)*100,y2:(numRows+2)*100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+
+										// RIGHT border
+										line = makeSVG('line', {
+										    x1: (numCols * 100) + 100,
+										    y1: 100,
+										    x2: (numCols * 100) + 100,
+										    y2: (numRows * 100) + 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
 										document.getElementById('mysvg').appendChild(line);
-										
-										line= makeSVG('line', {x1: 100, y1: (numRows+2)*100, x2:(numCols+1.2)*100,y2:(numRows+2)*100, stroke: 'red', 'stroke-width': 1, fill: 'red'});
+
+										// BOTTOM border — ✔ PERFECT MATCH
+										line = makeSVG('line', {
+										    x1: 100,
+										    y1: (numRows * 100) + 100,
+										    x2: (numCols * 100) + 100,
+										    y2: (numRows * 100) + 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
 										document.getElementById('mysvg').appendChild(line);
-									
-										//////*********** DRAWIN COLS DAShES *************///////
+		//////*********** DRAWIN COLS DAShES *************///////
 		
 										for(i=1;i<=numCols;i++){
 

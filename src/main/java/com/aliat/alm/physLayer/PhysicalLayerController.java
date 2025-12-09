@@ -3654,6 +3654,92 @@ public class PhysicalLayerController {
 
 	
 	
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findPanelPortData", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> findPanelPortData(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+		// logger.info("Welcome home! The client locale is {}.", locale);
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			String selectedDistBoardContext = request.getParameter("selectedDistBoardContext");
+			String getPortIndex = request.getParameter("portIndex");
+			int portIndex;
+			try {
+			    portIndex = Integer.parseInt(getPortIndex);
+			} catch (NumberFormatException e) {
+			    // handle invalid input
+			    throw new IllegalArgumentException("Port index must be numeric!");
+			}	try {
+
+				List<Object[]> panelPortData = session.createNativeQuery(
+						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_NB,FP_TUBE_NB,BP_STRAND_NB,BP_TUBE_NB,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, "
+						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM, BACK_KIT_MODULE, BACK_PORT_NUM FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+								+ selectedDistBoardContext + "' AND ROW_COL_INDEX= '" + portIndex +"'")
+						.getResultList();
+
+				rtn.put("panelPortData", panelPortData);
+				
+				Object[] panelInfo = (Object[]) session.createNativeQuery(
+					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE, B.NUM_ROWS,B.NUM_COLUMNS,  ROW_COUNTING  " +
+					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+					)
+					.setParameter("dbId", selectedDistBoardContext)
+					.getSingleResult();
+					
+				rtn.put("panelInfo", panelInfo);
+			
+					
+				session.flush();
+				session.clear();
+				tx.commit();
+			} catch (Exception e) {
+				tx.rollback();
+				sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				exceptionAsString = sw.toString();
+				logger.finest("Error in findPanelPortData due to \n " + exceptionAsString);
+				logger.info("Error in findPanelPortData due to \n " + exceptionAsString);
+				rtn.put("panelPortData", null);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findModuleDetails", method = RequestMethod.GET)
 	@ResponseBody
@@ -9820,6 +9906,142 @@ public class PhysicalLayerController {
 		}
 		return rtn;
 	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/savePanelPort", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> savePanelPort(Locale locale, Model model,
+	        @ModelAttribute ItemParameters itemParameters, HttpServletRequest request, HttpServletResponse response)
+	        throws JsonProcessingException {
+
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+
+	    session = AlmDbSession.getInstance().getSession();
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", LoginServices.checkSession(request, response));
+	        return rtn;
+	    }
+
+	    if (session != null && session.isOpen()) {
+
+	        tx = session.beginTransaction();
+
+	        try {
+	            Date date = new Date();
+	            Calendar calendar = new GregorianCalendar();
+	            calendar.setTime(date);
+	            int year = calendar.get(Calendar.YEAR);
+
+	            DistributionBoardMapping distributionBoardMapping = new DistributionBoardMapping();
+
+	            String dbId = request.getParameter("selectedDistBoardContext");
+	            int index = Integer.parseInt(request.getParameter("portIndex"));
+
+	            // Safe SELECT (avoids NoResultException)
+	            query = session.createNativeQuery(
+	                    "SELECT DB_PORT_ID FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_ID = :dbId AND ROW_COL_INDEX = :index");
+	            query.setParameter("dbId", dbId);
+	            query.setParameter("index", index);
+
+	            List<Object> list = query.getResultList();
+	            String portId = list.isEmpty() ? null : list.get(0).toString();
+
+	            // Generate new ID if not found
+	            if (portId == null) {
+	                synchronized (this) {
+	                    portId = "DB_PORT_" + year + "_"
+	                            + Integer.parseInt(session.createNativeQuery("SELECT DB_PORT FROM SEQ_TABLE")
+	                                    .uniqueResult().toString());
+
+	                    session.createNativeQuery("UPDATE SEQ_TABLE SET DB_PORT = DB_PORT + 1").executeUpdate();
+	                }
+	            }
+
+	            // ---------- SET VALUES ----------
+	            distributionBoardMapping.setDb_Port_Id(portId);
+
+	            // FRONT
+	            distributionBoardMapping.setRowColIndex(request.getParameter("portIndex"));
+	            distributionBoardMapping.setDistributionBoardId(request.getParameter("selectedDistBoardContext"));
+	            distributionBoardMapping.setRowNum(request.getParameter("portRowNum"));
+	            distributionBoardMapping.setColNum(request.getParameter("portColNum"));
+	            distributionBoardMapping.setfP_Status(request.getParameter("portFrontStatus"));
+	            distributionBoardMapping.setfP_LocationType(request.getParameter("portFrontLocationType"));
+	            distributionBoardMapping.setfP_LocationId(request.getParameter("portFrontLocationID"));
+	            distributionBoardMapping.setfP_LocationName(request.getParameter("portFrontLocationName"));
+	            distributionBoardMapping.setfP_Equipment(request.getParameter("portFrontEquipment"));
+	            distributionBoardMapping.setfP_EquipmentId(request.getParameter("portFrontEquipmentID"));
+	            distributionBoardMapping.setfP_EquipmentName(request.getParameter("portFrontEquipmentName"));
+	            distributionBoardMapping.setfP_EquipmentType(request.getParameter("portFrontEquipmentType"));
+	            distributionBoardMapping.setfP_Address(request.getParameter("portFrontAddress"));
+	            distributionBoardMapping.setfP_StrandId(request.getParameter("portFrontStrandID"));
+	            distributionBoardMapping.setfP_StrandName(request.getParameter("portFrontStrandName"));
+	            distributionBoardMapping.setfP_StrandNb(request.getParameter("portFrontStrandNumber"));
+	            distributionBoardMapping.setfP_StrandColor(request.getParameter("portFrontStrandColor"));
+	            distributionBoardMapping.setfP_TubeId(request.getParameter("portFrontTubeID"));
+	            distributionBoardMapping.setfP_TubeName(request.getParameter("portFrontTubeName"));
+	            distributionBoardMapping.setfP_TubeNb(request.getParameter("portFrontTubeNumber"));
+	            distributionBoardMapping.setfP_TubeColor(request.getParameter("portFrontTubeColor"));
+	            distributionBoardMapping.setfP_FiberId(request.getParameter("portFrontFiberID"));
+	            distributionBoardMapping.setfP_FiberName(request.getParameter("portFrontFiberName"));
+	            distributionBoardMapping.setfP_JunctionId(request.getParameter("portFrontJunctionID"));
+	            distributionBoardMapping.setfP_JunctionName(request.getParameter("portFrontJunctionName"));
+
+	            // BACK
+	            distributionBoardMapping.setbP_Status(request.getParameter("portBackStatus"));
+	            distributionBoardMapping.setbP_LocationType(request.getParameter("portBackLocationType"));
+	            distributionBoardMapping.setbP_LocationId(request.getParameter("portBackLocationID"));
+	            distributionBoardMapping.setbP_LocationName(request.getParameter("portBackLocationName"));
+	            distributionBoardMapping.setbP_Equipment(request.getParameter("portBackEquipment"));
+	            distributionBoardMapping.setbP_EquipmentId(request.getParameter("portBackEquipmentID"));
+	            distributionBoardMapping.setbP_EquipmentName(request.getParameter("portBackEquipmentName"));
+	            distributionBoardMapping.setbP_EquipmentType(request.getParameter("portBackEquipmentType"));
+	            distributionBoardMapping.setbP_Address(request.getParameter("portBackAddress"));
+	            distributionBoardMapping.setbP_StrandId(request.getParameter("portBackStrandID"));
+	            distributionBoardMapping.setbP_StrandName(request.getParameter("portBackStrandName"));
+	            distributionBoardMapping.setbP_StrandNb(request.getParameter("portBackStrandNumber"));
+	            distributionBoardMapping.setbP_StrandColor(request.getParameter("portBackStrandColor"));
+	            distributionBoardMapping.setbP_TubeId(request.getParameter("portBackTubeID"));
+	            distributionBoardMapping.setbP_TubeName(request.getParameter("portBackTubeName"));
+	            distributionBoardMapping.setbP_TubeNb(request.getParameter("portBackTubeNumber"));
+	            distributionBoardMapping.setbP_TubeColor(request.getParameter("portBackTubeColor"));
+	            distributionBoardMapping.setbP_FiberId(request.getParameter("portBackFiberID"));
+	            distributionBoardMapping.setbP_FiberName(request.getParameter("portBackFiberName"));
+	            distributionBoardMapping.setbP_JunctionId(request.getParameter("portBackJunctionID"));
+	            distributionBoardMapping.setbP_JunctionName(request.getParameter("portBackJunctionName"));
+
+	            // NEAR / FAR / BACK
+	            distributionBoardMapping.setNearModule(request.getParameter("portModule"));
+	            distributionBoardMapping.setNearPortNum(request.getParameter("portNum"));
+	            distributionBoardMapping.setNearPatchType(request.getParameter("portPatchType"));
+	            distributionBoardMapping.setFarKitSerialNum(request.getParameter("portFrontKitSerialNum"));
+	            distributionBoardMapping.setFarModule(request.getParameter("portFrontModuleValue"));
+	            distributionBoardMapping.setFarPortNum(request.getParameter("portFrontNum"));
+	            distributionBoardMapping.setBackKitModule(request.getParameter("portBackKitSerialNum"));
+	            distributionBoardMapping.setBackportNum(request.getParameter("portBackNum"));
+
+	            // SAVE
+	            session.saveOrUpdate(distributionBoardMapping);
+	            session.flush();
+	            tx.commit();
+
+	            rtn.put("done", "done");
+
+	        } catch (Exception e) {
+	            tx.rollback();
+	            rtn.put("error", e.getMessage());
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                session.close();
+	            }
+	        }
+	    }
+
+	    return rtn;
+	}
+
 
 	@RequestMapping(value = "/saveLoadedDistributionBoard", method = RequestMethod.POST)
 	@ResponseBody

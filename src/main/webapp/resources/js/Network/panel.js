@@ -304,6 +304,1134 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
 	  $("#portModal").modal('show');   
 	  
 	  
+	
+	  			$.ajax({
+	  				type: "GET",
+	  				url: getContext()+'/findPanelPortData',
+	  				data: {
+	  					"selectedDistBoardContext":selectedDistBoardContext,
+						"portIndex" : this.id()
+	  				},
+	  			
+	  				dataType: "json",
+	  				success: function (data) {
+	  			
+						console.log(data);
+						
+if (!data.panelPortData || data.panelPortData.length === 0) {
+	const modal = document.getElementById("portModal");
+
+	   if (!modal) return;
+
+	   // RESET ALL INPUTS
+	   const allInputs = modal.querySelectorAll("input[type='text'], input[type='number']");
+	   allInputs.forEach(input => {
+	       input.value = "";
+	   });
+
+	   // RESET ALL SELECTS
+	   const allSelects = modal.querySelectorAll("select");
+	   allSelects.forEach(select => {
+	       select.selectedIndex = 0;
+		   select.style.backgroundColor ="white"; 
+	   });
+   
+   
+	   $("#portIndex, #portIndex1").val(id);
+	   
+	   
+	      const { row, col } = calculateRowColFromIndex(id, data.panelInfo[2], data.panelInfo[3], data.panelInfo[4], data.panelInfo[0], data.panelInfo[1]);
+	   
+   
+	   $("#portRowNum, #portRowNum1").val(row);
+   
+	   $("#portColNum, #portColNum1").val(col);
+	   
+	 
+   
+   
+   }
+							
+							else {	
+						// ===================== BASIC PORT INFO =====================
+						if (data.panelPortData[0][0] != null) {
+						    $("#portIndex, #portIndex1").val(data.panelPortData[0][0]);
+						}
+
+						if (data.panelPortData[0][1] != null) {
+						    $("#portRowNum, #portRowNum1").val(data.panelPortData[0][1]);
+						}
+
+						if (data.panelPortData[0][2] != null) {
+						    $("#portColNum, #portColNum1").val(data.panelPortData[0][2]);
+						}
+
+						if (data.panelPortData[0][48] != null) {
+						    $("#portModule, #portModule1").val(data.panelPortData[0][48]);
+						}
+
+						if (data.panelPortData[0][49] != null) {
+						    $("#portNum, #portNum1").val(data.panelPortData[0][49]);
+						}
+
+						if (data.panelPortData[0][50] != null) {
+						    $("#portPatchType, #portPatchType1").val(data.panelPortData[0][50]);
+						}
+
+
+						// ===================== FRONT & BACK STATUS =====================
+						if (data.panelPortData[0][4] != null) {
+						    $("#portFrontStatus").val(data.panelPortData[0][4]);
+						}
+
+						if (data.panelPortData[0][14] != null) {
+						    $("#portBackStatus").val(data.panelPortData[0][14]);
+						}
+
+
+						// ===================== LOCATION TYPE =====================
+						if (data.panelPortData[0][5] != null) {
+						    $("#portFrontLocationType").val(data.panelPortData[0][5]);
+						}
+
+						if (data.panelPortData[0][27] != null) {
+						    $("#portBackLocationType").val(data.panelPortData[0][27]);
+						}
+
+
+						// ===================== LOCATION ID =====================
+						if (data.panelPortData[0][6] != null) {
+						    $("#portFrontLocationID").val(data.panelPortData[0][6]);
+						}
+
+						if (data.panelPortData[0][28] != null) {
+						    $("#portBackLocationID").val(data.panelPortData[0][28]);
+						}
+
+
+						// ===================== LOCATION NAME =====================
+						if (data.panelPortData[0][7] != null) {
+						    $("#portFrontLocationName").val(data.panelPortData[0][7]);
+						}
+
+						if (data.panelPortData[0][29] != null) {
+						    $("#portBackLocationName").val(data.panelPortData[0][29]);
+						}
+
+
+						// ===================== FRONT EQUIPMENT =====================
+						if (data.panelPortData[0][10] != null) {
+						    let value = data.panelPortData[0][10];
+
+						    if ($("#portFrontEquipment option[value='" + value + "']").length === 0) {
+						        $("#portFrontEquipment").append(
+						            $("<option></option>").val(value).text(value)
+						        );
+						    }
+
+						    $("#portFrontEquipment").val(value);
+						}
+
+						if (data.panelPortData[0][11] != null) {
+						    $("#portFrontEquipmentID").val(data.panelPortData[0][11]);
+						}
+
+						if (data.panelPortData[0][12] != null) {
+						    $("#portFrontEquipmentName").val(data.panelPortData[0][12]);
+						}
+
+						if (data.panelPortData[0][9] != null) {
+						    $("#portFrontEquipmentType").val(data.panelPortData[0][9]);
+						}
+
+
+						// ===================== BACK EQUIPMENT =====================
+						if (data.panelPortData[0][32] != null) {
+						    let value = data.panelPortData[0][32];
+
+						    if ($("#portBackEquipment option[value='" + value + "']").length === 0) {
+						        $("#portBackEquipment").append(
+						            $("<option></option>").val(value).text(value)
+						        ); 
+						    }
+
+						    $("#portBackEquipment").val(value);
+						}
+
+						if (data.panelPortData[0][33] != null) {
+						    $("#portBackEquipmentID").val(data.panelPortData[0][33]);
+						}
+
+						if (data.panelPortData[0][34] != null) {
+						    $("#portBackEquipmentName").val(data.panelPortData[0][34]);
+						}
+
+						if (data.panelPortData[0][31] != null) {
+						    $("#portBackEquipmentType").val(data.panelPortData[0][31]);
+						}
+
+						if (data.panelPortData[0][51] != null) {
+						    $("#portFrontKitSerialNum").val(data.panelPortData[0][51]);
+						}
+
+						if (data.panelPortData[0][54] != null) {
+						    $("#portBackKitSerialNum").val(data.panelPortData[0][54]);
+						}
+
+						if (data.panelPortData[0][49] != null) {
+						    $("#PortFrontNum").val(data.panelPortData[0][49]);
+						}
+
+						if (data.panelPortData[0][55] != null) {
+						    $("#PortBackNum").val(data.panelPortData[0][55]);
+						}
+
+						if (data.panelPortData[0][48] != null) {
+						    $("#portFrontModule").val(data.panelPortData[0][48]);
+						}
+
+						if (data.panelPortData[0][13] != null) {
+						    $("#portFrontAddress").val(data.panelPortData[0][13]);
+						}
+
+						if (data.panelPortData[0][34] != null) {
+						    $("#portBackAddress").val(data.panelPortData[0][34]);
+						}
+
+						if (data.panelPortData[0][44] != null) {
+						    $("#portFrontJunctionID").val(data.panelPortData[0][44]);
+						}
+
+						if (data.panelPortData[0][46] != null) {
+						    $("#portBackJunctionID").val(data.panelPortData[0][46]);
+						}
+
+						if (data.panelPortData[0][45] != null) {
+						    $("#portFrontJunctionName").val(data.panelPortData[0][45]);
+						}
+
+						if (data.panelPortData[0][47] != null) {
+						    $("#portBackJunctionName").val(data.panelPortData[0][47]);
+						}
+
+						if (data.panelPortData[0][36] != null) {
+						    $("#portFrontStrandNumber").val(data.panelPortData[0][36]);
+						}
+
+						if (data.panelPortData[0][38] != null) {
+						    $("#portBackStrandNumber").val(data.panelPortData[0][38]);
+						}
+						if (data.panelPortData[0][40] != null) {
+						    $("#PortFrontStrandColor").val(data.panelPortData[0][40]);
+							if(data.panelPortData[0][40] != null || data.panelPortData[0][40] != ""){
+							strandTubeSetColor(data.panelPortData[0][36], 'PortFrontStrandColor');
+							}
+							
+						}
+
+						if (data.panelPortData[0][42] != null) {
+						    $("#PortBackStrandColor").val(data.panelPortData[0][42]);
+							if(data.panelPortData[0][42] != null || data.panelPortData[0][42] != ""){
+							strandTubeSetColor(data.panelPortData[0][38], 'PortBackStrandColor'); }
+							
+						}
+
+						if (data.panelPortData[0][21] != null) {
+						    $("#portFrontStrandID").val(data.panelPortData[0][21]);
+						}
+
+						if (data.panelPortData[0][15] != null) {
+						    $("#portBackStrandName").val(data.panelPortData[0][15]);
+						}
+						if (data.panelPortData[0][22] != null) {
+						    $("#portFrontStrandName").val(data.panelPortData[0][22]);
+						}
+
+						if (data.panelPortData[0][16] != null) {
+						    $("#portBackStrandID").val(data.panelPortData[0][16]);
+						}
+
+						if (data.panelPortData[0][37] != null) {
+						    $("#portFrontTubeNumber").val(data.panelPortData[0][37]);
+						}
+
+						if (data.panelPortData[0][39] != null) {
+						    $("#portBackTubeNumber").val(data.panelPortData[0][39]);
+						}
+
+						if (data.panelPortData[0][41] != null) {
+						    $("#portFrontTubeColor").val(data.panelPortData[0][41]);
+							if(data.panelPortData[0][41] != null || data.panelPortData[0][41] != ""){
+							strandTubeSetColor(data.panelPortData[0][37], 'portFrontTubeColor');}
+					
+						}
+
+						if (data.panelPortData[0][43] != null) {
+						    $("#portBackTubeColor").val(data.panelPortData[0][43]);
+							if(data.panelPortData[0][43] != null || data.panelPortData[0][43] != ""){
+							strandTubeSetColor(data.panelPortData[0][39], 'portBackTubeColor'); }
+							
+						
+						}
+
+						if (data.panelPortData[0][23] != null) {
+						    $("#portFrontTubeID").val(data.panelPortData[0][23]);
+						}
+
+						if (data.panelPortData[0][17] != null) {
+						    $("#portBackTubeID").val(data.panelPortData[0][17]);
+						}
+
+						if (data.panelPortData[0][24] != null) {
+						    $("#portFrontTubeName").val(data.panelPortData[0][24]);
+						}
+
+						if (data.panelPortData[0][18] != null) {
+						    $("#portBackTubeName").val(data.panelPortData[0][18]);
+						}
+
+						if (data.panelPortData[0][25] != null) {
+						    $("#portFrontFiberID").val(data.panelPortData[0][25]);
+						}
+
+						if (data.panelPortData[0][19] != null) {
+						    $("#portBackFiberID").val(data.panelPortData[0][19]);
+						}
+
+						if (data.panelPortData[0][26] != null) {
+						    $("#portFrontFiberName").val(data.panelPortData[0][26]);
+						}
+
+						if (data.panelPortData[0][20] != null) {
+						    $("#portBackFiberName").val(data.panelPortData[0][20]);
+						}
+						}
+					
+						
+						$("#portFrontStrandID").autocomplete({
+							    source: debounce(function (request, response, event, ui) {
+
+							        let sId = $("#portFrontStrandID").val();
+							        console.log("strand id:", sId);
+
+							        $.ajax({
+							            type: "GET",
+							            url: getContext() + '/SearchMappingStrand',
+							            contentType: "application/json; charset=utf-8",
+							            dataType: "json",
+							            data: {
+							                searchId: sId
+							            },
+							            success: function (data) {
+							                if (data != null) {
+							                    console.log(data.glist);
+							                    response(data.glist);
+							                }
+							            },
+							            error: function () {
+							                alert("Error");
+							            }
+							        });
+
+							    }, 900),
+
+							    minLength: 0,
+							    maxShowItems: 4,
+							    scroll: true,
+
+							    select: function (event, ui) {
+
+							        if (!ui.item) return false;
+
+							        this.value = ui.item[0];
+
+							        $("#portFrontStrandName").val(ui.item[1]);
+							        $("#portFrontTubeID").val(ui.item[2]);
+							        $("#portFrontFiberID").val(ui.item[3]);
+							        $("#portFrontTubeName").val(ui.item[5]);
+							        $("#portFrontFiberName").val(ui.item[4]);
+							        $("#portFrontStrandNumber").val(ui.item[6]);
+							        $("#portFrontTubeNumber").val(ui.item[8]);
+
+									if (ui.item[7] !== "" && ui.item[7] != null) {
+
+									    $("#portFrontTubeColor").val(ui.item[9]);
+									    $("#PortFrontStrandColor").val(ui.item[7]);
+										
+									    tubeStrandSetColor("PortFrontStrandColor", "portFrontStrandNumber");
+									    tubeStrandSetColor("portFrontTubeColor", "portFrontTubeNumber");
+									}
+
+							        return false;
+							    }
+							})
+							.data("ui-autocomplete")._renderItem = function (ul, item) {
+
+							    return $("<li class='each'></li>")
+							        .data("ui-autocomplete-item", item)
+							        .append(
+							            "<div class='acItem'>" +
+							                "<span class='name' style='font-weight:bold'>" + item[0] + "</span><br>" +
+							                "<span class='desc'>" + item[1] + ", " + item[4] + ", " + item[5] + "</span>" +
+							            "</div>"
+							        )
+							        .appendTo(ul);
+							};
+
+							$("#portFrontStrandID").focus(function () {
+							    if (this.value === "") {
+							        $(this).autocomplete("search");
+							    }
+							});
+							
+							
+							$("#portFrontStrandName").autocomplete({
+							    source: debounce(function (request, response) {
+
+							        let sName = $("#portFrontStrandName").val();
+
+							        $.ajax({
+							            type: "GET",
+							            url: getContext() + '/SearchMappingStrand',
+							            contentType: "application/json; charset=utf-8",
+							            dataType: "json",
+							            data: {
+							                "searchId": sName
+							            },
+							            success: function (data) {
+							                if (data != null) {
+							                    response(data.glist);
+							                }
+							            },
+							            error: function () {
+							                alert("Error");
+							            }
+							        });
+
+							    }, 900),
+
+							    minLength: 0,
+							    maxShowItems: 4,
+							    scroll: true,
+
+							    select: function (event, ui) {
+
+							        if (!ui.item) return false;
+
+							        this.value = ui.item[1];
+
+							        $("#portFrontStrandID").val(ui.item[0]);
+							        $("#portFrontTubeID").val(ui.item[2]);
+							        $("#portFrontFiberID").val(ui.item[3]);
+							        $("#portFrontTubeName").val(ui.item[5]);
+							        $("#portFrontFiberName").val(ui.item[4]);
+							        $("#portFrontStrandNumber").val(ui.item[6]);
+							        $("#portFrontTubeNumber").val(ui.item[8]);
+
+							        // Correct condition AND correct ID names
+							        if (ui.item[7] !== "" && ui.item[7] != null) {
+
+							            $("#portFrontTubeColor").val(ui.item[9]);
+							            $("#PortFrontStrandColor").val(ui.item[7]); // FIXED CAPITAL LETTER
+
+							            // Set colors correctly
+							            tubeStrandSetColor("PortFrontStrandColor", "portFrontStrandNumber");
+							            tubeStrandSetColor("portFrontTubeColor", "portFrontTubeNumber");
+							        }
+
+							        return false;
+							    }
+							})
+							.data("ui-autocomplete")._renderItem = function (ul, item) {
+
+							    return $('<li class="each"></li>')
+							        .data("ui-autocomplete-item", item)
+							        .append(
+							            '<div class="acItem">' +
+							            '<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+							            '<span class="desc">' + item[0] + ', ' + item[4] + ', ' + item[5] + '</span>' +
+							            '</div>'
+							        )
+							        .appendTo(ul);
+							};
+
+							// FIXED selector (lowercase p)
+							$("#portFrontStrandName").focus(function () {
+							    if (this.value === "") {
+							        $(this).autocomplete("search");
+							    }
+							});
+
+							
+							
+							
+							
+							
+							
+							$("#portBackStrandID").autocomplete({
+												    source: debounce(function (request, response, event, ui) {
+
+												        let sId = $("#portBackStrandID").val();
+												        console.log("strand id:", sId);
+
+												        $.ajax({
+												            type: "GET",
+												            url: getContext() + '/SearchMappingStrand',
+												            contentType: "application/json; charset=utf-8",
+												            dataType: "json",
+												            data: {
+												                searchId: sId
+												            },
+												            success: function (data) {
+												                if (data != null) {
+												                    console.log(data.glist);
+												                    response(data.glist);
+												                }
+												            },
+												            error: function () {
+												                alert("Error");
+												            }
+												        });
+
+												    }, 900),
+
+												    minLength: 0,
+												    maxShowItems: 4,
+												    scroll: true,
+
+												    select: function (event, ui) {
+
+												        if (!ui.item) return false;
+
+												        this.value = ui.item[0];
+
+												        $("#portBackStrandName").val(ui.item[1]);
+												        $("#portBackTubeID").val(ui.item[2]);
+												        $("#portBackFiberID").val(ui.item[3]);
+												        $("#portBackTubeName").val(ui.item[5]);
+												        $("#portBackFiberName").val(ui.item[4]);
+												        $("#portBackStrandNumber").val(ui.item[6]);
+												        $("#portBackTubeNumber").val(ui.item[8]);
+
+														if (ui.item[7] !== "" && ui.item[7] != null) {
+
+														    $("#portBackTubeColor").val(ui.item[9]);
+														    $("#PortBackStrandColor").val(ui.item[7]);
+															
+														    tubeStrandSetColor("PortBackStrandColor", "portBackStrandNumber");
+														    tubeStrandSetColor("portBackTubeColor", "portBackTubeNumber");
+														}
+
+												        return false;
+												    }
+												})
+												.data("ui-autocomplete")._renderItem = function (ul, item) {
+
+												    return $("<li class='each'></li>")
+												        .data("ui-autocomplete-item", item)
+												        .append(
+												            "<div class='acItem'>" +
+												                "<span class='name' style='font-weight:bold'>" + item[0] + "</span><br>" +
+												                "<span class='desc'>" + item[1] + ", " + item[4] + ", " + item[5] + "</span>" +
+												            "</div>"
+												        )
+												        .appendTo(ul);
+												};
+
+												$("#portBackStrandID").focus(function () {
+												    if (this.value === "") {
+												        $(this).autocomplete("search");
+												    }
+												});
+												
+												
+												$("#portBackStrandName").autocomplete({
+												    source: debounce(function (request, response) {
+
+												        let sName = $("#portBackStrandName").val();
+
+												        $.ajax({
+												            type: "GET",
+												            url: getContext() + '/SearchMappingStrand',
+												            contentType: "application/json; charset=utf-8",
+												            dataType: "json",
+												            data: {
+												                "searchId": sName
+												            },
+												            success: function (data) {
+												                if (data != null) {
+												                    response(data.glist);
+												                }
+												            },
+												            error: function () {
+												                alert("Error");
+												            }
+												        });
+
+												    }, 900),
+
+												    minLength: 0,
+												    maxShowItems: 4,
+												    scroll: true,
+
+												    select: function (event, ui) {
+
+												        if (!ui.item) return false;
+
+												        this.value = ui.item[1];
+
+												        $("#portBackStrandID").val(ui.item[0]);
+												        $("#portBackTubeID").val(ui.item[2]);
+												        $("#portBackFiberID").val(ui.item[3]);
+												        $("#portBackTubeName").val(ui.item[5]);
+												        $("#portBackFiberName").val(ui.item[4]);
+												        $("#portBackStrandNumber").val(ui.item[6]);
+												        $("#portBackTubeNumber").val(ui.item[8]);
+
+												        // Correct condition AND correct ID names
+												        if (ui.item[7] !== "" && ui.item[7] != null) {
+
+												            $("#portBackTubeColor").val(ui.item[9]);
+												            $("#PortBackStrandColor").val(ui.item[7]); // FIXED CAPITAL LETTER
+
+												            // Set colors correctly
+												            tubeStrandSetColor("PortBackStrandColor", "portBackStrandNumber");
+												            tubeStrandSetColor("portBackTubeColor", "portBackTubeNumber");
+												        }
+
+												        return false;
+												    }
+												})
+												.data("ui-autocomplete")._renderItem = function (ul, item) {
+
+												    return $('<li class="each"></li>')
+												        .data("ui-autocomplete-item", item)
+												        .append(
+												            '<div class="acItem">' +
+												            '<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+												            '<span class="desc">' + item[0] + ', ' + item[4] + ', ' + item[5] + '</span>' +
+												            '</div>'
+												        )
+												        .appendTo(ul);
+												};
+
+												// FIXED selector (lowercase p)
+												$("#portBackStrandName").focus(function () {
+												    if (this.value === "") {
+												        $(this).autocomplete("search");
+												    }
+												});
+
+												
+												
+												
+												
+												
+												
+												
+													$("#portFrontFiberID").autocomplete({
+												   	    source: debounce(function(request, response,event, ui) {
+												   	    	console.log("fiber id");
+																 var fId= $("#portFrontFiberID").val();
+																 var cId = $("#portFrontTubeID").val();
+																 var sId= $("#portFrontStrandID").val();
+														    	     if(sId != "" ){
+															    	     searchId = sId;    	    
+															    	 }else if(cId != ""){
+															    	     searchId = cId;
+																     }else{
+															    		 searchId = fId;
+																     }
+													             $.ajax({
+													                 type: "GET",
+													                 contentType: "application/json; charset=utf-8", 
+													                 url: getContext()+'/SearchFiber',
+													                 data: {
+																		"searchId" : searchId,
+																	 },
+													                 dataType: "json",
+													                 success: function (data) {
+													                     if (data != null) {
+													                         response(data.glist);
+													                         console.log(data.glist);
+													                     }
+													                 },
+													                 error: function(result) {
+													                     alert("Error");
+													                 }
+													             });      
+													        },900), minLength:0, maxShowItems: 4, scroll:true,
+															select: function(event, ui) {			
+																this.value = (ui.item ? ui.item[0] : '');
+																$("#portFrontFiberName").val(ui.item[1]);
+																
+																
+																return false;
+															}
+														}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+												   	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
+												   			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+												               item[0] + '</span><br><span class="desc">' +
+												               item[1] + '</span></div>').appendTo(ul);
+													};
+													$("#portFrontFiberID").focus(function(){
+														if (this.value == ""){
+															$(this).autocomplete("search");
+													        }
+													});
+												///////////////////////////////
+												$("#portFrontFiberName").autocomplete({
+												   	    source: debounce(function(request, response,event, ui) {
+																var fName= $("#portFrontFiberName").val();
+																 var cId = $("#portFrontTubeID").val();
+																 var sId= $("#portFrontStrandID").val();
+														    	     if(sId != "" ){
+															    	     searchId = sId;
+															    	 }else if(cId != ""){
+															    	     searchId = cId;
+																     }else{
+															    		 searchId = fName;
+																     } 
+													             $.ajax({
+													                 type: "GET",
+													                 contentType: "application/json; charset=utf-8",
+													                 
+													                 url: getContext()+'/SearchFiber',
+													                 data: {
+																		"searchId" : searchId,
+																	 },
+													                 dataType: "json",
+													                 success: function (data) {
+													                     if (data != null) {
+													                         response(data.glist);
+													                     }
+													                 },
+													                 error: function(result) {
+													                     alert("Error");
+													                 }
+													             });        
+													        },900), minLength:0, maxShowItems: 4, scroll:true,
+															select: function(event, ui) {
+																
+																this.value = (ui.item ? ui.item[1] : '');
+																$("#portFrontFiberID").val(ui.item[0]);
+																
+																
+																	return false;
+															}
+														}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+												   	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
+												   			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+												               item[1] + '</span><br><span class="desc">' +
+												               item[0] + '</span></div>').appendTo(ul);
+													};
+													$("#portFrontFiberName").focus(function(){
+														if (this.value == ""){
+															$(this).autocomplete("search");
+													        }
+													});
+													
+													
+													
+								
+													$("#portBackFiberID").autocomplete({
+													    source: debounce(function (request, response, event, ui) {
+													        console.log("fiber id");
+
+													        var fId = $("#portBackFiberID").val();
+													        var cId = $("#portBackTubeID").val();
+													        var sId = $("#portBackStrandID").val();
+
+													        if (sId != "") {
+													            searchId = sId;
+													        } else if (cId != "") {
+													            searchId = cId;
+													        } else {
+													            searchId = fId;
+													        }
+
+													        $.ajax({
+													            type: "GET",
+													            contentType: "application/json; charset=utf-8",
+													            url: getContext() + '/SearchFiber',
+													            data: {
+													                "searchId": searchId
+													            },
+													            dataType: "json",
+													            success: function (data) {
+													                if (data != null) {
+													                    response(data.glist);
+													                    console.log(data.glist);
+													                }
+													            },
+													            error: function (result) {
+													                alert("Error");
+													            }
+													        });
+
+													    }, 900),
+													    minLength: 0,
+													    maxShowItems: 4,
+													    scroll: true,
+													    select: function (event, ui) {
+													        this.value = (ui.item ? ui.item[0] : '');
+													        $("#portBackFiberName").val(ui.item[1]);
+													        return false;
+													    }
+													}).data("ui-autocomplete")._renderItem = function (ul, item) {
+													    return $('<li class="each"></li>')
+													        .data("ui-autocomplete-item", item)
+													        .append(
+													            '<div class="acItem">' +
+													            '<span class="name" style="font-weight:bold">' + item[0] + '</span><br>' +
+													            '<span class="desc">' + item[1] + '</span>' +
+													            '</div>'
+													        )
+													        .appendTo(ul);
+													};
+
+													$("#portBackFiberID").focus(function () {
+													    if (this.value == "") {
+													        $(this).autocomplete("search");
+													    }
+													});
+
+													//////////////////////////////////////////
+
+													$("#portBackFiberName").autocomplete({
+													    source: debounce(function (request, response, event, ui) {
+
+													        var fName = $("#portBackFiberName").val();
+													        var cId = $("#portBackTubeID").val();
+													        var sId = $("#portBackStrandID").val();
+
+													        if (sId != "") {
+													            searchId = sId;
+													        } else if (cId != "") {
+													            searchId = cId;
+													        } else {
+													            searchId = fName;
+													        }
+
+													        $.ajax({
+													            type: "GET",
+													            contentType: "application/json; charset=utf-8",
+													            url: getContext() + '/SearchFiber',
+													            data: {
+													                "searchId": searchId
+													            },
+													            dataType: "json",
+													            success: function (data) {
+													                if (data != null) {
+													                    response(data.glist);
+													                }
+													            },
+													            error: function (result) {
+													                alert("Error");
+													            }
+													        });
+
+													    }, 900),
+													    minLength: 0,
+													    maxShowItems: 4,
+													    scroll: true,
+													    select: function (event, ui) {
+													        this.value = (ui.item ? ui.item[1] : '');
+													        $("#portBackFiberID").val(ui.item[0]);
+													        return false;
+													    }
+													}).data("ui-autocomplete")._renderItem = function (ul, item) {
+													    return $('<li class="each"></li>')
+													        .data("ui-autocomplete-item", item)
+													        .append(
+													            '<div class="acItem">' +
+													            '<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+													            '<span class="desc">' + item[0] + '</span>' +
+													            '</div>'
+													        )
+													        .appendTo(ul);
+													};
+
+													$("#portBackFiberName").focus(function () {
+													    if (this.value == "") {
+													        $(this).autocomplete("search");
+													    }
+													});
+
+													
+													
+													
+													
+													
+													
+														$("#portFrontTubeID").autocomplete({
+															 source: debounce(function(request, response,event, ui) {
+															     var cName =$("#portFrontTubeID").val(); 
+															     var sId= $("#portFrontStrandID").val();
+															     if(sId != ""){
+														   	     searchId = sId;
+														   	 
+														   	     console.log("tube id");
+														   	 }else{
+														   		 searchId = cName;
+														   		 //url="SearchStrandTube";
+															     }
+															     console.log("sid "+searchId );
+														        $.ajax({
+														            type: "GET",
+														            contentType: "application/json; charset=utf-8",
+														            
+														            url: getContext()+'/SearchTube',
+														            data: {
+																		"searchId" : searchId,
+																	 },
+														            dataType: "json",
+														            success: function (data) {
+														                if (data != null) {
+														                    response(data.clist);
+														                }
+														            },
+														            error: function(result) {
+														                alert("Error");
+														            }
+														        }); 
+														   },900), minLength:0, maxShowItems: 4, scroll:true,
+															select: function(event, ui) {
+																this.value = (ui.item ? ui.item[0] : '');
+																$("#portFrontFiberID").val(ui.item[2]);
+																$("#portFrontTubeName").val(ui.item[1]);
+																$("#portFrontFiberName").val(ui.item[3]);
+																$("#portFrontTubeNumber").val(ui.item[4]);
+																
+																if(ui.item[5] !="" || ui.item[5] != null){
+																	$("#portFrontTubeColor").val(ui.item[5]);
+																	tubeStrandSetColor("portFrontTubeColor","portFrontTubeNumber");
+																}
+																
+																
+																return false;
+																		}
+																	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+															    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
+															    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+														                   item[0] + '</span><br><span class="desc">' +
+														                   item[1] +', ' +item[3]+ '</span></div>').appendTo(ul);
+																};
+														$("#portFrontTubeID").focus(function(){
+														if (this.value == ""){
+															$(this).autocomplete("search");
+														  }
+														});
+
+													$("#portFrontTubeName").autocomplete({
+													   source: debounce(function(request, response,event, ui) {
+														     var cName =$("#portFrontTubeName").val(); 
+														     var sId= $("#portFrontStrandID").val();
+														     if(sId != ""){
+													   	     searchId = sId;
+													   	   //  url="SearchStrandTube";
+													   	 }else{
+													   		 searchId = cName;
+													   		// url="SearchStrandTube";
+														     }
+													        $.ajax({
+													            type: "GET",
+													            contentType: "application/json; charset=utf-8",
+													            
+													            url: getContext()+'/SearchTube',
+													            data: {
+																	"searchId" : searchId,
+																 },
+													            dataType: "json",
+													            success: function (data) {
+													                if (data != null) {
+													                    response(data.clist);
+													                }
+													            },
+													            error: function(result) {
+													                alert("Error");
+													            }
+													        });
+													      
+													   },900), minLength:0, maxShowItems: 4, scroll:true,
+														select: function(event, ui) {
+															this.value = (ui.item ? ui.item[1] : '');
+																													 
+															$("#portFrontFiberID").val(ui.item[2]);
+															$("#portFrontTubeID").val(ui.item[0]);
+															$("#portFrontFiberName").val(ui.item[3]);
+															$("#portFrontTubeNumber").val(ui.item[4]);
+															
+															if(ui.item[5] !="" || ui.item[5] != null){
+															$("#portFrontTubeColor").val(ui.item[5]);
+															tubeStrandSetColor("portFrontTubeColor","portFrontTubeNumber");
+															}
+																		
+																		return false;
+																	}
+																}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
+														    	return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
+														    			.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+													                   item[1] + '</span><br><span class="desc">' +
+													                   item[0] +', ' +item[3]+ '</span></div>').appendTo(ul);
+															};
+													$("#portFrontTubeName").focus(function(){
+													if (this.value == ""){
+														$(this).autocomplete("search");
+													  }
+													});
+										
+													
+													
+													$("#portBackTubeID").autocomplete({
+													    source: debounce(function (request, response, event, ui) {
+
+													        var cName = $("#portBackTubeID").val();
+													        var sId = $("#portBackStrandID").val();
+
+													        if (sId != "") {
+													            searchId = sId;
+													            console.log("tube id");
+													        } else {
+													            searchId = cName;
+													        }
+
+													        console.log("sid " + searchId);
+
+													        $.ajax({
+													            type: "GET",
+													            contentType: "application/json; charset=utf-8",
+													            url: getContext() + '/SearchTube',
+													            data: {
+													                "searchId": searchId
+													            },
+													            dataType: "json",
+													            success: function (data) {
+													                if (data != null) {
+													                    response(data.clist);
+													                }
+													            },
+													            error: function (result) {
+													                alert("Error");
+													            }
+													        });
+
+													    }, 900),
+													    minLength: 0,
+													    maxShowItems: 4,
+													    scroll: true,
+													    select: function (event, ui) {
+
+													        this.value = (ui.item ? ui.item[0] : '');
+
+													        $("#portBackFiberID").val(ui.item[2]);
+													        $("#portBackTubeName").val(ui.item[1]);
+													        $("#portBackFiberName").val(ui.item[3]);
+													        $("#portBackTubeNumber").val(ui.item[4]);
+
+													        if (ui.item[5] != "" || ui.item[5] != null) {
+													            $("#portBackTubeColor").val(ui.item[5]);
+													            tubeStrandSetColor("portBackTubeColor", "portBackTubeNumber");
+													        }
+
+													        return false;
+													    }
+													}).data("ui-autocomplete")._renderItem = function (ul, item) {
+
+													    return $('<li class="each"></li>')
+													        .data("ui-autocomplete-item", item)
+													        .append(
+													            '<div class="acItem">' +
+													            '<span class="name" style="font-weight:bold">' + item[0] + '</span><br>' +
+													            '<span class="desc">' + item[1] + ', ' + item[3] + '</span>' +
+													            '</div>'
+													        )
+													        .appendTo(ul);
+													};
+
+													$("#portBackTubeID").focus(function () {
+													    if (this.value == "") {
+													        $(this).autocomplete("search");
+													    }
+													});
+
+													///////////////////////////////////////////////////////////////
+
+													$("#portBackTubeName").autocomplete({
+													    source: debounce(function (request, response, event, ui) {
+
+													        var cName = $("#portBackTubeName").val();
+													        var sId = $("#portBackStrandID").val();
+
+													        if (sId != "") {
+													            searchId = sId;
+													        } else {
+													            searchId = cName;
+													        }
+
+													        $.ajax({
+													            type: "GET",
+													            contentType: "application/json; charset=utf-8",
+													            url: getContext() + '/SearchTube',
+													            data: {
+													                "searchId": searchId
+													            },
+													            dataType: "json",
+													            success: function (data) {
+													                if (data != null) {
+													                    response(data.clist);
+													                }
+													            },
+													            error: function (result) {
+													                alert("Error");
+													            }
+													        });
+
+													    }, 900),
+													    minLength: 0,
+													    maxShowItems: 4,
+													    scroll: true,
+													    select: function (event, ui) {
+
+													        this.value = (ui.item ? ui.item[1] : '');
+
+													        $("#portBackFiberID").val(ui.item[2]);
+													        $("#portBackTubeID").val(ui.item[0]);
+													        $("#portBackFiberName").val(ui.item[3]);
+													        $("#portBackTubeNumber").val(ui.item[4]);
+
+													        if (ui.item[5] != "" || ui.item[5] != null) {
+													            $("#portBackTubeColor").val(ui.item[5]);
+													            tubeStrandSetColor("portBackTubeColor", "portBackTubeNumber");
+													        }
+
+													        return false;
+													    }
+													}).data("ui-autocomplete")._renderItem = function (ul, item) {
+
+													    return $('<li class="each"></li>')
+													        .data("ui-autocomplete-item", item)
+													        .append(
+													            '<div class="acItem">' +
+													            '<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+													            '<span class="desc">' + item[0] + ', ' + item[3] + '</span>' +
+													            '</div>'
+													        )
+													        .appendTo(ul);
+													};
+
+													$("#portBackTubeName").focus(function () {
+													    if (this.value == "") {
+													        $(this).autocomplete("search");
+													    }
+													});
+
+			},
+	  				error: function(result) {
+	  					alert("Error");
+	  				}
+	  			});
+	  
 	  
 	  
 	  
@@ -454,11 +1582,11 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
       if (numberingArray.length > 0) {
         // use numbering array label, keep id as "P" + label
         let label = numberingArray[usedIndex];
-        createPort(panelGroup, x, y, "P" + label, label);
+        createPort(panelGroup, x, y,  label, label);
         usedIndex++;
       } else {
         // original behavior (no numberingArray) — preserve exact behaviour
-        createPort(panelGroup, x, y, "P" + portCount, portCount);
+        createPort(panelGroup, x, y, portCount, portCount);
         portCount++;
       }
     }
@@ -821,7 +1949,7 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
   layer.draw();
 }
 document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('portLocationType').addEventListener('change', function() {
+        document.getElementById('portFrontLocationType').addEventListener('change', function() {
             var locationType = this.value;
             var equipmentSelect = document.getElementById('portEquipment');
             
@@ -858,63 +1986,335 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 	document.addEventListener('DOMContentLoaded', function() {
-	    var locationTypeElement = document.getElementById('portLocationType');
-	    
-	    if (locationTypeElement) {
-	        locationTypeElement.addEventListener('change', function() {
-	            var locationType = this.value;
-	            var equipmentSelect = document.getElementById('portEquipment');
-	            
-	            // Clear the current options in the Equipment select
-	            equipmentSelect.innerHTML = '';
+	    // Get elements
+	    var locationTypeElement = document.getElementById('portFrontLocationType');
+	    var equipmentSelect = document.getElementById('portFrontEquipment');
 
-	            // Create a new option to add to the Equipment select
-	            var optionNone = document.createElement('option');
-	            optionNone.value = 'none';
-	            optionNone.text = 'Select an Option';
-	            equipmentSelect.appendChild(optionNone);
-
-	            // Check if the location type is 'Customer'
-	            if (locationType === 'Customer') {
-	                // Add Customer-specific options
-	                var optionCustom = document.createElement('option');
-	                optionCustom.value = 'Custom';
-	                optionCustom.text = 'Custom';
-	                equipmentSelect.appendChild(optionCustom);
-	            }
-	            
-	            // Add the common options (Node and DistBoard)
-	            var optionNode = document.createElement('option');
-	            optionNode.value = 'Node';
-	            optionNode.text = 'Node';
-	            equipmentSelect.appendChild(optionNode);
-	            
-	            var optionDistBoard = document.createElement('option');
-	            optionDistBoard.value = 'DistBoard';
-	            optionDistBoard.text = 'DB';
-	            equipmentSelect.appendChild(optionDistBoard);
-	        });
-	    } else {
-	        console.error('Element #portLocationType not found!');
+	    if (!locationTypeElement) {
+	        console.error('Element #portFrontLocationType not found!');
+	        return;
 	    }
-	});
-	document.addEventListener('DOMContentLoaded', function() {
-	document.getElementById('farPortStrandColor').addEventListener('change', function() {
-	    tubeStrandSetColor('farPortStrandColor', 'farStrandNumber');
+	    if (!equipmentSelect) {
+	        console.error('Element #portFrontEquipment not found!');
+	        return;
+	    }
+
+	    // Add change listener
+	    locationTypeElement.addEventListener('change', function() {
+	        var locationType = this.value;
+
+	        // Clear current options
+	        equipmentSelect.innerHTML = '';
+
+	        // Add default option
+	        var optionNone = document.createElement('option');
+	        optionNone.value = 'none';
+	        optionNone.text = 'Select an Option';
+	        equipmentSelect.appendChild(optionNone);
+
+	        // Conditional option
+	        if (locationType === 'Customer') {
+	            var optionCustom = document.createElement('option');
+	            optionCustom.value = 'Custom';
+	            optionCustom.text = 'Custom';
+	            equipmentSelect.appendChild(optionCustom);
+	        }
+
+	        // Common options
+	        var optionNode = document.createElement('option');
+	        optionNode.value = 'Node';
+	        optionNode.text = 'Node';
+	        equipmentSelect.appendChild(optionNode);
+
+	        var optionDistBoard = document.createElement('option');
+	        optionDistBoard.value = 'DistBoard';
+	        optionDistBoard.text = 'DB';
+	        equipmentSelect.appendChild(optionDistBoard);
+	    });
 	});
 
-	document.getElementById('farStrandNumber').addEventListener('change', function() {
-	    strandTubeSetColor(this.value, 'farPortStrandColor');
+	document.addEventListener('DOMContentLoaded', function() {
+	document.getElementById('PortFrontStrandColor').addEventListener('change', function() {
+	    tubeStrandSetColor('PortFrontStrandColor', 'portFrontStrandNumber');
+	});
+
+	document.getElementById('portFrontStrandNumber').addEventListener('change', function() {
+	    strandTubeSetColor(this.value, 'portFrontStrandColor');
 	});
 	
-	document.getElementById('farTubeColor').addEventListener('change', function() {
-	    tubeStrandSetColor('farTubeColor', 'farTubeNumber');
+	document.getElementById('portFrontTubeColor').addEventListener('change', function() {
+	    tubeStrandSetColor('portFrontTubeColor', 'portFrontTubeNumber');
 	});
 
-	document.getElementById('farTubeNumber').addEventListener('change', function() {
-	    strandTubeSetColor(this.value, 'farTubeColor');
+	document.getElementById('portFrontTubeNumber').addEventListener('change', function() {
+	    strandTubeSetColor(this.value, 'portFrontTubeColor');
 	});
 	});
+	
+	
+	
+	
+	
+	
+	
+
+	document.addEventListener('DOMContentLoaded', function() {
+	    // Get elements
+	    var locationTypeElement = document.getElementById('portBackLocationType');
+	    var equipmentSelect = document.getElementById('portBackEquipment');
+
+	    if (!locationTypeElement) {
+	        console.error('Element #portBackLocationType not found!');
+	        return;
+	    }
+	    if (!equipmentSelect) {
+	        console.error('Element #portBackEquipment not found!');
+	        return;
+	    }
+
+	    // Add change listener
+	    locationTypeElement.addEventListener('change', function() {
+	        var locationType = this.value;
+
+	        // Clear current options
+	        equipmentSelect.innerHTML = '';
+
+	        // Add default option
+	        var optionNone = document.createElement('option');
+	        optionNone.value = 'none';
+	        optionNone.text = 'Select an Option';
+	        equipmentSelect.appendChild(optionNone);
+
+	        // Conditional option
+	        if (locationType === 'Customer') {
+	            var optionCustom = document.createElement('option');
+	            optionCustom.value = 'Custom';
+	            optionCustom.text = 'Custom';
+	            equipmentSelect.appendChild(optionCustom);
+	        }
+
+	        // Common options
+	        var optionNode = document.createElement('option');
+	        optionNode.value = 'Node';
+	        optionNode.text = 'Node';
+	        equipmentSelect.appendChild(optionNode);
+
+	        var optionDistBoard = document.createElement('option');
+	        optionDistBoard.value = 'DistBoard';
+	        optionDistBoard.text = 'DB';
+	        equipmentSelect.appendChild(optionDistBoard);
+	    });
+	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+	document.getElementById('PortBackStrandColor').addEventListener('change', function() {
+	    tubeStrandSetColor('PortBackStrandColor', 'portBackStrandNumber');
+	});
+
+	document.getElementById('portBackStrandNumber').addEventListener('change', function() {
+	    strandTubeSetColor(this.value, 'portBackStrandColor');
+	});
+
+	document.getElementById('portBackTubeColor').addEventListener('change', function() {
+	    tubeStrandSetColor('portBackTubeColor', 'portBackTubeNumber');
+	});
+
+	document.getElementById('portBackTubeNumber').addEventListener('change', function() {
+	    strandTubeSetColor(this.value, 'portBackTubeColor');
+	});
+	});
+	
+	
+	
+	
+
+function savePanelPort(){
+				
+		var portIndex = document.getElementById("portIndex").value;
+		var portModule = document.getElementById("portModule").value;
+		var portRowNum = document.getElementById("portRowNum").value;
+		var portColNum = document.getElementById("portColNum").value;
+		var portNum = document.getElementById("portNum").value;
+		var portPatchType = document.getElementById("portPatchType").value;
+
+		var portFrontStatus = document.getElementById("portFrontStatus").value;
+		var portFrontLocationType = document.getElementById("portFrontLocationType").value;
+		var portFrontLocationID = document.getElementById("portFrontLocationID").value;
+		var portFrontLocationName = document.getElementById("portFrontLocationName").value;
+
+		var portFrontEquipment = document.getElementById("portFrontEquipment").value;
+		var portFrontEquipmentID = document.getElementById("portFrontEquipmentID").value;
+		var portFrontEquipmentName = document.getElementById("portFrontEquipmentName").value;
+		var portFrontEquipmentType = document.getElementById("portFrontEquipmentType").value;
+
+		var portFrontKitSerialNum = document.getElementById("portFrontKitSerialNum").value;
+		var portFrontModuleValue = document.getElementById("portFrontModule").value;
+		var portFrontNum = document.getElementById("PortFrontNum").value;
+
+		var portFrontAddress = document.getElementById("portFrontAddress").value;
+		var portFrontJunctionID = document.getElementById("portFrontJunctionID").value;
+		var portFrontJunctionName = document.getElementById("portFrontJunctionName").value;
+
+		var portFrontStrandNumber = document.getElementById("portFrontStrandNumber").value;
+		var portFrontStrandColor = document.getElementById("PortFrontStrandColor").value;
+		var portFrontStrandID = document.getElementById("portFrontStrandID").value;
+		var portFrontStrandName = document.getElementById("portFrontStrandName").value;
+
+		var portFrontTubeNumber = document.getElementById("portFrontTubeNumber").value;
+		var portFrontTubeColor = document.getElementById("portFrontTubeColor").value;
+		var portFrontTubeID = document.getElementById("portFrontTubeID").value;
+		var portFrontTubeName = document.getElementById("portFrontTubeName").value;
+
+		var portFrontFiberID = document.getElementById("portFrontFiberID").value;
+		var portFrontFiberName = document.getElementById("portFrontFiberName").value;
+
+		var portIndex1 = document.getElementById("portIndex1").value;
+		var portModule1 = document.getElementById("portModule1").value;
+		var portRowNum1 = document.getElementById("portRowNum1").value;
+		var portColNum1 = document.getElementById("portColNum1").value;
+		var portNum1 = document.getElementById("portNum1").value;
+		var portPatchType1 = document.getElementById("portPatchType1").value;
+
+		var portBackStatus = document.getElementById("portBackStatus").value;
+		var portBackLocationType = document.getElementById("portBackLocationType").value;
+		var portBackLocationID = document.getElementById("portBackLocationID").value;
+		var portBackLocationName = document.getElementById("portBackLocationName").value;
+
+		var portBackEquipment = document.getElementById("portBackEquipment").value;
+		var portBackEquipmentID = document.getElementById("portBackEquipmentID").value;
+		var portBackEquipmentName = document.getElementById("portBackEquipmentName").value;
+		var portBackEquipmentType = document.getElementById("portBackEquipmentType").value;
+
+		var portBackKitSerialNum = document.getElementById("portBackKitSerialNum").value;
+		//var portBackModuleValue = document.getElementById("portBackModule").value;
+		var portBackNum = document.getElementById("PortBackNum").value;
+
+		var portBackAddress = document.getElementById("portBackAddress").value;
+		var portBackJunctionID = document.getElementById("portBackJunctionID").value;
+		var portBackJunctionName = document.getElementById("portBackJunctionName").value;
+
+		var portBackStrandNumber = document.getElementById("portBackStrandNumber").value;
+		var portBackStrandColor = document.getElementById("PortBackStrandColor").value;
+		var portBackStrandID = document.getElementById("portBackStrandID").value;
+		var portBackStrandName = document.getElementById("portBackStrandName").value;
+
+		var portBackTubeNumber = document.getElementById("portBackTubeNumber").value;
+		var portBackTubeColor = document.getElementById("portBackTubeColor").value;
+		var portBackTubeID = document.getElementById("portBackTubeID").value;
+		var portBackTubeName = document.getElementById("portBackTubeName").value;
+
+		var portBackFiberID = document.getElementById("portBackFiberID").value;
+		var portBackFiberName = document.getElementById("portBackFiberName").value;
+
+
+		var token =  $('input[name="csrfToken"]').attr('value');
+							$.ajax({
+								type: "POST",
+								headers: {
+									'X-CSRFToken': token 
+								},
+								url: getContext()+'/savePanelPort',
+								data: {
+									
+									"selectedDistBoardContext":selectedDistBoardContext, 
+									// ---------- FRONT ----------
+									"portIndex" : portIndex,
+									"portModule" : portModule,
+									"portRowNum" : portRowNum,
+									"portColNum" : portColNum,
+									"portNum" : portNum,
+									"portPatchType" : portPatchType,
+
+									"portFrontStatus" : portFrontStatus,
+									"portFrontLocationType" : portFrontLocationType,
+									"portFrontLocationID" : portFrontLocationID,
+									"portFrontLocationName" : portFrontLocationName,
+
+									"portFrontEquipment" : portFrontEquipment,
+									"portFrontEquipmentID" : portFrontEquipmentID,
+									"portFrontEquipmentName" : portFrontEquipmentName,
+									"portFrontEquipmentType" : portFrontEquipmentType,
+
+									"portFrontKitSerialNum" : portFrontKitSerialNum,
+									"portFrontModuleValue" : portFrontModuleValue,
+									"portFrontNum" : portFrontNum,
+
+									"portFrontAddress" : portFrontAddress,
+									"portFrontJunctionID" : portFrontJunctionID,
+									"portFrontJunctionName" : portFrontJunctionName,
+
+									"portFrontStrandNumber" : portFrontStrandNumber,
+									"portFrontStrandColor" : portFrontStrandColor,
+									"portFrontStrandID" : portFrontStrandID,
+									"portFrontStrandName" : portFrontStrandName,
+
+									"portFrontTubeNumber" : portFrontTubeNumber,
+									"portFrontTubeColor" : portFrontTubeColor,
+									"portFrontTubeID" : portFrontTubeID,
+									"portFrontTubeName" : portFrontTubeName,
+
+									"portFrontFiberID" : portFrontFiberID,
+									"portFrontFiberName" : portFrontFiberName,
+
+									// ---------- BACK ----------
+									"portIndex1" : portIndex1,
+									"portModule1" : portModule1,
+									"portRowNum1" : portRowNum1,
+									"portColNum1" : portColNum1,
+									"portNum1" : portNum1,
+									"portPatchType1" : portPatchType1,
+
+									"portBackStatus" : portBackStatus,
+									"portBackLocationType" : portBackLocationType,
+									"portBackLocationID" : portBackLocationID,
+									"portBackLocationName" : portBackLocationName,
+
+									"portBackEquipment" : portBackEquipment,
+									"portBackEquipmentID" : portBackEquipmentID,
+									"portBackEquipmentName" : portBackEquipmentName,
+									"portBackEquipmentType" : portBackEquipmentType,
+
+									"portBackKitSerialNum" : portBackKitSerialNum,
+									//"portBackModuleValue" : portBackModuleValue,
+									"portBackNum" : portBackNum,
+
+									"portBackAddress" : portBackAddress,
+									"portBackJunctionID" : portBackJunctionID,
+									"portBackJunctionName" : portBackJunctionName,
+
+									"portBackStrandNumber" : portBackStrandNumber,
+									"portBackStrandColor" : portBackStrandColor,
+									"portBackStrandID" : portBackStrandID,
+									"portBackStrandName" : portBackStrandName,
+
+									"portBackTubeNumber" : portBackTubeNumber,
+									"portBackTubeColor" : portBackTubeColor,
+									"portBackTubeID" : portBackTubeID,
+									"portBackTubeName" : portBackTubeName,
+
+									"portBackFiberID" : portBackFiberID,
+									"portBackFiberName" : portBackFiberName  
+										   
+								},
+								dataType: "json",
+								success: function (data) {
+								
+									if(data!=null){
+										
+										$("#portModal").modal('hide');  
+									
+											}
+										},
+									    error: function (result) {
+										alert("Error");
+										}
+									}); 									
+								
+							}		  	
+	
+	
+	
+	
 	
 	
 	
