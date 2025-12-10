@@ -13970,124 +13970,27 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             const bpEquipmentOptions = generateEquipmentOptions(bpLocType);
 			
 			const fpStrandNumber = DistBoardMappingPts[i][36];  // e.g. "3"
-			console.log("fpStrandNumber is " +fpStrandNumber);
 			const fpStrandData = getColorByNumber(fpStrandNumber);
 			const fpStrandColor = fpStrandData.color;
-			console.log("fpStrandColor is " +fpStrandColor);
 			const fpStrandTextColor = fpStrandData.text;
-			console.log("fpStrandTextColor is " +fpStrandTextColor);
 						
 			const fpTubeNumber = DistBoardMappingPts[i][37];  // e.g. "3"
-			console.log("fpTubeNumber is " +fpTubeNumber);
 			const fpTubeData = getColorByNumber(fpTubeNumber);
 			const fpTubeColor = fpTubeData.color;
-			console.log("fpTubeColor is " +fpTubeColor);
 			const fpTubeTextColor = fpTubeData.text;
-			console.log("fpTubeTextColor is " +fpTubeTextColor);
-
 
 			const bpStrandNumber = DistBoardMappingPts[i][38];  // e.g. "3"
-			console.log("bpStrandNumber is " +bpStrandNumber);
 			const bpStrandData = getColorByNumber(bpStrandNumber);
 			const bpStrandColor = bpStrandData.color;
-			console.log("bpStrandColor is " +bpStrandColor);
 			const bpStrandTextColor = bpStrandData.text;
-			console.log("bpStrandTextColor is " +bpStrandTextColor);
 						
 			const bpTubeNumber = DistBoardMappingPts[i][39];  // e.g. "3"
-			console.log("bpTubeNumber is " +bpTubeNumber);
 			const bpTubeData = getColorByNumber(bpTubeNumber);			
 			const bpTubeColor = bpTubeData.color;
-			console.log("bpTubeColor is " +bpTubeColor);
-			const bpTubeTextColor = bpTubeData.text;
-			console.log("bpTubeTextColor is " +bpTubeTextColor);			
+			const bpTubeTextColor = bpTubeData.text;			
 
             window["DB_" + DistBoardMappingPts[i][3]] = [];
             window["DB_" + DistBoardMappingPts[i][3]] = DistBoardMappingPts[i];
-
-            /*							
-                        var locationTypeOption = DistBoardMappingPts[i][5];
-                        locationOptions = "<select class='form-control' name='FP_locationType' id='FP_LocationType"+dBBoqIndex+"'>";
-                        locationOptionValue = "Select an Option";
-                        var locationArray = ["Select an Option","Customer","Site","Manhole","Handhole"];
-                    	
-                        for(j=0; j<locationArray.length; j++)
-                        {
-                            if(locationTypeOption == locationArray[j]){
-                                selected_option = "selected='selected'";
-                            }
-                            else{
-                                selected_option = "";
-                            }
-                            if(locationArray[j] != 'Select an Option'){
-                                locationOptionValue = locationArray[j];
-                            }
-                            locationOptions += "<option value='"+locationOptionValue+"' "+selected_option+" >"+locationArray[j]+"</option>";
-                        }
-                        locationOptions += "</select>";
-                    	
-                            	
-                    	
-                                if (DistBoardMappingPts[i][5]=="Customer"){
-                                    addMark2 = "<option value='Custom'>Custom</option>"
-                                    +"<option value='Node'>Node</option>"
-                                    +"<option value='DistBoard'>DB</option>"
-                                        	
-                                    	
-                                } else if (DistBoardMappingPts[i][5]=="Site"){
-                                    addMark2 = "<option value='Node'>Node</option>"
-                                    +"<option value='DistBoard'>DB</option>"
-                    	
-                                    	
-                                } 
-                                else if (DistBoardMappingPts[i][5]=="Manhole" || DistBoardMappingPts[i][5]=="Handhole"){
-                                    addMark2 = "<option value='Node'>Node</option>"
-                                    +"<option value='DistBoard'>DB</option>"
-                    	
-                                    	
-                                } 
-            
-                            ////added	
-                                var BP_locationTypeOption = DistBoardMappingPts[i][27];
-                                        BP_locationOptions = "<select class='form-control' name='BP_locationType' id='BP_LocationType"+dBBoqIndex+"'>";
-                                        BP_locationOptionValue = "Select an Option";
-                                        var BP_locationArray = ["Select an Option","Customer","Site","Manhole","Handhole"];
-                            	
-                                          for(j=0; j<BP_locationArray.length; j++)
-                                {
-                                    if(BP_locationTypeOption == BP_locationArray[j]){
-                                        selected_option = "selected='selected'";
-                                    }
-                                    else{
-                                        selected_option = "";
-                                    }
-                                    if(BP_locationArray[j] != 'Select an Option'){
-                                        BP_locationOptionValue = BP_locationArray[j];
-                                    }
-                                    BP_locationOptions += "<option value='"+BP_locationOptionValue+"' "+selected_option+" >"+BP_locationArray[j]+"</option>";
-                                }
-                                   BP_locationOptions += "</select>";
-                                   
-                                  if (DistBoardMappingPts[i][27]=="Customer"){
-                                addMark3 = "<option value='Custom'>Custom</option>"
-                                +"<option value='Node'>Node</option>"
-                                +"<option value='DistBoard'>DB</option>"
-                                        	
-                                	
-                            } else if (DistBoardMappingPts[i][27]=="Site"){
-                                addMark3 = "<option value='Node'>Node</option>"
-                                +"<option value='DistBoard'>DB</option>"
-                    	
-                                	
-                            } 
-                            else if (DistBoardMappingPts[i][27]=="Manhole" || DistBoardMappingPts[i][27]=="Handhole"){
-                                addMark3 = "<option value='Node'>Node</option>"
-                                +"<option value='DistBoard'>DB</option>"
-                    	
-                                	
-                            }
-                        	
-            */
 
             var f_statusOption = "", b_statusOption = "";
             if (DistBoardMappingPts[i][4] == "Active") {
@@ -14145,39 +14048,22 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='FP_Address'><input name='FP_Address' value='" + DistBoardMappingPts[i][13] + "' id='FP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_JunctionID'><input name='FP_junctionID' value='" + DistBoardMappingPts[i][44] + "' id='FP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_JunctionName'><input name='FP_junctionName' value='" + DistBoardMappingPts[i][45] + "' id='FP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-//                + "<td name='FP_StrandNb'><input name='FP_strandNb' value='" + DistBoardMappingPts[i][36] + "' id='FP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
 				+ "<td name='FP_StrandNb'><input name='FP_strandNb' value='" + fpStrandNumber + "' id='FP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-				
-/*                + "<td name='FP_StrandColor'>"
-                + "<select class='form-control' name='FP_strandcolor' id='FP_strandcolor" + dBBoqIndex + "'>" + addMark4 + "</select>"
-*/				
-
 				+ "<td name='FP_StrandColor'>"
 				+ "<select class='form-control' name='FP_strandcolor' id='FP_strandcolor" + dBBoqIndex + "' "
 				+ "style='background-color:" + fpStrandColor + "; color:" + fpStrandTextColor + "'>"
 				+ colorOptions(fpStrandColor)
 				+ "</select>"
 				+ "</td>" 
-				
-				
                 + "<td name='FP_StrandID'><input name='FP_strandID' value='" + DistBoardMappingPts[i][21] + "' id='FP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='FP_StrandName'><input name='FP_strandName' value='" + DistBoardMappingPts[i][22] + "' id='FP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-				
-                //+ "<td name='FP_TubeNb'><input name='FP_tubeNb' value='" + DistBoardMappingPts[i][37] + "' id='FP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+                + "<td name='FP_StrandName'><input name='FP_strandName' value='" + DistBoardMappingPts[i][22] + "' id='FP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"				
 				+ "<td name='FP_TubeNb'><input name='FP_tubeNb' value='" + fpTubeNumber + "' id='FP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-
-/*								
-                + "<td name='FP_TubeColor'>"
-                + "<select class='form-control' name='FP_tubecolor' id='FP_tubecolor" + dBBoqIndex + "'>" + addMark4 + "</select>"
-*/				
-				
 				+ "<td name='FP_TubeColor'>"
-				+ "<select class='form-control' name='FP_tubecolor' id='FP_tubecolor" + dBBoqIndex + "'>" 
+				+ "<select class='form-control' name='FP_tubecolor' id='FP_tubecolor" + dBBoqIndex + "' " 
 				+ "style='background-color:" + fpTubeColor + "; color:" + fpTubeTextColor + "'>"
 				+ colorOptions(fpTubeColor)
 				+ "</select>"
-				+ "</td>"			
-				
+				+ "</td>"
                 + "<td name='FP_TubeID'><input name='FP_tubeID' value='" + DistBoardMappingPts[i][23] + "' id='FP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='FP_TubeName'><input name='FP_tubeName' value='" + DistBoardMappingPts[i][24] + "' id='FP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='FP_FiberID'><input name='FP_fiberID' value='" + DistBoardMappingPts[i][25] + "' id='FP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
@@ -14199,106 +14085,27 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='BP_Address'><input name='BP_Address' value='" + DistBoardMappingPts[i][35] + "'id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionID'><input name='BP_junctionID' value='" + DistBoardMappingPts[i][46] + "' id='BP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionName'><input name='BP_junctionName' value='" + DistBoardMappingPts[i][47] + "' id='BP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-				
-                //+ "<td name='BP_StrandNb'><input name='BP_strandNb' value='" + DistBoardMappingPts[i][38] + "' id='BP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
 				+ "<td name='BP_StrandNb'><input name='BP_strandNb' value='" + bpStrandNumber + "' id='BP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-                
-/*				
 				+ "<td name='BP_StrandColor'>"				
-                + "<select class='form-control' name='BP_strandcolor' id='BP_strandcolor" + dBBoqIndex + "'>" + addMark4 + "</select>"
-*/				
-
-				+ "<td name='BP_StrandColor'>"				
-				+ "<select class='form-control' name='BP_strandcolor' id='BP_strandcolor" + dBBoqIndex + "'>" 
+				+ "<select class='form-control' name='BP_strandcolor' id='BP_strandcolor" + dBBoqIndex + "' " 
 				+ "style='background-color:" + bpStrandColor + "; color:" + bpStrandTextColor + "'>"
 				+ colorOptions(bpStrandColor)
 				+ "</select>"
-				+ "</td>"				
-
+				+ "</td>"
                 + "<td name='BP_StrandID'><input name='BP_strandID' value='" + DistBoardMappingPts[i][15] + "' id='BP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_StrandName'><input name='BP_strandName' value='" + DistBoardMappingPts[i][16] + "' id='BP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-				
-                //+ "<td name='BP_TubeNb'><input name='BP_tubeNb' value='" + DistBoardMappingPts[i][39] + "' id='BP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
 				+ "<td name='BP_TubeNb'><input name='BP_tubeNb' value='" + bpTubeNumber + "' id='BP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
-/*				
-                + "<td name='BP_TubeColor'>"
-                + "<select class='form-control' name='BP_tubecolor' id='BP_tubecolor" + dBBoqIndex + "'>" + addMark4 + "</select>"
-*/								
 				+ "<td name='BP_TubeColor'>"
-				+ "<select class='form-control' name='BP_tubecolor' id='BP_tubecolor" + dBBoqIndex + "'>" 
+				+ "<select class='form-control' name='BP_tubecolor' id='BP_tubecolor" + dBBoqIndex + "' " 
 				+ "style='background-color:" + bpTubeColor + "; color:" + bpTubeTextColor + "'>"
 				+ colorOptions(bpTubeColor)
 				+ "</select>"
 				+ "</td>"
-								
                 + "<td name='BP_TubeID'><input name='BP_tubeID' value='" + DistBoardMappingPts[i][17] + "' id='BP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='BP_TubeName'><input name='BP_tubeName' value='" + DistBoardMappingPts[i][18] + "' id='BP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='BP_FiberID'><input name='BP_fiberID' value='" + DistBoardMappingPts[i][19] + "' id='BP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='BP_FiberName'><input name='BP_fiberName' value='" + DistBoardMappingPts[i][20] + "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
             $("#DbMappingTable > tbody").append(markup);
-/*
-            const indexInput = document.getElementById("index" + i);
-            const rowInput = document.getElementById("rowIndex" + i);
-            const colInput = document.getElementById("colIndex" + i);
-
-            // -------------------------------------------------------------
-            // HANDLE INDEX → ROW/COL
-            // -------------------------------------------------------------
-            indexInput.addEventListener("input", () => {
-                const index = parseInt(indexInput.value.trim(), 10);
-
-                if (isNaN(index)) {
-                    rowInput.value = "";
-                    colInput.value = "";
-                    return;
-                }
-
-                const { row, col } = calculateRowColFromIndex(
-                    index, numRows, numCols, direction, rowPerModule, totalModules
-                );
-
-                // ❗ Invalid → clear after alert is shown inside function
-                if (row === "" || col === "") {
-                    indexInput.value = "";
-                    rowInput.value = "";
-                    colInput.value = "";
-                    return;
-                }
-
-                rowInput.value = row;
-                colInput.value = col;
-            });
-
-            // -------------------------------------------------------------
-            // HANDLE ROW/COL → INDEX
-            // -------------------------------------------------------------
-            const updateIndex = () => {
-                const row = parseInt(rowInput.value.trim(), 10);
-                const col = parseInt(colInput.value.trim(), 10);
-
-                if (isNaN(row) || isNaN(col)) {
-                    indexInput.value = "";
-                    return;
-                }
-
-                const index = calculateIndexFromRowCol(
-                    row, col, numRows, numCols, direction, rowPerModule, totalModules
-                );
-
-                // ❗ Invalid → clear after alert in function
-                if (index === "") {
-                    indexInput.value = "";
-                    rowInput.value = "";
-                    colInput.value = "";
-                    return;
-                }
-
-                indexInput.value = index;
-            };
-
-            rowInput.addEventListener("input", updateIndex);
-            colInput.addEventListener("input", updateIndex);
-*/
 
             let backKitModule = $("#backKitModule" + dBBoqIndex);
             let backPortNumInput = $("#backPortNum" + dBBoqIndex);
@@ -14325,22 +14132,6 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 farModule.prop("readonly", true);
                 farPortNum.prop("readonly", true);
             }
-
-            /*							
-                                                        $(document).on("change", "select[name='BP_equipment']", function() {
-                                                                        let selectedValue = $(this).val();
-            
-                                                                        if (selectedValue === "DistBoard") {
-                                                                            // Make inputs editable
-                                                                            backKitModule.prop("readonly", false);
-                                                                            backPortNumInput.prop("readonly", false);
-                                                                        } else {
-                                                                            // Make inputs readonly again
-                                                                            backKitModule.prop("readonly", true);
-                                                                            backPortNumInput.prop("readonly", true);
-                                                                        }
-                                                                    });
-            */
 
             if (DistBoardMappingPts[i][40] != null) {
                 $("#FP_strandcolor" + dBBoqIndex).val(DistBoardMappingPts[i][40]);
@@ -14378,164 +14169,7 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 $('#BP_Location' + dBBoqIndex).val('');
             }
 
-            /*								
-                        $("#FP_LocationType"+dBBoqIndex).change(function(){
-                                    var thisID = $(this).attr("id");
-                                    console.log(thisID+"kkkkkkkkkk");
-                                    console.log("the Index is " +(parseInt(dBBoqIndex)-1));
-                                    //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                    var indexFor = thisID.replace('FP_LocationType','');
-                                    //var xyz=$('#FP_LocationType'+indexFor).find('option:selected').text();
-                                    //console.log("this loctaion "+xyz);
-                                    $('#FP_LocationM'+indexFor).val('');
-                                    $('#FP_Location'+indexFor).val('');
-                                    $('#FP_LocationID'+indexFor).val('');
-                                    if($(this).val()=="Customer"){					
-                                        $('#FP_equipment'+indexFor).children('option').remove();
-                                        $('#FP_equipment'+indexFor).append("<option value='none'>Select an Option</option><option value='Custom'>Custom</option><option value='Node'>Node</option><option value='DistBoard'>DB</option>");
-                                        $('#FP_equipmentType'+indexFor).val('');	
-                                        $('#FP_Location'+indexFor).prop("readonly", true);					
-                                    } else if($(this).val()=="Manhole" || $(this).val()=="Handhole"){
-                                        $('#FP_equipment'+indexFor).children('option').remove();
-                                        $('#FP_equipment'+indexFor).append("<option value='Node'>Node</option><option value='DistBoard'>DB</option>");
-                                        $('#FP_equipmentType'+indexFor).val('');
-                                        $('#FP_Location'+indexFor).prop("readonly", true);
-                                    }else if( $(this).val()=="Site") {
-                                        $('#FP_equipment'+indexFor).children('option').remove();
-                                        $('#FP_equipment'+indexFor).append("<option value='Node'>Node</option><option value='DistBoard'>DB</option>");
-                                        $('#FP_equipmentType'+indexFor).val('');
-                                        $('#FP_Location'+indexFor).prop("readonly", false);
-                                    }else if($(this).val()=="None"){
-                                        $('#FP_equipment'+indexFor).children('option').remove();
-                                        $('#FP_equipmentType'+indexFor).val('');
-                                    }
-                                });
-                        	
-                            $("#BP_LocationType"+dBBoqIndex).change(function(){
-                                var thisID = $(this).attr("id");
-                                console.log(thisID+"kkkkkkkkkk");
-                                console.log("the Index is " +(parseInt(dBBoqIndex)-1));
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('BP_LocationType','');
-                                $('#BP_LocationM'+indexFor).val('');
-                                $('#BP_Location'+indexFor).val('');
-                                $('#BP_LocationID'+indexFor).val('');
-                                if($(this).val()=="Customer"){					
-                                    $('#BP_equipment'+indexFor).children('option').remove();
-                                    $('#BP_equipment'+indexFor).append("<option value='none'>select an option</option><option value='Custom'>Custom</option><option value='Node'>Node</option><option value='DistBoard'>DB</option>");
-                                    $('#BP_equipmentType'+indexFor).val('');
-                                    $('#BP_Location'+indexFor).prop("readonly", true);						
-                                } else if($(this).val()=="Manhole" || $(this).val()=="Handhole"){
-                                    $('#BP_equipment'+indexFor).children('option').remove();
-                                    $('#BP_equipment'+indexFor).append("<option value='Node'>Node</option><option value='DistBoard'>DB</option>");
-                                    $('#BP_equipmentType'+indexFor).val('');
-                                    $('#BP_Location'+indexFor).prop("readonly", true);
-                                }else if($(this).val()=="Site"){
-                                    $('#BP_equipment'+indexFor).children('option').remove();
-                                    $('#BP_equipment'+indexFor).append("<option value='Node'>Node</option><option value='DistBoard'>DB</option>");
-                                    $('#BP_equipmentType'+indexFor).val('');
-                                    $('#BP_Location'+indexFor).prop("readonly", false);
-                                } else if($(this).val()=="None"){
-                                    $('#BP_equipment'+indexFor).children('option').remove();
-                                    $('#BP_equipmentType'+indexFor).val('');
-                                }
-                            });
-            */
-
-            /*									
-                                $("#BP_tubecolor"+dBBoqIndex).change(function(){
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('BP_tubecolor','');
-                                colorId="BP_tubecolor"+indexFor;
-                                numberId="BP_tubeNb"+indexFor;
-                                tubeStrandSetColor(colorId,numberId);	 
-                            });
-                        	
-                            $("#FP_tubecolor"+dBBoqIndex).change(function(){
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('FP_tubecolor','');
-                                colorId="FP_tubecolor"+indexFor;
-                                numberId="FP_tubeNb"+indexFor;
-                                tubeStrandSetColor(colorId,numberId);	 
-                            });
-                        	
-                            $("#BP_strandcolor"+dBBoqIndex).change(function(){
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('BP_strandcolor','');
-                                colorId="BP_strandcolor"+indexFor;
-                                numberId="BP_strandNb"+indexFor;
-                                tubeStrandSetColor(colorId,numberId);
-                            });
-                        	
-                            $("#FP_strandcolor"+dBBoqIndex).change(function(){
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('FP_strandcolor','');
-                                colorId="FP_strandcolor"+indexFor;
-                                numberId="FP_strandNb"+indexFor;
-                                tubeStrandSetColor(colorId,numberId);
-                            });
-                        	
-                            document.getElementById("FP_tubeNb"+dBBoqIndex).addEventListener ("input" ,function() {
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('FP_tubeNb','');
-                                colorId="FP_tubecolor"+indexFor;
-                                numberId="FP_tubeNb"+indexFor;
-                                number=document.getElementById(numberId).value;
-                                strandTubeSetColor(number,colorId);
-                        	
-                            });
-                        	
-                            document.getElementById("BP_tubeNb"+dBBoqIndex).addEventListener ("input" ,function() {
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('BP_tubeNb','');
-                                colorId="BP_tubecolor"+indexFor;
-                                numberId="BP_tubeNb"+indexFor;
-                                number=document.getElementById(numberId).value;
-                                strandTubeSetColor(number,colorId);
-                        	
-                            });
-                        	
-                            document.getElementById("FP_strandNb"+dBBoqIndex).addEventListener ("input" ,function() {
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('FP_strandNb','');
-                                colorId="FP_strandcolor"+indexFor;
-                                numberId="FP_strandNb"+indexFor;
-                                number=document.getElementById(numberId).value;
-                                strandTubeSetColor(number,colorId);
-                        	
-                            });
-                        	
-                            document.getElementById("BP_strandNb"+dBBoqIndex).addEventListener ("input" ,function() {
-                                var thisID = $(this).attr("id");
-                                //var indexFor = parseInt(thisID.substr(thisID.length-1));
-                                var indexFor = thisID.replace('BP_strandNb','');
-                                colorId="BP_strandcolor"+indexFor;
-                                numberId="BP_strandNb"+indexFor;
-                                number=document.getElementById(numberId).value;
-                                strandTubeSetColor(number,colorId);
-                        	
-                            });
-            */
-            /*					 
-            autoCompleteForMapping(dBBoqIndex,"DbMappingTable",DistBoardMappingPts[i][1],"FP_Location","FP_LocationID","FP_LocationM","FP_LocationType","FP_equipment","FP_equipmentID","FP_equipmentName","FP_equipmentType","FP_strandID","FP_strandName","FP_tubeID","FP_tubeName","FP_fiberID","FP_fiberName","FP_strandNb","FP_strandcolor","FP_tubeNb","FP_tubecolor","FP_junctionID","FP_junctionName");
-            autoCompleteForMapping(dBBoqIndex,"DbMappingTable",DistBoardMappingPts[i][1],"BP_Location","BP_LocationID","BP_LocationM","BP_LocationType","BP_equipment","BP_equipmentID","BP_equipmentName","BP_equipmentType","BP_strandID","BP_strandName","BP_tubeID","BP_tubeName","BP_fiberID","BP_fiberName","BP_strandNb","BP_strandcolor","BP_tubeNb","BP_tubecolor","BP_junctionID","BP_junctionName");
-            */
-
-/*
-            tubeStrandSetColor("FP_strandcolor" + dBBoqIndex, "FP_strandNb" + dBBoqIndex);
-            tubeStrandSetColor("BP_strandcolor" + dBBoqIndex, "BP_strandNb" + dBBoqIndex);
-            tubeStrandSetColor("FP_tubecolor" + dBBoqIndex, "FP_tubeNb" + dBBoqIndex);
-            tubeStrandSetColor("BP_tubecolor" + dBBoqIndex, "BP_tubeNb" + dBBoqIndex);
-*/			
             dBBoqIndex++;
-
         }
 
 		indexRowColEvents({
