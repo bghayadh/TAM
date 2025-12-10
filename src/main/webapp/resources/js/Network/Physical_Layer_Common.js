@@ -14103,72 +14103,7 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='BP_TubeID'><input name='BP_tubeID' value='" + DistBoardMappingPts[i][17] + "' id='BP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='BP_TubeName'><input name='BP_tubeName' value='" + DistBoardMappingPts[i][18] + "' id='BP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='BP_FiberID'><input name='BP_fiberID' value='" + DistBoardMappingPts[i][19] + "' id='BP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='BP_FiberName'><input name='BP_fiberName' value='" + DistBoardMappingPts[i][20] + "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"  
-/*			
-            let backKitModule = $("#backKitModule" + dBBoqIndex);
-            let backPortNumInput = $("#backPortNum" + dBBoqIndex);
-            let farKitSerialNum = $("#farKitSerialNum" + dBBoqIndex);
-            let farModule = $("#farModule" + dBBoqIndex);
-            let farPortNum = $("#farPortNum" + dBBoqIndex);
-
-            if (DistBoardMappingPts[i][32] == "DistBoard") {
-                backKitModule.prop("readonly", false);
-                backPortNumInput.prop("readonly", false);
-            } else {
-                // Make inputs readonly again
-                backKitModule.prop("readonly", true);
-                backPortNumInput.prop("readonly", true);
-            }
-
-            if (DistBoardMappingPts[i][10] == "DistBoard") {
-                farKitSerialNum.prop("readonly", false);
-                farModule.prop("readonly", false);
-                farPortNum.prop("readonly", false);
-            } else {
-                // Make inputs readonly again
-                farKitSerialNum.prop("readonly", true);
-                farModule.prop("readonly", true);
-                farPortNum.prop("readonly", true);
-            }
-*/			
-/*
-            if (DistBoardMappingPts[i][40] != null) {
-                $("#FP_strandcolor" + dBBoqIndex).val(DistBoardMappingPts[i][40]);
-            }
-
-            if (DistBoardMappingPts[i][41] != null) {
-                $("#FP_tubecolor" + dBBoqIndex).val(DistBoardMappingPts[i][41]);
-            }
-
-            if (DistBoardMappingPts[i][42] != null) {
-                $("#BP_strandcolor" + dBBoqIndex).val(DistBoardMappingPts[i][42]);
-            }
-
-            if (DistBoardMappingPts[i][43] != null) {
-                $("#BP_tubecolor" + dBBoqIndex).val(DistBoardMappingPts[i][43]);
-            }
-*/
-/*
-            if (DistBoardMappingPts[i][10] != null) {
-                $("#FP_equipment" + dBBoqIndex).val(DistBoardMappingPts[i][10]);
-            }
-
-            if (DistBoardMappingPts[i][32] != null) {
-                $("#BP_equipment" + dBBoqIndex).val(DistBoardMappingPts[i][32]);
-            }			
-
-            var FP_LocType = $('#FP_LocationType' + dBBoqIndex).find('option:selected').text();
-            if (FP_LocType == "Manhole" || FP_LocType == "Handhole" || FP_LocType == "Customer") {
-                $('#FP_Location' + dBBoqIndex).prop("readonly", true);
-                $('#FP_Location' + dBBoqIndex).val('');
-            }
-
-            var BP_LocType = $('#BP_LocationType' + dBBoqIndex).find('option:selected').text();
-            if (BP_LocType == "Manhole" || BP_LocType == "Handhole" || BP_LocType == "Customer") {
-                $('#BP_Location' + dBBoqIndex).prop("readonly", true);
-                $('#BP_Location' + dBBoqIndex).val('');
-            }
-*/			
+                + "<td name='BP_FiberName'><input name='BP_fiberName' value='" + DistBoardMappingPts[i][20] + "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
             dBBoqIndex++;
         }
 		$("#DbMappingTable > tbody").html(markup);
@@ -14468,450 +14403,445 @@ function relatedCableTabEvents(netLevel){
 }
 
 //Show / Hide tube and strand auxiliaries in fiber cable popup
-function showHideTubeStrandAuxPoints(auxiliaryArray,wareID,srcDstID,name,longitude,latitude,pathID,checkSeqWindowID,action,type) {
-	 
-	  if(action=="Show") {	  
-		if(auxiliaryArray.length>0){
-			for(var A=0;A<auxiliaryArray.length;A++) {			
-				var seqNumber = String(auxiliaryArray[A].seqSorting);	
-				var auxPt = auxiliaryArray[A].aux_Name;
-				var latitude = auxiliaryArray[A].aux_Latitude;
-				var longitude = auxiliaryArray[A].aux_Longitude;
-				
-				
-			if(auxPt.split("_")[0]=="WARE") {
-					wareID = auxPt.split(":")[0];
-					srcName = auxPt.split(":")[1];
-					srcID = auxPt.split(":")[2];
-					
-					createSiteCltMarker(wareID,auxPt,latitude,longitude,siteCltSrcMarkers);		
-					if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-						  if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-							  siteCltSrcMarkers[wareID].setLabel({text: seqNumber+" / "+wareID+":"+srcID, className:"marker-position-site",color:"red"});
-						  }
-						else {
-							siteCltSrcMarkers[wareID].setLabel({text: seqNumber , className:"marker-position-sequence",color:"red"}); 
-						}
-					}
-					else {
-						if(allcheckedLabels.length >0 && allcheckedLabels.includes("sitesMapCheck_Labels")==true) {
-							siteCltSrcMarkers[wareID].setLabel({text: wareID+":"+srcID , className:"marker-position-site",color:"red"});
-						}
-						else {
-							if(siteCltSrcMarkers[wareID].getLabel()!="undefined") {
-								siteCltSrcMarkers[wareID].setLabel(null);
-							}
-						}
-					}
-					 
-				}
-			else {
-			 if(auxPt==null || auxPt =="null"){
-				var AuxId = "null".concat("_"+seqNumber+"_"+pathID);
-				createSiteCltMarker(AuxId,AuxId,latitude,longitude,siteCltSrcMarkers);
-				
-				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-					siteCltSrcMarkers[AuxId].setLabel({text: seqNumber , className:"marker-position-sequence",color:"green"}); 
-				}
-				else {
-					if(siteCltSrcMarkers[AuxId].getLabel()!="undefined") {
-						siteCltSrcMarkers[AuxId].setLabel(null);
-					}
-				}						
-			}
-		else if(auxPt.includes("Auxiliary_Point")){
-			createSiteCltMarker(auxPt.split(":")[0],auxPt.split(":")[0],latitude,longitude,siteCltSrcMarkers);
-			
-			if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-				siteCltSrcMarkers[auxPt.split(":")[0]].setLabel({text: seqNumber , className:"marker-position-sequence",color:"green"}); 
-			}
-			else {
-				if(siteCltSrcMarkers[auxPt.split(":")[0]].getLabel()!="undefined") {
-					siteCltSrcMarkers[auxPt.split(":")[0]].setLabel(null);
-				}
-			}
-		}
-		else if(auxPt.split('_')[0]=="MH"){
-			if(markersManhole[auxPt.split(':')[0]]){
-				markerClusterManhole.removeMarker(markersManhole[auxPt.split(':')[0]]);	
-				if(markersManhole[auxPt.split(':')[0]].getMap() ==null) {
-					markersManhole[auxPt.split(':')[0]].setMap(map);
-					markerClusterManhole.addMarker(markersManhole[auxPt.split(':')[0]]);	
-					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", true );
-					$("#manholeCheckAllBoq").prop( "checked", true );													
-							
-				}
-				
-				//Show seq is checked 
-				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("manholesMapCheck_Labels")==true) {
-						markersManhole[auxPt.split(':')[0]].setLabel({text: seqNumber+" / "+ auxPt.split(':')[1], className:"marker-position-manhole",color:"red"});
-					}
-					else {
-						markersManhole[auxPt.split(':')[0]].setLabel({text: seqNumber , className:"marker-position-sequence",color:"red"}); 
-					}
-				}
-				//Show Seq is unchecked
-				else {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("manholesMapCheck_Labels")==true) {
-						markersManhole[auxPt.split(':')[0]].setLabel({text: auxPt.split(':')[1], className:"marker-position-manhole",color:"red"});
-					}
-					else {
-						if(markersManhole[auxPt.split(':')[0]].getLabel()!="undefined") {
-							markersManhole[auxPt.split(':')[0]].setLabel(null);
-						}
-					}
-				}	
-			}
-		}   		
-		else if(auxPt.split('_')[0]=="HH"){
-			if(markersHandhole[auxPt.split(':')[0]]){
-				markerClusterHandhole.removeMarker(markersHandhole[auxPt.split(':')[0]]);	
-				if(markersHandhole[auxPt.split(':')[0]].getMap() ==null) {
-					markersHandhole[auxPt.split(':')[0]].setMap(map);
-					markerClusterHandhole.addMarker(markersHandhole[auxPt.split(':')[0]]);
-					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", true );
-					$("#handholeCheckAllBoq").prop( "checked", true );
-				
-				}
-				//Show Sequence is checked
-				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("handholesMapCheck_Labels")==true) {
-						markersHandhole[auxPt.split(':')[0]].setLabel({text: seqNumber+" / "+auxPt.split(':')[1], className:"marker-position-handhole",color:"#E5C523"});
-					}
-					else {
-						markersHandhole[auxPt.split(':')[0]].setLabel({text: seqNumber , className:"marker-position-sequence",color:"#E5C523"}); 
-					}
-				}
-				//Show Sequence is unchecked
-				else {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("handholesMapCheck_Labels")==true) {
-						markersHandhole[auxPt.split(':')[0]].setLabel({text: auxPt.split(':')[1], className:"marker-position-handhole",color:"#E5C523"});
-					}
-					else {
-						if(markersHandhole[auxPt.split(':')[0]].getLabel()!="undefined") {
-							markersHandhole[auxPt.split(':')[0]].setLabel(null);
-						}
-					}
-				}
-				
-			}
-		}			 
-		else if(auxPt.split('_')[0]=="DB"){
-			if(markersDistBoard[auxPt.split(':')[0]]){ 
-				
-				if(window[""+auxPt.split(':')[0]][8]=="backbone") {
-					className=markerClusterBackboneDistBoard;
-				}
-				else if(window[""+auxPt.split(':')[0]][8]=="metro") {
-					className=markerClusterMetroDistBoard;
-				}
-				else if(window[""+auxPt.split(':')[0]][8]=="access") {
-					className=markerClusterAccessDistBoard;
-				}
-				className.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
-				if(markersDistBoard[auxPt.split(':')[0]].getMap() ==null) {
-					markersDistBoard[auxPt.split(':')[0]].setMap(map);	
-					className.addMarker(markersDistBoard[auxPt.split(':')[0]]);
-					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", true );
-					$("#distBoardCheckAllBoq").prop( "checked", true );
-				}
-				if(window[''+checkSeqWindowID+'_'+pathID] == "checked") {
-					if(allcheckedLabels.length >0 && allcheckedLabels.includes("dBMapCheck_Labels")==true) {
-						markersDistBoard[auxPt.split(':')[0]].setLabel({text: seqNumber+" / "+ auxPt.split(':')[1], className:"marker-position-dB",color:"#5665F9"});
-					}
-					else {
-						markersDistBoard[auxPt.split(':')[0]].setLabel({text: seqNumber , className:"marker-position-sequence",color:"#5665F9"}); 
-					}
-				}
-				else {
-					if(markersDistBoard[auxPt.split(':')[0]].getLabel()!="undefined") {
-						markersDistBoard[auxPt.split(':')[0]].setLabel(null);
-					}
-					
-				}
-			}
-		}
-					
-		}		  
-		}
-			}
+function showHideTubeStrandAuxPoints(auxiliaryArray, wareID, srcDstID, name, longitude, latitude, pathID, checkSeqWindowID, action, type) {
 
-	  }	
-	 
-	  //Hide points
-	  else {
+    if (action == "Show") {
+        if (auxiliaryArray.length > 0) {
+            for (var A = 0;A < auxiliaryArray.length;A++) {
+                var seqNumber = String(auxiliaryArray[A].seqSorting);
+                var auxPt = auxiliaryArray[A].aux_Name;
+                var latitude = auxiliaryArray[A].aux_Latitude;
+                var longitude = auxiliaryArray[A].aux_Longitude;
 
-		  if(auxiliaryArray.length>0){
-				for(var A=0;A<auxiliaryArray.length;A++) {
-				
-					var seqNumber = String(auxiliaryArray[A].seqSorting);	
-					var auxPt = auxiliaryArray[A].aux_Name;
-					
-				if(auxPt.split("_")[0]=="WARE") {
-					if(siteCltSrcMarkers[auxPt.split(":")[0]]) {
-						siteCltSrcMarkers[auxPt.split(":")[0]].setMap(null);
-					}					 
-				}
-				else {
-				 if(auxPt==null || auxPt =="null"){
-					var AuxId = "null".concat("_"+seqNumber+"_"+pathID);
-					if(siteCltSrcMarkers[AuxId]) {
-						siteCltSrcMarkers[AuxId].setMap(null);
-					}				
-				}
-			else if(auxPt.includes("Auxiliary_Point")){
-				if(siteCltSrcMarkers[auxPt.split(":")[0]]) {
-					siteCltSrcMarkers[auxPt.split(":")[0]].setMap(null);	
-				}	
-			}
-			else if(auxPt.split('_')[0]=="MH"){
-				if(markersManhole[auxPt.split(':')[0]]) {
-					markersManhole[auxPt.split(':')[0]].setMap(null);				
-					markerClusterManhole.removeMarker(markersManhole[auxPt.split(':')[0]]);	
-					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", false );	
-				}			
-			}   		
-			else if(auxPt.split('_')[0]=="HH"){
-				if(markersHandhole[auxPt.split(':')[0]]) {
-					markersHandhole[auxPt.split(':')[0]].setMap(null);
-					markerClusterHandhole.removeMarker(markersHandhole[auxPt.split(':')[0]]);
-					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", false );	
-				}
-			
-			}			 
-			else if(auxPt.split('_')[0]=="DB"){
-				if(markersDistBoard[auxPt.split(':')[0]]) {
-					if(window[""+auxPt.split(':')[0]][8]=="backbone") {
-						className=markerClusterBackboneDistBoard;
-					}
-					else if(window[""+auxPt.split(':')[0]][8]=="metro") {
-						className=markerClusterMetroDistBoard;
-					}
-					else if(window[""+auxPt.split(':')[0]][8]=="access") {
-						className=markerClusterAccessDistBoard;
-					}
-					markersDistBoard[auxPt.split(':')[0]].setMap(null);					
-					className.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
-					$("#"+auxPt.split(':')[0]).children(':checkbox').prop( "checked", false );	
-					
-			}	
-			}
-						
-			}		  
-			}
-				
-		  }
-	  }
 
-			if( $("#Manhole_f_CurrentPhysicalLayer").find(".Manhole:checked" ).length ==0){
-				$("#manholeCheckAllBoq").prop("checked",false);
-			}
-			else{
-				$("#manholeCheckAllBoq").prop("checked",true);
-			}
-			
-			if( $("#Handhole_f_CurrentPhysicalLayer").find(".Handhole:checked" ).length ==0){
-				$("#handholeCheckAllBoq").prop("checked",false);
-			}
-			else{
-				$("#handholeCheckAllBoq").prop("checked",true);
-			}
-			if( $("#DistributionBoard_f_CurrentPhysicalLayer").find(".DistBoard:checked" ).length ==0){
-				$("#distBoardCheckAllBoq").prop("checked",false);
-			}
-			else{
-				$("#distBoardCheckAllBoq").prop("checked",true);
-			}	
-			
-		}
-		
+                if (auxPt.split("_")[0] == "WARE") {
+                    wareID = auxPt.split(":")[0];
+                    srcName = auxPt.split(":")[1];
+                    srcID = auxPt.split(":")[2];
+
+                    createSiteCltMarker(wareID, auxPt, latitude, longitude, siteCltSrcMarkers);
+                    if (window['' + checkSeqWindowID + '_' + pathID] == "checked") {
+                        if (allcheckedLabels.length > 0 && allcheckedLabels.includes("sitesMapCheck_Labels") == true) {
+                            siteCltSrcMarkers[wareID].setLabel({ text: seqNumber + " / " + wareID + ":" + srcID, className: "marker-position-site", color: "red" });
+                        }
+                        else {
+                            siteCltSrcMarkers[wareID].setLabel({ text: seqNumber, className: "marker-position-sequence", color: "red" });
+                        }
+                    }
+                    else {
+                        if (allcheckedLabels.length > 0 && allcheckedLabels.includes("sitesMapCheck_Labels") == true) {
+                            siteCltSrcMarkers[wareID].setLabel({ text: wareID + ":" + srcID, className: "marker-position-site", color: "red" });
+                        }
+                        else {
+                            if (siteCltSrcMarkers[wareID].getLabel() != "undefined") {
+                                siteCltSrcMarkers[wareID].setLabel(null);
+                            }
+                        }
+                    }
+
+                }
+                else {
+                    if (auxPt == null || auxPt == "null") {
+                        var AuxId = "null".concat("_" + seqNumber + "_" + pathID);
+                        createSiteCltMarker(AuxId, AuxId, latitude, longitude, siteCltSrcMarkers);
+
+                        if (window['' + checkSeqWindowID + '_' + pathID] == "checked") {
+                            siteCltSrcMarkers[AuxId].setLabel({ text: seqNumber, className: "marker-position-sequence", color: "green" });
+                        }
+                        else {
+                            if (siteCltSrcMarkers[AuxId].getLabel() != "undefined") {
+                                siteCltSrcMarkers[AuxId].setLabel(null);
+                            }
+                        }
+                    }
+                    else if (auxPt.includes("Auxiliary_Point")) {
+                        createSiteCltMarker(auxPt.split(":")[0], auxPt.split(":")[0], latitude, longitude, siteCltSrcMarkers);
+
+                        if (window['' + checkSeqWindowID + '_' + pathID] == "checked") {
+                            siteCltSrcMarkers[auxPt.split(":")[0]].setLabel({ text: seqNumber, className: "marker-position-sequence", color: "green" });
+                        }
+                        else {
+                            if (siteCltSrcMarkers[auxPt.split(":")[0]].getLabel() != "undefined") {
+                                siteCltSrcMarkers[auxPt.split(":")[0]].setLabel(null);
+                            }
+                        }
+                    }
+                    else if (auxPt.split('_')[0] == "MH") {
+                        if (markersManhole[auxPt.split(':')[0]]) {
+                            markerClusterManhole.removeMarker(markersManhole[auxPt.split(':')[0]]);
+                            if (markersManhole[auxPt.split(':')[0]].getMap() == null) {
+                                markersManhole[auxPt.split(':')[0]].setMap(map);
+                                markerClusterManhole.addMarker(markersManhole[auxPt.split(':')[0]]);
+                                $("#" + auxPt.split(':')[0]).children(':checkbox').prop("checked", true);
+                                $("#manholeCheckAllBoq").prop("checked", true);
+
+                            }
+
+                            //Show seq is checked 
+                            if (window['' + checkSeqWindowID + '_' + pathID] == "checked") {
+                                if (allcheckedLabels.length > 0 && allcheckedLabels.includes("manholesMapCheck_Labels") == true) {
+                                    markersManhole[auxPt.split(':')[0]].setLabel({ text: seqNumber + " / " + auxPt.split(':')[1], className: "marker-position-manhole", color: "red" });
+                                }
+                                else {
+                                    markersManhole[auxPt.split(':')[0]].setLabel({ text: seqNumber, className: "marker-position-sequence", color: "red" });
+                                }
+                            }
+                            //Show Seq is unchecked
+                            else {
+                                if (allcheckedLabels.length > 0 && allcheckedLabels.includes("manholesMapCheck_Labels") == true) {
+                                    markersManhole[auxPt.split(':')[0]].setLabel({ text: auxPt.split(':')[1], className: "marker-position-manhole", color: "red" });
+                                }
+                                else {
+                                    if (markersManhole[auxPt.split(':')[0]].getLabel() != "undefined") {
+                                        markersManhole[auxPt.split(':')[0]].setLabel(null);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (auxPt.split('_')[0] == "HH") {
+                        if (markersHandhole[auxPt.split(':')[0]]) {
+                            markerClusterHandhole.removeMarker(markersHandhole[auxPt.split(':')[0]]);
+                            if (markersHandhole[auxPt.split(':')[0]].getMap() == null) {
+                                markersHandhole[auxPt.split(':')[0]].setMap(map);
+                                markerClusterHandhole.addMarker(markersHandhole[auxPt.split(':')[0]]);
+                                $("#" + auxPt.split(':')[0]).children(':checkbox').prop("checked", true);
+                                $("#handholeCheckAllBoq").prop("checked", true);
+
+                            }
+                            //Show Sequence is checked
+                            if (window['' + checkSeqWindowID + '_' + pathID] == "checked") {
+                                if (allcheckedLabels.length > 0 && allcheckedLabels.includes("handholesMapCheck_Labels") == true) {
+                                    markersHandhole[auxPt.split(':')[0]].setLabel({ text: seqNumber + " / " + auxPt.split(':')[1], className: "marker-position-handhole", color: "#E5C523" });
+                                }
+                                else {
+                                    markersHandhole[auxPt.split(':')[0]].setLabel({ text: seqNumber, className: "marker-position-sequence", color: "#E5C523" });
+                                }
+                            }
+                            //Show Sequence is unchecked
+                            else {
+                                if (allcheckedLabels.length > 0 && allcheckedLabels.includes("handholesMapCheck_Labels") == true) {
+                                    markersHandhole[auxPt.split(':')[0]].setLabel({ text: auxPt.split(':')[1], className: "marker-position-handhole", color: "#E5C523" });
+                                }
+                                else {
+                                    if (markersHandhole[auxPt.split(':')[0]].getLabel() != "undefined") {
+                                        markersHandhole[auxPt.split(':')[0]].setLabel(null);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+                    else if (auxPt.split('_')[0] == "DB") {
+                        if (markersDistBoard[auxPt.split(':')[0]]) {
+
+                            if (window["" + auxPt.split(':')[0]][8] == "backbone") {
+                                className = markerClusterBackboneDistBoard;
+                            }
+                            else if (window["" + auxPt.split(':')[0]][8] == "metro") {
+                                className = markerClusterMetroDistBoard;
+                            }
+                            else if (window["" + auxPt.split(':')[0]][8] == "access") {
+                                className = markerClusterAccessDistBoard;
+                            }
+                            className.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
+                            if (markersDistBoard[auxPt.split(':')[0]].getMap() == null) {
+                                markersDistBoard[auxPt.split(':')[0]].setMap(map);
+                                className.addMarker(markersDistBoard[auxPt.split(':')[0]]);
+                                $("#" + auxPt.split(':')[0]).children(':checkbox').prop("checked", true);
+                                $("#distBoardCheckAllBoq").prop("checked", true);
+                            }
+                            if (window['' + checkSeqWindowID + '_' + pathID] == "checked") {
+                                if (allcheckedLabels.length > 0 && allcheckedLabels.includes("dBMapCheck_Labels") == true) {
+                                    markersDistBoard[auxPt.split(':')[0]].setLabel({ text: seqNumber + " / " + auxPt.split(':')[1], className: "marker-position-dB", color: "#5665F9" });
+                                }
+                                else {
+                                    markersDistBoard[auxPt.split(':')[0]].setLabel({ text: seqNumber, className: "marker-position-sequence", color: "#5665F9" });
+                                }
+                            }
+                            else {
+                                if (markersDistBoard[auxPt.split(':')[0]].getLabel() != "undefined") {
+                                    markersDistBoard[auxPt.split(':')[0]].setLabel(null);
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
+
+    //Hide points
+    else {
+
+        if (auxiliaryArray.length > 0) {
+            for (var A = 0;A < auxiliaryArray.length;A++) {
+
+                var seqNumber = String(auxiliaryArray[A].seqSorting);
+                var auxPt = auxiliaryArray[A].aux_Name;
+
+                if (auxPt.split("_")[0] == "WARE") {
+                    if (siteCltSrcMarkers[auxPt.split(":")[0]]) {
+                        siteCltSrcMarkers[auxPt.split(":")[0]].setMap(null);
+                    }
+                }
+                else {
+                    if (auxPt == null || auxPt == "null") {
+                        var AuxId = "null".concat("_" + seqNumber + "_" + pathID);
+                        if (siteCltSrcMarkers[AuxId]) {
+                            siteCltSrcMarkers[AuxId].setMap(null);
+                        }
+                    }
+                    else if (auxPt.includes("Auxiliary_Point")) {
+                        if (siteCltSrcMarkers[auxPt.split(":")[0]]) {
+                            siteCltSrcMarkers[auxPt.split(":")[0]].setMap(null);
+                        }
+                    }
+                    else if (auxPt.split('_')[0] == "MH") {
+                        if (markersManhole[auxPt.split(':')[0]]) {
+                            markersManhole[auxPt.split(':')[0]].setMap(null);
+                            markerClusterManhole.removeMarker(markersManhole[auxPt.split(':')[0]]);
+                            $("#" + auxPt.split(':')[0]).children(':checkbox').prop("checked", false);
+                        }
+                    }
+                    else if (auxPt.split('_')[0] == "HH") {
+                        if (markersHandhole[auxPt.split(':')[0]]) {
+                            markersHandhole[auxPt.split(':')[0]].setMap(null);
+                            markerClusterHandhole.removeMarker(markersHandhole[auxPt.split(':')[0]]);
+                            $("#" + auxPt.split(':')[0]).children(':checkbox').prop("checked", false);
+                        }
+
+                    }
+                    else if (auxPt.split('_')[0] == "DB") {
+                        if (markersDistBoard[auxPt.split(':')[0]]) {
+                            if (window["" + auxPt.split(':')[0]][8] == "backbone") {
+                                className = markerClusterBackboneDistBoard;
+                            }
+                            else if (window["" + auxPt.split(':')[0]][8] == "metro") {
+                                className = markerClusterMetroDistBoard;
+                            }
+                            else if (window["" + auxPt.split(':')[0]][8] == "access") {
+                                className = markerClusterAccessDistBoard;
+                            }
+                            markersDistBoard[auxPt.split(':')[0]].setMap(null);
+                            className.removeMarker(markersDistBoard[auxPt.split(':')[0]]);
+                            $("#" + auxPt.split(':')[0]).children(':checkbox').prop("checked", false);
+
+                        }
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    if ($("#Manhole_f_CurrentPhysicalLayer").find(".Manhole:checked").length == 0) {
+        $("#manholeCheckAllBoq").prop("checked", false);
+    }
+    else {
+        $("#manholeCheckAllBoq").prop("checked", true);
+    }
+
+    if ($("#Handhole_f_CurrentPhysicalLayer").find(".Handhole:checked").length == 0) {
+        $("#handholeCheckAllBoq").prop("checked", false);
+    }
+    else {
+        $("#handholeCheckAllBoq").prop("checked", true);
+    }
+    if ($("#DistributionBoard_f_CurrentPhysicalLayer").find(".DistBoard:checked").length == 0) {
+        $("#distBoardCheckAllBoq").prop("checked", false);
+    }
+    else {
+        $("#distBoardCheckAllBoq").prop("checked", true);
+    }
+
+}
+
 
 function appendManholesClosePoints(manholesClosePtArray) {
 
-		var markupManh="";
-		document.getElementById("findCloseManholePts").innerHTML = "";
-		document.getElementById("searchCloseManhTBody").innerHTML = "";	
-		
-				
-		if (manholesClosePtArray.length==0){
-			document.getElementById("findCloseManholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
-		}
-		else {
-			for(var i =0 ; i<manholesClosePtArray.length;i++){
-				markupManh +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeManholePoint' id=closePoint_"+manholesClosePtArray[i][0]+" ></td><td  >"+manholesClosePtArray[i][0]+"</td><td name ='closeManholeId' style='min-width:250px;'>"+manholesClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+manholesClosePtArray[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+manholesClosePtArray[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(manholesClosePtArray[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
-			}
-		}						  
-		$("#searchCloseManhTBody").append(markupManh);
-	    drivingDistance("findCloseManhole");
-		makeAllSortable();
-		
-		$('.closeManholePoint').click(function(){
-			var ManId = $(this).attr('id').split("closePoint_")[1];
-			if ($(this).is(':checked')){
-				treeSelectForClosePoints(ManId,"Manhole");
-			}
-		});
-		
+    var markupManh = "";
+    document.getElementById("findCloseManholePts").innerHTML = "";
+    document.getElementById("searchCloseManhTBody").innerHTML = "";
+
+
+    if (manholesClosePtArray.length == 0) {
+        document.getElementById("findCloseManholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+    }
+    else {
+        for (var i = 0;i < manholesClosePtArray.length;i++) {
+            markupManh += "<tr style='height: 30px;'><td ><input type='checkbox' class='closeManholePoint' id=closePoint_" + manholesClosePtArray[i][0] + " ></td><td  >" + manholesClosePtArray[i][0] + "</td><td name ='closeManholeId' style='min-width:250px;'>" + manholesClosePtArray[i][1] + "</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='" + manholesClosePtArray[i][2] + "' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='" + manholesClosePtArray[i][3] + "' readonly></input ></td><td style='width:100px;'>" + (manholesClosePtArray[i][7]) + "</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+        }
+    }
+    $("#searchCloseManhTBody").append(markupManh);
+    drivingDistance("findCloseManhole");
+    makeAllSortable();
+
+    $('.closeManholePoint').click(function() {
+        var ManId = $(this).attr('id').split("closePoint_")[1];
+        if ($(this).is(':checked')) {
+            treeSelectForClosePoints(ManId, "Manhole");
+        }
+    });
 }
 function appendHandholesClosePoints(handholesClosePtArray) {
 
-		var markupHandhole="";
-		document.getElementById("findCloseHandholePts").innerHTML = "";
-		document.getElementById("searchCloseHandTBody").innerHTML = "";	
+    var markupHandhole = "";
+    document.getElementById("findCloseHandholePts").innerHTML = "";
+    document.getElementById("searchCloseHandTBody").innerHTML = "";
 
-								
-		if (handholesClosePtArray.length==0){
-			document.getElementById("findCloseHandholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
-		}
-		else {
-			for(var i =0 ; i<handholesClosePtArray.length;i++){
-				markupHandhole +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeHandholeBOQ' id=closePoint_"+handholesClosePtArray[i][0]+" ></td><td  >"+handholesClosePtArray[i][0]+"</td><td name ='closeHandholeId' style='min-width:250px;'>"+handholesClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+handholesClosePtArray[i][2]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+handholesClosePtArray[i][3]+"' readonly></input ></td><td style='width:100px;'>"+(handholesClosePtArray[i][7])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
-			}
-		}						  
-		$("#searchCloseHandTBody").append(markupHandhole);
-	    drivingDistance("findCloseHandhole");
-		makeAllSortable();
-		
-		$('.closeHandholeBOQ').click(function(){
-			var handId = $(this).attr('id').split("closePoint_")[1];
-			if ($(this).is(':checked')){
-				treeSelectForClosePoints(handId,"Handhole");
-			}
-		});
+    if (handholesClosePtArray.length == 0) {
+        document.getElementById("findCloseHandholePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+    }
+    else {
+        for (var i = 0;i < handholesClosePtArray.length;i++) {
+            markupHandhole += "<tr style='height: 30px;'><td ><input type='checkbox' class='closeHandholeBOQ' id=closePoint_" + handholesClosePtArray[i][0] + " ></td><td  >" + handholesClosePtArray[i][0] + "</td><td name ='closeHandholeId' style='min-width:250px;'>" + handholesClosePtArray[i][1] + "</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='" + handholesClosePtArray[i][2] + "' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='" + handholesClosePtArray[i][3] + "' readonly></input ></td><td style='width:100px;'>" + (handholesClosePtArray[i][7]) + "</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+        }
+    }
+    $("#searchCloseHandTBody").append(markupHandhole);
+    drivingDistance("findCloseHandhole");
+    makeAllSortable();
+
+    $('.closeHandholeBOQ').click(function() {
+        var handId = $(this).attr('id').split("closePoint_")[1];
+        if ($(this).is(':checked')) {
+            treeSelectForClosePoints(handId, "Handhole");
+        }
+    });
 }
 function appendDbClosePoints(dbClosePtArray) {
 
-		var markupDB="";
-		document.getElementById("findCloseDbPts").innerHTML = "";
-		document.getElementById("searchCloseDbTBody").innerHTML = "";	
+    var markupDB = "";
+    document.getElementById("findCloseDbPts").innerHTML = "";
+    document.getElementById("searchCloseDbTBody").innerHTML = "";
 
-								
-		if (dbClosePtArray.length==0){
-			document.getElementById("findCloseDbPts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
-		}
-		else {
-			for(var i =0 ; i<dbClosePtArray.length;i++){
-				markupDB +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeDbBOQ' id=closePoint_"+dbClosePtArray[i][0]+" ></td><td  >"+dbClosePtArray[i][0]+"</td><td name ='closeDbId' style='min-width:250px;'>"+dbClosePtArray[i][3]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+dbClosePtArray[i][1]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+dbClosePtArray[i][2]+"' readonly></input ></td><td style='width:100px;'>"+(dbClosePtArray[i][9])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
-			}
-		}						  
-		$("#searchCloseDbTBody").append(markupDB);
-	    drivingDistance("findCloseDB");
-		makeAllSortable();
-		
-		
-		$('.closeDbBOQ').click(function(){			
-			var DBId = $(this).attr('id').split("closePoint_")[1];
-			if ($(this).is(':checked')){
-				treeSelectForClosePoints(DBId,"DistributionBoard");
-			}
-		});
 
-	
+    if (dbClosePtArray.length == 0) {
+        document.getElementById("findCloseDbPts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+    }
+    else {
+        for (var i = 0;i < dbClosePtArray.length;i++) {
+            markupDB += "<tr style='height: 30px;'><td ><input type='checkbox' class='closeDbBOQ' id=closePoint_" + dbClosePtArray[i][0] + " ></td><td  >" + dbClosePtArray[i][0] + "</td><td name ='closeDbId' style='min-width:250px;'>" + dbClosePtArray[i][3] + "</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='" + dbClosePtArray[i][1] + "' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='" + dbClosePtArray[i][2] + "' readonly></input ></td><td style='width:100px;'>" + (dbClosePtArray[i][9]) + "</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+        }
+    }
+    $("#searchCloseDbTBody").append(markupDB);
+    drivingDistance("findCloseDB");
+    makeAllSortable();
+
+    $('.closeDbBOQ').click(function() {
+        var DBId = $(this).attr('id').split("closePoint_")[1];
+        if ($(this).is(':checked')) {
+            treeSelectForClosePoints(DBId, "DistributionBoard");
+        }
+    });
 }
 function appendNodeClosePoints(nodeClosePtArray) {
-		var markupNode="";
-		document.getElementById("findCloseNodePts").innerHTML = "";
-		document.getElementById("searchCloseNodeTBody").innerHTML = "";	
+    var markupNode = "";
+    document.getElementById("findCloseNodePts").innerHTML = "";
+    document.getElementById("searchCloseNodeTBody").innerHTML = "";
 
-								
-		if (nodeClosePtArray.length==0){
-			document.getElementById("findCloseNodePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
-		}
-		else {
-			for(var i =0 ; i<nodeClosePtArray.length;i++){
-				markupNode +="<tr style='height: 30px;'><td ><input type='checkbox' class='closeNodeBOQ' id=closePoint_"+nodeClosePtArray[i][0]+" ></td><td name ='closeNodePk' style='min-width:300px;'>"+nodeClosePtArray[i][0]+"</td><td name ='closeNodeId' style='min-width:150px;'>"+nodeClosePtArray[i][7]+"</td><td name ='closeNodeName' style='min-width:250px;'>"+nodeClosePtArray[i][1]+"</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='"+nodeClosePtArray[i][5]+"' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='"+nodeClosePtArray[i][6]+"' readonly></input ></td><td style='width:100px;'>"+(nodeClosePtArray[i][9])+"</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"				
-			}
-		}						  
-		$("#searchCloseNodeTBody").append(markupNode);
-	    drivingDistance("findCloseNode");
-		makeAllSortable();
-		
-		$('.closeNodeBOQ').click(function(){
-			var nodeId = $(this).attr('id').split("closePoint_")[1];
-			if ($(this).is(':checked')){
-				treeSelectForClosePoints(nodeId,"NodeActive");
-			}			
-		});
+
+    if (nodeClosePtArray.length == 0) {
+        document.getElementById("findCloseNodePts").innerHTML = '<p style=" color:#ff0000;font-size: 1.4em;">There is no result</p>';
+    }
+    else {
+        for (var i = 0;i < nodeClosePtArray.length;i++) {
+            markupNode += "<tr style='height: 30px;'><td ><input type='checkbox' class='closeNodeBOQ' id=closePoint_" + nodeClosePtArray[i][0] + " ></td><td name ='closeNodePk' style='min-width:300px;'>" + nodeClosePtArray[i][0] + "</td><td name ='closeNodeId' style='min-width:150px;'>" + nodeClosePtArray[i][7] + "</td><td name ='closeNodeName' style='min-width:250px;'>" + nodeClosePtArray[i][1] + "</td><td name='LONGG' style='width:150px;'><input name='LONGG' style='border: none;' value='" + nodeClosePtArray[i][5] + "' readonly></input ></td><td style='width:150px;' name='LATT'><input name='LATT' style='border: none;' value='" + nodeClosePtArray[i][6] + "' readonly></input ></td><td style='width:100px;'>" + (nodeClosePtArray[i][9]) + "</td><td  style='width:300px; height:30px;vertical-align: top;' name='DDistance'><label name='DDistance'  style='border: none;width:80px;font-size: 14px;' id='dDistanceResult'></label></td> <td style='width:300px; height:30px;vertical-align: top;' name='DDistanceB'><button type='button' style='width:75px;font-size:9px; ' name='DDistanceB'  onclick='getDrivingDistanceClosePoint(this)'>Get Distance</button> </td></tr>"
+        }
+    }
+    $("#searchCloseNodeTBody").append(markupNode);
+    drivingDistance("findCloseNode");
+    makeAllSortable();
+
+    $('.closeNodeBOQ').click(function() {
+        var nodeId = $(this).attr('id').split("closePoint_")[1];
+        if ($(this).is(':checked')) {
+            treeSelectForClosePoints(nodeId, "NodeActive");
+        }
+    });
 
 
 
 }
 
-function treeSelectForClosePoints(idSelected,markerType) {
-	
-			if(markerType=="DistributionBoard" || markerType=="NodeActive"){
-					
-				 nodeFileId=$("#"+idSelected).parent().parent().attr('id').split("__")[1];
- 			     var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
-		   		 var children =  $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li');			
-			 	 var networkLevelFolder =  $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li >ul >li');
-					
-				childrenInitial.show('fast');
-				if(!children.is(":visible")){
-					children.show();
-				}				
-				networkLevelFolder.show(); 
+function treeSelectForClosePoints(idSelected, markerType) {
 
-				$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-				$("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');				
+    if (markerType == "DistributionBoard" || markerType == "NodeActive") {
 
-				var elementScrollTo = document.getElementById(""+idSelected);				
-				elementScrollTo.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});		
-			}
-			else {
-									
-				nodeFileId = $("#"+idSelected).parents().eq(3).attr("id").split("initial_ul_")[1];
-				var projectInitial=$("#initial_ul_Projects").find('>ul > #'+nodeFileId);
-				var projectRel=$("#"+nodeFileId+"").find('>ul > #initial_ul_'+nodeFileId);
-				var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
-				var children = $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li');				
-				
-				childrenInitial.show('fast');
-				if(!children.is(":visible")){
-					children.show();
-				}
-				offset=$("#"+idSelected).offset().top;
-				projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
-				offsetTotal=(offset-projectOffset);
-				$("#network_tree").animate({ scrollTop: offsetTotal}, "slow");
-			}
-			
-			$("#initial_ul_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-			$("#"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');						
-			$("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+        nodeFileId = $("#" + idSelected).parent().parent().attr('id').split("__")[1];
+        var childrenInitial = $("#initial_ul_" + nodeFileId + "").find(' > ul > li');
+        var children = $("#" + markerType + "_f_" + nodeFileId + "").find(' > ul > li');
+        var networkLevelFolder = $("#" + markerType + "_f_" + nodeFileId + "").find(' > ul > li >ul >li');
 
-			//Remove the selection of previous selected element before selecting the new one 
-			if(IdSelectedTemp!=""){
-				$("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-				$("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-			}
-			// Select the checked element in tree
-			$("#"+idSelected+" > .TreeSpan").addClass("selected-span");
-			$("#"+idSelected+" > .TreeSpan").css("background-color", "#97b9cc");
-			IdSelectedTemp=idSelected;				
+        childrenInitial.show('fast');
+        if (!children.is(":visible")) {
+            children.show();
+        }
+        networkLevelFolder.show();
+
+        $("#" + markerType + "_f_" + nodeFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+        $("#" + markerType + "_f_" + nodeFileId + "").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+
+        var elementScrollTo = document.getElementById("" + idSelected);
+        elementScrollTo.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+    }
+    else {
+
+        nodeFileId = $("#" + idSelected).parents().eq(3).attr("id").split("initial_ul_")[1];
+        var projectInitial = $("#initial_ul_Projects").find('>ul > #' + nodeFileId);
+        var projectRel = $("#" + nodeFileId + "").find('>ul > #initial_ul_' + nodeFileId);
+        var childrenInitial = $("#initial_ul_" + nodeFileId + "").find(' > ul > li');
+        var children = $("#" + markerType + "_f_" + nodeFileId + "").find(' > ul > li');
+
+        childrenInitial.show('fast');
+        if (!children.is(":visible")) {
+            children.show();
+        }
+        offset = $("#" + idSelected).offset().top;
+        projectOffset = $("#initial_ul_" + nodeFileId).offset().top;
+        offsetTotal = (offset - projectOffset);
+        $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
+    }
+
+    $("#initial_ul_" + nodeFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+    $("#" + nodeFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+    $("#" + markerType + "_f_" + nodeFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+
+    //Remove the selection of previous selected element before selecting the new one 
+    if (IdSelectedTemp != "") {
+        $("#" + IdSelectedTemp + " > .TreeSpan").removeClass("selected-span");
+        $("#" + IdSelectedTemp + " > .TreeSpan").css("background", "");
+    }
+    // Select the checked element in tree
+    $("#" + idSelected + " > .TreeSpan").addClass("selected-span");
+    $("#" + idSelected + " > .TreeSpan").css("background-color", "#97b9cc");
+    IdSelectedTemp = idSelected;
 }
 
-function getAllSurveyArrays(tableId,surveyArray) {
-	
-		var tableRows = document.querySelectorAll("#"+tableId+" tr");
-		let dictObj = {};
+function getAllSurveyArrays(tableId, surveyArray) {
 
-		for (var i =0 ; i < tableRows.length; i++) { // start the loop with index 1 to exclude the header			
-					
-				// This array is used in save survey
-				dictObj.ID = tableRows[i].querySelector("td[name='ID'] input ").value;
-				dictObj.Name = tableRows[i].querySelector("td[name='name'] input").value;
-				dictObj.source = tableRows[i].querySelector("td[name='source'] input").value;
-				dictObj.destination = tableRows[i].querySelector("td[name='destination'] input").value;
-				
-				surveyArray.push(dictObj);
-				dictObj = {}; 	
-	  }	
+    var tableRows = document.querySelectorAll("#" + tableId + " tr");
+    let dictObj = {};
+
+    for (var i = 0;i < tableRows.length;i++) { // start the loop with index 1 to exclude the header			
+
+        // This array is used in save survey
+        dictObj.ID = tableRows[i].querySelector("td[name='ID'] input ").value;
+        dictObj.Name = tableRows[i].querySelector("td[name='name'] input").value;
+        dictObj.source = tableRows[i].querySelector("td[name='source'] input").value;
+        dictObj.destination = tableRows[i].querySelector("td[name='destination'] input").value;
+
+        surveyArray.push(dictObj);
+        dictObj = {};
+    }
 }
 function viewOnMap(checkbox, ptList, ptData) {
-	console.log(ptList);
-	 checkbox = checkbox.checked;
+    console.log(ptList);
+    checkbox = checkbox.checked;
     let ManholeIds = [];
     let HandholeIds = [];
     let DBIds = [];
@@ -14919,132 +14849,132 @@ function viewOnMap(checkbox, ptList, ptData) {
     let nodeIds = [];
     let tubeIds = [];
     let strandIds = [];
-	function removeDistributionBoardMarker(id, markerObj) {
-	      const type = window["" + id][8];
-	      if (type === "backbone") markerClusterBackboneDistBoard.removeMarker(markerObj[id]);
-	      else if (type === "metro") markerClusterMetroDistBoard.removeMarker(markerObj[id]);
-	      else if (type === "access") markerClusterAccessDistBoard.removeMarker(markerObj[id]);
-	  }
-	  function addDistributionBoardMarker(id, markerObj) {
-	         const type = window["" + id][8];
-	         if (type === "backbone") markerClusterBackboneDistBoard.addMarker(markerObj[id]);
-	         else if (type === "metro") markerClusterMetroDistBoard.addMarker(markerObj[id]);
-	         else if (type === "access") markerClusterAccessDistBoard.addMarker(markerObj[id]);
-	     }
-		 function addNodeMarker(id, markerObj) {
-		         const type = window["" + id][8];
-			
-		         if (type === "MSAN") markerClusterMSANNodes.addMarker(markerObj[id]);
-		         else if (type === "DWDM") markerClusterDWDMNodes.addMarker(markerObj[id]);
-		         else if (type === "SDH") markerClusterSDHNodes.addMarker(markerObj[id]);
-		         else if (type === "GPON") markerClusterGPONNodes.addMarker(markerObj[id]);
-		         else if (type === "SWITCH") markerClusterEntSwitchNodes.addMarker(markerObj[id]);
-		     }
+    function removeDistributionBoardMarker(id, markerObj) {
+        const type = window["" + id][8];
+        if (type === "backbone") markerClusterBackboneDistBoard.removeMarker(markerObj[id]);
+        else if (type === "metro") markerClusterMetroDistBoard.removeMarker(markerObj[id]);
+        else if (type === "access") markerClusterAccessDistBoard.removeMarker(markerObj[id]);
+    }
+    function addDistributionBoardMarker(id, markerObj) {
+        const type = window["" + id][8];
+        if (type === "backbone") markerClusterBackboneDistBoard.addMarker(markerObj[id]);
+        else if (type === "metro") markerClusterMetroDistBoard.addMarker(markerObj[id]);
+        else if (type === "access") markerClusterAccessDistBoard.addMarker(markerObj[id]);
+    }
+    function addNodeMarker(id, markerObj) {
+        const type = window["" + id][8];
 
-		     function removeNodeMarker(id, markerObj) {
-		         const type = window["" + id][8];
-				
-		         if (type === "MSAN") markerClusterMSANNodes.removeMarker(markerObj[id]);
-		         else if (type === "DWDM") markerClusterDWDMNodes.removeMarker(markerObj[id]);
-		         else if (type === "SDH") markerClusterSDHNodes.removeMarker(markerObj[id]);
-		         else if (type === "GPON") markerClusterGPONNodes.removeMarker(markerObj[id]);
-		         else if (type === "SWITCH") markerClusterEntSwitchNodes.removeMarker(markerObj[id]);
-		     }
+        if (type === "MSAN") markerClusterMSANNodes.addMarker(markerObj[id]);
+        else if (type === "DWDM") markerClusterDWDMNodes.addMarker(markerObj[id]);
+        else if (type === "SDH") markerClusterSDHNodes.addMarker(markerObj[id]);
+        else if (type === "GPON") markerClusterGPONNodes.addMarker(markerObj[id]);
+        else if (type === "SWITCH") markerClusterEntSwitchNodes.addMarker(markerObj[id]);
+    }
+
+    function removeNodeMarker(id, markerObj) {
+        const type = window["" + id][8];
+
+        if (type === "MSAN") markerClusterMSANNodes.removeMarker(markerObj[id]);
+        else if (type === "DWDM") markerClusterDWDMNodes.removeMarker(markerObj[id]);
+        else if (type === "SDH") markerClusterSDHNodes.removeMarker(markerObj[id]);
+        else if (type === "GPON") markerClusterGPONNodes.removeMarker(markerObj[id]);
+        else if (type === "SWITCH") markerClusterEntSwitchNodes.removeMarker(markerObj[id]);
+    }
     // Helper function to toggle markers based on checkbox state
 
-	function toggleMarker(id, mapObj, markerObj, clusterObj, isChecked, Class, folder, markerType) {
-	    if (checkbox && !isChecked) {
+    function toggleMarker(id, mapObj, markerObj, clusterObj, isChecked, Class, folder, markerType) {
+        if (checkbox && !isChecked) {
 
-	        // Main checkbox checked, check the individual box and add the marker
-	        $("#" + id).children('input:checkbox').prop('checked', true);
-	        markerObj[id].setMap(mapObj);
-	        if (markerType === "DistBoard") {
-				removeDistributionBoardMarker(id, markerObj);
-	            addDistributionBoardMarker(id, markerObj);
-	        } else if (markerType === "NodeList") {
-				removeNodeMarker(id, markerObj);
-	            addNodeMarker(id, markerObj);
-	        } else {
-				clusterObj.removeMarker(markerObj[id]);
-	            clusterObj.addMarker(markerObj[id]);
-	        }
-	    } else if (!checkbox && isChecked) {
+            // Main checkbox checked, check the individual box and add the marker
+            $("#" + id).children('input:checkbox').prop('checked', true);
+            markerObj[id].setMap(mapObj);
+            if (markerType === "DistBoard") {
+                removeDistributionBoardMarker(id, markerObj);
+                addDistributionBoardMarker(id, markerObj);
+            } else if (markerType === "NodeList") {
+                removeNodeMarker(id, markerObj);
+                addNodeMarker(id, markerObj);
+            } else {
+                clusterObj.removeMarker(markerObj[id]);
+                clusterObj.addMarker(markerObj[id]);
+            }
+        } else if (!checkbox && isChecked) {
 
-	        // Main checkbox unchecked, uncheck the individual box and remove the marker
-	        $("#" + id).children('input:checkbox').prop('checked', false);
-	        markerObj[id].setMap(null);
-	        if (markerType === "DistBoard") {
-	            removeDistributionBoardMarker(id, markerObj);
-	        } else if (markerType === "NodeList") {
-	            removeNodeMarker(id, markerObj);
-	        } else {
-	            clusterObj.removeMarker(markerObj[id]);
-	        }
-	    } 
+            // Main checkbox unchecked, uncheck the individual box and remove the marker
+            $("#" + id).children('input:checkbox').prop('checked', false);
+            markerObj[id].setMap(null);
+            if (markerType === "DistBoard") {
+                removeDistributionBoardMarker(id, markerObj);
+            } else if (markerType === "NodeList") {
+                removeNodeMarker(id, markerObj);
+            } else {
+                clusterObj.removeMarker(markerObj[id]);
+            }
+        }
 
-	    // Update folder checkbox based on checked items
-	    $(folder).prop('checked', $(Class).length === $(Class + ":checked").length);
-	}
+        // Update folder checkbox based on checked items
+        $(folder).prop('checked', $(Class).length === $(Class + ":checked").length);
+    }
 
     // Process Manhole markers
-	if (ptList.Manhole.length > 0) {
-	    for (let i = 0; i < ptList.Manhole.length; i++) {
-	        const ManId = ptList.Manhole[i][0];
-	        const isChecked = $("#" + ManId).children('input:checkbox').is(':checked');
+    if (ptList.Manhole.length > 0) {
+        for (let i = 0;i < ptList.Manhole.length;i++) {
+            const ManId = ptList.Manhole[i][0];
+            const isChecked = $("#" + ManId).children('input:checkbox').is(':checked');
 
-	        // Toggle Manhole markers based on the checkbox state
-	        toggleMarker(ManId, map, markersManhole, markerClusterManhole, isChecked, ".Manhole", ".AllManholes", "default");
+            // Toggle Manhole markers based on the checkbox state
+            toggleMarker(ManId, map, markersManhole, markerClusterManhole, isChecked, ".Manhole", ".AllManholes", "default");
 
-	        ManholeIds.push(ManId);
-	    }
-	}
+            ManholeIds.push(ManId);
+        }
+    }
 
     // Process Handhole markers
     if (ptList.Handhole.length > 0) {
-        for (let i = 0; i < ptList.Handhole.length; i++) {
+        for (let i = 0;i < ptList.Handhole.length;i++) {
             const HandId = ptList.Handhole[i][0];
             const isChecked = $("#" + HandId).children('input:checkbox').is(':checked');
 
-              toggleMarker(HandId, map, markersHandhole, markerClusterHandhole, isChecked, ".Handhole", ".AllHandholes", "default");
-           
+            toggleMarker(HandId, map, markersHandhole, markerClusterHandhole, isChecked, ".Handhole", ".AllHandholes", "default");
+
             HandholeIds.push(HandId);
         }
     }
 
     // Process Distribution Board markers
     if (ptList.Distribution_Board.length > 0) {
-        for (let i = 0; i < ptList.Distribution_Board.length; i++) {
+        for (let i = 0;i < ptList.Distribution_Board.length;i++) {
             const DBId = ptList.Distribution_Board[i][0];
             const isChecked = $("#" + DBId).children('input:checkbox').is(':checked');
 
-               toggleMarker(DBId, map, markersDistBoard, null, isChecked, ".DistributionBoard", ".AllDistributionBoards", "DistBoard");
-           
+            toggleMarker(DBId, map, markersDistBoard, null, isChecked, ".DistributionBoard", ".AllDistributionBoards", "DistBoard");
+
             DBIds.push(DBId);
         }
     }
 
     // Process NodeList markers
     if (ptList.NodeList.length > 0) {
-        for (let i = 0; i < ptList.NodeList.length; i++) {
+        for (let i = 0;i < ptList.NodeList.length;i++) {
             const NodeId = ptList.NodeList[i][0];
             const isChecked = $("#" + NodeId).children('input:checkbox').is(':checked');
 
-                toggleMarker(NodeId, map, markersNodeActive, null, isChecked, ".Node", ".AllNodes", "NodeList");
-           
+            toggleMarker(NodeId, map, markersNodeActive, null, isChecked, ".Node", ".AllNodes", "NodeList");
+
             nodeIds.push(NodeId);
         }
     }
 
     // Extract IDs from fiber markers
     if (ptList.fiber.length > 0) {
-        for (let i = 0; i < ptList.fiber.length; i++) {
+        for (let i = 0;i < ptList.fiber.length;i++) {
             const fiberId = ptList.fiber[i][4];
             const isChecked = $("#" + fiberId).children('input:checkbox').is(':checked');
 
             if (checkbox && !isChecked) {
                 $("#" + fiberId).children('input:checkbox').prop('checked', false);
                 $("#" + fiberId).children('input:checkbox').prop('checked', true);
-                const path = window["mapPoints_" + fiberId];							 
+                const path = window["mapPoints_" + fiberId];
                 buildPath(
                     fiberId,
                     path,
@@ -15057,188 +14987,187 @@ function viewOnMap(checkbox, ptList, ptData) {
                     'blue',
                     13
                 );
-				fiberArray[fiberId].setMap(null);
-				fiberArray[fiberId].mapLabel.setMap(null);
+                fiberArray[fiberId].setMap(null);
+                fiberArray[fiberId].mapLabel.setMap(null);
                 fiberArray[fiberId].setMap(map);
             } else if (!checkbox && isChecked) {
-                    $("#" + fiberId).children('input:checkbox').prop('checked', false);
-                    fiberArray[fiberId].setMap(null);
-                    fiberArray[fiberId].mapLabel.setMap(null);
-                }
-            
+                $("#" + fiberId).children('input:checkbox').prop('checked', false);
+                fiberArray[fiberId].setMap(null);
+                fiberArray[fiberId].mapLabel.setMap(null);
+            }
+
         }
     }
 
-	
+
     // Process fiber tubes and strands (if needed)
     if (ptData.fiber_Tubes.length > 0) {
-        for (let i = 0; i < ptData.fiber_Tubes.length; i++) {
+        for (let i = 0;i < ptData.fiber_Tubes.length;i++) {
             const tubeId = ptData.fiber_Tubes[i][0];
-			const isChecked = $("#" + tubeId).children('input:checkbox').is(':checked');
+            const isChecked = $("#" + tubeId).children('input:checkbox').is(':checked');
 
-			          if (checkbox && !isChecked) {
-			             $("#" + tubeId).children('input:checkbox').prop('checked', false);
-			             $("#" + tubeId).children('input:checkbox').prop('checked', true);
-			             buildPath(tubeId,window["mapPoints_"+tubeId],tubeArray,allTubes,"Tube",'green',0.7,3.3,'green',0);
-						 tubeArray[tubeId].setMap(null);
-						 tubeArray[tubeId].mapLabel.setMap(null);
-						 tubeArray[tubeId].setMap(map);
+            if (checkbox && !isChecked) {
+                $("#" + tubeId).children('input:checkbox').prop('checked', false);
+                $("#" + tubeId).children('input:checkbox').prop('checked', true);
+                buildPath(tubeId, window["mapPoints_" + tubeId], tubeArray, allTubes, "Tube", 'green', 0.7, 3.3, 'green', 0);
+                tubeArray[tubeId].setMap(null);
+                tubeArray[tubeId].mapLabel.setMap(null);
+                tubeArray[tubeId].setMap(map);
 
-			         }else if (!checkbox && isChecked) {
-			                 $("#" + tubeId).children('input:checkbox').prop('checked', false);
-			                  tubeArray[tubeId].setMap(null);
-			                  tubeArray[tubeId].mapLabel.setMap(null);
-			             }
-			         
-			     }
-			 }
+            } else if (!checkbox && isChecked) {
+                $("#" + tubeId).children('input:checkbox').prop('checked', false);
+                tubeArray[tubeId].setMap(null);
+                tubeArray[tubeId].mapLabel.setMap(null);
+            }
+
+        }
+    }
 
     if (ptData.fiber_Strands.length > 0) {
-        for (let i = 0; i < ptData.fiber_Strands.length; i++) {
+        for (let i = 0;i < ptData.fiber_Strands.length;i++) {
             const strandId = ptData.fiber_Strands[i][0];
-			const isChecked = $("#" + strandId).children('input:checkbox').is(':checked');
+            const isChecked = $("#" + strandId).children('input:checkbox').is(':checked');
 
-						         if (checkbox && !isChecked) {
-						             $("#" + strandId).children('input:checkbox').prop('checked', false);
-						             $("#" + strandId).children('input:checkbox').prop('checked', true);
-									 buildPath(strandId,window["mapPoints_"+strandId],strandArray,allStrands,"Strand",'purple',0.7,2.8,'purple',0);
-									 strandArray[strandId].setMap(null);
-								     strandArray[strandId].mapLabel.setMap(null);
-									 strandArray[strandId].setMap(map);
-									 							
-						         } else if (!checkbox && isChecked) {
-						             
-						                 $("#" + strandId).children('input:checkbox').prop('checked', false);
-						                  strandArray[strandId].setMap(null);
-						                  strandArray[strandId].mapLabel.setMap(null);
-						             }
-						         }
-						     }
-						 }
-						 function calculateRowColFromIndex(index, numRows, numCols, direction, rowPerModule, totalModules) {
-						 				     const totalPorts = numRows * numCols;
-						 				     if (index < 1 || index > totalPorts) {
-						 				         alert(`Invalid Port: ${index}. Must be between 1 and ${totalPorts}.`);
-						 				         return { row: "", col: "" };
-						 				     }
+            if (checkbox && !isChecked) {
+                $("#" + strandId).children('input:checkbox').prop('checked', false);
+                $("#" + strandId).children('input:checkbox').prop('checked', true);
+                buildPath(strandId, window["mapPoints_" + strandId], strandArray, allStrands, "Strand", 'purple', 0.7, 2.8, 'purple', 0);
+                strandArray[strandId].setMap(null);
+                strandArray[strandId].mapLabel.setMap(null);
+                strandArray[strandId].setMap(map);
 
-						 				     direction = direction.toLowerCase().replace(/\s+/g, "");
+            } else if (!checkbox && isChecked) {
 
-						 				     // --- CASE 1: simple (no modules) ---
-						 				     if (!rowPerModule || totalModules <= 1) {
-						 				         let row, col;
-						 				         if (direction === "uptodown" || direction === "downtoup") {
-						 				             row = Math.ceil(index / numCols);
-						 				             col = (index - 1) % numCols + 1;
-						 				         }/* else if (direction === "downtoup") {
+                $("#" + strandId).children('input:checkbox').prop('checked', false);
+                strandArray[strandId].setMap(null);
+                strandArray[strandId].mapLabel.setMap(null);
+            }
+        }
+    }
+}
+function calculateRowColFromIndex(index, numRows, numCols, direction, rowPerModule, totalModules) {
+    const totalPorts = numRows * numCols;
+    if (index < 1 || index > totalPorts) {
+        alert(`Invalid Port: ${index}. Must be between 1 and ${totalPorts}.`);
+        return { row: "", col: "" };
+    }
+
+    direction = direction.toLowerCase().replace(/\s+/g, "");
+
+    // --- CASE 1: simple (no modules) ---
+    if (!rowPerModule || totalModules <= 1) {
+        let row, col;
+        if (direction === "uptodown" || direction === "downtoup") {
+            row = Math.ceil(index / numCols);
+            col = (index - 1) % numCols + 1;
+        }/* else if (direction === "downtoup") {
 						 				             const reversedRow = Math.ceil(index / numCols);
 						 				             col = (index - 1) % numCols + 1;
 						 				             row = numRows - reversedRow + 1;
 						 				         } */else {
-						 				             alert("Invalid direction value.");
-						 				             return { row: "", col: "" };
-						 				         }
-						 				         return { row, col };
-						 				     }
+            alert("Invalid direction value.");
+            return { row: "", col: "" };
+        }
+        return { row, col };
+    }
 
-						 				     // --- CASE 2: module-aware (horizontal modules) ---
-						 				     const colsPerModule = Math.floor(numCols / totalModules); // ensure integer value
-						 				     const portsPerModule = numRows * colsPerModule;
+    // --- CASE 2: module-aware (horizontal modules) ---
+    const colsPerModule = Math.floor(numCols / totalModules); // ensure integer value
+    const portsPerModule = numRows * colsPerModule;
 
-						 				     if (isNaN(portsPerModule) || portsPerModule <= 0) {
-						 				         console.error("Invalid portsPerModule.");
-						 				         return { row: "", col: "" };
-						 				     }
+    if (isNaN(portsPerModule) || portsPerModule <= 0) {
+        console.error("Invalid portsPerModule.");
+        return { row: "", col: "" };
+    }
 
-						 				     const moduleIndex = Math.ceil(index / portsPerModule); // 1-based
-						 				     const portInModule = index - (moduleIndex - 1) * portsPerModule;
+    const moduleIndex = Math.ceil(index / portsPerModule); // 1-based
+    const portInModule = index - (moduleIndex - 1) * portsPerModule;
 
-						 				     if (isNaN(portInModule) || portInModule <= 0) {
-						 				         console.error("Invalid portInModule.");
-						 				         return { row: "", col: "" };
-						 				     }
+    if (isNaN(portInModule) || portInModule <= 0) {
+        console.error("Invalid portInModule.");
+        return { row: "", col: "" };
+    }
 
-						 				     let localRow, localCol;
+    let localRow, localCol;
 
-						 				     if (direction === "uptodown" || direction === "downtoup") {
-						 				         localRow = Math.ceil(portInModule / colsPerModule);
-						 				         localCol = (portInModule - 1) % colsPerModule + 1;
-						 				     }/* else if (direction === "downtoup") {
+    if (direction === "uptodown" || direction === "downtoup") {
+        localRow = Math.ceil(portInModule / colsPerModule);
+        localCol = (portInModule - 1) % colsPerModule + 1;
+    }/* else if (direction === "downtoup") {
 						 				         const reversedRow = Math.ceil(portInModule / colsPerModule);
 						 				         localCol = (portInModule - 1) % colsPerModule + 1;
 						 				         localRow = numRows - reversedRow + 1;
 						 				     } */else {
-						 				         alert("Invalid direction value.");
-						 				         return { row: "", col: "" };
-						 				     }
+        alert("Invalid direction value.");
+        return { row: "", col: "" };
+    }
 
-						 				     const globalCol = (moduleIndex - 1) * colsPerModule + localCol;
+    const globalCol = (moduleIndex - 1) * colsPerModule + localCol;
 
-						 				     return { row: localRow, col: globalCol };
-						 				 }
+    return { row: localRow, col: globalCol };
+}
 
-										 function calculateIndexFromRowCol(row, col, numRows, numCols, direction, rowPerModule, totalModules) {
+function calculateIndexFromRowCol(row, col, numRows, numCols, direction, rowPerModule, totalModules) {
 
-										     // Normalize direction
-										     direction = direction.toLowerCase().replace(/\s+/g, "");
+    // Normalize direction
+    direction = direction.toLowerCase().replace(/\s+/g, "");
 
-										     // Validate row
-										     if (row < 1 || row > numRows) {
-										         alert(`Invalid Row: ${row}. Must be between 1 and ${numRows}.`);
-										         return "";
-										     }
+    // Validate row
+    if (row < 1 || row > numRows) {
+        alert(`Invalid Row: ${row}. Must be between 1 and ${numRows}.`);
+        return "";
+    }
 
-										     // Validate column
-										     if (col < 1 || col > numCols) {
-										         alert(`Invalid Column: ${col}. Must be between 1 and ${numCols}.`);
-										         return "";
-										     }
+    // Validate column
+    if (col < 1 || col > numCols) {
+        alert(`Invalid Column: ${col}. Must be between 1 and ${numCols}.`);
+        return "";
+    }
 
-										     // --- CASE 1: simple (no modules) ---
-										     if (!rowPerModule || totalModules <= 1) {
+    // --- CASE 1: simple (no modules) ---
+    if (!rowPerModule || totalModules <= 1) {
 
-										         if (direction === "uptodown") {
-										             const index = (row - 1) * numCols + col;
-										             console.log(`Simple → Row=${row}, Col=${col}, Port=${index}`);
-										             return index;
-										         }
+        if (direction === "uptodown") {
+            const index = (row - 1) * numCols + col;
+            console.log(`Simple → Row=${row}, Col=${col}, Port=${index}`);
+            return index;
+        }
 
-										         else if (direction === "downtoup") {
-										             const reversedRow = numRows - row + 1;
-										             const index = (reversedRow - 1) * numCols + col;
-										             console.log(`Simple (Down→Up) → Row=${row}, Col=${col}, Port=${index}`);
-										             return index;
-										         }
+        else if (direction === "downtoup") {
+            const reversedRow = numRows - row + 1;
+            const index = (reversedRow - 1) * numCols + col;
+            console.log(`Simple (Down→Up) → Row=${row}, Col=${col}, Port=${index}`);
+            return index;
+        }
 
-										         else {
-										             alert("Invalid direction value.");
-										             return "";
-										         }
-										     }
+        else {
+            alert("Invalid direction value.");
+            return "";
+        }
+    }
 
-										     // --- CASE 2: module-aware (horizontal modules) ---
-										     const colsPerModule = numCols / totalModules;
-										     const portsPerModule = numRows * colsPerModule;
-										     const moduleIndex = Math.ceil(col / colsPerModule);
-										     const localCol = col - (moduleIndex - 1) * colsPerModule;
+    // --- CASE 2: module-aware (horizontal modules) ---
+    const colsPerModule = numCols / totalModules;
+    const portsPerModule = numRows * colsPerModule;
+    const moduleIndex = Math.ceil(col / colsPerModule);
+    const localCol = col - (moduleIndex - 1) * colsPerModule;
 
-										     console.log(`[DEBUG] Row=${row}, Col=${col}, Module=${moduleIndex}, LocalCol=${localCol}`);
+    console.log(`[DEBUG] Row=${row}, Col=${col}, Module=${moduleIndex}, LocalCol=${localCol}`);
 
-										     let portInModule;
+    let portInModule;
 
-										     if (direction === "uptodown"|| direction === "downtoup") {
-										         portInModule = (row - 1) * colsPerModule + localCol;
-										     }
-										    /* else if (direction === "downtoup") {
-										         const reversedRow = numRows - row + 1;
-										         portInModule = (reversedRow - 1) * colsPerModule + localCol;
-										     } */
-										     else {
-										         alert("Invalid direction value.");
-										         return "";
-										     }
+    if (direction === "uptodown" || direction === "downtoup") {
+        portInModule = (row - 1) * colsPerModule + localCol;
+    }
+    /* else if (direction === "downtoup") {
+         const reversedRow = numRows - row + 1;
+         portInModule = (reversedRow - 1) * colsPerModule + localCol;
+     } */
+    else {
+        alert("Invalid direction value.");
+        return "";
+    }
 
-										     const index = (moduleIndex - 1) * portsPerModule + portInModule;
-										     return index;
-										 }
-						
+    const index = (moduleIndex - 1) * portsPerModule + portInModule;
+    return index;
+}
