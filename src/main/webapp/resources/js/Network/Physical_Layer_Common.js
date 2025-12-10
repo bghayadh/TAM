@@ -13918,11 +13918,11 @@ function numberofselectedTrench(layer,subLayer,selectedTrenchContext){
 		}	
 }
 	 
-function deleteprop(layer,subLayer,selectedIdContext){
-layer_arr=[];
-layer_arr.push(layer);
-layer_arr.push(subLayer);
-layer_arr.push(selectedIdContext);
+function deleteprop(layer, subLayer, selectedIdContext) {
+    layer_arr = [];
+    layer_arr.push(layer);
+    layer_arr.push(subLayer);
+    layer_arr.push(selectedIdContext);
 }
 
 function DBMappingData(DistBoardMappingPts, panelInfo) {
@@ -13931,43 +13931,35 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
     if (DistBoardMappingPts) {
         window["DB_Mapper" + selectedDistBoardContext] = [];
         window["DB_Mapper" + selectedDistBoardContext] = DistBoardMappingPts;
-        var addMark = "";
-        var addMark2 = "";
-        var addMark3 = "";
-        var fp_strandcolor = "";
-        var bp_strandcolor = "";
-        var fp_tubecolor = "";
-        var bp_tubecolor = "";
-        var addMark4 = '<option value=' + '""' + ' style=' + '"background-color: white;"' + '></option>' +
-            '<option value=' + '"blue"' + ' style=' + '"background-color: white; color:black"' + '>blue</option>' +
-            '<option value=' + '"orange"' + ' style=' + '"background-color: white; color:black"' + '>orange</option>' +
-            '<option value=' + '"green"' + ' style=' + '"background-color: white; color:black"' + '>green</option>' +
-            '<option value=' + '"brown"' + ' style=' + '"background-color: white; color:black"' + '>brown</option>' +
-            '<option value=' + '"gray"' + ' style=' + '"background-color: white; color:black"' + '>gray</option>' +
-            '<option value=' + '"white"' + ' style=' + '"background-color: white; color:black"' + '>white</option>' +
-            '<option value=' + '"red"' + ' style=' + '"background-color: white; color:black"' + '>red</option>' +
-            '<option value=' + '"black"' + ' style=' + '"background-color: white; color:black"' + '>black</option>' +
-            '<option value=' + '"yellow"' + ' style=' + '"background-color: white; color:black"' + '>yellow</option>' +
-            '<option value=' + '"violet"' + ' style=' + '"background-color: white; color:black"' + '>violet</option>' +
-            '<option value=' + '"pink"' + ' style=' + '"background-color: white; color:black"' + '>pink</option>' +
-            '<option value=' + '"aqua"' + ' style=' + '"background-color: white; color:black"' + '>aqua</option>';
 
         const numRows = parseInt($("#DistributionBoardRowsNum").val());
         const numCols = parseInt($("#DistributionBoardColsNum").val());
         const direction = $("#rowCounting").val().toLowerCase();
 		
         dBBoqIndex = 0;
+		let markup = "";
 
         for (i = 0;i < DistBoardMappingPts.length;i++) {
 
-            const fpLocType = DistBoardMappingPts[i][5];
-            const fpLocationOptions = generateLocationOptions(fpLocType);
-            const fpEquipmentOptions = generateEquipmentOptions(fpLocType);
+            const fpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][5]);
+            const fpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][5], DistBoardMappingPts[i][10]);
 
             // BP
-            const bpLocType = DistBoardMappingPts[i][27];
-            const bpLocationOptions = generateLocationOptions(bpLocType);
-            const bpEquipmentOptions = generateEquipmentOptions(bpLocType);
+            const bpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][27]);
+            const bpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][27], DistBoardMappingPts[i][32]);
+			
+			const fpLocType = DistBoardMappingPts[i][5];
+			const fpLocationReadonly =
+			    (fpLocType === "Manhole" || fpLocType === "Handhole" || fpLocType === "Customer") ? "readonly" : "";
+				
+			const bpLocType = DistBoardMappingPts[i][27];
+			const bpLocationReadonly = (bpLocType === "Manhole" || bpLocType === "Handhole" || bpLocType === "Customer") ? "readonly" : "";
+					
+			const fpEqIsDist = DistBoardMappingPts[i][10] === "DistBoard";
+			const fpReadonly = fpEqIsDist ? "" : "readonly";
+			
+			const bpEqIsDist = DistBoardMappingPts[i][32] === "DistBoard";
+			const bpReadonly = bpEqIsDist ? "" : "readonly";
 			
 			const fpStrandNumber = DistBoardMappingPts[i][36];  // e.g. "3"
 			const fpStrandData = getColorByNumber(fpStrandNumber);
@@ -14015,7 +14007,7 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             let backKitVal = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
             let backPortVal = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
 
-            var markup = "<tr id='" + DistBoardMappingPts[i][3] + "''><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
+            markup += "<tr id='" + DistBoardMappingPts[i][3] + "'><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
                 + "<td name='Index'><input id='index" + i + "' name='Index' value='" + DistBoardMappingPts[i][0] + "' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
                 + "<td name='nearModule'><input name='nearModule' value='" + DistBoardMappingPts[i][48] + "' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
                 + "<td name='nearPortNum'> <input id='nearPortNum" + i + "' name='nearPortNum' value='" + DistBoardMappingPts[i][49] +
@@ -14036,15 +14028,19 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + fpLocationOptions + "</select></td>"
                 + "<td name='FP_LocationID'><input name='FP_locationID' value='" + DistBoardMappingPts[i][6] + "' id='FP_LocationID" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_LocationM'><input name='FP_locationM' value='" + DistBoardMappingPts[i][7] + "' id='FP_LocationM" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='FP_Location'><input name='FP_location' value='" + DistBoardMappingPts[i][8] + "' id='FP_Location" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_Location'><input name='FP_location' value='" + DistBoardMappingPts[i][8] + "' id='FP_Location" + dBBoqIndex + "' class='form-control' type='text' " 
+				+ fpLocationReadonly + " style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_Equipment'>"
-                + "<select class='form-control' name='FP_equipment' id='FP_equipment" + dBBoqIndex + "'>" + fpEquipmentOptions + "</select>"
+                + "<select class='form-control' name='FP_equipment' id='FP_equipment" + dBBoqIndex + "'>" + fpEquipmentOptions + "</select></td>"
                 + "<td name='FP_EquipmentID'><input name='FP_equipmentID' value='" + DistBoardMappingPts[i][11] + "' id='FP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_EquipmentName'><input name='FP_equipmentName' value='" + DistBoardMappingPts[i][12] + "' id='FP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_EquipmentType'><input name='FP_equipmentType' value='" + DistBoardMappingPts[i][9] + "' id='FP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='farKitSerialNum'><input name='farKitSerialNum' value='" + DistBoardMappingPts[i][51] + "' id='farKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='farModule'><input name='farModule' value='" + DistBoardMappingPts[i][52] + "' id='farModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='farPortNum'><input name='farPortNum' value='" + DistBoardMappingPts[i][53] + "' id='farPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='farKitSerialNum'><input name='farKitSerialNum' value='" + DistBoardMappingPts[i][51] + "' id='farKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+				+ fpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='farModule'><input name='farModule' value='" + DistBoardMappingPts[i][52] + "' id='farModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
+				+ fpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='farPortNum'><input name='farPortNum' value='" + DistBoardMappingPts[i][53] + "' id='farPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+				+ fpReadonly + " style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_Address'><input name='FP_Address' value='" + DistBoardMappingPts[i][13] + "' id='FP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_JunctionID'><input name='FP_junctionID' value='" + DistBoardMappingPts[i][44] + "' id='FP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_JunctionName'><input name='FP_junctionName' value='" + DistBoardMappingPts[i][45] + "' id='FP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -14068,20 +14064,23 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='FP_TubeName'><input name='FP_tubeName' value='" + DistBoardMappingPts[i][24] + "' id='FP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='FP_FiberID'><input name='FP_fiberID' value='" + DistBoardMappingPts[i][25] + "' id='FP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='FP_FiberName'><input name='FP_fiberName' value='" + DistBoardMappingPts[i][26] + "' id='FP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td style='background-color:#00757C' width='-10px'></td>"
+                + "<td style='background-color:#00757C'></td>"
                 + "<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status" + dBBoqIndex + "'>" + b_statusOption + "</select></td>"
                 + "<td name='BP_LocationType'><select class='form-control' name='BP_locationType' id='BP_LocationType" + dBBoqIndex + "'>"
                 + bpLocationOptions + "</select></td>"
                 + "<td name='BP_LocationID'><input name='BP_locationID' value='" + DistBoardMappingPts[i][28] + "' id='BP_LocationID" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_LocationM'><input name='BP_locationM' value='" + DistBoardMappingPts[i][29] + "' id='BP_LocationM" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='BP_Location'><input name='BP_location' value='" + DistBoardMappingPts[i][30] + "' id='BP_Location" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_Location'><input name='BP_location' value='" + DistBoardMappingPts[i][30] + "' id='BP_Location" + dBBoqIndex + "' class='form-control' type='text' "
+				+ bpLocationReadonly + " style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_Equipment'>"
                 + "<select class='form-control' name='BP_equipment' id='BP_equipment" + dBBoqIndex + "'>" + bpEquipmentOptions + "</select>"
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' value='" + DistBoardMappingPts[i][33] + "' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' value='" + DistBoardMappingPts[i][34] + "' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name='BP_equipmentType' value='" + DistBoardMappingPts[i][31] + "' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='backKitModule'><input name='backKitModule' value='" + backKitVal + "' id='backKitModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='backPortNum'><input name='backPortNum' value='" + backPortVal + "' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='backKitModule'><input name='backKitModule' value='" + backKitVal + "' id='backKitModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
+				+ bpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='backPortNum'><input name='backPortNum' value='" + backPortVal + "' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+				+ bpReadonly + " style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_Address'><input name='BP_Address' value='" + DistBoardMappingPts[i][35] + "'id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionID'><input name='BP_junctionID' value='" + DistBoardMappingPts[i][46] + "' id='BP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionName'><input name='BP_junctionName' value='" + DistBoardMappingPts[i][47] + "' id='BP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -14104,9 +14103,8 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='BP_TubeID'><input name='BP_tubeID' value='" + DistBoardMappingPts[i][17] + "' id='BP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='BP_TubeName'><input name='BP_tubeName' value='" + DistBoardMappingPts[i][18] + "' id='BP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='BP_FiberID'><input name='BP_fiberID' value='" + DistBoardMappingPts[i][19] + "' id='BP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='BP_FiberName'><input name='BP_fiberName' value='" + DistBoardMappingPts[i][20] + "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
-            $("#DbMappingTable > tbody").append(markup);
-
+                + "<td name='BP_FiberName'><input name='BP_fiberName' value='" + DistBoardMappingPts[i][20] + "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"  
+/*			
             let backKitModule = $("#backKitModule" + dBBoqIndex);
             let backPortNumInput = $("#backPortNum" + dBBoqIndex);
             let farKitSerialNum = $("#farKitSerialNum" + dBBoqIndex);
@@ -14132,7 +14130,8 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 farModule.prop("readonly", true);
                 farPortNum.prop("readonly", true);
             }
-
+*/			
+/*
             if (DistBoardMappingPts[i][40] != null) {
                 $("#FP_strandcolor" + dBBoqIndex).val(DistBoardMappingPts[i][40]);
             }
@@ -14148,14 +14147,15 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             if (DistBoardMappingPts[i][43] != null) {
                 $("#BP_tubecolor" + dBBoqIndex).val(DistBoardMappingPts[i][43]);
             }
-
+*/
+/*
             if (DistBoardMappingPts[i][10] != null) {
                 $("#FP_equipment" + dBBoqIndex).val(DistBoardMappingPts[i][10]);
             }
 
             if (DistBoardMappingPts[i][32] != null) {
                 $("#BP_equipment" + dBBoqIndex).val(DistBoardMappingPts[i][32]);
-            }
+            }			
 
             var FP_LocType = $('#FP_LocationType' + dBBoqIndex).find('option:selected').text();
             if (FP_LocType == "Manhole" || FP_LocType == "Handhole" || FP_LocType == "Customer") {
@@ -14168,9 +14168,10 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 $('#BP_Location' + dBBoqIndex).prop("readonly", true);
                 $('#BP_Location' + dBBoqIndex).val('');
             }
-
+*/			
             dBBoqIndex++;
         }
+		$("#DbMappingTable > tbody").html(markup);
 
 		indexRowColEvents({
 		    numRows,

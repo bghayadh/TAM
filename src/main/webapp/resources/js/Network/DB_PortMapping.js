@@ -1159,14 +1159,15 @@ function generateLocationOptions(selectedValue) {
 }
 
 // returns options only (string) for equipment based on locationType
-function generateEquipmentOptions(locationType, includeDefault = true) {
+function generateEquipmentOptions(locationType, selectedValue) {
     const list = EQUIPMENT_MAP[locationType] || [];
-    let opts = "";
-    if (includeDefault) opts += `<option value="">Select an Option</option>`;
-    list.forEach(v => { opts += `<option value="${v}">${v}</option>`; });
+    let opts = `<option value="">Select an Option</option>`;
+    list.forEach(v => {
+        const sel = (v === selectedValue) ? " selected" : "";
+        opts += `<option value="${v}"${sel}>${v}</option>`;
+    });
     return opts;
 }
-
 
 function equipmentChange() {
 
@@ -1186,8 +1187,6 @@ function equipmentChange() {
             row.find("input[name='backKitModule']").val('');
             row.find("input[name='backPortNum']").prop("readonly", true);
             row.find("input[name='backPortNum']").val('');
-            /*backKitModule.prop("readonly", true);
-            backPortNumInput.prop("readonly", true);*/
         }
     });
 
