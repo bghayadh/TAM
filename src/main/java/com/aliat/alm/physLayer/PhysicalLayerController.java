@@ -3350,7 +3350,8 @@ public class PhysicalLayerController {
 			try {
 				// Execute native query to get NUM_ROWS and NUM_COLUMNS
 				Object[] result = (Object[]) session.createNativeQuery(
-				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME, B.ROW_PER_MODULE, B.ROW_COUNTING, B.TOTAL_NUM_MODULE FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
+				        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME, B.ROW_PER_MODULE, B.ROW_COUNTING, B.TOTAL_NUM_MODULE FROM DISTRIBUTION_BOARD B "
+				        + "WHERE B.DB_ID = :dbId"
 				    )
 				    .setParameter("dbId", selectedDistBoardContext)
 				    .getSingleResult();
@@ -3366,6 +3367,14 @@ public class PhysicalLayerController {
 				BigDecimal totalNumModule= (BigDecimal) result[7];
 				
 			System.out.println(dbName);
+			  query = session.createNativeQuery(
+	                    "SELECT ROW_COL_INDEX, FP_STATUS FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_ID = :dbId   ORDER BY ROW_COL_INDEX");
+	            query.setParameter("dbId", selectedDistBoardContext);
+	  
+	            List<Object[]> statusResult = query.getResultList();
+	           
+	            rtn.put("statusResult", statusResult);
+	            
 				rtn.put("numRows", numRows);
 				rtn.put("numColumns", numColumns);
 				
@@ -9952,10 +9961,9 @@ public class PhysicalLayerController {
 	            if (portId == null) {
 	                synchronized (this) {
 	                    portId = "DB_PORT_" + year + "_"
-	                            + Integer.parseInt(session.createNativeQuery("SELECT DB_PORT FROM SEQ_TABLE")
-	                                    .uniqueResult().toString());
+	                            +  ((Number) session.createNativeQuery("SELECT DB_PORT_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
 
-	                    session.createNativeQuery("UPDATE SEQ_TABLE SET DB_PORT = DB_PORT + 1").executeUpdate();
+	                   
 	                }
 	            }
 
@@ -10043,6 +10051,69 @@ public class PhysicalLayerController {
 	}
 
 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/getPortStatus", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPortStatus(Locale locale, Model model,
+	        @ModelAttribute ItemParameters itemParameters, HttpServletRequest request, HttpServletResponse response)
+	        throws JsonProcessingException {
+
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+
+	    session = AlmDbSession.getInstance().getSession();
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", LoginServices.checkSession(request, response));
+	        return rtn;
+	    }
+
+	    if (session != null && session.isOpen()) {
+
+	        tx = session.beginTransaction();
+
+	        try {
+	         
+	            String dbId = request.getParameter("selectedDistBoardContext");
+	         
+	            // Safe SELECT (avoids NoResultException)
+	            query = session.createNativeQuery(
+	                    "SELECT ROW_COL_INDEX, FP_STATUS FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_ID = :dbId   ORDER BY ROW_COL_INDEX");
+	            query.setParameter("dbId", dbId);
+	  
+	            List<Object[]> result = query.getResultList();
+	           
+	            rtn.put("result", result);
+System.out.println(result);
+	        } catch (Exception e) {
+	            tx.rollback();
+	            rtn.put("error", e.getMessage());
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                session.close();
+	            }
+	        }
+	    }
+
+	    return rtn;
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	@RequestMapping(value = "/saveLoadedDistributionBoard", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> saveLoadedDistributionBoard(Locale locale, Model model,
