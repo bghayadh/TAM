@@ -46,7 +46,6 @@ function getDB(type, url, id, tr, showDBflag) {
 }
 
 function DBLayerCheckAll() {
-
     $("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked", true);
     $("#DistributionBoard_backbone__CurrentPhysicalLayer input[type=checkbox]").prop("checked", true);
     $("#DistributionBoard_metro__CurrentPhysicalLayer input[type=checkbox]").prop("checked", true);
@@ -60,7 +59,6 @@ function DBLayerCheckAll() {
     controllerLayerCheckAll("access");
 
     $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li ').each(function() {
-
         var ID = $(this).attr('id');
         var DBID = "";
         var controllerID = "";
@@ -81,7 +79,6 @@ function DBLayerCheckAll() {
         $("#" + DBID).children(':checkbox').prop("checked", true);
         if (markersDistBoard[DBID].getMap() == null) {
             markersDistBoard[DBID].setMap(map);
-
             if (window["" + DBID][8] == "backbone") {
                 markerClusterBackboneDistBoard.addMarker(markersDistBoard[DBID]);
             }
@@ -154,7 +151,6 @@ function DBLayerUnCheckAll() {
         }
     });
 }
-
 
 function createDB(distribBoardList, transfer) {
 
@@ -656,21 +652,17 @@ function createController(controllerList, DBList) {
             controllerList[i][2],
             markersController,
             markerClusterController
-
         );
 
-        controllerCheckFilter(
-            id,
-            markerClusterController
-        );
+        controllerCheckFilter(id, markerClusterController);
 
         // Context menu binding for controllers
-
         AllControllerCheckFilter("DistributionBoard_backboneController__CurrentPhysicalLayer", markerClusterController);
         AllControllerCheckFilter("DistributionBoard_metroController__CurrentPhysicalLayer", markerClusterController);
         AllControllerCheckFilter("DistributionBoard_accessController__CurrentPhysicalLayer", markerClusterController);
     }
 }
+
 function createControllerMarkerClick(Id, name, long, lat, markers, markerClusterController) {
     const pos = new google.maps.LatLng(lat, long);
 
@@ -736,9 +728,7 @@ function createControllerMarkerClick(Id, name, long, lat, markers, markerCluster
                 children.show();
             }
             networkLevelFolder.show();
-
             $("#" + IdSelected + " > .TreeSpan").addClass("selected-span").css("background-color", "#97b9cc");
-
             $("#initial_ul_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
             $("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
             $("#" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
@@ -748,10 +738,7 @@ function createControllerMarkerClick(Id, name, long, lat, markers, markerCluster
             const offset = $("#" + IdSelected).offset().top;
             const projectOffset = $("#initial_ul_" + dbFileId).offset().top;
             const offsetTotal = (offset - projectOffset);
-
             $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
-
-
         });
 
     } else {
@@ -776,7 +763,6 @@ function createControllerMarkerClick(Id, name, long, lat, markers, markerCluster
             } else {
                 infowindow = new google.maps.InfoWindow();
             }
-
             infowindow.setContent(Id);
             infowindow.open(map, marker);
         });
@@ -893,14 +879,10 @@ function appendControllerToTree(data) {
     let id = data.controllerId;
     let name = data.controllerName;
     if (data.networkLayer == "backbone") {
-
         if (dbCount > 0) {
-
             str = "<ul><li id='" + id + "' class='bController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
             $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
-
         }
-
         else {
             str = "<ul><li id='" + id + "' class='bController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
             $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
@@ -910,19 +892,13 @@ function appendControllerToTree(data) {
             selectedControllerName = $(this).text();
             openContext(selectedControllerId, selectedControllerName, singleController, event);
         });
-
     }
     else if (data == "metro") {
         if (dbCount.length > 0) {
-
             str = "<ul><li id='" + id + "'  class='mController' style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter' ></input>					<span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span>  <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
-
             $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
-
         }
-
         else {
-
             str = "<ul><li id='" + id + "'  class='mController' style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
 
             $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
@@ -1009,7 +985,6 @@ function deleteKit() {
 
         alert("Select Row(s) to Delete");
     }
-
     console.log(deletedKitIds);
 };
 
@@ -1025,7 +1000,6 @@ function selectAllKit(btn) {
     }
 }
 
-
 function selectAllModule(btn) {
     if ($(btn).hasClass('allChecked')) {
         // Uncheck all checkboxes with name="record"
@@ -1038,7 +1012,6 @@ function selectAllModule(btn) {
     }
 }
 
-
 function addModule() {
     const markup = `<tr>
 			 		         <td style='text-align:center;'><input  name='record' type='checkbox' style='vertical-align: middle; width:70px'></td>
@@ -1050,12 +1023,8 @@ function addModule() {
 			 				 <td name='sensorCount'><input  class='form-control' type='text' style='width:80px;'/></td>
 			 				 <td name='occupiedSensorMask'><input  class='form-control' type='text' style='width:100px;'/></td>
 			 		          </tr>`;
-
     $("#DbModule > tbody").append(markup);
 };
-
-
-
 
 function deleteModule() {
     var check = 0;
