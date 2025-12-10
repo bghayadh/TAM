@@ -985,32 +985,32 @@ function dbAutoCompleteLocationM(input) {
 function dbTubeStrandNoColor() {
 
     $("#DbMappingTable").on("change", "select[name='FP_tubecolor'], select[name='BP_tubecolor']", function() {
-		prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
-		//equip = row.find(`select[name='${prefix}_equipment']`).val();		
-		const row = $(this).closest("tr");
+        prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
+        //equip = row.find(`select[name='${prefix}_equipment']`).val();		
+        const row = $(this).closest("tr");
         const numberField = row.find(`input[name='${prefix}_tubeNb']`);
         tubeStrandColorSelect(this, numberField[0]);
     });
 
     $("#DbMappingTable").on("change", "select[name='FP_strandcolor'], select[name='BP_strandcolor']", function() {
-		prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
+        prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
         const row = $(this).closest("tr");
         const numberField = row.find(`input[name='${prefix}_strandNb']`);
         tubeStrandColorSelect(this, numberField[0]);
     });
 
     $("#DbMappingTable").on("change", "input[name='FP_tubeNb'], input[name='BP_tubeNb']", function() {
-		prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
+        prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
         const row = $(this).closest("tr");
         const colorField = row.find(`select[name='${prefix}_tubecolor']`);
         tubeStrandNoChange(this, colorField[0]);
     });
 
     $("#DbMappingTable").on("change", "input[name='FP_strandNb'], input[name='BP_strandNb']", function() {
-		prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
+        prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
         const row = $(this).closest("tr");
         const colorField = row.find(`select[name='${prefix}_strandcolor']`);
-		//console.log("size of colorField is " +colorField.length);
+        //console.log("size of colorField is " +colorField.length);
         tubeStrandNoChange(this, colorField[0]);
     });
 }
@@ -1036,26 +1036,26 @@ function tubeStrandColorSelect(colorElement, numberElement) {
 
     // If color not in map, clear style and exit
     if (!colorMap[color]) {
-		colorElement.classList.remove("colored-select");
-		colorElement.style.backgroundColor = "";
-		colorElement.style.color = "";
+        colorElement.classList.remove("colored-select");
+        colorElement.style.backgroundColor = "";
+        colorElement.style.color = "";
         numberElement.value = "";
         return;
     }
 
     // Apply new background + text color
-	
-	colorElement.classList.add("colored-select");
-	colorElement.style.backgroundColor = color;
-	colorElement.style.color = colorMap[color].text;
-	
+
+    colorElement.classList.add("colored-select");
+    colorElement.style.backgroundColor = color;
+    colorElement.style.color = colorMap[color].text;
+
     // Set the tube/strand number
     numberElement.value = colorMap[color].num;
 }
 
 function tubeStrandNoChange(numberElement, colorElement) {
     const number = numberElement.value;
-	console.log("number is " +number);
+    console.log("number is " + number);
 
     // Mapping tube/strand numbers to colors and text colors
     const numberMap = {
@@ -1073,20 +1073,20 @@ function tubeStrandNoChange(numberElement, colorElement) {
         "12": { color: "aqua", text: "black" }
     };
 
-    if (!numberMap[number]) {		
+    if (!numberMap[number]) {
         // Clear if invalid or empty
-		colorElement.value = "";
-		colorElement.classList.remove("colored-select");
-		colorElement.style.backgroundColor = "";
-		colorElement.style.color = "";
+        colorElement.value = "";
+        colorElement.classList.remove("colored-select");
+        colorElement.style.backgroundColor = "";
+        colorElement.style.color = "";
         return;
     }
 
     // Apply color
     colorElement.value = numberMap[number].color;
-	colorElement.classList.add("colored-select");
-	colorElement.style.backgroundColor = numberMap[number].color;
-	colorElement.style.color = numberMap[number].text;
+    colorElement.classList.add("colored-select");
+    colorElement.style.backgroundColor = numberMap[number].color;
+    colorElement.style.color = numberMap[number].text;
 }
 
 const LOCATION_TYPES = ["Select an Option", "Customer", "Site", "Manhole", "Handhole"];
