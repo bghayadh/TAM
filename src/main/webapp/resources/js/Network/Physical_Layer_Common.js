@@ -13970,26 +13970,37 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             const bpEquipmentOptions = generateEquipmentOptions(bpLocType);
 			
 			const fpStrandNumber = DistBoardMappingPts[i][36];  // e.g. "3"
+			console.log("fpStrandNumber is " +fpStrandNumber);
 			const fpStrandData = getColorByNumber(fpStrandNumber);
 			const fpStrandColor = fpStrandData.color;
+			console.log("fpStrandColor is " +fpStrandColor);
 			const fpStrandTextColor = fpStrandData.text;
+			console.log("fpStrandTextColor is " +fpStrandTextColor);
 						
-			const fpTubeNumber = DistBoardMappingPts[i][36];  // e.g. "3"
+			const fpTubeNumber = DistBoardMappingPts[i][37];  // e.g. "3"
+			console.log("fpTubeNumber is " +fpTubeNumber);
 			const fpTubeData = getColorByNumber(fpTubeNumber);
 			const fpTubeColor = fpTubeData.color;
+			console.log("fpTubeColor is " +fpTubeColor);
 			const fpTubeTextColor = fpTubeData.text;
+			console.log("fpTubeTextColor is " +fpTubeTextColor);
 
 
-			const bpStrandNumber = DistBoardMappingPts[i][36];  // e.g. "3"
+			const bpStrandNumber = DistBoardMappingPts[i][38];  // e.g. "3"
+			console.log("bpStrandNumber is " +bpStrandNumber);
 			const bpStrandData = getColorByNumber(bpStrandNumber);
 			const bpStrandColor = bpStrandData.color;
+			console.log("bpStrandColor is " +bpStrandColor);
 			const bpStrandTextColor = bpStrandData.text;
+			console.log("bpStrandTextColor is " +bpStrandTextColor);
 						
-			const bpTubeNumber = DistBoardMappingPts[i][36];  // e.g. "3"
-			const bpTubeData = getColorByNumber(bpTubeNumber);
+			const bpTubeNumber = DistBoardMappingPts[i][39];  // e.g. "3"
+			console.log("bpTubeNumber is " +bpTubeNumber);
+			const bpTubeData = getColorByNumber(bpTubeNumber);			
 			const bpTubeColor = bpTubeData.color;
+			console.log("bpTubeColor is " +bpTubeColor);
 			const bpTubeTextColor = bpTubeData.text;
-			
+			console.log("bpTubeTextColor is " +bpTubeTextColor);			
 
             window["DB_" + DistBoardMappingPts[i][3]] = [];
             window["DB_" + DistBoardMappingPts[i][3]] = DistBoardMappingPts[i];
