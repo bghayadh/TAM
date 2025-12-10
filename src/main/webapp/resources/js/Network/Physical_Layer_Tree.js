@@ -8528,7 +8528,7 @@ singleHandhole = new ContextMenu({
 					 					var numRowsFromDb = Number(data.numRows || 1);
 					 					 var numColumnsFromDb = Number(data.numColumns || 1);
 					 					     drawPanelDiagram(numRowsFromDb, numColumnsFromDb, data.controllerID, data.controllerName, data.dbId, 
-					 							data.dbName,data.rowPerModule, data.rowCounting, data.totalNumModule);
+					 							data.dbName,data.rowPerModule, data.rowCounting, data.totalNumModule, data.statusResult);
 					 				
 					 			
 					 			       },

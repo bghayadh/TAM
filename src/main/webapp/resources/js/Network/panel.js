@@ -49,7 +49,11 @@
 	   mapBtn.className += " active";
 	 }
 
-function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, controllerName, dbId, dbName, rowPerModule, rowCounting, totalModule) {
+function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, controllerName, dbId, dbName, rowPerModule, rowCounting, totalModule, statusResult) {
+	
+	
+	
+	
   const container = document.getElementById("panelStage");
   container.innerHTML = "";
 
@@ -272,30 +276,67 @@ function drawPanelDiagram(numRowsFromDb, numColumnsFromDb, controllerID, control
   // existing connector points (kept for compatibility)
 
   // function to create a simple port (kept) — now accepts numberLabel as 4th parameter
-  function createPort(group, x, y, id, numberLabel) {
-    const portWidth = 20;
-    const portHeight = 15;
-    const notchWidth = 10;
-    const notchHeight = 4;
-    var port = new Konva.Line({
-      points: [ x, y, x + 5, y, x + 5, y - notchHeight, x + 5 + notchWidth, y - notchHeight, x + 5 + notchWidth, y, x + portWidth, y, x + portWidth, y + portHeight, x, y + portHeight ],
-      closed: true,
-      stroke: "black",
-      strokeWidth: 1.5,
-      fill: "black",
-      id: id
-    });
-    for (let i = 0; i < 4; i++) {
-      let slot = new Konva.Rect({
-        x: x + 2 + i * 4,
-        y: y + 4,
-        width: 3,
-        height: 9,
-        fill: "black",
-        listening: false
+  function createPort(group, x, y, id, numberLabel, statusResult) {
+      const portWidth = 20;
+      const portHeight = 15;
+      const notchWidth = 10;
+      const notchHeight = 4;
+
+      // Default fill color
+      let fillColor = "black";
+      
+      // Check if the id exists in statusResult and if its status is 'Active'
+      let isActive = false;
+      for (let i = 0; i < statusResult.length; i++) {
+          if (statusResult[i][0] === id) { // index 0 is id
+              if (statusResult[i][1] === "Active") { // index 1 is status
+                  fillColor = "#6AA84F";
+                  isActive = true;
+              }
+              break; // id found, no need to continue
+          }
+      }
+
+      // Create the port shape
+	  let slotFillColor = isActive ? "#6AA84F" : "black";  // Slot color is based on port status
+      var port = new Konva.Line({
+		
+          points: [
+              x, y,
+              x + 5, y,
+              x + 5, y - notchHeight,
+              x + 5 + notchWidth, y - notchHeight,
+              x + 5 + notchWidth, y,
+              x + portWidth, y,
+              x + portWidth, y + portHeight,
+              x, y + portHeight
+          ],
+          closed: true,
+          stroke:slotFillColor,
+          strokeWidth: 1.5,
+          fill: fillColor,
+          id: id
       });
-      group.add(slot);
-    }
+
+      group.add(port);
+
+      // Create the slots inside the port
+      for (let i = 0; i < 4; i++) {
+          let slotFillColor = isActive ? "#6AA84F" : "black";  // Slot color is based on port status
+
+          let slot = new Konva.Rect({
+              x: x + 2 + i * 4,
+              y: y + 4,
+              width: 3,
+              height: 9,
+              fill: slotFillColor,
+              listening: false
+          });
+          group.add(slot);
+      }
+  
+  
+
     port.on("click", function (e) {
 
       console.log("Clicked " + this.id());
@@ -1582,11 +1623,11 @@ if (!data.panelPortData || data.panelPortData.length === 0) {
       if (numberingArray.length > 0) {
         // use numbering array label, keep id as "P" + label
         let label = numberingArray[usedIndex];
-        createPort(panelGroup, x, y,  label, label);
+        createPort(panelGroup, x, y,  label, label, statusResult);
         usedIndex++;
       } else {
         // original behavior (no numberingArray) — preserve exact behaviour
-        createPort(panelGroup, x, y, portCount, portCount);
+        createPort(panelGroup, x, y, portCount, portCount, statusResult);
         portCount++;
       }
     }
