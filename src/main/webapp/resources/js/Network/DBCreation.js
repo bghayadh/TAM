@@ -53,7 +53,6 @@ function DBLayerCheckAll() {
     $("#BackboneControllerDB__CurrentPhysicalLayer").prop("checked", true);
     $("#MetroControllerDB__CurrentPhysicalLayer").prop("checked", true);
     $("#AccessControllerDB__CurrentPhysicalLayer").prop("checked", true);
-
     controllerLayerCheckAll("backbone");
     controllerLayerCheckAll("metro");
     controllerLayerCheckAll("access");
@@ -106,14 +105,12 @@ function DBLayerUnCheckAll() {
     $("#DistributionBoard_backbone__CurrentPhysicalLayer  input[type=checkbox]").prop("checked", false);
     $("#DistributionBoard_metro__CurrentPhysicalLayer  input[type=checkbox]").prop("checked", false);
     $("#DistributionBoard_access__CurrentPhysicalLayer  input[type=checkbox]").prop("checked", false);
-
     markerClusterBackboneDistBoard.clearMarkers();
     markerClusterMetroDistBoard.clearMarkers();
     markerClusterAccessDistBoard.clearMarkers();
     $("#BackboneControllerDB__CurrentPhysicalLayer").prop("checked", false);
     $("#MetroControllerDB__CurrentPhysicalLayer").prop("checked", false);
     $("#AccessControllerDB__CurrentPhysicalLayer").prop("checked", false);
-
     controllerLayerUnCheckAll("backbone");
     controllerLayerUnCheckAll("metro");
     controllerLayerUnCheckAll("access");
@@ -124,18 +121,15 @@ function DBLayerUnCheckAll() {
         if (DBID && DBID.startsWith("Controller")) {
             return true; // continue to next
         }
-
         // Skip if marker doesn't exist
         if (!markersDistBoard[DBID]) {
             return;
         }
-
         markersDistBoard[DB].setMap(null);
         $("#" + DB).children(':checkbox').prop("checked", false);
     });
 
     $("#network_tree").find(".DistBoard:checked").each(function() {
-
         id = $(this).parent().attr('id');
         if (markersDistBoard[id].getMap() == null) {
             markersDistBoard[id].setMap(map);
@@ -153,8 +147,6 @@ function DBLayerUnCheckAll() {
 }
 
 function createDB(distribBoardList, transfer) {
-
-
     if (typeof markerClusterBackboneDistBoard === "undefined") {
         var checkExist = setInterval(function() {
             if (typeof markerClusterBackboneDistBoard !== "undefined") {
@@ -262,8 +254,6 @@ function createDB(distribBoardList, transfer) {
 
 
 function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type, city) {
-
-
     const pos = new google.maps.LatLng(Lat, Long);
     var data = "<div>" + Name + "</div>";
     var mapIcon;
@@ -329,7 +319,6 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
         }
     });
 
-
     if (markers == markersDistBoard && marker_Cluster == markerClusterBackboneDistBoard) {
         mapIcon = iconBackboneDB;
         markerType = "DistributionBoard";
@@ -344,7 +333,6 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
     }
 
     if (!markers[Id]) {
-
         Mapmarker = new google.maps.Marker({
             position: pos,
             data: data,
@@ -355,22 +343,18 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
         markers[Id] = Mapmarker;
         markers.push(Mapmarker);
 
-
         google.maps.event.addListener(Mapmarker, "click", function(e) {
             var IdSelected = this.ID;
 
             dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
             if (!dbFileId) {
                 dbFileId = $("#" + IdSelected).parent().parent().parent().parent().attr('id').split("__")[1];
-
             }
             var childrenInitial = $("#initial_ul_" + dbFileId + "").find(' > ul > li');
             var children = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li');
-
             var networkLevelFolder = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ');
             var networkControllerFolders = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ul > li');
             var networkController = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ul > li ul > li');
-
 
             if (IdSelected != IdSelectedTemp) {
                 if (IdSelectedTemp != "") {
@@ -386,16 +370,11 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
             networkLevelFolder.show();
             networkControllerFolders.show();
             networkController.show();
-
             $("#" + IdSelected + " > .TreeSpan").addClass("selected-span");
             $("#" + IdSelected + " > .TreeSpan").css("background-color", "#97b9cc");
-
             $("#initial_ul_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-            //$("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-
             $("#" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
             $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-
             $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
             $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
             $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
@@ -416,7 +395,6 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
             }
         });
     }
-
     else {
         if (markers[Id].map != map) {
             markers[Id].setMap(map);
@@ -432,13 +410,11 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
         panTo(markers[Id].getPosition().lat(), markers[Id].getPosition().lng());
         map.setZoom(11);
 
-
         if (typeof infowindow !== 'undefined') {
             infowindow.close();
         } else {
             infowindow = new google.maps.InfoWindow();
         }
-
         infowindow.setContent(Id);
         infowindow.open(map, markers[Id]);
     });
@@ -465,12 +441,9 @@ function DBCheckFilter(Id, clusterName) {
             clusterName.removeMarker(markersDistBoard[Id]);
         }
         if ($(this).parents().eq(2).find('.DistributionBoard :checked').length == $(this).parents().eq(2).find('.DistributionBoard').length) {
-
             if (parentId && !parentId.toLowerCase().includes("controller")) {
                 $parent.children('input[type=checkbox]').prop('checked', true);
-
             }
-
         }
         else {
 
@@ -506,22 +479,17 @@ function getContainerSelector(networkLayer) {
     }
 }
 
-
 function controllerLayerCheckAll(layer) {
 
     let selector = "#DistributionBoard_" + layer + "Controller__CurrentPhysicalLayer"; // Added #
 
-
     // Check main checkbox for this layer
-
 
     // Loop over its <li> elements inside <ul>
     $(selector).find('ul > li').each(function() {
         let controllerId = $(this).attr('id');
-
         if (!controllerId) return;
         if (controllerId.includes("Controller")) {
-
             // Check the checkbox inside this li
             $(this).children(':checkbox').prop("checked", true);
 
@@ -532,7 +500,6 @@ function controllerLayerCheckAll(layer) {
                 markerClusterController.addMarker(markersController[controllerId]);
             }
         }
-
     });
 }
 
@@ -561,7 +528,6 @@ function controllerLayerUnCheckAll(layer) {
     });
 }
 
-
 function createController(controllerList, DBList) {
     if (typeof markersController === "undefined") {
         var checkExist = setInterval(function() {
@@ -586,13 +552,10 @@ function createController(controllerList, DBList) {
         let dbCount = controllerList[i][5];
 
         if (layer == "backbone") {
-
             if (dbCount > 0) {
                 str = "<ul><li id='" + id + "' class='bController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
                 $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
-
             }
-
             else {
                 str = "<ul><li id='" + id + "' class='bController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
                 $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
@@ -602,21 +565,14 @@ function createController(controllerList, DBList) {
                 selectedControllerName = $(this).text();
                 openContext(selectedControllerId, selectedControllerName, singleController, event);
             });
-
         }
         else if (layer == "metro") {
             if (dbCount > 0) {
-
                 str = "<ul><li id='" + id + "'  class='mController' style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter' ></input>					<span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span>  <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
-
                 $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
-
             }
-
             else {
-
                 str = "<ul><li id='" + id + "'  class='mController' style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
-
                 $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
             }
             $(".mController > .TreeSpan").contextmenu(function(event) {
@@ -629,13 +585,10 @@ function createController(controllerList, DBList) {
         else if (layer == "access") {
             if (dbCount > 0) {
                 str = "<ul><li id='" + id + "'  class='aController' style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter' ></input>	<span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
-
                 $("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
             }
-
             else {
                 str = "<ul><li id='" + id + "'  class='aController' style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + name + "/" + id + " </span></li></ul>";
-
                 $("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
             }
             $(".aController > .TreeSpan").contextmenu(function(event) {
@@ -645,17 +598,8 @@ function createController(controllerList, DBList) {
             });
         }
 
-        createControllerMarkerClick(
-            id,
-            name,
-            controllerList[i][1],
-            controllerList[i][2],
-            markersController,
-            markerClusterController
-        );
-
+        createControllerMarkerClick(id, name, controllerList[i][1], controllerList[i][2], markersController, markerClusterController);
         controllerCheckFilter(id, markerClusterController);
-
         // Context menu binding for controllers
         AllControllerCheckFilter("DistributionBoard_backboneController__CurrentPhysicalLayer", markerClusterController);
         AllControllerCheckFilter("DistributionBoard_metroController__CurrentPhysicalLayer", markerClusterController);
@@ -767,7 +711,6 @@ function createControllerMarkerClick(Id, name, long, lat, markers, markerCluster
             infowindow.open(map, marker);
         });
 }
-
 
 
 function AllControllerCheckFilter(containerId, cluster) {
@@ -931,8 +874,6 @@ function appendControllerToTree(data) {
 function handleUpdateController(data, cont, db) {
 
     if (data.networkLayer != dbContNtLevel) {
-
-
         $("#" + data.controllerId).remove();
         createController(cont);
         createDB(db);
@@ -954,14 +895,11 @@ function handleUpdateController(data, cont, db) {
 }
 
 function addKit() {
-
     const markup = `<tr>
 		         <td style='text-align:center;'><input  name='record' type='checkbox' style='vertical-align: middle; width:70px'></td>
 		         <td name='serialNum'><input  class='form-control' type='text' style='width:400px;'/></td>
 				 <td name='type'><input  class='form-control' type='text' style='width:400px;'/></td>
-				 	        
 		          </tr>`;
-
     $("#DbKit > tbody").append(markup);
 };
 
@@ -972,9 +910,7 @@ function deleteKit() {
     $("#DbKit > tbody").find('input[name="record"]').each(function() {
         if ($(this).is(":checked")) {
             $(this).closest("tr").remove();
-
             let deletedId = $(this).attr("id");
-
             if (deletedId) {
                 deletedKitIds.push(deletedId);
                 check++; // store deleted id
@@ -1042,7 +978,6 @@ function deleteModule() {
     });
 
     if (check == 0) {
-
         alert("Select Row(s) to Delete");
     }
 };
