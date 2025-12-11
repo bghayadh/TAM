@@ -30,9 +30,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class CommScopeService {
 
-	private static Session session = null;
-	private static Transaction tx = null;
-	private static ObjectMapper mapper = new ObjectMapper();
+	private Session session = null;
+	private Transaction tx = null;
+	private ObjectMapper mapper = new ObjectMapper();
 
 	private static final Logger logger = LoggerFactory.getLogger(CommScopeService.class);
 

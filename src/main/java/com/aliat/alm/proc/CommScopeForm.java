@@ -46,13 +46,13 @@ public class CommScopeForm {
 	@Autowired
 	Notify notifications;
 
-	private static Session session = null;
-	private static Transaction tx = null;
-	private static ObjectMapper mapper = new ObjectMapper();
+	private Session session = null;
+	private Transaction tx = null;
+	private ObjectMapper mapper = new ObjectMapper();
 	private String str = null;
 
 	@SuppressWarnings("rawtypes")
-	private static Query query = null;
+	private Query query = null;
 
 	Map<String, Object> rtn = new LinkedHashMap<>();
 	private final SchedulerService schedulerService;

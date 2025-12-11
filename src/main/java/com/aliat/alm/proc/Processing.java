@@ -49,14 +49,14 @@ public class Processing {
 	@Autowired
 	Notify notifications;
 
-	private static Session session = null;
-	private static Transaction tx = null;
-	private static ObjectMapper mapper = new ObjectMapper();
+	private Session session = null;
+	private Transaction tx = null;
+	private ObjectMapper mapper = new ObjectMapper();
 	private String str = null;
 	private Object[] row = null;
 
 	@SuppressWarnings("rawtypes")
-	private static Query query = null;
+	private Query query = null;
 
 	private static final Logger logger = LoggerFactory.getLogger(Processing.class);
 
