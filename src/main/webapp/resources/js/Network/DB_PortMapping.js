@@ -1,3 +1,229 @@
+function DBMappingData(DistBoardMappingPts, panelInfo) {
+    var rowPerModule = panelInfo[0];
+    var totalModules = panelInfo[1];
+    if (DistBoardMappingPts) {
+        window["DB_Mapper" + selectedDistBoardContext] = [];
+        window["DB_Mapper" + selectedDistBoardContext] = DistBoardMappingPts;
+
+        const numRows = parseInt($("#DistributionBoardRowsNum").val());
+        const numCols = parseInt($("#DistributionBoardColsNum").val());
+        const direction = $("#rowCounting").val().toLowerCase();
+
+        dBBoqIndex = 0;
+        let markup = "";
+
+        for (i = 0;i < DistBoardMappingPts.length;i++) {
+
+            const fpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][5]);
+            const fpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][5], DistBoardMappingPts[i][10]);
+
+            // BP
+            const bpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][27]);
+            const bpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][27], DistBoardMappingPts[i][32]);
+
+            const fpLocType = DistBoardMappingPts[i][5];
+            const fpLocationReadonly =
+                (fpLocType === "Manhole" || fpLocType === "Handhole" || fpLocType === "Customer") ? "readonly" : "";
+
+            const bpLocType = DistBoardMappingPts[i][27];
+            const bpLocationReadonly = (bpLocType === "Manhole" || bpLocType === "Handhole" || bpLocType === "Customer") ? "readonly" : "";
+
+            const fpEqIsDist = DistBoardMappingPts[i][10] === "DistBoard";
+            const fpReadonly = fpEqIsDist ? "" : "readonly";
+
+            const bpEqIsDist = DistBoardMappingPts[i][32] === "DistBoard";
+            const bpReadonly = bpEqIsDist ? "" : "readonly";
+
+            const fpStrandNumber = DistBoardMappingPts[i][36];  // e.g. "3"
+            const fpStrandData = getColorByNumber(fpStrandNumber);
+            const fpStrandColor = fpStrandData.color;
+            const fpStrandTextColor = fpStrandData.text;
+
+            const fpTubeNumber = DistBoardMappingPts[i][37];  // e.g. "3"
+            const fpTubeData = getColorByNumber(fpTubeNumber);
+            const fpTubeColor = fpTubeData.color;
+            const fpTubeTextColor = fpTubeData.text;
+
+            const bpStrandNumber = DistBoardMappingPts[i][38];  // e.g. "3"
+            const bpStrandData = getColorByNumber(bpStrandNumber);
+            const bpStrandColor = bpStrandData.color;
+            const bpStrandTextColor = bpStrandData.text;
+
+            const bpTubeNumber = DistBoardMappingPts[i][39];  // e.g. "3"
+            const bpTubeData = getColorByNumber(bpTubeNumber);
+            const bpTubeColor = bpTubeData.color;
+            const bpTubeTextColor = bpTubeData.text;
+
+            window["DB_" + DistBoardMappingPts[i][3]] = [];
+            window["DB_" + DistBoardMappingPts[i][3]] = DistBoardMappingPts[i];
+
+            var f_statusOption = "", b_statusOption = "";
+            if (DistBoardMappingPts[i][4] == "Active") {
+                f_statusOption = "<option value='Active' selected >Active</option><option value='InActive'>Inactive</option>";
+            }
+            else if (DistBoardMappingPts[i][4] == "InActive") {
+                f_statusOption = "<option value='InActive' selected >Inactive</option><option value='Active'>Active</option>";
+            }
+            else {
+                f_statusOption = "<option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option>";
+            }
+
+            if (DistBoardMappingPts[i][14] == "Active") {
+                b_statusOption = "<option value='Active' selected >Active</option><option value='InActive'>Inactive</option>";
+            }
+            else if (DistBoardMappingPts[i][14] == "InActive") {
+                b_statusOption = "<option value='InActive' selected >Inactive</option><option value='Active'>Active</option>";
+            }
+            else {
+                b_statusOption = "<option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option>";
+            }
+            let backKitVal = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
+            let backPortVal = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
+
+            markup += "<tr id='" + DistBoardMappingPts[i][3] + "'><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
+                + "<td name='Index'><input id='index" + i + "' name='Index' value='" + DistBoardMappingPts[i][0] + "' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+                + "<td name='nearModule'><input name='nearModule' value='" + DistBoardMappingPts[i][48] + "' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
+                + "<td name='nearPortNum'> <input id='nearPortNum" + i + "' name='nearPortNum' value='" + DistBoardMappingPts[i][49] +
+                "' class='form-control text-input' type='text' style='width:70px;position:relative;'/>" +
+                "</td>" +
+                "<td name='RowIndex'>" +
+                "<input id='rowIndex" + i + "' name='rowIndex' value='" + DistBoardMappingPts[i][1] +
+                "' class='form-control text-input rowIndex' type='text' style='width:60px;position:relative;'/>" +
+                "</td>" +
+                "<td name='ColIndex'>" +
+                "<input id='colIndex" + i + "' name='colIndex' value='" + DistBoardMappingPts[i][2] +
+                "' class='form-control text-input colIndex' type='text' style='width:60px;position:relative;'/>" +
+                "</td>"
+                + "<td name='patchType'><input name='patchType' value='" + DistBoardMappingPts[i][50] + "' class='form-control text-input portIndex' type='text' style='width:240px;position:relative;'/></td>"
+                + "<td style='background-color:#00757C' width='-10px'></td>"
+                + "<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status" + dBBoqIndex + "'>" + f_statusOption + "</select></td>"
+                + "<td name='FP_LocationType'><select class='form-control' name='FP_locationType' id='FP_LocationType" + dBBoqIndex + "'>"
+                + fpLocationOptions + "</select></td>"
+                + "<td name='FP_LocationID'><input name='FP_locationID' value='" + DistBoardMappingPts[i][6] + "' id='FP_LocationID" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_LocationM'><input name='FP_locationM' value='" + DistBoardMappingPts[i][7] + "' id='FP_LocationM" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_Location'><input name='FP_location' value='" + DistBoardMappingPts[i][8] + "' id='FP_Location" + dBBoqIndex + "' class='form-control' type='text' "
+                + fpLocationReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_Equipment'>"
+                + "<select class='form-control' name='FP_equipment' id='FP_equipment" + dBBoqIndex + "'>" + fpEquipmentOptions + "</select></td>"
+                + "<td name='FP_EquipmentID'><input name='FP_equipmentID' value='" + DistBoardMappingPts[i][11] + "' id='FP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_EquipmentName'><input name='FP_equipmentName' value='" + DistBoardMappingPts[i][12] + "' id='FP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_EquipmentType'><input name='FP_equipmentType' value='" + DistBoardMappingPts[i][9] + "' id='FP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='farKitSerialNum'><input name='farKitSerialNum' value='" + DistBoardMappingPts[i][51] + "' id='farKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + fpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='farModule'><input name='farModule' value='" + DistBoardMappingPts[i][52] + "' id='farModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + fpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='farPortNum'><input name='farPortNum' value='" + DistBoardMappingPts[i][53] + "' id='farPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + fpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_Address'><input name='FP_Address' value='" + DistBoardMappingPts[i][13] + "' id='FP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_JunctionID'><input name='FP_junctionID' value='" + DistBoardMappingPts[i][44] + "' id='FP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_JunctionName'><input name='FP_junctionName' value='" + DistBoardMappingPts[i][45] + "' id='FP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_StrandNb'><input name='FP_strandNb' value='" + fpStrandNumber + "' id='FP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+                + "<td name='FP_StrandColor'>"
+                + "<select class='form-control' name='FP_strandcolor' id='FP_strandcolor" + dBBoqIndex + "' "
+                + "style='background-color:" + fpStrandColor + "; color:" + fpStrandTextColor + "'>"
+                + colorOptions(fpStrandColor)
+                + "</select>"
+                + "</td>"
+                + "<td name='FP_StrandID'><input name='FP_strandID' value='" + DistBoardMappingPts[i][21] + "' id='FP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_StrandName'><input name='FP_strandName' value='" + DistBoardMappingPts[i][22] + "' id='FP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_TubeNb'><input name='FP_tubeNb' value='" + fpTubeNumber + "' id='FP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+                + "<td name='FP_TubeColor'>"
+                + "<select class='form-control' name='FP_tubecolor' id='FP_tubecolor" + dBBoqIndex + "' "
+                + "style='background-color:" + fpTubeColor + "; color:" + fpTubeTextColor + "'>"
+                + colorOptions(fpTubeColor)
+                + "</select>"
+                + "</td>"
+                + "<td name='FP_TubeID'><input name='FP_tubeID' value='" + DistBoardMappingPts[i][23] + "' id='FP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='FP_TubeName'><input name='FP_tubeName' value='" + DistBoardMappingPts[i][24] + "' id='FP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='FP_FiberID'><input name='FP_fiberID' value='" + DistBoardMappingPts[i][25] + "' id='FP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='FP_FiberName'><input name='FP_fiberName' value='" + DistBoardMappingPts[i][26] + "' id='FP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td style='background-color:#00757C'></td>"
+                + "<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status" + dBBoqIndex + "'>" + b_statusOption + "</select></td>"
+                + "<td name='BP_LocationType'><select class='form-control' name='BP_locationType' id='BP_LocationType" + dBBoqIndex + "'>"
+                + bpLocationOptions + "</select></td>"
+                + "<td name='BP_LocationID'><input name='BP_locationID' value='" + DistBoardMappingPts[i][28] + "' id='BP_LocationID" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_LocationM'><input name='BP_locationM' value='" + DistBoardMappingPts[i][29] + "' id='BP_LocationM" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_Location'><input name='BP_location' value='" + DistBoardMappingPts[i][30] + "' id='BP_Location" + dBBoqIndex + "' class='form-control' type='text' "
+                + bpLocationReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_Equipment'>"
+                + "<select class='form-control' name='BP_equipment' id='BP_equipment" + dBBoqIndex + "'>" + bpEquipmentOptions + "</select>"
+                + "<td name='BP_EquipmentID'><input name='BP_equipmentID' value='" + DistBoardMappingPts[i][33] + "' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_EquipmentName'><input name='BP_equipmentName' value='" + DistBoardMappingPts[i][34] + "' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_EquipmentType'><input name='BP_equipmentType' value='" + DistBoardMappingPts[i][31] + "' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='backKitModule'><input name='backKitModule' value='" + backKitVal + "' id='backKitModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + bpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='backPortNum'><input name='backPortNum' value='" + backPortVal + "' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + bpReadonly + " style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_Address'><input name='BP_Address' value='" + DistBoardMappingPts[i][35] + "'id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_JunctionID'><input name='BP_junctionID' value='" + DistBoardMappingPts[i][46] + "' id='BP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_JunctionName'><input name='BP_junctionName' value='" + DistBoardMappingPts[i][47] + "' id='BP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_StrandNb'><input name='BP_strandNb' value='" + bpStrandNumber + "' id='BP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+                + "<td name='BP_StrandColor'>"
+                + "<select class='form-control' name='BP_strandcolor' id='BP_strandcolor" + dBBoqIndex + "' "
+                + "style='background-color:" + bpStrandColor + "; color:" + bpStrandTextColor + "'>"
+                + colorOptions(bpStrandColor)
+                + "</select>"
+                + "</td>"
+                + "<td name='BP_StrandID'><input name='BP_strandID' value='" + DistBoardMappingPts[i][15] + "' id='BP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_StrandName'><input name='BP_strandName' value='" + DistBoardMappingPts[i][16] + "' id='BP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_TubeNb'><input name='BP_tubeNb' value='" + bpTubeNumber + "' id='BP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
+                + "<td name='BP_TubeColor'>"
+                + "<select class='form-control' name='BP_tubecolor' id='BP_tubecolor" + dBBoqIndex + "' "
+                + "style='background-color:" + bpTubeColor + "; color:" + bpTubeTextColor + "'>"
+                + colorOptions(bpTubeColor)
+                + "</select>"
+                + "</td>"
+                + "<td name='BP_TubeID'><input name='BP_tubeID' value='" + DistBoardMappingPts[i][17] + "' id='BP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='BP_TubeName'><input name='BP_tubeName' value='" + DistBoardMappingPts[i][18] + "' id='BP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='BP_FiberID'><input name='BP_fiberID' value='" + DistBoardMappingPts[i][19] + "' id='BP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='BP_FiberName'><input name='BP_fiberName' value='" + DistBoardMappingPts[i][20] + "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
+            dBBoqIndex++;
+        }
+        $("#DbMappingTable > tbody").html(markup);
+
+        indexRowColEvents({
+            numRows,
+            numCols,
+            direction,
+            rowPerModule,
+            totalModules
+        });
+        dbAutoCompleteForMapping();
+        dbTubeStrandNoColor();
+        locationTypeChange();
+        equipmentChange();
+    }
+}
+
+function getColorByNumber(num) {
+    numberMap = {
+        "0": { color: "", text: "" },
+        "1": { color: "blue", text: "white" },
+        "2": { color: "orange", text: "white" },
+        "3": { color: "green", text: "white" },
+        "4": { color: "brown", text: "white" },
+        "5": { color: "gray", text: "white" },
+        "6": { color: "white", text: "black" },
+        "7": { color: "red", text: "white" },
+        "8": { color: "black", text: "white" },
+        "9": { color: "yellow", text: "black" },
+        "10": { color: "violet", text: "white" },
+        "11": { color: "pink", text: "black" },
+        "12": { color: "aqua", text: "black" }
+    };
+
+    return numberMap[num] || { color: "white", text: "black" };
+}
+
+function colorOptions(selectedColor) {
+    return Object.entries(numberMap)
+        .map(([number, info]) => {
+            const selected = info.color === selectedColor ? "selected" : "";
+            return `<option value="${info.color}" ${selected}>${info.color}</option>`;
+        })
+        .join("");
+}
+
 function dbAutoCompleteForMapping() {
     console.log("Welcome to dbAutoCompleteForMapping");
     const fields = [
@@ -1089,6 +1315,140 @@ function tubeStrandNoChange(numberElement, colorElement) {
     colorElement.style.color = numberMap[number].text;
 }
 
+function tubeStrandSetColor(colorID, numberID) {
+
+    if (document.getElementById(colorID).value == "blue") {
+        document.getElementById(colorID).style.backgroundColor = "blue";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "1";
+    }
+    else if (document.getElementById(colorID).value == "orange") {
+        document.getElementById(colorID).style.backgroundColor = "orange";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "2";
+    }
+    else if (document.getElementById(colorID).value == "green") {
+        document.getElementById(colorID).style.backgroundColor = "green";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "3";
+    }
+    else if (document.getElementById(colorID).value == "brown") {
+        document.getElementById(colorID).style.backgroundColor = "brown";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "4";
+    }
+    else if (document.getElementById(colorID).value == "gray") {
+        document.getElementById(colorID).style.backgroundColor = "gray";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "5";
+    }
+    else if (document.getElementById(colorID).value == "white") {
+        document.getElementById(colorID).style.backgroundColor = "white";
+        document.getElementById(colorID).style.color = "black";
+        document.getElementById(numberID).value = "6";
+    }
+    else if (document.getElementById(colorID).value == "red") {
+        document.getElementById(colorID).style.backgroundColor = "red";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "7";
+    }
+    else if (document.getElementById(colorID).value == "black") {
+        document.getElementById(colorID).style.backgroundColor = "black";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "8";
+    }
+    else if (document.getElementById(colorID).value == "yellow") {
+        document.getElementById(colorID).style.backgroundColor = "yellow";
+        document.getElementById(colorID).style.color = "black";
+        document.getElementById(numberID).value = "9";
+    }
+    else if (document.getElementById(colorID).value == "violet") {
+        document.getElementById(colorID).style.backgroundColor = "violet";
+        document.getElementById(colorID).style.color = "white";
+        document.getElementById(numberID).value = "10";
+    }
+    else if (document.getElementById(colorID).value == "pink") {
+        document.getElementById(colorID).style.backgroundColor = "pink";
+        document.getElementById(colorID).style.color = "black";
+        document.getElementById(numberID).value = "11";
+    }
+    else if (document.getElementById(colorID).value == "aqua") {
+        document.getElementById(colorID).style.backgroundColor = "aqua";
+        document.getElementById(colorID).style.color = "black";
+        document.getElementById(numberID).value = "12";
+    }
+}
+
+function strandTubeSetColor(strandTubeNumber, ID) {
+    if (strandTubeNumber == "1") {
+        document.getElementById(ID).value = "blue";
+        document.getElementById(ID).style.backgroundColor = "blue";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "2") {
+        document.getElementById(ID).value = "orange";
+        document.getElementById(ID).style.backgroundColor = "orange";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "3") {
+        document.getElementById(ID).value = "green";
+        document.getElementById(ID).style.backgroundColor = "green";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "4") {
+        document.getElementById(ID).value = "brown";
+        document.getElementById(ID).style.backgroundColor = "brown";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "5") {
+        document.getElementById(ID).value = "gray";
+        document.getElementById(ID).style.backgroundColor = "gray";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "6") {
+        document.getElementById(ID).value = "white";
+        document.getElementById(ID).style.backgroundColor = "white";
+        document.getElementById(ID).style.color = "black";
+    }
+    else if (strandTubeNumber == "7") {
+        document.getElementById(ID).value = "red";
+        document.getElementById(ID).style.backgroundColor = "red";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "8") {
+        document.getElementById(ID).value = "black";
+        document.getElementById(ID).style.backgroundColor = "black";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "9") {
+        document.getElementById(ID).value = "yellow";
+        document.getElementById(ID).style.backgroundColor = "yellow";
+        document.getElementById(ID).style.color = "black";
+    }
+    else if (strandTubeNumber == "10") {
+        document.getElementById(ID).value = "violet";
+        document.getElementById(ID).style.backgroundColor = "violet";
+        document.getElementById(ID).style.color = "white";
+    }
+    else if (strandTubeNumber == "11") {
+        document.getElementById(ID).value = "pink";
+        document.getElementById(ID).style.backgroundColor = "pink";
+        document.getElementById(ID).style.color = "black";
+    }
+    else if (strandTubeNumber == "12") {
+        document.getElementById(ID).value = "aqua";
+        document.getElementById(ID).style.backgroundColor = "aqua";
+        document.getElementById(ID).style.color = "black";
+    }
+    else if (strandTubeNumber > 12 || strandTubeNumber == "") {
+        document.getElementById(ID).value = "";
+        document.getElementById(ID).style.backgroundColor = "";
+        document.getElementById(ID).style.color = "";
+    }
+}
+
+
+
 const LOCATION_TYPES = ["Select an Option", "Customer", "Site", "Manhole", "Handhole"];
 const EQUIPMENT_MAP = {
     "Customer": ["Custom", "Node", "DistBoard"],
@@ -1278,4 +1638,131 @@ function indexRowColEvents(config) {
             row.find("input[name='Index']").val(index);
         }
     );
+}
+
+function calculateRowColFromIndex(index, numRows, numCols, direction, rowPerModule, totalModules) {
+    const totalPorts = numRows * numCols;
+    if (index < 1 || index > totalPorts) {
+        alert(`Invalid Port: ${index}. Must be between 1 and ${totalPorts}.`);
+        return { row: "", col: "" };
+    }
+
+    direction = direction.toLowerCase().replace(/\s+/g, "");
+
+    // --- CASE 1: simple (no modules) ---
+    if (!rowPerModule || totalModules <= 1) {
+        let row, col;
+        if (direction === "uptodown" || direction === "downtoup") {
+            row = Math.ceil(index / numCols);
+            col = (index - 1) % numCols + 1;
+        }/* else if (direction === "downtoup") {
+						 				             const reversedRow = Math.ceil(index / numCols);
+						 				             col = (index - 1) % numCols + 1;
+						 				             row = numRows - reversedRow + 1;
+						 				         } */else {
+            alert("Invalid direction value.");
+            return { row: "", col: "" };
+        }
+        return { row, col };
+    }
+
+    // --- CASE 2: module-aware (horizontal modules) ---
+    const colsPerModule = Math.floor(numCols / totalModules); // ensure integer value
+    const portsPerModule = numRows * colsPerModule;
+
+    if (isNaN(portsPerModule) || portsPerModule <= 0) {
+        console.error("Invalid portsPerModule.");
+        return { row: "", col: "" };
+    }
+
+    const moduleIndex = Math.ceil(index / portsPerModule); // 1-based
+    const portInModule = index - (moduleIndex - 1) * portsPerModule;
+
+    if (isNaN(portInModule) || portInModule <= 0) {
+        console.error("Invalid portInModule.");
+        return { row: "", col: "" };
+    }
+
+    let localRow, localCol;
+
+    if (direction === "uptodown" || direction === "downtoup") {
+        localRow = Math.ceil(portInModule / colsPerModule);
+        localCol = (portInModule - 1) % colsPerModule + 1;
+    }/* else if (direction === "downtoup") {
+						 				         const reversedRow = Math.ceil(portInModule / colsPerModule);
+						 				         localCol = (portInModule - 1) % colsPerModule + 1;
+						 				         localRow = numRows - reversedRow + 1;
+						 				     } */else {
+        alert("Invalid direction value.");
+        return { row: "", col: "" };
+    }
+
+    const globalCol = (moduleIndex - 1) * colsPerModule + localCol;
+
+    return { row: localRow, col: globalCol };
+}
+
+function calculateIndexFromRowCol(row, col, numRows, numCols, direction, rowPerModule, totalModules) {
+
+    // Normalize direction
+    direction = direction.toLowerCase().replace(/\s+/g, "");
+
+    // Validate row
+    if (row < 1 || row > numRows) {
+        alert(`Invalid Row: ${row}. Must be between 1 and ${numRows}.`);
+        return "";
+    }
+
+    // Validate column
+    if (col < 1 || col > numCols) {
+        alert(`Invalid Column: ${col}. Must be between 1 and ${numCols}.`);
+        return "";
+    }
+
+    // --- CASE 1: simple (no modules) ---
+    if (!rowPerModule || totalModules <= 1) {
+
+        if (direction === "uptodown") {
+            const index = (row - 1) * numCols + col;
+            console.log(`Simple → Row=${row}, Col=${col}, Port=${index}`);
+            return index;
+        }
+
+        else if (direction === "downtoup") {
+            const reversedRow = numRows - row + 1;
+            const index = (reversedRow - 1) * numCols + col;
+            console.log(`Simple (Down→Up) → Row=${row}, Col=${col}, Port=${index}`);
+            return index;
+        }
+
+        else {
+            alert("Invalid direction value.");
+            return "";
+        }
+    }
+
+    // --- CASE 2: module-aware (horizontal modules) ---
+    const colsPerModule = numCols / totalModules;
+    const portsPerModule = numRows * colsPerModule;
+    const moduleIndex = Math.ceil(col / colsPerModule);
+    const localCol = col - (moduleIndex - 1) * colsPerModule;
+
+    console.log(`[DEBUG] Row=${row}, Col=${col}, Module=${moduleIndex}, LocalCol=${localCol}`);
+
+    let portInModule;
+
+    if (direction === "uptodown" || direction === "downtoup") {
+        portInModule = (row - 1) * colsPerModule + localCol;
+    }
+    /* else if (direction === "downtoup") {
+         const reversedRow = numRows - row + 1;
+         portInModule = (reversedRow - 1) * colsPerModule + localCol;
+     } */
+    else {
+        alert("Invalid direction value.");
+        return "";
+    }
+
+    const index = (moduleIndex - 1) * portsPerModule + portInModule;
+    return index;
 }
