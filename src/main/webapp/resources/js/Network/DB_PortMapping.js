@@ -212,7 +212,7 @@ function getColorByNumber(num) {
         "12": { color: "aqua", text: "black" }
     };
 
-    return numberMap[num] || { color: "white", text: "black" };
+    return numberMap[num] || { color: "", text: "" };
 }
 
 function colorOptions(selectedColor) {
