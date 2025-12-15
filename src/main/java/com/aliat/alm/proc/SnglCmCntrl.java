@@ -475,10 +475,11 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
+											.setParameter("fpStatus", "Connected")
+											.setParameter("fpEquipment", equipment)
 											.setParameter("dbPortID", matchedDbPort[0].toString()).executeUpdate();
 								} else {
-									equipment = "DB";
+									equipment = "DistBoard";
 									str = ", FAR_NEAR_KIT_SERIAL_NUM = :farNearKitSerialNum, FAR_NEAR_MODULE = :farNearModule, "
 											+ "FAR_NEAR_PORT_NUM = :farNearPortNum where DB_PORT_ID = :dbPortID";
 									session.createNativeQuery(str).setParameter("portIndex", portIndex)
@@ -486,7 +487,8 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
+											.setParameter("fpStatus", "Connected")
+											.setParameter("fpEquipment", equipment)
 											.setParameter("farNearKitSerialNum", matchedPatchPort.get("eKitId"))
 											.setParameter("farNearModule", matchedPatchPort.get("eModule"))
 											.setParameter("farNearPortNum", matchedPatchPort.get("ePort"))
@@ -497,7 +499,7 @@ public class SnglCmCntrl {
 								session.createNativeQuery(str).setParameter("portIndex", portIndex)
 										.setParameter("rowNum", rowModuleNum).setParameter("colNum", colModuleNum)
 										.setParameter("nearModule", panelModule[2]).setParameter("nearPortNum", i + 1)
-										.setParameter("fpStatus", "InActive")
+										.setParameter("fpStatus", "Disconnected")
 										.setParameter("dbPortID", matchedDbPort[0].toString()).executeUpdate();
 							}
 						} else {
@@ -524,10 +526,11 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
-											.setParameter("DB_PORT_ID", dbPortID).executeUpdate();
+											.setParameter("fpStatus", "Connected")
+											.setParameter("fpEquipment", equipment).setParameter("DB_PORT_ID", dbPortID)
+											.executeUpdate();
 								} else { // Case new port and has patch of type that is connected to another DB
-									equipment = "DB";
+									equipment = "DistBoard";
 									str = str + ", FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM)"
 											+ " values (:dbPortID, :dbID, :portIndex, :rowNum, :colNum, :nearModule, :nearPortNum, "
 											+ ":fpStatus, :nearPatchType, :fpEquipment, :farNearKitSerialNum, :farNearModule, :farNearPortNum)";
@@ -539,7 +542,8 @@ public class SnglCmCntrl {
 											.setParameter("nearModule", panelModule[2])
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
-											.setParameter("fpStatus", "Active").setParameter("fpEquipment", equipment)
+											.setParameter("fpStatus", "Connected")
+											.setParameter("fpEquipment", equipment)
 											.setParameter("farNearKitSerialNum", matchedPatchPort.get("eKitId"))
 											.setParameter("farNearModule", matchedPatchPort.get("eModule"))
 											.setParameter("farNearPortNum", matchedPatchPort.get("ePort"))
@@ -552,7 +556,7 @@ public class SnglCmCntrl {
 										.setParameter("dbID", panel_Info[0].toString())
 										.setParameter("portIndex", portIndex).setParameter("rowNum", rowModuleNum)
 										.setParameter("colNum", colModuleNum).setParameter("nearModule", panelModule[2])
-										.setParameter("nearPortNum", i + 1).setParameter("fpStatus", "InActive")
+										.setParameter("nearPortNum", i + 1).setParameter("fpStatus", "Disconnected")
 										.executeUpdate();
 							}
 						}
