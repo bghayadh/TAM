@@ -22,6 +22,7 @@ public class CommScopeScan implements Job, ExecutableOperation {
 
 	private List<Object[]> cntrls_login = new ArrayList<Object[]>();
 	private Map<String, Object> cntrl_info = new LinkedHashMap<>();
+	private String str = "";
 	private static ObjectMapper mapper = new ObjectMapper();
 
 	private static final Logger logger = LoggerFactory.getLogger(CommScopeScan.class);
@@ -54,6 +55,13 @@ public class CommScopeScan implements Job, ExecutableOperation {
 					snglCmCntrl.login((String) cntrl_login[0], (String) cntrl_login[1], (String) cntrl_login[2],
 							(String) cntrl_login[3], 900, (String) cntrl_login[4], session);
 				}
+				session.flush();
+				str = "update distribution_board_mapping a set a.fp_equipment_type = 'Distribution Board', a.fp_equipment_id = "
+					+"(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num), "
+					+"a.fp_equipment_name = (select db_name from distribution_board where db_id = "
+					+ "(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num))";
+				
+				session.createNativeQuery(str).executeUpdate();
 
 				// This is for manual or dynamic execution
 				String processName = (String) params[0];
