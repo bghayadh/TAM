@@ -10033,22 +10033,66 @@ public class PhysicalLayerController {
 	            // SAVE
 	            session.saveOrUpdate(distributionBoardMapping);
 	            session.flush();
-	            tx.commit();
+	            
+	            
+		         // Execute native query to get NUM_ROWS and NUM_COLUMNS
+					Object[] result = (Object[]) session.createNativeQuery(
+					        "SELECT DISTINCT B.NUM_ROWS, B.NUM_COLUMNS, B.DB_NAME, B.CONTROLLER_ID, B.CONTROLLER_NAME, B.ROW_PER_MODULE, B.ROW_COUNTING, B.TOTAL_NUM_MODULE FROM DISTRIBUTION_BOARD B "
+					        + "WHERE B.DB_ID = :dbId"
+					    )
+					    .setParameter("dbId", dbId)
+					    .getSingleResult();
 
-	            rtn.put("done", "done");
+					// Cast to BigDecimal
+					BigDecimal numRows = (BigDecimal) result[0];
+					BigDecimal numColumns = (BigDecimal) result[1];
+					String dbName= (String) result[2];
+					String controllerID= (String) result[3];
+					String controllerName= (String) result[4];
+					BigDecimal rowPerModule= (BigDecimal) result[5];
+					String rowCounting= (String) result[6];
+					BigDecimal totalNumModule= (BigDecimal) result[7];
+					
+				System.out.println(dbName);
+				  query = session.createNativeQuery(
+		                    "SELECT ROW_COL_INDEX, FP_STATUS FROM DISTRIBUTION_BOARD_MAPPING WHERE DB_ID = :dbId   ORDER BY ROW_COL_INDEX");
+		            query.setParameter("dbId", dbId);
+		  
+		            List<Object[]> statusResult = query.getResultList();
+		           
+		            rtn.put("statusResult", statusResult);
+		            
+					rtn.put("numRows", numRows);
+					rtn.put("numColumns", numColumns);
+					
+					rtn.put("dbId", dbId);
+					rtn.put("dbName", dbName);
+					
+					rtn.put("controllerID", controllerID);
+					rtn.put("controllerName", controllerName);
+					
+					rtn.put("rowPerModule", rowPerModule);
+					rtn.put("rowCounting", rowCounting);
 
-	        } catch (Exception e) {
-	            tx.rollback();
-	            rtn.put("error", e.getMessage());
-	        } finally {
-	            if (session != null && session.isOpen()) {
-	                session.close();
-	            }
-	        }
-	    }
+					rtn.put("totalNumModule", totalNumModule);
+					
+				
+		            tx.commit();
 
-	    return rtn;
-	}
+		            rtn.put("done", "done");
+
+		        } catch (Exception e) {
+		            tx.rollback();
+		            rtn.put("error", e.getMessage());
+		        } finally {
+		            if (session != null && session.isOpen()) {
+		                session.close();
+		            }
+		        }
+		    }
+
+		    return rtn;
+		}
 
 
 	@SuppressWarnings("unchecked")
