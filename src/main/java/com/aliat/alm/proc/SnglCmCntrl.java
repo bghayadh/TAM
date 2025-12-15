@@ -386,16 +386,18 @@ public class SnglCmCntrl {
 			str = "SELECT DB_ID, NUM_ROWS, NUM_COLUMNS, MAX_CAPACITY FROM DISTRIBUTION_BOARD WHERE CONTROLLER_ID = '"
 					+ ID + "'";
 			panelsInfo = session.createNativeQuery(str).list();
-			rtn = commscopeService.patchesAPI(token, ipAddress, ID);
+			System.out.println("ID is " +ID);
+			str = " select serial_numb from controller where controller_id ='" + ID + "'"; 
+			rtn = commscopeService.patchesAPI(token, ipAddress, session.createNativeQuery(str).uniqueResult().toString());
 			if (rtn.containsKey("responseBody")
 					&& !StringUtils.equalsIgnoreCase(rtn.get("status").toString(), "Failed")) {
+				System.out.println("Passing patchesAPI");
 				rtnBody = (Map<String, Object>) rtn.get("responseBody");
 				if (rtnBody.containsKey("patches")) {
 					patches = (List<Map<String, Object>>) rtnBody.get("patches");
 					// Build patch lookup map
 
 					for (Map<String, Object> p : patches) {
-
 						// Start side:
 						String sm = p.get("sModule") != null ? p.get("sModule").toString() : "null";
 						String sp = p.get("sPort") != null ? p.get("sPort").toString() : null;
@@ -407,6 +409,8 @@ public class SnglCmCntrl {
 					}
 				}
 			}
+			
+			System.out.println("patchMap is " +mapper.writeValueAsString(patchMap));
 
 			for (Object[] panel_Info : panelsInfo) {
 				portIndex = 0;
@@ -438,6 +442,7 @@ public class SnglCmCntrl {
 					String key = dbPort[5] + "-" + dbPort[6];
 					portsMap.put(key, dbPort);
 				}
+				System.out.println("portsMap is " +mapper.writeValueAsString(portsMap));
 				int j = 0;
 				for (Object[] panelModule : panelModules) {
 					int modulePortCount = Integer.parseInt(panelModule[4].toString());
@@ -452,11 +457,17 @@ public class SnglCmCntrl {
 							rowModuleNum = 3;
 							colModuleNum = (i + 1) - 2 * colPerModule + (j * colPerModule);
 						}
-
+						System.out.println("panelModule[2] is: " +panelModule[2]);
 						String key = panelModule[2] + "-" + (i + 1);
+						System.out.println("key is " + key);
+						System.out.println("portsMap.get(key) is " +mapper.writeValueAsString(portsMap.get(key)));
 						Object[] matchedDbPort = portsMap.get(key);
+						System.out.println("matchedDbPor is " +matchedDbPort);						
 						key = panelModule[3] + "-" + key;
+						System.out.println("panelModule[3] is " +panelModule[3] + " and new key is " +key);
+						System.out.println("patchMap.get(key) is " +mapper.writeValueAsString(patchMap.get(key)));
 						Map<String, Object> matchedPatchPort = patchMap.get(key);
+						System.out.println("matchedPatchPort is " +mapper.writeValueAsString(matchedPatchPort));
 						portIndex = (i + 1) + (Integer.parseInt(panelModule[0].toString()) - 1) * modulePortCount;
 						str = "update distribution_board_mapping set ROW_COL_INDEX = :portIndex, ROW_NUMBER = :rowNum, COLUMN_NUMBER = :colNum,"
 								+ " NEAR_MODULE = :nearModule, NEAR_PORT_NUM = :nearPortNum, fp_status = :fpStatus";
@@ -466,7 +477,7 @@ public class SnglCmCntrl {
 						if (matchedDbPort != null) {
 							// Found matching port and will use matchedPatchPort
 							if (matchedPatchPort != null) {
-								str = str + ", near_patch_type =: nearPatchType, fp_equipment = :fpEquipment";
+								str = str + ", near_patch_type = :nearPatchType, fp_equipment = :fpEquipment";
 								if (matchedPatchPort.containsKey("eEquipment")) {
 									equipment = "Custom";
 									str = str + " where DB_PORT_ID = :dbPortID";
@@ -480,7 +491,7 @@ public class SnglCmCntrl {
 											.setParameter("dbPortID", matchedDbPort[0].toString()).executeUpdate();
 								} else {
 									equipment = "DistBoard";
-									str = ", FAR_NEAR_KIT_SERIAL_NUM = :farNearKitSerialNum, FAR_NEAR_MODULE = :farNearModule, "
+									str = str + ", FAR_NEAR_KIT_SERIAL_NUM = :farNearKitSerialNum, FAR_NEAR_MODULE = :farNearModule, "
 											+ "FAR_NEAR_PORT_NUM = :farNearPortNum where DB_PORT_ID = :dbPortID";
 									session.createNativeQuery(str).setParameter("portIndex", portIndex)
 											.setParameter("rowNum", rowModuleNum).setParameter("colNum", colModuleNum)

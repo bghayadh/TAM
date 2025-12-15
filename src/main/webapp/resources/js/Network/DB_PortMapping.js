@@ -13,13 +13,17 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
         let markup = "";
 
         for (i = 0;i < DistBoardMappingPts.length;i++) {
-
             const fpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][5]);
-            const fpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][5], DistBoardMappingPts[i][10]);
+			let port_Location = "Select an Option";
+			if (DistBoardMappingPts[i][5] != null && DistBoardMappingPts[i][5] != 'null' && DistBoardMappingPts[i][5] != "")
+				port_Location = DistBoardMappingPts[i][5];							
+			const fpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][10]);			
 
             // BP
             const bpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][27]);
-            const bpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][27], DistBoardMappingPts[i][32]);
+			if (DistBoardMappingPts[i][27] != null && DistBoardMappingPts[i][27] != 'null' && DistBoardMappingPts[i][27] != "")
+				port_Location = DistBoardMappingPts[i][27];							
+			const bpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][32]);
 
             const fpLocType = DistBoardMappingPts[i][5];
             const fpLocationReadonly =
@@ -1453,15 +1457,13 @@ function strandTubeSetColor(strandTubeNumber, ID) {
     }
 }
 
-
-
 const LOCATION_TYPES = ["Select an Option", "Customer", "Site", "Manhole", "Handhole"];
 const EQUIPMENT_MAP = {
     "Customer": ["Custom", "Node", "DistBoard"],
     "Site": ["Node", "DistBoard"],
     "Manhole": ["Node", "DistBoard"],
     "Handhole": ["Node", "DistBoard"],
-    "Select an Option": []   // fallback
+    "Select an Option": ["Custom", "Node", "DistBoard"]   // fallback
 };
 
 function locationTypeChange() {
