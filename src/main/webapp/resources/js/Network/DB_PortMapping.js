@@ -57,26 +57,32 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             window["DB_" + DistBoardMappingPts[i][3]] = [];
             window["DB_" + DistBoardMappingPts[i][3]] = DistBoardMappingPts[i];
 
-            var f_statusOption = "", b_statusOption = "";
-            if (DistBoardMappingPts[i][4] == "Active") {
-                f_statusOption = "<option value='Active' selected >Active</option><option value='InActive'>Inactive</option>";
-            }
-            else if (DistBoardMappingPts[i][4] == "InActive") {
-                f_statusOption = "<option value='InActive' selected >Inactive</option><option value='Active'>Active</option>";
-            }
-            else {
-                f_statusOption = "<option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option>";
-            }
+			var f_statusOption = "", b_statusOption = "";
+			if (DistBoardMappingPts[i][4] == "Connected") {
+			    f_statusOption = "<option value='Connected' selected >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+			}
+			else if (DistBoardMappingPts[i][4] == "Disconnected") {
+			    f_statusOption = "<option value='Disconnected' selected >Disconnected</option><option value='Connected'>Connected</option><option value='Incomplete'>Incomplete</option>";
+			}
+			else if (DistBoardMappingPts[i][4] == "Incomplete") {
+			                f_statusOption = "<option value='Incomplete' selected >Incomplete</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option>";
+			            }
+			else {
+			    f_statusOption = "<option value='None' selected>Select an Option</option><option value='Connected' >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+			}
 
-            if (DistBoardMappingPts[i][14] == "Active") {
-                b_statusOption = "<option value='Active' selected >Active</option><option value='InActive'>Inactive</option>";
-            }
-            else if (DistBoardMappingPts[i][14] == "InActive") {
-                b_statusOption = "<option value='InActive' selected >Inactive</option><option value='Active'>Active</option>";
-            }
-            else {
-                b_statusOption = "<option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option>";
-            }
+			if (DistBoardMappingPts[i][14] == "Connected") {
+			             b_statusOption = "<option value='Connected' selected >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+			         }
+			         else if (DistBoardMappingPts[i][14] == "Disconnected") {
+			             b_statusOption = "<option value='Disconnected' selected >Disconnected</option><option value='Connected'>Connected</option><option value='Incomplete'>Incomplete</option>";
+			         }
+					else if (DistBoardMappingPts[i][14] == "Incomplete") {
+					                b_statusOption = "<option value='Incomplete' selected >Incomplete</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option>";
+					            }
+			         else {
+			             b_statusOption = "<option value='None' >Select an Option</option><option value='Connected' >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+			         }
             let backKitVal = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
             let backPortVal = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
 
@@ -1829,8 +1835,8 @@ $(document).ready(function() {
                 + "<td name='ColIndex'><input id='colIndex" + dBBoqIndex + "' name='colIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
                 + "<td name='patchType'><input name='patchType'  class='form-control text-input' type='text' style='width:240px;position:relative;'/></td>"
                 + "<td style='background-color:#00757C' width='-10px'></td>"
-                + "<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status" + dBBoqIndex + "'><option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option></select></td>"
-                + "<td name='FP_LocationType'>"
+				+"<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status"+dBBoqIndex+"'><option value='None' selected>Select an Option</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option></select></td>"
+			    + "<td name='FP_LocationType'>"
                 + "<select class='form-control' name='FP_locationType' id='FP_LocationType" + dBBoqIndex + "'>"
                 + "<option value='None' selected>Select an Option</option>"
                 + "<option value='Customer'>Customer</option>"
@@ -1872,8 +1878,8 @@ $(document).ready(function() {
                 + "<td name='FP_FiberID'><input name='FP_fiberID' id='FP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='FP_FiberName'><input name='FP_fiberName' id='FP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td style='background-color:#00757C' width='-10px'></td>"
-                + "<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status" + dBBoqIndex + "'><option value='None' selected>Select an Option</option><option value='Active'>Active</option><option value='InActive'>Inactive</option></select></td>"
-                + "<td name='BP_LocationType'>"
+				+"<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status"+dBBoqIndex+"'><option value='None' selected>Select an Option</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option></select></td>"
+			    + "<td name='BP_LocationType'>"
                 + "<select class='form-control' name='BP_locationType' id='BP_LocationType" + dBBoqIndex + "'>"
                 + "<option value='None' selected>Select an Option</option>"
                 + "<option value='Customer'>Customer</option>"

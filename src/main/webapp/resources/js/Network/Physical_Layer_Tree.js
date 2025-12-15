@@ -8017,8 +8017,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         container.innerHTML = "";
                         console.log(data);
 
-                        var numRowsFromDb = Number(data.numRows || 1);
-                        var numColumnsFromDb = Number(data.numColumns || 1);
+                        var numRowsFromDb = Number(data.numRows || 0);
+                        var numColumnsFromDb = Number(data.numColumns ||0);
                         drawPanelDiagram(numRowsFromDb, numColumnsFromDb, data.controllerID, data.controllerName, data.dbId,
                             data.dbName, data.rowPerModule, data.rowCounting, data.totalNumModule, data.statusResult);
 
@@ -8035,499 +8035,511 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
         /////////////*********************	PORTS Mapping  ***********************///////////////
         //-------------------------------------------------------------------------------------------------//	         
-        {
-            'icon': 'braille', 'name': 'View Board Mapping', action: () => {
-
-
-                $.ajax({
-                    type: "GET",
-                    contentType: "application/json; charset=utf-8",
-                    url: getContext() + '/findDistBoardMappingDetails',
-                    async: false,
-                    data: {
-                        "selectedDistBoardContext": selectedDistBoardContext
-                    },
-                    dataType: "json",
-
-                    success: function(data) {
-
-                        var dpWidth = $("#dB_MappingModal").width();
-
-                        $("#dB_tabContentPortsMap").empty();
-                        $("#backStatus").empty();
-                        $("#backPortStrandID").empty();
-                        $("#backPortStrandName").empty();
-                        $("#dB_MappingModal").modal('show');
-                        $("#dB_TitleId").text("Internal Board Mapping: " + selectedDistBoardName);
-
-                        var numCols = 0;
-                        var numRows = 0;
-                        if (data.DistBoardMappingPts) {
-
-
-                            if (typeof data.DistBoardMappingPts[0][6] !== 'undefined') {
-                                var numCols = data.DistBoardMappingPts[0][6];
-                            }
-
-                            if (typeof data.DistBoardMappingPts[0][5] !== 'undefined') {
-                                var numRows = data.DistBoardMappingPts[0][5];
-                            }
-
-                            var minWidth = "500";  // Minimum width for SVG
-                            var width = (numCols + 2.2) * 103.5;  // Width calculation based on columns
-                            var height = (numRows + 2) * 100;     // Height calculation based on rows
-
-                            // Calculate total width
-                            var totWidth = width;
-
-                            // Apply constraint to width: ensure it does not exceed 900px
-
-
-                            // Further reduce total width if it exceeds 1366px
-                            if (totWidth > 1366.1999999999998) {
-                                totWidth -= 110;
-                            }
-
-                            // Set the modal content width to the calculated total width
-                            $("#contentMappingModal").width(totWidth);
-
-                            // Update dpWidth after setting the modal content width
-                            dpWidth = $("#contentMappingModal").width();
-
-                            // Function to create SVG elements
-                            function makeSVG(tag, attrs, val) {
-                                var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
-                                for (var k in attrs) {
-                                    el.setAttribute(k, attrs[k]);
-                                }
-                                $(el).val(val);
-                                return el;
-                            }
-
-                            $("#dB_tabContentPortsMap").height(height);
-                            // Append the SVG with the width and height calculated
-                            var svg = "<svg id='mysvg' width='" + totWidth + "px' height='" + height + "px' min-width='" + minWidth + "px' '></svg>";
-                            $("#dB_tabContentPortsMap").append(svg);
-
-                            //////*********** DRAWIN BOARDS BORDERS *************///////
-
-                            // TOP border (same)
-                            // TOP border
-                            line = makeSVG('line', {
-                                x1: 100, y1: 100,
-                                x2: (numCols * 100) + 100,
-                                y2: 100,
-                                stroke: 'red',
-                                'stroke-width': 1
-                            });
-                            document.getElementById('mysvg').appendChild(line);
-
-                            // LEFT border
-                            line = makeSVG('line', {
-                                x1: 100, y1: 100,
-                                x2: 100,
-                                y2: (numRows * 100) + 100,
-                                stroke: 'red',
-                                'stroke-width': 1
-                            });
-                            document.getElementById('mysvg').appendChild(line);
-
-                            // RIGHT border
-                            line = makeSVG('line', {
-                                x1: (numCols * 100) + 100,
-                                y1: 100,
-                                x2: (numCols * 100) + 100,
-                                y2: (numRows * 100) + 100,
-                                stroke: 'red',
-                                'stroke-width': 1
-                            });
-                            document.getElementById('mysvg').appendChild(line);
-
-                            // BOTTOM border — ✔ PERFECT MATCH
-                            line = makeSVG('line', {
-                                x1: 100,
-                                y1: (numRows * 100) + 100,
-                                x2: (numCols * 100) + 100,
-                                y2: (numRows * 100) + 100,
-                                stroke: 'red',
-                                'stroke-width': 1
-                            });
-                            document.getElementById('mysvg').appendChild(line);
-                            //////*********** DRAWIN COLS DAShES *************///////
-
-                            for (i = 1;i <= numCols;i++) {
-
-                                var svgNS = "http://www.w3.org/2000/svg";
-                                var newText = document.createElementNS(svgNS, "text");
-                                newText.setAttributeNS(null, "x", (i * 100) + 40);
-                                newText.setAttributeNS(null, "y", 85);
-                                newText.setAttributeNS(null, "font-size", "10");
-                                newText.setAttributeNS(null, "stroke", "#00757C");
-                                newText.setAttributeNS(null, "class", "text");
-                                newText.setAttributeNS(null, "id", "text" + i);
-
-                                var textNode = document.createTextNode(i);
-                                newText.appendChild(textNode);
-                                document.getElementById("mysvg").appendChild(newText);
-
-
-                            }
-
-                            // draw linear gradient
-                            svgNS = "http://www.w3.org/2000/svg";
-
-                            var defs = document.createElementNS(svgNS, "defs");
-
-                            var marker = document.createElementNS(svgNS, "marker");
-                            marker.setAttributeNS(null, "id", "arrowhead");
-                            marker.setAttributeNS(null, "markerWidth", "10");
-                            marker.setAttributeNS(null, "markerHeight", "7");
-                            marker.setAttributeNS(null, "refX", "0");
-                            marker.setAttributeNS(null, "refY", "3.5");
-                            marker.setAttributeNS(null, "stroke", "#000");
-                            marker.setAttributeNS(null, "fill", "#00757C");
-
-                            marker.setAttributeNS(null, "orient", "auto");
-
-                            var polygon = document.createElementNS(svgNS, "polygon");
-                            polygon.setAttributeNS(null, "points", "0 0, 5 3.5, 0 7");
-
-                            marker.appendChild(polygon);
-
-                            defs.appendChild(marker);
-
-                            document.getElementById("mysvg").appendChild(defs);
-                            //////////////////////////////////////////
-                            newText = document.createElementNS(svgNS, "text");
-                            newText.setAttributeNS(null, "x", 135);
-                            newText.setAttributeNS(null, "y", 60);
-                            newText.setAttributeNS(null, "font-size", "15");
-                            newText.setAttributeNS(null, "stroke", "#00757C");
-                            newText.setAttributeNS(null, "class", "text");
-                            newText.setAttributeNS(null, "id", "text" + i);
-
-
-                            textNode = document.createTextNode("Columns");
-                            newText.appendChild(textNode);
-                            document.getElementById("mysvg").appendChild(newText);
-                            ///////////////////////////////////////////////
-                            var line = document.createElementNS(svgNS, "line");
-
-                            line.setAttributeNS(null, "x1", "60");
-                            line.setAttributeNS(null, "y1", "55");
-                            line.setAttributeNS(null, "x2", "110");
-                            line.setAttributeNS(null, "y2", "55");
-                            line.setAttributeNS(null, "stroke", "#000");
-                            line.setAttributeNS(null, "fill", "#00757C");
-                            line.setAttributeNS(null, "stroke-width", "2");
-                            line.setAttributeNS(null, "marker-end", "url(#arrowhead)");
-                            line.setAttributeNS(null, "marker-start", "url(#arrowhead)");
-                            document.getElementById("mysvg").appendChild(line);
-
-
-
-                            var defs = document.createElementNS(svgNS, "defs");
-
-                            var marker = document.createElementNS(svgNS, "marker");
-                            marker.setAttributeNS(null, "id", "arrowhead1");
-                            marker.setAttributeNS(null, "markerWidth", "10");
-                            marker.setAttributeNS(null, "markerHeight", "7");
-                            marker.setAttributeNS(null, "refX", "0");
-                            marker.setAttributeNS(null, "refY", "3.5");
-                            marker.setAttributeNS(null, "stroke", "#000");
-                            marker.setAttributeNS(null, "fill", "#00757C");
-
-                            marker.setAttributeNS(null, "orient", "auto");
-
-                            var polygon = document.createElementNS(svgNS, "polygon");
-                            polygon.setAttributeNS(null, "points", "0 0, 5 3.5, 0 7");
-
-                            marker.appendChild(polygon);
-
-                            defs.appendChild(marker);
-
-                            document.getElementById("mysvg").appendChild(defs);
-
-                            var line = document.createElementNS(svgNS, "line");
-
-                            line.setAttributeNS(null, "x1", "50");
-                            line.setAttributeNS(null, "y1", "60");
-                            line.setAttributeNS(null, "x2", "50");
-                            line.setAttributeNS(null, "y2", "110");
-                            line.setAttributeNS(null, "stroke", "#000");
-                            line.setAttributeNS(null, "fill", "#00757C");
-                            line.setAttributeNS(null, "stroke-width", "2");
-                            line.setAttributeNS(null, "marker-end", "url(#arrowhead1)");
-                            line.setAttributeNS(null, "marker-start", "url(#arrowhead1)");
-                            document.getElementById("mysvg").appendChild(line);
-
-                            //////////////////////////////////////////
-                            newText = document.createElementNS(svgNS, "text");
-                            newText.setAttributeNS(null, "x", 30);
-                            newText.setAttributeNS(null, "y", 140);
-                            newText.setAttributeNS(null, "font-size", "15");
-                            newText.setAttributeNS(null, "stroke", "#00757C");
-
-
-                            textNode = document.createTextNode("Rows");
-                            newText.appendChild(textNode);
-                            document.getElementById("mysvg").appendChild(newText);
-                            ///////////////////////////////////////////////
-
-
-                            //////////////////////////////////////////
-                            newText = document.createElementNS(svgNS, "text");
-                            newText.setAttributeNS(null, "x", 20);
-                            newText.setAttributeNS(null, "y", 30);
-                            newText.setAttributeNS(null, "font-size", "15");
-                            newText.setAttributeNS(null, "stroke", "#00757C");
-
-
-                            textNode = document.createTextNode("Port Key: Rows-Columns");
-                            newText.appendChild(textNode);
-                            document.getElementById("mysvg").appendChild(newText);
-                            ///////////////////////////////////////////////
-
-                            //////////////////////////////////////////
-                            newText = document.createElementNS(svgNS, "text");
-                            newText.setAttributeNS(null, "x", "215");
-                            newText.setAttributeNS(null, "y", "30");
-                            newText.setAttributeNS(null, "font-size", "15");
-                            newText.setAttributeNS(null, "stroke", "#00757C");
-
-
-                            textNode = document.createTextNode('B: Back  /  F: Front');
-                            newText.appendChild(textNode);
-                            document.getElementById("mysvg").appendChild(newText);
-                            ///////////////////////////////////////////////
-
-                            ////////////////////////////////////////////////
-
-                            var newImg = document.createElementNS(svgNS, "image");
-                            newImg.setAttributeNS(null, "x", "355");
-                            newImg.setAttributeNS(null, "y", "15");
-                            newImg.setAttributeNS(null, "width", "20");
-                            newImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getContext() + "/resources/NetworkImages/green.png");
-                            document.getElementById("mysvg").appendChild(newImg);
-
-                            newText = document.createElementNS(svgNS, "text");
-                            newText.setAttributeNS(null, "x", "379");
-                            newText.setAttributeNS(null, "y", "30");
-                            newText.setAttributeNS(null, "font-size", "15");
-                            newText.setAttributeNS(null, "stroke", "#00757C");
-
-                            // ===== add number text BELOW back port =====
-
-                            textNode = document.createTextNode("Connected");
-                            newText.appendChild(textNode);
-                            document.getElementById("mysvg").appendChild(newText);
-
-                            ////////////////////////////////////////////////
-
-                            newImg = document.createElementNS(svgNS, "image");
-                            newImg.setAttributeNS(null, "x", "475");
-                            newImg.setAttributeNS(null, "y", "15");
-                            newImg.setAttributeNS(null, "width", "20");
-                            newImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getContext() + "/resources/NetworkImages/red.png");
-                            document.getElementById("mysvg").appendChild(newImg);
-                            ewText = document.createElementNS(svgNS, "text");
-                            newText.setAttributeNS(null, "x", "499");
-                            newText.setAttributeNS(null, "y", "30");
-                            newText.setAttributeNS(null, "font-size", "15");
-                            newText.setAttributeNS(null, "stroke", "#00757C");
-
-
-                            textNode = document.createTextNode("Disconnected");
-                            newText.appendChild(textNode);
-                            document.getElementById("mysvg").appendChild(newText);
-
-                            //////*********** DRAWIN ROWS DAShES *************///////
-
-                            if (data.panelInfo[3] === "Up To Down") {
-                                // Normal order
-                                for (let j = 1;j <= numRows;j++) {
-                                    svgNS = "http://www.w3.org/2000/svg";
-                                    newText = document.createElementNS(svgNS, "text");
-                                    newText.setAttribute("x", 80);
-                                    newText.setAttribute("y", (j * 100) + 40);
-                                    newText.setAttribute("font-size", "10");
-                                    newText.setAttribute("stroke", "#00757C");
-                                    newText.appendChild(document.createTextNode(j));
-                                    document.getElementById("mysvg").appendChild(newText);
-                                }
-
-                            } else {
-                                // Reverse labels but keep positions from top to bottom
-                                for (let pos = 1;pos <= numRows;pos++) {
-                                    let label = numRows - pos + 1;   // reversed numbering
-
-                                    svgNS = "http://www.w3.org/2000/svg";
-                                    newText = document.createElementNS(svgNS, "text");
-                                    newText.setAttribute("x", 80);
-                                    newText.setAttribute("y", (pos * 100) + 40);  // position moves normally
-                                    newText.setAttribute("font-size", "10");
-                                    newText.setAttribute("stroke", "#00757C");
-                                    newText.appendChild(document.createTextNode(label));
-                                    document.getElementById("mysvg").appendChild(newText);
-                                }
-                            }
-
-                            //////*********** DRAWIN PORTS CONNECTIONS RELATIVE TO EACh ROW AND COLUMN *************///////
-
-                            for (i = 0;i < data.DistBoardMappingPts.length;i++) {
-
-                                console.log(data.panelInfo[2]);
-                                console.log(data.panelInfo[3]);
-
-                                if (data.panelInfo[3] === "Down To Up") {
-
-                                    console.log("old");
-                                    console.log(data.DistBoardMappingPts[i][0]);
-                                    data.DistBoardMappingPts[i][0] = (data.panelInfo[2] + 1) - data.DistBoardMappingPts[i][0];
-
-                                }
-
-                                window["DB_" + data.DistBoardMappingPts[i][4]] = [];
-                                window["DB_" + data.DistBoardMappingPts[i][4]] = data.DistBoardMappingPts[i];
-
-                                svgNS = "http://www.w3.org/2000/svg";
-                                var newImg = document.createElementNS(svgNS, "image");
-                                //newImg.setAttributeNS(null,"x",(data.DistBoardMappingPts[i][1]*100)+60);     
-                                //newImg.setAttributeNS(null,"y",(data.DistBoardMappingPts[i][0]*100)+70);  
-
-                                newImg.setAttributeNS(null, "x", (data.DistBoardMappingPts[i][1] * 100) + 30);
-                                newImg.setAttributeNS(null, "y", (data.DistBoardMappingPts[i][0] * 100) + 20);
-                                newImg.setAttributeNS(null, "width", "40");
-
-                                newImg.setAttributeNS(null, "class", "backImage");
-                                newImg.setAttributeNS(null, "id", "B-" + data.DistBoardMappingPts[i][4]);
-
-                                if (data.DistBoardMappingPts[i][7] == "Active") {
-                                    newImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getContext() + "/resources/NetworkImages/green_letter-b.png");
-                                    console.log("b not  nullhhhhhhhhhh");
-
-                                }
-
-                                else {
-                                    newImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getContext() + "/resources/NetworkImages/B.png");
-
-                                }
-                                document.getElementById("mysvg").appendChild(newImg);
-                                if (data.DistBoardMappingPts[i]) {
-                                    // Draw number text below the port (from column 40)
-                                    var numText = document.createElementNS(svgNS, "text");
-                                    numText.setAttributeNS(null, "x", (data.DistBoardMappingPts[i][1] * 100) + 64);
-                                    numText.setAttributeNS(null, "y", (data.DistBoardMappingPts[i][0] * 100) + 75);
-                                    numText.setAttributeNS(null, "font-size", "10");
-                                    numText.setAttributeNS(null, "fill", "#00757C");
-                                    var numNode = document.createTextNode(data.DistBoardMappingPts[i][20] || '');
-
-                                    numText.appendChild(numNode);
-
-                                    document.getElementById("mysvg").appendChild(numText);
-                                }
-
-                                var newImg = document.createElementNS(svgNS, "image");
-                                //newImg.setAttributeNS(null,"x",(data.DistBoardMappingPts[i][1]*100)+100);     
-                                //newImg.setAttributeNS(null,"y",(data.DistBoardMappingPts[i][0]*100)+70);  
-
-                                newImg.setAttributeNS(null, "x", (data.DistBoardMappingPts[i][1] * 100) + 70);
-                                newImg.setAttributeNS(null, "y", (data.DistBoardMappingPts[i][0] * 100) + 20);
-                                newImg.setAttributeNS(null, "width", "40");
-                                newImg.setAttributeNS(null, "class", "frontImage");
-                                newImg.setAttributeNS(null, "id", "F-" + data.DistBoardMappingPts[i][4]);
-
-                                if (data.DistBoardMappingPts[i][13] == "Active") {
-
-                                    newImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getContext() + "/resources/NetworkImages/green_letter-f.png");
-
-                                }
-                                else {
-                                    newImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', getContext() + "/resources/NetworkImages/F.png");
-
-                                }
-                                document.getElementById("mysvg").appendChild(newImg);
-                                data.DistBoardMappingPts == null;
-
-                            }
-                            $('.backImage').click(function() {
-                                console.log("back image");
-                                var portId = $(this).attr('id').split("-");
-                                portId = portId[1];
-                                $("#backPortHeader").html("<b>Port Address: </b>" + window['DB_' + portId][0] + "-" + window['DB_' + portId][1] + "&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;" + "<b>Port Index: </b>" + window['DB_' + portId][20] + "");
-
-                                var backStatus = "N/A";
-                                if (window['DB_' + portId][7] != '' && window['DB_' + portId][7] != null && window['DB_' + portId][0] != "null") {
-                                    backStatus = window['DB_' + portId][7];
-                                }
-                                $("#backStatus").html("<b>Back Status: </b>" + backStatus);
-                                $("#backPortLocationType").html("<b>Location Type: </b>" + window['DB_' + portId][27]);
-                                $("#backPortLocationID").html("<b>Location Id: </b>" + window['DB_' + portId][28]);
-                                $("#backPortLocationName").html("<b>Location Name: </b>" + window['DB_' + portId][29]);
-                                $("#backPortEquipment").html("<b>Equipment: </b>" + window['DB_' + portId][32]);
-                                $("#backPortEquipmentType").html("<b>Equipment Type: </b>" + window['DB_' + portId][31]);
-                                $("#backPortEquipmentID").html("<b>Equipment Id: </b>" + window['DB_' + portId][33]);
-                                $("#backPortEquipmentName").html("<b>Equipment Name: </b>" + window['DB_' + portId][34]);
-                                $("#backPortStrandNb").html("<b>Strand No.: </b>" + window['DB_' + portId][38]);
-                                $("#backPortStrandID").html("<b>Strand Id: </b>" + window['DB_' + portId][8]);
-                                $("#backPortStrandName").html("<b>Strand Name: </b>" + window['DB_' + portId][3]);
-                                $("#backPortTubeNb").html("<b>Tube No.: </b>" + window['DB_' + portId][39]);
-                                $("#backPortTubeId").html("<b>Tube ID: </b>" + window['DB_' + portId][9]);
-                                $("#backPortTubeName").html("<b>Tube Name: </b>" + window['DB_' + portId][10]);
-                                $("#backPortFiberId").html("<b>Fiber Id: </b>" + window['DB_' + portId][11]);
-                                $("#backPortFiberName").html("<b>Fiber Name: </b>" + window['DB_' + portId][12]);
-
-                                $("#BackPortAssignedPortsModal").modal('show');
-
-                            });
-                            $('.frontImage').click(function() {
-                                var portId = $(this).attr('id').split("-");
-                                portId = portId[1];
-
-
-                                $("#frontPortHeader").html("<b>Port Address: </b>" + window['DB_' + portId][0] + "-" + window['DB_' + portId][1] + "&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;" + "<b>Port Index: </b>" + window['DB_' + portId][20] + "");
-
-                                var frontStatus = "N/A";
-                                if (window['DB_' + portId][7] != '' && window['DB_' + portId][7] != null && window['DB_' + portId][0] != "null") {
-                                    frontStatus = window['DB_' + portId][13];
-                                }
-                                $("#frontStatus").html("<b>front Status: </b>" + frontStatus);
-                                $("#frontPortLocationType").html("<b>Location Type: </b>" + window['DB_' + portId][14]);
-                                $("#frontPortLocationID").html("<b>Location Id: </b>" + window['DB_' + portId][15]);
-                                $("#frontPortLocationName").html("<b>Location Name: </b>" + window['DB_' + portId][16]);
-                                $("#frontPortEquipment").html("<b>Equipment: </b>" + window['DB_' + portId][2]);
-                                $("#frontPortEquipmentType").html("<b>Equipment Type: </b>" + window['DB_' + portId][17]);
-                                $("#frontPortEquipmentID").html("<b>Equipment Id: </b>" + window['DB_' + portId][18]);
-                                $("#frontPortEquipmentName").html("<b>Equipment Name: </b>" + window['DB_' + portId][19]);
-                                $("#frontPortStrandNb").html("<b>Strand No.: </b>" + window['DB_' + portId][36]);
-                                $("#frontPortStrandID").html("<b>Strand Id: </b>" + window['DB_' + portId][21]);
-                                $("#frontPortStrandName").html("<b>Strand Name: </b>" + window['DB_' + portId][22]);
-                                $("#frontPortTubeNb").html("<b>Tube No.: </b>" + window['DB_' + portId][37]);
-                                $("#frontPortTubeId").html("<b>Tube ID: </b>" + window['DB_' + portId][23]);
-                                $("#frontPortTubeName").html("<b>Tube Name: </b>" + window['DB_' + portId][24]);
-                                $("#frontPortFiberId").html("<b>Fiber Id: </b>" + window['DB_' + portId][25]);
-                                $("#frontPortFiberName").html("<b>Fiber Name: </b>" + window['DB_' + portId][26]);
-
-                                $("#frontPortAssignedPortsModal").modal('show');
-
-                            });
-
-                        }
-                        else {
-                            var text = "<p style='color: #00757C;font-weight:bold'> No data available concerning the board " + selectedDistBoardName + " !</br> Mapping will be filled after insertion of board's corresponding data fields..</p>"
-                            $("#dB_tabContentPortsMap").append(text);
-                        }
-                    },
-                    error: function(error) {
-                        console.log("The error is " + error);
-                    }
-                });
-
-
-            }
-
-        }, {
-            'icon': 'paste', 'name': 'Show BoQ', action: () => {
+       {'icon': 'braille', 'name': 'View Board Mapping', action: () => {
+		
+					
+								$.ajax({
+								  type: "GET",
+								  contentType: "application/json; charset=utf-8",
+								  url: getContext()+'/findDistBoardMappingDetails',
+								  async:false,
+								  data: {
+									  "selectedDistBoardContext":selectedDistBoardContext
+										},
+								  dataType: "json",
+							
+									success : function(data) {
+										
+										var dpWidth=$( "#dB_MappingModal" ).width();
+										
+										$("#dB_tabContentPortsMap").empty();	
+										$("#backStatus").empty();
+										$("#backPortStrandID").empty();
+										$("#backPortStrandName").empty();
+										$("#dB_MappingModal").modal('show');
+										$("#dB_TitleId").text("Internal Board Mapping: "+selectedDistBoardName);	
+										console.log(data);
+										var numCols=0;
+										var numRows=0;
+										if(data.DistBoardMappingPts){
+											
+												
+											if(typeof data.DistBoardMappingPts[0][6]!== 'undefined'){
+												var numCols=data.DistBoardMappingPts[0][6];
+											}
+											
+											if(typeof data.DistBoardMappingPts[0][5]!== 'undefined'){
+												var numRows=data.DistBoardMappingPts[0][5];
+											}
+										
+											var minWidth = "500";  // Minimum width for SVG
+											var width = (numCols + 2.2) * 103.5;  // Width calculation based on columns
+											var height = (numRows + 2) * 100;     // Height calculation based on rows
+
+											// Calculate total width
+											var totWidth = width;
+
+											// Apply constraint to width: ensure it does not exceed 900px
+											
+
+											// Further reduce total width if it exceeds 1366px
+											if (totWidth > 1366.1999999999998) {
+											    totWidth -= 110;
+											}
+
+											// Set the modal content width to the calculated total width
+											$("#contentMappingModal").width(totWidth);
+
+											// Update dpWidth after setting the modal content width
+											dpWidth = $("#contentMappingModal").width();
+
+											// Function to create SVG elements
+											function makeSVG(tag, attrs, val) {
+											    var el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+											    for (var k in attrs) {
+											        el.setAttribute(k, attrs[k]);
+											    }
+											    $(el).val(val);
+											    return el;
+											}
+											
+											$("#dB_tabContentPortsMap").height(height);
+											// Append the SVG with the width and height calculated
+											var svg = "<svg id='mysvg' width='" + totWidth + "px' height='" + height + "px' min-width='" + minWidth + "px' '></svg>";
+											$("#dB_tabContentPortsMap").append(svg);
+
+										//////*********** DRAWIN BOARDS BORDERS *************///////
+										
+										// TOP border (same)
+										// TOP border
+										line = makeSVG('line', {
+										    x1: 100, y1: 100,
+										    x2: (numCols * 100) + 100,
+										    y2: 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
+										document.getElementById('mysvg').appendChild(line);
+
+										// LEFT border
+										line = makeSVG('line', {
+										    x1: 100, y1: 100,
+										    x2: 100,
+										    y2: (numRows * 100) + 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
+										document.getElementById('mysvg').appendChild(line);
+
+										// RIGHT border
+										line = makeSVG('line', {
+										    x1: (numCols * 100) + 100,
+										    y1: 100,
+										    x2: (numCols * 100) + 100,
+										    y2: (numRows * 100) + 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
+										document.getElementById('mysvg').appendChild(line);
+
+										// BOTTOM border — ✔ PERFECT MATCH
+										line = makeSVG('line', {
+										    x1: 100,
+										    y1: (numRows * 100) + 100,
+										    x2: (numCols * 100) + 100,
+										    y2: (numRows * 100) + 100,
+										    stroke: 'red',
+										    'stroke-width': 1
+										});
+										document.getElementById('mysvg').appendChild(line);
+		//////*********** DRAWIN COLS DAShES *************///////
+		
+										for(i=1;i<=numCols;i++){
+
+											var svgNS = "http://www.w3.org/2000/svg";
+											var newText = document.createElementNS(svgNS,"text");
+											newText.setAttributeNS(null,"x",(i*100)+40);     
+											newText.setAttributeNS(null,"y",85);  
+											newText.setAttributeNS(null,"font-size","10");
+											newText.setAttributeNS(null,"stroke","#00757C");
+											newText.setAttributeNS(null,"class","text");
+											newText.setAttributeNS(null,"id","text"+i);										
+											
+											var textNode = document.createTextNode(i);
+											newText.appendChild(textNode);
+											document.getElementById("mysvg").appendChild(newText);
+										
+										
+										}
+		
+											// draw linear gradient
+											svgNS = "http://www.w3.org/2000/svg";
+		
+											var defs = document.createElementNS(svgNS, "defs");
+											
+											var marker = document.createElementNS(svgNS, "marker");
+											marker.setAttributeNS(null, "id", "arrowhead");
+											marker.setAttributeNS(null, "markerWidth", "10");
+											marker.setAttributeNS(null, "markerHeight", "7");
+											marker.setAttributeNS(null, "refX", "0");
+											marker.setAttributeNS(null, "refY", "3.5");
+											marker.setAttributeNS(null, "stroke", "#000");
+											marker.setAttributeNS(null, "fill", "#00757C");
+											
+											marker.setAttributeNS(null, "orient", "auto");
+											
+											var polygon = document.createElementNS(svgNS, "polygon");
+											polygon.setAttributeNS(null, "points", "0 0, 5 3.5, 0 7");
+											
+											marker.appendChild(polygon);
+											
+											defs.appendChild(marker);
+											
+											document.getElementById("mysvg").appendChild(defs);
+											//////////////////////////////////////////
+											newText = document.createElementNS(svgNS,"text");
+											newText.setAttributeNS(null,"x",135);     
+											newText.setAttributeNS(null,"y",60);  
+											newText.setAttributeNS(null,"font-size","15");
+											newText.setAttributeNS(null,"stroke","#00757C");
+											newText.setAttributeNS(null,"class","text");
+											newText.setAttributeNS(null,"id","text"+i);
+		
+		
+											textNode = document.createTextNode("Columns");
+											newText.appendChild(textNode);
+											document.getElementById("mysvg").appendChild(newText);
+											///////////////////////////////////////////////
+											var line = document.createElementNS(svgNS, "line");
+											
+											line.setAttributeNS(null, "x1", "60");
+											line.setAttributeNS(null, "y1", "55");
+											line.setAttributeNS(null, "x2", "110");
+											line.setAttributeNS(null, "y2", "55");
+											line.setAttributeNS(null, "stroke", "#000");
+											line.setAttributeNS(null,  "fill", "#00757C");
+											line.setAttributeNS(null, "stroke-width", "2");
+											line.setAttributeNS(null, "marker-end", "url(#arrowhead)");
+											line.setAttributeNS(null, "marker-start", "url(#arrowhead)");
+											document.getElementById("mysvg").appendChild(line);
+		
+		
+		
+											var defs = document.createElementNS(svgNS, "defs");
+											
+											var marker = document.createElementNS(svgNS, "marker");
+											marker.setAttributeNS(null, "id", "arrowhead1");
+											marker.setAttributeNS(null, "markerWidth", "10");
+											marker.setAttributeNS(null, "markerHeight", "7");
+											marker.setAttributeNS(null, "refX", "0");
+											marker.setAttributeNS(null, "refY", "3.5");
+											marker.setAttributeNS(null, "stroke", "#000");
+											marker.setAttributeNS(null, "fill", "#00757C");
+											
+											marker.setAttributeNS(null, "orient", "auto");
+											
+											var polygon = document.createElementNS(svgNS, "polygon");
+											polygon.setAttributeNS(null, "points", "0 0, 5 3.5, 0 7");
+											
+											marker.appendChild(polygon);
+											
+											defs.appendChild(marker);
+											
+											document.getElementById("mysvg").appendChild(defs);
+											
+											var line = document.createElementNS(svgNS, "line");
+											
+											line.setAttributeNS(null, "x1", "50");
+											line.setAttributeNS(null, "y1", "60");
+											line.setAttributeNS(null, "x2", "50");
+											line.setAttributeNS(null, "y2", "110");
+											line.setAttributeNS(null, "stroke", "#000");
+											line.setAttributeNS(null,  "fill", "#00757C");
+											line.setAttributeNS(null, "stroke-width", "2");
+											line.setAttributeNS(null, "marker-end", "url(#arrowhead1)");
+											line.setAttributeNS(null, "marker-start", "url(#arrowhead1)");
+											document.getElementById("mysvg").appendChild(line);
+		
+											//////////////////////////////////////////
+											newText = document.createElementNS(svgNS,"text");
+											newText.setAttributeNS(null,"x",30);     
+											newText.setAttributeNS(null,"y",140);  
+											newText.setAttributeNS(null,"font-size","15");
+											newText.setAttributeNS(null,"stroke","#00757C");
+		
+		
+											textNode = document.createTextNode("Rows");
+											newText.appendChild(textNode);
+											document.getElementById("mysvg").appendChild(newText);
+											///////////////////////////////////////////////
+											
+											
+											//////////////////////////////////////////
+												///////////////////////////////////////////////
+											
+											//////////////////////////////////////////
+											newText = document.createElementNS(svgNS,"text");
+											newText.setAttributeNS(null,"x","20");     
+											newText.setAttributeNS(null,"y","30");  
+											newText.setAttributeNS(null,"font-size","15");
+											newText.setAttributeNS(null,"stroke","#00757C");
+		
+		
+											textNode = document.createTextNode('B: Back  /  F: Front');
+											newText.appendChild(textNode);
+											document.getElementById("mysvg").appendChild(newText);
+											///////////////////////////////////////////////
+											
+											////////////////////////////////////////////////
+											
+											// First pair (unchanged)
+											var newImg = document.createElementNS(svgNS,"image");
+											newImg.setAttributeNS(null,"x","215");     
+											newImg.setAttributeNS(null,"y","15");  
+											newImg.setAttributeNS(null,"width","20");
+											newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green.png");
+											document.getElementById("mysvg").appendChild(newImg);
+
+											var newText = document.createElementNS(svgNS,"text");  // Keep 'var' for clarity
+											newText.setAttributeNS(null,"x","245");     
+											newText.setAttributeNS(null,"y","30");  
+											newText.setAttributeNS(null,"font-size","15");
+											newText.setAttributeNS(null,"stroke","#00757C");
+											var textNode = document.createTextNode("Connected");
+											newText.appendChild(textNode);
+											document.getElementById("mysvg").appendChild(newText);
+
+											// Second pair - NEW variable
+											var newImg2 = document.createElementNS(svgNS,"image");
+											newImg2.setAttributeNS(null,"x","340");     
+											newImg2.setAttributeNS(null,"y","15");  
+											newImg2.setAttributeNS(null,"width","20");
+											newImg2.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/blackCircle.png");
+											document.getElementById("mysvg").appendChild(newImg2);
+
+											var newText2 = document.createElementNS(svgNS,"text");  // Fresh variable!
+											newText2.setAttributeNS(null,"x","370");     
+											newText2.setAttributeNS(null,"y","30");  
+											newText2.setAttributeNS(null,"font-size","15");
+											newText2.setAttributeNS(null,"stroke","#00757C");
+											var textNode2 = document.createTextNode("Disconnected");
+											newText2.appendChild(textNode2);
+											document.getElementById("mysvg").appendChild(newText2);
+											
+											
+											var newImg3 = document.createElementNS(svgNS,"image");
+											newImg3.setAttributeNS(null,"x","480");     
+											newImg3.setAttributeNS(null,"y","15");  
+											newImg3.setAttributeNS(null,"width","20");
+											newImg3.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/orange.png");
+											document.getElementById("mysvg").appendChild(newImg3);
+
+											var newText3 = document.createElementNS(svgNS,"text");  // Fresh variable!
+											newText3.setAttributeNS(null,"x","510");     
+											newText3.setAttributeNS(null,"y","30");  
+											newText3.setAttributeNS(null,"font-size","15");
+											newText3.setAttributeNS(null,"stroke","#00757C");
+											var textNode3 = document.createTextNode("Incomplete");
+											newText3.appendChild(textNode3);
+											document.getElementById("mysvg").appendChild(newText3);
+										//////*********** DRAWIN ROWS DAShES *************///////
+										
+										if (data.panelInfo[3] === "Up To Down") {
+										    // Normal order
+										    for (let j = 1; j <= numRows; j++) {
+										        svgNS = "http://www.w3.org/2000/svg";
+										        newText = document.createElementNS(svgNS, "text");
+										        newText.setAttribute("x", 80);
+										        newText.setAttribute("y", (j * 100) + 40);
+										        newText.setAttribute("font-size", "10");
+										        newText.setAttribute("stroke", "#00757C");
+										        newText.appendChild(document.createTextNode(j));
+										        document.getElementById("mysvg").appendChild(newText);
+										    }
+
+										} else {
+										    // Reverse labels but keep positions from top to bottom
+										    for (let pos = 1; pos <= numRows; pos++) {
+										        let label = numRows - pos + 1;   // reversed numbering
+
+										        svgNS = "http://www.w3.org/2000/svg";
+										        newText = document.createElementNS(svgNS, "text");
+										        newText.setAttribute("x", 80);
+										        newText.setAttribute("y", (pos * 100) + 40);  // position moves normally
+										        newText.setAttribute("font-size", "10");
+										        newText.setAttribute("stroke", "#00757C");
+										        newText.appendChild(document.createTextNode(label));
+										        document.getElementById("mysvg").appendChild(newText);
+										    }
+										}
+
+										//////*********** DRAWIN PORTS CONNECTIONS RELATIVE TO EACh ROW AND COLUMN *************///////
+		
+										for(i=0;i<data.DistBoardMappingPts.length;i++)
+										{
+											
+										console.log(data.panelInfo[2]);
+										console.log(data.panelInfo[3]);
+										
+										if(data.panelInfo[3] === "Down To Up"){
+											
+											console.log("old");
+											console.log(data.DistBoardMappingPts[i][0]);
+											data.DistBoardMappingPts[i][0] = (data.panelInfo[2]+1) - data.DistBoardMappingPts[i][0];
+											
+										}
+											
+												window["DB_"+data.DistBoardMappingPts[i][4]]=[];
+												window["DB_"+data.DistBoardMappingPts[i][4]]=data.DistBoardMappingPts[i];	  
+												
+												svgNS = "http://www.w3.org/2000/svg";
+												var newImg = document.createElementNS(svgNS,"image");
+												//newImg.setAttributeNS(null,"x",(data.DistBoardMappingPts[i][1]*100)+60);     
+												//newImg.setAttributeNS(null,"y",(data.DistBoardMappingPts[i][0]*100)+70);  
+												
+												newImg.setAttributeNS(null,"x",(data.DistBoardMappingPts[i][1]*100)+5);     
+												newImg.setAttributeNS(null,"y",(data.DistBoardMappingPts[i][0]*100)+20);  
+												newImg.setAttributeNS(null,"width","40");
+												
+												newImg.setAttributeNS(null,"class","backImage");
+												newImg.setAttributeNS(null,"id","B-"+data.DistBoardMappingPts[i][4]);
+									
+												if(data.DistBoardMappingPts[i][7]=="Connected"){
+																					
+																									newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green_letter-b.png");
+																								
+																								}
+																								else if(data.DistBoardMappingPts[i][7]=="Disconnected"){
+																									newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/backDisconnected.png");
+																								
+																										}
+																									
+																							 else {
+																									newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/backIncomplete.png");
+																											 }
+																											 
+												 
+										
+																	
+												document.getElementById("mysvg").appendChild(newImg);
+												if (data.DistBoardMappingPts[i]) {
+																						    // Draw number text below the port (from column 40)
+																						    var numText = document.createElementNS(svgNS, "text");
+																						    numText.setAttributeNS(null, "x", (data.DistBoardMappingPts[i][1] * 100) + 43);
+																						    numText.setAttributeNS(null, "y", (data.DistBoardMappingPts[i][0] * 100) + 75);
+																						    numText.setAttributeNS(null, "font-size", "10");
+																						    numText.setAttributeNS(null, "fill", "#00757C");
+																						    var numNode = document.createTextNode(data.DistBoardMappingPts[i][20] || '');
+																							
+																						    numText.appendChild(numNode);
+																							
+																						    document.getElementById("mysvg").appendChild(numText);
+																						}
+												
+												var newImg = document.createElementNS(svgNS,"image");
+												//newImg.setAttributeNS(null,"x",(data.DistBoardMappingPts[i][1]*100)+100);     
+												//newImg.setAttributeNS(null,"y",(data.DistBoardMappingPts[i][0]*100)+70);  
+												
+												newImg.setAttributeNS(null,"x",(data.DistBoardMappingPts[i][1]*100)+45);     
+												newImg.setAttributeNS(null,"y",(data.DistBoardMappingPts[i][0]*100)+20);  
+												newImg.setAttributeNS(null,"width","40");
+												newImg.setAttributeNS(null,"class","frontImage");
+												newImg.setAttributeNS(null,"id","F-"+data.DistBoardMappingPts[i][4]);
+												
+												if(data.DistBoardMappingPts[i][13]=="Connected"){
+									
+													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green_letter-f.png");
+												
+												}
+												else if(data.DistBoardMappingPts[i][13]=="Disconnected"){
+													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/frontDisconnected.png");
+												
+														}
+													
+											 else {
+													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/frontIncomplete.png");
+															 }
+															 
+												document.getElementById("mysvg").appendChild(newImg);
+										data.DistBoardMappingPts==null;
+										
+										}									
+										$('.backImage').click(function() {
+											console.log("back image");
+											var portId=$(this).attr('id').split("-");
+											portId=portId[1];
+										$("#backPortHeader").html("<b>Port Address: </b>"+window['DB_'+portId][0]+"-"+window['DB_'+portId][1]+"&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;"+"<b>Port Index: </b>"+window['DB_'+portId][20]+"");	
+											
+											var backStatus="N/A";
+											if(window['DB_'+portId][7] !='' && window['DB_'+portId][7] !=null && window['DB_'+portId][0] !="null"){
+												backStatus=window['DB_'+portId][7];
+											}
+											$("#backStatus").html("<b>Back Status: </b>"+backStatus);
+											$("#backPortLocationType").html("<b>Location Type: </b>"+window['DB_'+portId][27]);
+											$("#backPortLocationID").html("<b>Location Id: </b>"+window['DB_'+portId][28]);
+											$("#backPortLocationName").html("<b>Location Name: </b>"+window['DB_'+portId][29]);
+											$("#backPortEquipment").html("<b>Equipment: </b>"+window['DB_'+portId][32]);
+											$("#backPortEquipmentType").html("<b>Equipment Type: </b>"+window['DB_'+portId][31]);
+											$("#backPortEquipmentID").html("<b>Equipment Id: </b>"+window['DB_'+portId][33]);
+											$("#backPortEquipmentName").html("<b>Equipment Name: </b>"+window['DB_'+portId][34]);
+											$("#backPortStrandNb").html("<b>Strand No.: </b>"+window['DB_'+portId][38]);
+											$("#backPortStrandID").html("<b>Strand Id: </b>"+window['DB_'+portId][8]);
+											$("#backPortStrandName").html("<b>Strand Name: </b>"+window['DB_'+portId][3]);
+											$("#backPortTubeNb").html("<b>Tube No.: </b>"+window['DB_'+portId][39]);
+											$("#backPortTubeId").html("<b>Tube ID: </b>"+window['DB_'+portId][9]);
+											$("#backPortTubeName").html("<b>Tube Name: </b>"+window['DB_'+portId][10]);
+											$("#backPortFiberId").html("<b>Fiber Id: </b>"+window['DB_'+portId][11]);
+											$("#backPortFiberName").html("<b>Fiber Name: </b>"+window['DB_'+portId][12]);
+												
+											$("#BackPortAssignedPortsModal").modal('show');
+											
+										});	
+										$('.frontImage').click(function() {
+											var portId=$(this).attr('id').split("-");
+											portId=portId[1];
+										
+											
+											$("#frontPortHeader").html("<b>Port Address: </b>"+window['DB_'+portId][0]+"-"+window['DB_'+portId][1]+"&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;"+"<b>Port Index: </b>"+window['DB_'+portId][20]+"");	
+											
+											var frontStatus="N/A";
+											if(window['DB_'+portId][7] !='' && window['DB_'+portId][7] !=null && window['DB_'+portId][0] !="null"){
+												frontStatus=window['DB_'+portId][13];
+											}
+											$("#frontStatus").html("<b>front Status: </b>"+frontStatus);
+											$("#frontPortLocationType").html("<b>Location Type: </b>"+window['DB_'+portId][14]);
+											$("#frontPortLocationID").html("<b>Location Id: </b>"+window['DB_'+portId][15]);
+											$("#frontPortLocationName").html("<b>Location Name: </b>"+window['DB_'+portId][16]);
+											$("#frontPortEquipment").html("<b>Equipment: </b>"+window['DB_'+portId][2]);
+											$("#frontPortEquipmentType").html("<b>Equipment Type: </b>"+window['DB_'+portId][17]);
+											$("#frontPortEquipmentID").html("<b>Equipment Id: </b>"+window['DB_'+portId][18]);
+											$("#frontPortEquipmentName").html("<b>Equipment Name: </b>"+window['DB_'+portId][19]);
+											$("#frontPortStrandNb").html("<b>Strand No.: </b>"+window['DB_'+portId][36]);
+											$("#frontPortStrandID").html("<b>Strand Id: </b>"+window['DB_'+portId][21]);
+											$("#frontPortStrandName").html("<b>Strand Name: </b>"+window['DB_'+portId][22]);
+											$("#frontPortTubeNb").html("<b>Tube No.: </b>"+window['DB_'+portId][37]);
+											$("#frontPortTubeId").html("<b>Tube ID: </b>"+window['DB_'+portId][23]);
+											$("#frontPortTubeName").html("<b>Tube Name: </b>"+window['DB_'+portId][24]);
+											$("#frontPortFiberId").html("<b>Fiber Id: </b>"+window['DB_'+portId][25]);
+											$("#frontPortFiberName").html("<b>Fiber Name: </b>"+window['DB_'+portId][26]);
+												
+											$("#frontPortAssignedPortsModal").modal('show');
+											
+										});	
+									
+									}
+									else{
+										var text="<p style='color: #00757C;font-weight:bold'> No data available concerning the board "+selectedDistBoardName+" !</br> Mapping will be filled after insertion of board's corresponding data fields..</p>"
+										$("#dB_tabContentPortsMap").append(text);
+									}
+								},
+							error : function(error) {
+							console.log("The error is " + error);
+							}
+						});
+									
+						}		
+					}, 
+					{ 'icon': 'paste', 'name': 'Show BoQ', action: () => {
 
                 $.ajax({
                     type: "GET",
