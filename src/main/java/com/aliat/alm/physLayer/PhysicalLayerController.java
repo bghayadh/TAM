@@ -9565,8 +9565,8 @@ public class PhysicalLayerController {
 											: "");
 							
 							distributionBoardMapping.setFarKitSerialNum(
-									itemParameters.getDictParameter().get(i).get("farPortNum") != ""
-											? itemParameters.getDictParameter().get(i).get("farPortNum")
+									itemParameters.getDictParameter().get(i).get("farKitSerialNum") != ""
+											? itemParameters.getDictParameter().get(i).get("farKitSerialNum")
 											: "");
 							
 							
