@@ -89,6 +89,7 @@
 .tablinks.active {
  	width: 16%;
 }
+
 #DbModule th {
     vertical-align: middle !important;
     text-align: center; /* optional: centers horizontally */
@@ -7961,7 +7962,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												class="table table-striped table-bordered table-sm "
 												style="display: block; height: 450px; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
-													<tr>
+													<tr class="fixed-headerr"  >
 														<th></th>
 														<th colspan="6">Near Port</th>
 														<th style="background-color: #00757C" width="-10px"></th>
@@ -7969,14 +7970,14 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="background-color: #00757C" width="-10px"></th>
 														<th colspan="24">Back Port</th>
 													</tr>
-													<tr>
+													<tr class="fixed-headerr"  >
 														<th>
 															<button type="button" id="selectAll_DbMapRows"
 																class="main">
 																<span class="sub"></span>Select
 															</button>
 														</th>
-													<th style="min-width: 80px">Index</th>
+													<th style="min-width: 80px" class="headcol">Index</th>
 													<th style="min-width: 90px">Module</th>
 													<th style="min-width: 90px">Port #</th>
 														<th style="min-width: 80px">Row #</th>
@@ -8474,7 +8475,7 @@ function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng
 
                       totalGeoDistance += segmentDistance;
             } else {
-                console.warn(`⚠️ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
+                console.warn(`â ï¸ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
             }
         }
     } else {
@@ -8742,7 +8743,7 @@ async function updateCities(item) {
 
 	        resolve(city);
 	      } else {
-	        console.warn("Geocoder failed for", lat, lng, "→", status);
+	        console.warn("Geocoder failed for", lat, lng, "â", status);
 	        resolve("");  // Resolve with empty string if geocoding fails
 	      }
 	    });
@@ -9282,7 +9283,7 @@ $("#saveController").click(function () {
     	                    			        markerClusterBackboneDistBoard.removeMarker(marker);
     	                    			        marker.setMap(null);
     	                    			        delete markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterBackboneDistBoard.repaint(); // ð¥ force refresh
+    	                    			        markerClusterBackboneDistBoard.repaint(); // Ã°ÂÂÂ¥ force refresh
     	                    			    }
     	                    			}
     	                    			else if (data.oldNetworkLevel == "metro") {
@@ -10005,7 +10006,7 @@ function scrollToController(id) {
 }	  
 //zeinaaa
 function siteControllerChanged(checkbox) {
-    console.log("Site Controller changed â checked =", checkbox.checked);
+    console.log("Site Controller changed Ã¢ÂÂ checked =", checkbox.checked);
     if ($(checkbox).is(":checked")) {
         document.getElementById("customer_ControllerAutoComplete").checked = false;
         $('#customer_ControllerAutoComplete').val('0');
@@ -10039,7 +10040,7 @@ function siteControllerChanged(checkbox) {
 }
 
 function customerControllerChanged(checkbox) {
-    console.log("Customer Controller changed â checked =", checkbox.checked);
+    console.log("Customer Controller changed Ã¢ÂÂ checked =", checkbox.checked);
 
     if ($(checkbox).is(":checked")) {
         document.getElementById("site_ControllerAutoComplete").checked = false;

@@ -13,17 +13,13 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
         let markup = "";
 
         for (i = 0;i < DistBoardMappingPts.length;i++) {
+
             const fpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][5]);
-			let port_Location = "Select an Option";
-			if (DistBoardMappingPts[i][5] != null && DistBoardMappingPts[i][5] != 'null' && DistBoardMappingPts[i][5] != "")
-				port_Location = DistBoardMappingPts[i][5];							
-			const fpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][10]);			
+            const fpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][5], DistBoardMappingPts[i][10]);
 
             // BP
             const bpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][27]);
-			if (DistBoardMappingPts[i][27] != null && DistBoardMappingPts[i][27] != 'null' && DistBoardMappingPts[i][27] != "")
-				port_Location = DistBoardMappingPts[i][27];							
-			const bpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][32]);
+            const bpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][27], DistBoardMappingPts[i][32]);
 
             const fpLocType = DistBoardMappingPts[i][5];
             const fpLocationReadonly =
@@ -91,7 +87,7 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             let backPortVal = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
 
             markup += "<tr id='" + DistBoardMappingPts[i][3] + "'><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-                + "<td name='Index'><input id='index" + i + "' name='Index' value='" + DistBoardMappingPts[i][0] + "' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+                + "<td name='Index' class='headcol'><input id='index" + i + "' name='Index' value='" + DistBoardMappingPts[i][0] + "' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
                 + "<td name='nearModule'><input name='nearModule' value='" + DistBoardMappingPts[i][48] + "' class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
                 + "<td name='nearPortNum'> <input id='nearPortNum" + i + "' name='nearPortNum' value='" + DistBoardMappingPts[i][49] +
                 "' class='form-control text-input' type='text' style='width:70px;position:relative;'/>" +
@@ -1457,13 +1453,15 @@ function strandTubeSetColor(strandTubeNumber, ID) {
     }
 }
 
+
+
 const LOCATION_TYPES = ["Select an Option", "Customer", "Site", "Manhole", "Handhole"];
 const EQUIPMENT_MAP = {
     "Customer": ["Custom", "Node", "DistBoard"],
     "Site": ["Node", "DistBoard"],
     "Manhole": ["Node", "DistBoard"],
     "Handhole": ["Node", "DistBoard"],
-    "Select an Option": ["Custom", "Node", "DistBoard"]   // fallback
+    "Select an Option": []   // fallback
 };
 
 function locationTypeChange() {
@@ -1830,7 +1828,7 @@ $(document).ready(function() {
         if (totalPorts > countRackBoq) {
 
             var markup = "<tr><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
-                + "<td name='Index'><input name='Index' id='index" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
+                + "<td name='Index' class='headcol'><input name='Index' id='index" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
                 + "<td name='nearModule'><input name='nearModule'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
                 + "<td name='nearPortNum'><input id='nearPortNum" + dBBoqIndex + "' name='nearPortNum'  class='form-control text-input' type='text' style='width:70px;position:relative;'/></td>"
                 + "<td name='RowIndex'><input id='rowIndex" + dBBoqIndex + "' name='rowIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
