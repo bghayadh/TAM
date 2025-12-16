@@ -17,16 +17,14 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
 
             const fpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][5]);
 			if (DistBoardMappingPts[i][5] != null && DistBoardMappingPts[i][5] != 'null' && DistBoardMappingPts[i][5] != "")
-				port_Location = DistBoardMappingPts[i][5];							
+				port_Location = DistBoardMappingPts[i][5];
 			const fpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][10]);			
-            //const fpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][5], DistBoardMappingPts[i][10]);
 
             // BP
             const bpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][27]);
 			if (DistBoardMappingPts[i][27] != null && DistBoardMappingPts[i][27] != 'null' && DistBoardMappingPts[i][27] != "")
-				port_Location = DistBoardMappingPts[i][27];							
-			const bpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][32]);			
-            //const bpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][27], DistBoardMappingPts[i][32]);
+				port_Location = DistBoardMappingPts[i][27];
+			const bpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][32]);
 
             const fpLocType = DistBoardMappingPts[i][5];
             const fpLocationReadonly =
