@@ -2097,7 +2097,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.getElementById('portFrontStrandNumber').addEventListener('change', function() {
-		strandTubeSetColor(this.value, 'portFrontStrandColor');
+	    const colorElement = document.getElementById('PortFrontStrandColor');
+	    const numberElement = document.getElementById('portFrontStrandNumber');
+	    tubeStrandNoChange(numberElement, colorElement);
 	});
 
 	document.getElementById('portFrontTubeColor').addEventListener('change', function() {
@@ -2105,8 +2107,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.getElementById('portFrontTubeNumber').addEventListener('change', function() {
-		strandTubeSetColor(this.value, 'portFrontTubeColor');
+	    const colorElement = document.getElementById('portFrontTubeColor');
+	    const numberElement = document.getElementById('portFrontTubeNumber');
+	    tubeStrandNoChange(numberElement, colorElement);
 	});
+	
+
 });
 
 
@@ -2170,7 +2176,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.getElementById('portBackStrandNumber').addEventListener('change', function() {
-		strandTubeSetColor(this.value, 'portBackStrandColor');
+	    const colorElement = document.getElementById('portBackStrandColor');
+	    const numberElement = document.getElementById('portBackStrandNumber');
+	    tubeStrandColorSelect(colorElement, numberElement);
 	});
 
 	document.getElementById('portBackTubeColor').addEventListener('change', function() {
@@ -2178,8 +2186,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.getElementById('portBackTubeNumber').addEventListener('change', function() {
-		strandTubeSetColor(this.value, 'portBackTubeColor');
-	});
+		    const colorElement = document.getElementById('portBackTubeColor');
+		    const numberElement = document.getElementById('portBackTubeNumber');
+		    tubeStrandColorSelect(colorElement, numberElement);
+		});
 });
 
 

@@ -1254,7 +1254,7 @@ function dbTubeStrandNoColor() {
 
 function tubeStrandColorSelect(colorElement, numberElement) {
     const color = colorElement.value;
-
+console.log(colorElement, numberElement);
     // Mapping colors to strand/tube numbers
     const colorMap = {
         blue: { num: "1", text: "white" },
