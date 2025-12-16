@@ -1040,7 +1040,6 @@ function dbAutoCompleteJunctionID(input) {
     });
 }
 
-
 function dbAutoCompleteJunctionName(input) {
     input.autocomplete({
         source: debounce(function(request, response) {
@@ -1302,7 +1301,6 @@ function dbTubeStrandNoColor() {
         prefix = $(this).attr("id").startsWith("FP") ? "FP" : "BP";
         const row = $(this).closest("tr");
         const colorField = row.find(`select[name='${prefix}_strandcolor']`);
-        //console.log("size of colorField is " +colorField.length);
         tubeStrandNoChange(this, colorField[0]);
     });
 }
@@ -2268,14 +2266,12 @@ $(document).ready(function() {
                         if (selected_port == "frontPort") {
                             $(this).parent().parent().children('td[name="FP_TubeID"]').children('input').val(fibertube_arr[1]);
                             $(this).parent().parent().children('td[name="FP_TubeName"]').children('input').val(fibertube_arr[0]);
-                            //$(this).parent().parent().children('td[name="FP_TubeNb"]').children('input').val(fibertube_arr[2]);
                             $("#FP_tubecolor" + i).val(fibertube_arr[3]);
                             tubeStrandSetColor("FP_tubecolor" + i, "FP_tubeNb" + i);
                         }
                         else if (selected_port == "backPort") {
                             $(this).parent().parent().children('td[name="BP_TubeID"]').children('input').val(fibertube_arr[1]);
                             $(this).parent().parent().children('td[name="BP_TubeName"]').children('input').val(fibertube_arr[0]);
-                            //$(this).parent().parent().children('td[name="BP_TubeNb"]').children('input').val(fibertube_arr[2]);
                             $("#BP_tubecolor" + i).val(fibertube_arr[3]);
                             tubeStrandSetColor("BP_tubecolor" + i, "BP_tubeNb" + i);;
                         }
