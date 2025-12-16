@@ -370,6 +370,11 @@ function dbAutoCompleteFiberID(input) {
                 }
             });
         }, 900), minLength: 0, maxShowItems: 4, scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},		
         select: function(event, ui) {
             this.value = (ui.item ? ui.item[0] : '');
             // Set the next td's input value
@@ -429,6 +434,11 @@ function dbAutoCompleteFiberName(input) {
                 }
             });
         }, 900), minLength: 0, maxShowItems: 4, scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},		
         select: function(event, ui) {
             this.value = (ui.item ? ui.item[1] : '');
             // Set the next td's input value
@@ -486,7 +496,11 @@ function dbAutoCompleteTubeID(input) {
         }, 900),
 
         minLength: 0, maxShowItems: 4, scroll: true,
-
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
 
             // Set the TubeID
@@ -579,7 +593,11 @@ function dbAutoCompleteTubeName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
 
             // Set the TubeName
@@ -670,6 +688,11 @@ function dbAutoCompleteStrandID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
 
         select: function(event, ui) {
 
@@ -719,11 +742,8 @@ function dbAutoCompleteStrandID(input) {
 
 
 function dbAutoCompleteStrandName(input) {
-
     input.autocomplete({
-
         source: debounce(function(request, response) {
-
             let strandNameID = input.attr("id");
             console.log("strandNameID is " + strandNameID);
             let sName = input.val();
@@ -759,7 +779,11 @@ function dbAutoCompleteStrandName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
 
             // Set StrandName
@@ -845,6 +869,11 @@ function dbAutoCompleteEquipmentID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},		
         select: function(event, ui) {
             this.value = ui.item ? ui.item[0] : "";
             let row = $(this).closest("tr");
@@ -911,6 +940,11 @@ function dbAutoCompleteEquipmentName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
             this.value = ui.item ? ui.item[1] : "";
             row.find(`input[name='${prefix}_equipmentID']`).val(ui.item[0]);
@@ -957,7 +991,6 @@ function dbAutoCompleteEquipmentType(input) {
             else {
                 url = 'emptyUrl';
             }
-
             if (url != "emptyUrl") {
                 $.ajax({
                     type: "GET",
@@ -975,6 +1008,11 @@ function dbAutoCompleteEquipmentType(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
             row.find(`input[name='${prefix}_equipmentID']`).val(ui.item[0]);
             row.find(`input[name='${prefix}_equipmentName']`).val(ui.item[1]);
@@ -1020,6 +1058,11 @@ function dbAutoCompleteJunctionID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
             this.value = ui.item ? ui.item[0] : "";
 
@@ -1062,6 +1105,11 @@ function dbAutoCompleteJunctionName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
             this.value = ui.item ? ui.item[1] : "";
 
@@ -1141,6 +1189,11 @@ function dbAutoCompleteLocationID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
             let row = $(this).closest("tr");
             let prefix = input.attr("id").startsWith("FP") ? "FP" : "BP";
@@ -1239,6 +1292,11 @@ function dbAutoCompleteLocationM(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
+		position: {
+		    my: "left top",
+		    at: "left bottom",
+		    collision: "flipfit"
+		},
         select: function(event, ui) {
             this.value = ui.item ? ui.item[1] : "";
 
