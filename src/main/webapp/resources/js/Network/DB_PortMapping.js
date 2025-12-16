@@ -11,20 +11,20 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
 
         dBBoqIndex = 0;
         let markup = "";
-		let port_Location = "Select an Option";
+        let port_Location = "Select an Option";
 
         for (i = 0;i < DistBoardMappingPts.length;i++) {
 
             const fpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][5]);
-			if (DistBoardMappingPts[i][5] != null && DistBoardMappingPts[i][5] != 'null' && DistBoardMappingPts[i][5] != "")
-				port_Location = DistBoardMappingPts[i][5];
-			const fpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][10]);			
+            if (DistBoardMappingPts[i][5] != null && DistBoardMappingPts[i][5] != 'null' && DistBoardMappingPts[i][5] != "")
+                port_Location = DistBoardMappingPts[i][5];
+            const fpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][10]);
 
             // BP
             const bpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][27]);
-			if (DistBoardMappingPts[i][27] != null && DistBoardMappingPts[i][27] != 'null' && DistBoardMappingPts[i][27] != "")
-				port_Location = DistBoardMappingPts[i][27];
-			const bpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][32]);
+            if (DistBoardMappingPts[i][27] != null && DistBoardMappingPts[i][27] != 'null' && DistBoardMappingPts[i][27] != "")
+                port_Location = DistBoardMappingPts[i][27];
+            const bpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][32]);
 
             const fpLocType = DistBoardMappingPts[i][5];
             const fpLocationReadonly =
@@ -39,22 +39,22 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             const bpEqIsDist = DistBoardMappingPts[i][32] === "DistBoard";
             const bpReadonly = bpEqIsDist ? "" : "readonly";
 
-            const fpStrandNumber = DistBoardMappingPts[i][36];  // e.g. "3"
+            const fpStrandNumber = (DistBoardMappingPts[i][36] === null || DistBoardMappingPts[i][36] === undefined || DistBoardMappingPts[i][36] === "null" ? "" : DistBoardMappingPts[i][36]);
             const fpStrandData = getColorByNumber(fpStrandNumber);
             const fpStrandColor = fpStrandData.color;
             const fpStrandTextColor = fpStrandData.text;
 
-            const fpTubeNumber = DistBoardMappingPts[i][37];  // e.g. "3"
+            const fpTubeNumber = (DistBoardMappingPts[i][37] === null || DistBoardMappingPts[i][37] === undefined || DistBoardMappingPts[i][37] === "null" ? "" : DistBoardMappingPts[i][37]);
             const fpTubeData = getColorByNumber(fpTubeNumber);
             const fpTubeColor = fpTubeData.color;
             const fpTubeTextColor = fpTubeData.text;
 
-            const bpStrandNumber = DistBoardMappingPts[i][38];  // e.g. "3"
+            const bpStrandNumber = (DistBoardMappingPts[i][38] === null || DistBoardMappingPts[i][38] === undefined || DistBoardMappingPts[i][38] === "null" ? "" : DistBoardMappingPts[i][38]);
             const bpStrandData = getColorByNumber(bpStrandNumber);
             const bpStrandColor = bpStrandData.color;
             const bpStrandTextColor = bpStrandData.text;
 
-            const bpTubeNumber = DistBoardMappingPts[i][39];  // e.g. "3"
+            const bpTubeNumber = (DistBoardMappingPts[i][39] === null || DistBoardMappingPts[i][39] === undefined || DistBoardMappingPts[i][39] === "null" ? "" : DistBoardMappingPts[i][39]);
             const bpTubeData = getColorByNumber(bpTubeNumber);
             const bpTubeColor = bpTubeData.color;
             const bpTubeTextColor = bpTubeData.text;
@@ -62,32 +62,32 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             window["DB_" + DistBoardMappingPts[i][3]] = [];
             window["DB_" + DistBoardMappingPts[i][3]] = DistBoardMappingPts[i];
 
-			var f_statusOption = "", b_statusOption = "";
-			if (DistBoardMappingPts[i][4] == "Connected") {
-			    f_statusOption = "<option value='Connected' selected >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
-			}
-			else if (DistBoardMappingPts[i][4] == "Disconnected") {
-			    f_statusOption = "<option value='Disconnected' selected >Disconnected</option><option value='Connected'>Connected</option><option value='Incomplete'>Incomplete</option>";
-			}
-			else if (DistBoardMappingPts[i][4] == "Incomplete") {
-			                f_statusOption = "<option value='Incomplete' selected >Incomplete</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option>";
-			            }
-			else {
-			    f_statusOption = "<option value='None' selected>Select an Option</option><option value='Connected' >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
-			}
+            var f_statusOption = "", b_statusOption = "";
+            if (DistBoardMappingPts[i][4] == "Connected") {
+                f_statusOption = "<option value='Connected' selected >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+            }
+            else if (DistBoardMappingPts[i][4] == "Disconnected") {
+                f_statusOption = "<option value='Disconnected' selected >Disconnected</option><option value='Connected'>Connected</option><option value='Incomplete'>Incomplete</option>";
+            }
+            else if (DistBoardMappingPts[i][4] == "Incomplete") {
+                f_statusOption = "<option value='Incomplete' selected >Incomplete</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option>";
+            }
+            else {
+                f_statusOption = "<option value='None' selected>Select an Option</option><option value='Connected' >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+            }
 
-			if (DistBoardMappingPts[i][14] == "Connected") {
-			             b_statusOption = "<option value='Connected' selected >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
-			         }
-			         else if (DistBoardMappingPts[i][14] == "Disconnected") {
-			             b_statusOption = "<option value='Disconnected' selected >Disconnected</option><option value='Connected'>Connected</option><option value='Incomplete'>Incomplete</option>";
-			         }
-					else if (DistBoardMappingPts[i][14] == "Incomplete") {
-					                b_statusOption = "<option value='Incomplete' selected >Incomplete</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option>";
-					            }
-			         else {
-			             b_statusOption = "<option value='None' >Select an Option</option><option value='Connected' >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
-			         }
+            if (DistBoardMappingPts[i][14] == "Connected") {
+                b_statusOption = "<option value='Connected' selected >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+            }
+            else if (DistBoardMappingPts[i][14] == "Disconnected") {
+                b_statusOption = "<option value='Disconnected' selected >Disconnected</option><option value='Connected'>Connected</option><option value='Incomplete'>Incomplete</option>";
+            }
+            else if (DistBoardMappingPts[i][14] == "Incomplete") {
+                b_statusOption = "<option value='Incomplete' selected >Incomplete</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option>";
+            }
+            else {
+                b_statusOption = "<option value='None' >Select an Option</option><option value='Connected' >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
+            }
             let backKitVal = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
             let backPortVal = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
 
@@ -105,7 +105,9 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 "<input id='colIndex" + i + "' name='colIndex' value='" + DistBoardMappingPts[i][2] +
                 "' class='form-control text-input colIndex' type='text' style='width:60px;position:relative;'/>" +
                 "</td>"
-                + "<td name='patchType'><input name='patchType' value='" + DistBoardMappingPts[i][50] + "' class='form-control text-input portIndex' type='text' style='width:240px;position:relative;'/></td>"
+                + "<td name='patchType'><input name='patchType' value='"
+				+ (DistBoardMappingPts[i][50] === null || DistBoardMappingPts[i][50] === undefined || DistBoardMappingPts[i][50] === "null" ? "" : DistBoardMappingPts[i][50])
+				+ "' class='form-control text-input portIndex' type='text' style='width:240px;position:relative;'/></td>"
                 + "<td style='background-color:#00757C' width='-10px'></td>"
                 + "<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status" + dBBoqIndex + "'>" + f_statusOption + "</select></td>"
                 + "<td name='FP_LocationType'><select class='form-control' name='FP_locationType' id='FP_LocationType" + dBBoqIndex + "'>"
@@ -119,13 +121,25 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='FP_EquipmentID'><input name='FP_equipmentID' value='" + DistBoardMappingPts[i][11] + "' id='FP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_EquipmentName'><input name='FP_equipmentName' value='" + DistBoardMappingPts[i][12] + "' id='FP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_EquipmentType'><input name='FP_equipmentType' value='" + DistBoardMappingPts[i][9] + "' id='FP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='farKitSerialNum'><input name='farKitSerialNum' value='" + DistBoardMappingPts[i][51] + "' id='farKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + "<td name='farKitSerialNum'><input name='farKitSerialNum' value='"
+				+ (DistBoardMappingPts[i][51] === null || DistBoardMappingPts[i][51] === undefined || DistBoardMappingPts[i][51] === "null"
+					? "" : DistBoardMappingPts[i][51])
+				+ "' id='farKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
                 + fpReadonly + " style='width:190px;position:relative;'/></td>"
-                + "<td name='farModule'><input name='farModule' value='" + DistBoardMappingPts[i][52] + "' id='farModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + "<td name='farModule'><input name='farModule' value='"
+				+ (DistBoardMappingPts[i][52] === null || DistBoardMappingPts[i][52] === undefined || DistBoardMappingPts[i][52] === "null"
+					? "" : DistBoardMappingPts[i][52])
+				+ "' id='farModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
                 + fpReadonly + " style='width:190px;position:relative;'/></td>"
-                + "<td name='farPortNum'><input name='farPortNum' value='" + DistBoardMappingPts[i][53] + "' id='farPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + "<td name='farPortNum'><input name='farPortNum' value='"
+				+ (DistBoardMappingPts[i][53] === null || DistBoardMappingPts[i][53] === undefined || DistBoardMappingPts[i][53] === "null"
+					? "" : DistBoardMappingPts[i][53]) 
+				+ "' id='farPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
                 + fpReadonly + " style='width:190px;position:relative;'/></td>"
-                + "<td name='FP_Address'><input name='FP_Address' value='" + DistBoardMappingPts[i][13] + "' id='FP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_Address'><input name='FP_Address' value='"
+				+ (DistBoardMappingPts[i][13] === null || DistBoardMappingPts[i][13] === undefined || DistBoardMappingPts[i][13] === "null"
+					? "" : DistBoardMappingPts[i][13])
+				+ "' id='FP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_JunctionID'><input name='FP_junctionID' value='" + DistBoardMappingPts[i][44] + "' id='FP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_JunctionName'><input name='FP_junctionName' value='" + DistBoardMappingPts[i][45] + "' id='FP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_StrandNb'><input name='FP_strandNb' value='" + fpStrandNumber + "' id='FP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
@@ -135,8 +149,14 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + colorOptions(fpStrandColor)
                 + "</select>"
                 + "</td>"
-                + "<td name='FP_StrandID'><input name='FP_strandID' value='" + DistBoardMappingPts[i][21] + "' id='FP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='FP_StrandName'><input name='FP_strandName' value='" + DistBoardMappingPts[i][22] + "' id='FP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_StrandID'><input name='FP_strandID' value='"
+                + (DistBoardMappingPts[i][21] === null || DistBoardMappingPts[i][21] === undefined || DistBoardMappingPts[i][21] === "null"
+                    ? "" : DistBoardMappingPts[i][21])
+                + "' id='FP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_StrandName'><input name='FP_strandName' value='"
+                + (DistBoardMappingPts[i][22] === null || DistBoardMappingPts[i][22] === undefined || DistBoardMappingPts[i][22] === "null"
+                    ? "" : DistBoardMappingPts[i][22])
+                + "' id='FP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_TubeNb'><input name='FP_tubeNb' value='" + fpTubeNumber + "' id='FP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
                 + "<td name='FP_TubeColor'>"
                 + "<select class='form-control' name='FP_tubecolor' id='FP_tubecolor" + dBBoqIndex + "' "
@@ -144,10 +164,22 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + colorOptions(fpTubeColor)
                 + "</select>"
                 + "</td>"
-                + "<td name='FP_TubeID'><input name='FP_tubeID' value='" + DistBoardMappingPts[i][23] + "' id='FP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='FP_TubeName'><input name='FP_tubeName' value='" + DistBoardMappingPts[i][24] + "' id='FP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='FP_FiberID'><input name='FP_fiberID' value='" + DistBoardMappingPts[i][25] + "' id='FP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='FP_FiberName'><input name='FP_fiberName' value='" + DistBoardMappingPts[i][26] + "' id='FP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='FP_TubeID'><input name='FP_tubeID' value='"
+				+ (DistBoardMappingPts[i][23] === null || DistBoardMappingPts[i][23] === undefined || DistBoardMappingPts[i][23] === "null"
+					? "" : DistBoardMappingPts[i][23])
+				+ "' id='FP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='FP_TubeName'><input name='FP_tubeName' value='"
+				+ (DistBoardMappingPts[i][24] === null || DistBoardMappingPts[i][24] === undefined || DistBoardMappingPts[i][24] === "null"
+					? "" : DistBoardMappingPts[i][24])
+				+ "' id='FP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='FP_FiberID'><input name='FP_fiberID' value='"
+				+ (DistBoardMappingPts[i][25] === null || DistBoardMappingPts[i][25] === undefined || DistBoardMappingPts[i][25] === "null"
+					? "" : DistBoardMappingPts[i][25])
+				+ "' id='FP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='FP_FiberName'><input name='FP_fiberName' value='"
+				+ (DistBoardMappingPts[i][26] === null || DistBoardMappingPts[i][26] === undefined || DistBoardMappingPts[i][26] === "null"
+					? "" : DistBoardMappingPts[i][26])
+				+ "' id='FP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td style='background-color:#00757C'></td>"
                 + "<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status" + dBBoqIndex + "'>" + b_statusOption + "</select></td>"
                 + "<td name='BP_LocationType'><select class='form-control' name='BP_locationType' id='BP_LocationType" + dBBoqIndex + "'>"
@@ -161,11 +193,16 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' value='" + DistBoardMappingPts[i][33] + "' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' value='" + DistBoardMappingPts[i][34] + "' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name='BP_equipmentType' value='" + DistBoardMappingPts[i][31] + "' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='backKitModule'><input name='backKitModule' value='" + backKitVal + "' id='backKitModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + "<td name='backKitModule'><input name='backKitModule' value='"
+				+ (backKitVal === null || backKitVal === undefined || backKitVal === "null"
+					? "" : backKitVal)  
+				+ "' id='backKitModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
                 + bpReadonly + " style='width:190px;position:relative;'/></td>"
                 + "<td name='backPortNum'><input name='backPortNum' value='" + backPortVal + "' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
                 + bpReadonly + " style='width:190px;position:relative;'/></td>"
-                + "<td name='BP_Address'><input name='BP_Address' value='" + DistBoardMappingPts[i][35] + "'id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_Address'><input name='BP_Address' value='"
+				+ (DistBoardMappingPts[i][35] === null || DistBoardMappingPts[i][35] === undefined || DistBoardMappingPts[i][35] === "null" ? "" : DistBoardMappingPts[i][35]) 
+				+ "'id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionID'><input name='BP_junctionID' value='" + DistBoardMappingPts[i][46] + "' id='BP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionName'><input name='BP_junctionName' value='" + DistBoardMappingPts[i][47] + "' id='BP_junctionName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_StrandNb'><input name='BP_strandNb' value='" + bpStrandNumber + "' id='BP_strandNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
@@ -175,8 +212,14 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + colorOptions(bpStrandColor)
                 + "</select>"
                 + "</td>"
-                + "<td name='BP_StrandID'><input name='BP_strandID' value='" + DistBoardMappingPts[i][15] + "' id='BP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='BP_StrandName'><input name='BP_strandName' value='" + DistBoardMappingPts[i][16] + "' id='BP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_StrandID'><input name='BP_strandID' value='"
+				+ (DistBoardMappingPts[i][15] === null || DistBoardMappingPts[i][15] === undefined || DistBoardMappingPts[i][15] === "null"
+					? "" : DistBoardMappingPts[i][15])
+				+ "' id='BP_strandID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_StrandName'><input name='BP_strandName' value='"
+				+ (DistBoardMappingPts[i][16] === null || DistBoardMappingPts[i][16] === undefined || DistBoardMappingPts[i][16] === "null"
+					? "" :  DistBoardMappingPts[i][16])
+				+ "' id='BP_strandName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_TubeNb'><input name='BP_tubeNb' value='" + bpTubeNumber + "' id='BP_tubeNb" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:80px;position:relative;'/></td>"
                 + "<td name='BP_TubeColor'>"
                 + "<select class='form-control' name='BP_tubecolor' id='BP_tubecolor" + dBBoqIndex + "' "
@@ -184,10 +227,22 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + colorOptions(bpTubeColor)
                 + "</select>"
                 + "</td>"
-                + "<td name='BP_TubeID'><input name='BP_tubeID' value='" + DistBoardMappingPts[i][17] + "' id='BP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='BP_TubeName'><input name='BP_tubeName' value='" + DistBoardMappingPts[i][18] + "' id='BP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='BP_FiberID'><input name='BP_fiberID' value='" + DistBoardMappingPts[i][19] + "' id='BP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
-                + "<td name='BP_FiberName'><input name='BP_fiberName' value='" + DistBoardMappingPts[i][20] + "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
+                + "<td name='BP_TubeID'><input name='BP_tubeID' value='"
+				+ (DistBoardMappingPts[i][17] === null || DistBoardMappingPts[i][17] === undefined || DistBoardMappingPts[i][17] === "null"
+					? "" : DistBoardMappingPts[i][17]) 
+				+ "' id='BP_tubeID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='BP_TubeName'><input name='BP_tubeName' value='"
+				+ (DistBoardMappingPts[i][18] === null || DistBoardMappingPts[i][18] === undefined || DistBoardMappingPts[i][18] === "null"
+					? "" : DistBoardMappingPts[i][18])  
+				+ "' id='BP_tubeName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='BP_FiberID'><input name='BP_fiberID' value='"
+				+ (DistBoardMappingPts[i][19] === null || DistBoardMappingPts[i][19] === undefined || DistBoardMappingPts[i][19] == "null"
+					? "" : DistBoardMappingPts[i][19])
+				+ "' id='BP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
+                + "<td name='BP_FiberName'><input name='BP_fiberName' value='"
+				+ (DistBoardMappingPts[i][20] === null || DistBoardMappingPts[i][20] === undefined || DistBoardMappingPts[i][20] === "null"
+					? "" :  DistBoardMappingPts[i][20])
+				+ "' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
             dBBoqIndex++;
         }
         $("#DbMappingTable > tbody").html(markup);
@@ -1254,7 +1309,7 @@ function dbTubeStrandNoColor() {
 
 function tubeStrandColorSelect(colorElement, numberElement) {
     const color = colorElement.value;
-
+console.log(colorElement, numberElement);
     // Mapping colors to strand/tube numbers
     const colorMap = {
         blue: { num: "1", text: "white" },
@@ -1839,8 +1894,8 @@ $(document).ready(function() {
                 + "<td name='ColIndex'><input id='colIndex" + dBBoqIndex + "' name='colIndex'  class='form-control text-input' type='text' style='width:60px;position:relative;'/></td>"
                 + "<td name='patchType'><input name='patchType'  class='form-control text-input' type='text' style='width:240px;position:relative;'/></td>"
                 + "<td style='background-color:#00757C' width='-10px'></td>"
-				+"<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status"+dBBoqIndex+"'><option value='None' selected>Select an Option</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option></select></td>"
-			    + "<td name='FP_LocationType'>"
+                + "<td name='FP_Status'><select class='form-control' name='FP_Status' id='FP_Status" + dBBoqIndex + "'><option value='None' selected>Select an Option</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option></select></td>"
+                + "<td name='FP_LocationType'>"
                 + "<select class='form-control' name='FP_locationType' id='FP_LocationType" + dBBoqIndex + "'>"
                 + "<option value='None' selected>Select an Option</option>"
                 + "<option value='Customer'>Customer</option>"
@@ -1882,8 +1937,8 @@ $(document).ready(function() {
                 + "<td name='FP_FiberID'><input name='FP_fiberID' id='FP_fiberID" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td name='FP_FiberName'><input name='FP_fiberName' id='FP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td>"
                 + "<td style='background-color:#00757C' width='-10px'></td>"
-				+"<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status"+dBBoqIndex+"'><option value='None' selected>Select an Option</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option></select></td>"
-			    + "<td name='BP_LocationType'>"
+                + "<td name='BP_Status'><select class='form-control' name='BP_Status' id='BP_Status" + dBBoqIndex + "'><option value='None' selected>Select an Option</option><option value='Connected'>Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option></select></td>"
+                + "<td name='BP_LocationType'>"
                 + "<select class='form-control' name='BP_locationType' id='BP_LocationType" + dBBoqIndex + "'>"
                 + "<option value='None' selected>Select an Option</option>"
                 + "<option value='Customer'>Customer</option>"
@@ -1922,7 +1977,7 @@ $(document).ready(function() {
                 + "<td name='BP_FiberName'><input name='BP_fiberName' id='BP_fiberName" + dBBoqIndex + "'  class='form-control text-input' type='text' style='width:190px;position:relative;' /></td></tr>"
 
             $("#DbMappingTable > tbody").append(markup);
-			
+
             /*
                                 // -------------------------------------------------------------
                                 // READ SETTINGS
