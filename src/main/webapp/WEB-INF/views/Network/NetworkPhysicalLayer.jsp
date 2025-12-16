@@ -7041,6 +7041,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
                 <select id="PortFrontStrandColor" class="form-control">
+                    <option value="" style="background-color: white; color: black;">Select an Option</option>
                     <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -7098,6 +7099,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                         <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
                     
                 <select id="portFrontTubeColor" class="form-control">
+                <option value="" style="background-color: white; color: black;">Select an Option</option>
                       <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -7389,6 +7391,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
                 <select id="PortBackStrandColor" class="form-control">
+                   <option value="" style="background-color: white; color: black;">Select an Option</option>
                     <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -7447,6 +7450,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                         <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
                     
                 <select id="portBackTubeColor" class="form-control">
+                <option value="" style="background-color: white; color: black;">Select an Option</option>
                     <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -8158,13 +8162,20 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 				</div>
 				<div class="modal-body" style="height: auto; width: auto;">
 					<div class="tab-content">
-						<div id="dB_tabAssignedPorts" style="float: center; border: solid black 1px; padding: 10px; border-radius: 25px; background: #E9ECEF; color: #ffd700; border: 2px solid #ffd700; width: auto; height: 400px;">
+						<div id="dB_tabAssignedPorts" style="float: center; border: solid black 1px; padding: 10px; border-radius: 25px; background: #E9ECEF; color: #ffd700; border: 2px solid #ffd700; width: auto; height: 535px;">
 							<div>
 								<p style="font-size: 20px; color: #00757C">
 									<b>Back Port</b>
 								</p>
 								<div style="column-count: 2;">
 									<label id="backStatus" style="color: #DC143C;"></label><br />
+									
+									<label id="backModule" style="color: #DC143C;"></label><br />
+									<label id="backPortNum" style="color: #DC143C;"></label><br />
+									<label id="backRow" style="color: #DC143C;"></label><br />
+									<label id="backCol" style="color: #DC143C;"></label><br />
+									<label id="backPatchType" style="color: #DC143C;"></label><br />
+									
 									<label id="backPortLocationType" style="color: #DC143C;"></label><br/> 
 									<label id="backPortLocationID" style="color: #DC143C;"></label><br/>
 									<label id="backPortLocationName" style="color: #DC143C;"></label><br/>
@@ -8194,13 +8205,21 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 					</div></div>
 				<div class="modal-body" style="height: auto; width: auto;">
 					<div class="tab-content">
-						<div id="frontPort_tabAssignedPorts" style="float: center; border: solid black 1px; padding: 10px; border-radius: 25px; background: #E9ECEF; color: #ffd700; border: 2px solid #ffd700; width: auto; height: 400px;">
+						<div id="frontPort_tabAssignedPorts" style="float: center; border: solid black 1px; padding: 10px; border-radius: 25px; background: #E9ECEF; color: #ffd700; border: 2px solid #ffd700; width: auto; height: 535px;">
 							<div>
 								<p style="font-size: 20px; color: #00757C">
 									<b>Front Port</b>
 								</p>
 								<div style="column-count: 2;">
 									<label id="frontStatus" style="color: #DC143C;"></label><br />
+									
+									<label id="frontModule" style="color: #DC143C;"></label><br />
+									<label id="frontPortNum" style="color: #DC143C;"></label><br />
+									<label id="frontRow" style="color: #DC143C;"></label><br />
+									<label id="frontCol" style="color: #DC143C;"></label><br />
+									<label id="frontPatchType" style="color: #DC143C;"></label><br />
+								
+								
 									<label id="frontPortLocationType" style="color: #DC143C;"></label><br/> 
 									<label id="frontPortLocationID" style="color: #DC143C;"></label><br/>
 									<label id="frontPortLocationName" style="color: #DC143C;"></label><br/>
