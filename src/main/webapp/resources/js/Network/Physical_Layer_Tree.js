@@ -8406,17 +8406,17 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 									
 												if(data.DistBoardMappingPts[i][7]=="Connected"){
 																					
-																									newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green_letter-b.png");
+												newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green_letter-b.png");
 																								
-																								}
-																								else if(data.DistBoardMappingPts[i][7]=="Disconnected"){
-																									newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/backDisconnected.png");
-																								
-																										}
-																									
-																							 else {
-																									newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/backIncomplete.png");
+														}
+																							
+												else if(data.DistBoardMappingPts[i][7]=="Incomplete"){
+													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/backIncomplete.png");
 																											 }
+														 else {
+														newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/backDisconnected.png");
+																											 																							
+																											 																									}
 																											 
 												 
 										
@@ -8451,14 +8451,15 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/green_letter-f.png");
 												
 												}
-												else if(data.DistBoardMappingPts[i][13]=="Disconnected"){
-													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/frontDisconnected.png");
-												
-														}
+											
 													
-											 else {
+											 else if(data.DistBoardMappingPts[i][13]=="Incomplete"){
 													newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/frontIncomplete.png");
 															 }
+												
+											  else {
+											newImg.setAttributeNS('http://www.w3.org/1999/xlink','href', getContext()+"/resources/NetworkImages/frontDisconnected.png");
+														}
 															 
 												document.getElementById("mysvg").appendChild(newImg);
 										data.DistBoardMappingPts==null;
@@ -8475,6 +8476,13 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 												backStatus=window['DB_'+portId][7];
 											}
 											$("#backStatus").html("<b>Back Status: </b>"+backStatus);
+											
+											$("#backModule").html("<b>Module: </b>"+window['DB_'+portId][41]);
+											$("#backPortNum").html("<b>Port #: </b>"+window['DB_'+portId][40]);
+											$("#backRow").html("<b>Row: </b>"+window['DB_'+portId][0]);
+											$("#backCol").html("<b>Column: </b>"+window['DB_'+portId][1]);
+											$("#backPatchType").html("<b>Patch Type: </b>"+window['DB_'+portId][42]);
+											
 											$("#backPortLocationType").html("<b>Location Type: </b>"+window['DB_'+portId][27]);
 											$("#backPortLocationID").html("<b>Location Id: </b>"+window['DB_'+portId][28]);
 											$("#backPortLocationName").html("<b>Location Name: </b>"+window['DB_'+portId][29]);
@@ -8506,6 +8514,13 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 												frontStatus=window['DB_'+portId][13];
 											}
 											$("#frontStatus").html("<b>front Status: </b>"+frontStatus);
+
+											$("#frontModule").html("<b> Module: </b>"+window['DB_'+portId][41]);
+											$("#frontPortNum").html("<b> Port #: </b>"+window['DB_'+portId][40]);
+											$("#frontRow").html("<b>Row: </b>"+window['DB_'+portId][0]);
+											$("#frontCol").html("<b>Column: </b>"+window['DB_'+portId][1]);
+											$("#frontPatchType").html("<b>Patch Type: </b>"+window['DB_'+portId][42]);
+																																
 											$("#frontPortLocationType").html("<b>Location Type: </b>"+window['DB_'+portId][14]);
 											$("#frontPortLocationID").html("<b>Location Id: </b>"+window['DB_'+portId][15]);
 											$("#frontPortLocationName").html("<b>Location Name: </b>"+window['DB_'+portId][16]);
