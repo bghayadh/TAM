@@ -11,15 +11,22 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
 
         dBBoqIndex = 0;
         let markup = "";
+		let port_Location = "Select an Option";
 
         for (i = 0;i < DistBoardMappingPts.length;i++) {
 
             const fpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][5]);
-            const fpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][5], DistBoardMappingPts[i][10]);
+			if (DistBoardMappingPts[i][5] != null && DistBoardMappingPts[i][5] != 'null' && DistBoardMappingPts[i][5] != "")
+				port_Location = DistBoardMappingPts[i][5];							
+			const fpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][10]);			
+            //const fpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][5], DistBoardMappingPts[i][10]);
 
             // BP
             const bpLocationOptions = generateLocationOptions(DistBoardMappingPts[i][27]);
-            const bpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][27], DistBoardMappingPts[i][32]);
+			if (DistBoardMappingPts[i][27] != null && DistBoardMappingPts[i][27] != 'null' && DistBoardMappingPts[i][27] != "")
+				port_Location = DistBoardMappingPts[i][27];							
+			const bpEquipmentOptions = generateEquipmentOptions(port_Location, DistBoardMappingPts[i][32]);			
+            //const bpEquipmentOptions = generateEquipmentOptions(DistBoardMappingPts[i][27], DistBoardMappingPts[i][32]);
 
             const fpLocType = DistBoardMappingPts[i][5];
             const fpLocationReadonly =
@@ -1461,7 +1468,7 @@ const EQUIPMENT_MAP = {
     "Site": ["Node", "DistBoard"],
     "Manhole": ["Node", "DistBoard"],
     "Handhole": ["Node", "DistBoard"],
-    "Select an Option": []   // fallback
+    "Select an Option": ["Custom", "Node", "DistBoard"]   // fallback
 };
 
 function locationTypeChange() {
@@ -1540,7 +1547,6 @@ function equipmentChange() {
     $("#DbMappingTable").on("change", "select[name='BP_equipment']", function() {
         let selectedValue = $(this).val();
         let row = $(this).closest("tr");
-
         if (selectedValue === "DistBoard") {
             // Make inputs editable
             row.find("input[name='backKitModule']").prop("readonly", false);
