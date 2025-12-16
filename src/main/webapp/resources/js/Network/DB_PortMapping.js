@@ -1533,6 +1533,7 @@ function locationTypeChange() {
         console.log("before if statement, equipSelect.length is " + equipSelect.length);
         if (equipSelect.length) {
             console.log("after if statement, equipSelect.length is " + equipSelect.length);
+			console.log("loc is " +loc);
             const newOptions = generateEquipmentOptions(loc);
             console.log("newOptions for FP equipment is " + newOptions);
             equipSelect.html(newOptions);
@@ -1584,7 +1585,7 @@ function generateLocationOptions(selectedValue) {
 
 // returns options only (string) for equipment based on locationType
 function generateEquipmentOptions(locationType, selectedValue) {
-    const list = EQUIPMENT_MAP[locationType] || [];
+    const list = EQUIPMENT_MAP[locationType] || ["Custom", "Node", "DistBoard"];
     let opts = `<option value="">Select an Option</option>`;
     list.forEach(v => {
         const sel = (v === selectedValue) ? " selected" : "";
