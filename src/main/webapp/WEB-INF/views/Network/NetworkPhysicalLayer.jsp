@@ -7041,6 +7041,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
                 <select id="PortFrontStrandColor" class="form-control">
+                    <option value="" style="background-color: white; color: black;">Select an Option</option>
                     <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -7098,6 +7099,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                         <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
                     
                 <select id="portFrontTubeColor" class="form-control">
+                <option value="" style="background-color: white; color: black;">Select an Option</option>
                       <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -7389,6 +7391,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
                 <select id="PortBackStrandColor" class="form-control">
+                   <option value="" style="background-color: white; color: black;">Select an Option</option>
                     <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
@@ -7447,6 +7450,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                         <span class="input-group-text" style="width: 150px;"><b>Tube Color</b></span>
                     
                 <select id="portBackTubeColor" class="form-control">
+                <option value="" style="background-color: white; color: black;">Select an Option</option>
                     <option value="blue" style="background-color: white; color: black;">blue</option>
                     <option value="orange" style="background-color: white; color: black;">orange</option>
                     <option value="green" style="background-color: white; color: black;">green</option>
