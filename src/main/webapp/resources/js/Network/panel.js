@@ -2176,9 +2176,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	document.getElementById('portBackStrandNumber').addEventListener('change', function() {
-	    const colorElement = document.getElementById('portBackStrandColor');
+	    const colorElement = document.getElementById('PortBackStrandColor');
 	    const numberElement = document.getElementById('portBackStrandNumber');
-	    tubeStrandColorSelect(colorElement, numberElement);
+	    tubeStrandNoChange(numberElement, colorElement);
 	});
 
 	document.getElementById('portBackTubeColor').addEventListener('change', function() {
@@ -2188,7 +2188,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.getElementById('portBackTubeNumber').addEventListener('change', function() {
 		    const colorElement = document.getElementById('portBackTubeColor');
 		    const numberElement = document.getElementById('portBackTubeNumber');
-		    tubeStrandColorSelect(colorElement, numberElement);
+		    tubeStrandNoChange(numberElement, colorElement);
 		});
 });
 
