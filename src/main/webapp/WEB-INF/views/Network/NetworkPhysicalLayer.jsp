@@ -7334,7 +7334,21 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+              <div class="col-md-6">
+                <div class="form-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" style="width: 190px;"><b>Back Kit Seial # </b></span>
+                        <input type="text" id="portBackKitSerialNum" class="form-control text-input" />
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+
+        <!-- Ninth Row -->
+        <div class="row">
+        
+         <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Back Port Num</b></span>
@@ -7342,10 +7356,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Ninth Row -->
-        <div class="row">
            <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
@@ -7354,7 +7364,13 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-             <div class="col-md-6">
+            
+        </div>
+
+        <!-- Tenth Row -->
+        <div class="row">
+        
+         <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Junction ID</b></span>
@@ -7362,10 +7378,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Tenth Row -->
-        <div class="row">
+            
              <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
@@ -7374,7 +7387,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-           <div class="col-md-6">
+          
+        </div>
+
+        <!-- Eleventh Row -->
+       <div class="row">
+        <div class="col-md-6">
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Number</b></span>
@@ -7382,11 +7400,9 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
             </div>
         </div>
     </div>
-        </div>
-
-        <!-- Eleventh Row -->
-       <div class="row">
     <div class="col-md-6">
+    
+    
         <div class="form-group">
             <div class="input-group-prepend">
                 <span class="input-group-text" style="width: 150px;"><b>Strand Color</b></span>
@@ -7408,7 +7424,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
             </div>
         </div>
     </div>
- <div class="col-md-6">
+ 
+</div>
+
+        <!-- Twelfth Row -->
+        <div class="row">
+        <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Strand ID</b></span>
@@ -7419,10 +7440,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-</div>
-
-        <!-- Twelfth Row -->
-        <div class="row">
       <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
@@ -7431,7 +7448,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-           <div class="col-md-6">
+         
+        </div>
+
+        <!-- Thirteenth Row -->
+        <div class="row">
+             <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Tube Number</b></span>
@@ -7439,11 +7461,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Thirteenth Row -->
-        <div class="row">
-           
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
@@ -7467,7 +7484,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-                 <div class="col-md-6">
+                
+        </div>
+
+        <!-- Fourteenth Row -->
+        <div class="row">
+         <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Tube ID</b></span>
@@ -7479,10 +7501,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Fourteenth Row -->
-        <div class="row">
           <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
@@ -7491,7 +7509,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-              <div class="col-md-6">
+              
+        </div>
+
+        <!-- Fifteenth Row -->
+        <div class="row">
+        <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text" style="width: 150px;"><b>Fiber ID</b></span>
@@ -7499,10 +7522,6 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Fifteenth Row -->
-        <div class="row">
              <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
@@ -7972,7 +7991,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="background-color: #00757C" width="-10px"></th>
 														<th colspan="25">Far Near Port</th>
 														<th style="background-color: #00757C" width="-10px"></th>
-														<th colspan="24">Back Port</th>
+														<th colspan="25">Back Port</th>
 													</tr>
 													<tr class="fixed-headerr"  >
 														<th>
@@ -8024,6 +8043,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 190px">Equipment ID</th>
 														<th style="min-width: 190px">Equipment Name</th>
 														<th style="min-width: 190px">Equipment Type</th>
+														<th style="min-width: 190px">Kit Serial # </th>
 														<th style="min-width: 190px">Module</th>
 														<th style="min-width: 190px">Port #</th>
                                                         <th style="min-width: 190px">Address</th>
