@@ -88,7 +88,7 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
             else {
                 b_statusOption = "<option value='None' >Select an Option</option><option value='Connected' >Connected</option><option value='Disconnected'>Disconnected</option><option value='Incomplete'>Incomplete</option>";
             }
-            let backKitVal = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
+            let backModuleVal = DistBoardMappingPts[i][54] ? DistBoardMappingPts[i][54] : "";
             let backPortVal = DistBoardMappingPts[i][55] ? DistBoardMappingPts[i][55] : "";
 
             markup += "<tr id='" + DistBoardMappingPts[i][3] + "'><td><input type='checkbox' style='position:relative;left:20px;top:10px' name='record'></td>"
@@ -193,10 +193,10 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' value='" + DistBoardMappingPts[i][33] + "' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' value='" + DistBoardMappingPts[i][34] + "' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name='BP_equipmentType' value='" + DistBoardMappingPts[i][31] + "' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='backKitModule'><input name='backKitModule' value='"
-                + (backKitVal === null || backKitVal === undefined || backKitVal === "null"
-                    ? "" : backKitVal)
-                + "' id='backKitModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
+                + "<td name='backModule'><input name='backModule' value='"
+                + (backModuleVal === null || backModuleVal === undefined || backModuleVal === "null"
+                    ? "" : backModuleVal)
+                + "' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
                 + bpReadonly + " style='width:190px;position:relative;'/></td>"
                 + "<td name='backPortNum'><input name='backPortNum' value='" + backPortVal + "' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' "
                 + bpReadonly + " style='width:190px;position:relative;'/></td>"
@@ -1659,14 +1659,14 @@ function equipmentChange() {
         let row = $(this).closest("tr");
         if (selectedValue === "DistBoard") {
             // Make inputs editable
-            row.find("input[name='backKitModule']").prop("readonly", false);
-            row.find("input[name='backKitModule']").val('');
+            row.find("input[name='backModule']").prop("readonly", false);
+            row.find("input[name='backModule']").val('');
             row.find("input[name='backPortNum']").prop("readonly", false);
             row.find("input[name='backPortNum']").val('');
         } else {
             // Make inputs readonly again
-            row.find("input[name='backKitModule']").prop("readonly", true);
-            row.find("input[name='backKitModule']").val('');
+            row.find("input[name='backModule']").prop("readonly", true);
+            row.find("input[name='backModule']").val('');
             row.find("input[name='backPortNum']").prop("readonly", true);
             row.find("input[name='backPortNum']").val('');
         }
@@ -2013,7 +2013,7 @@ $(document).ready(function() {
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name=' BP_equipmentType' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='backKitModule'><input name='backKitModule' id='backKitModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
+                + "<td name='backModule'><input name='backModule' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
                 + "<td name='backPortNum'><input name='backPortNum' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
                 + "<td name='BP_Address'><input name='BP_Address' id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionID'><input name='BP_junctionID' id='BP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -2139,7 +2139,7 @@ $(document).ready(function() {
             var farModule = $(this).parent().parent().children('td[name="farModule"]').children('input').val();
             var farPortNum = $(this).parent().parent().children('td[name="farPortNum"]').children('input').val();
 
-            var backKitModule = $(this).parent().parent().children('td[name="backKitModule"]').children('input').val();
+            var backModule = $(this).parent().parent().children('td[name="backModule"]').children('input').val();
             var backPortNum = $(this).parent().parent().children('td[name="backPortNum"]').children('input').val();
 
             dbmappingdata.push([Number(rowColIndex),
@@ -2192,7 +2192,7 @@ $(document).ready(function() {
                 bP_JunctionName,
                 nearModule, nearPortNum, nearPatchType,
                 farKitSerialNum, farModule, farPortNum,
-                backKitModule, backPortNum
+                backModule, backPortNum
             ]);
         });
 

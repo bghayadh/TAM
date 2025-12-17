@@ -530,7 +530,7 @@ console.log(statusResult.length);
 						}
 
 						if (data.panelPortData[0][54] != null) {
-							$("#portBackKitSerialNum").val(data.panelPortData[0][54]);
+							$("#portBackModule").val(data.panelPortData[0][54]);
 						}
 
 						if (data.panelPortData[0][49] != null) {
@@ -2253,7 +2253,7 @@ function savePanelPort() {
 	var portBackEquipmentName = document.getElementById("portBackEquipmentName").value;
 	var portBackEquipmentType = document.getElementById("portBackEquipmentType").value;
 
-	var portBackKitSerialNum = document.getElementById("portBackKitSerialNum").value;
+	var portBackModule = document.getElementById("portBackModule").value;
 	//var portBackModuleValue = document.getElementById("portBackModule").value;
 	var portBackNum = document.getElementById("PortBackNum").value;
 
@@ -2342,7 +2342,7 @@ function savePanelPort() {
 			"portBackEquipmentName": portBackEquipmentName,
 			"portBackEquipmentType": portBackEquipmentType,
 
-			"portBackKitSerialNum": portBackKitSerialNum,
+			"portBackModule": portBackModule,
 			//"portBackModuleValue" : portBackModuleValue,
 			"portBackNum": portBackNum,
 

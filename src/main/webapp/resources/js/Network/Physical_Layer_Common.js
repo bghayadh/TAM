@@ -12613,7 +12613,7 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 			var bP_EquipmentID=$(this).parent().parent().children('td[name="BP_EquipmentID"]').children('input').val();
 			var bP_EquipmentName=$(this).parent().parent().children('td[name="BP_EquipmentName"]').children('input').val();
 			
-			var backKitModule=$(this).parent().parent().children('td[name="backKitModule"]').children('input').val();
+			var backModule=$(this).parent().parent().children('td[name="backModule"]').children('input').val();
 			var backPortNum=$(this).parent().parent().children('td[name="backPortNum"]').children('input').val();			
 						
 			var bP_Address=$(this).parent().parent().children('td[name="BP_Address"]').children('input').val();
@@ -12648,7 +12648,7 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 						"rowColIndex" : rowColIndex,
 						"rowNum" : rowNum,								    
 						"colNum" : colNum,
-						"backKitModule" :backKitModule,
+						"backModule" :backModule,
 						"backPortNum" :backPortNum,
 						"farKitSerialNum" : farKitSerialNum,
 						"farModule": farModule,
@@ -12728,7 +12728,7 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 						"fP_Address":fP_Address,
 						"fP_JunctionID":fP_JunctionID,
 						"fP_JunctionName":fP_JunctionName,
-						"backKitModule" :backKitModule,
+						"backModule" :backModule,
 						"backPortNum" :backPortNum,
 						"farKitSerialNum" : farKitSerialNum,
 						"farModule": farModule,
@@ -12795,7 +12795,7 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 					"fP_Address":fP_Address,
 					"fP_JunctionID":fP_JunctionID,
 					"fP_JunctionName":fP_JunctionName,
-					"backKitModule" :backKitModule,
+					"backModule" :backModule,
 					"backPortNum" :backPortNum,
 					"farKitSerialNum" : farKitSerialNum,
 					"farModule": farModule,
@@ -12853,7 +12853,7 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 					"fP_LocationType":fP_LocationType,
 					"fP_LocationID":fP_LocationID,
 					"fP_LocationM":fP_LocationM,
-					"backKitModule" :backKitModule,
+					"backModule" :backModule,
 					"backPortNum" :backPortNum,
 					"farKitSerialNum" : farKitSerialNum,
 					"farModule": farModule,
