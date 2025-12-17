@@ -7329,8 +7329,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" style="width: 185px;"><b>Back Kit Serial Num </b></span>
-                        <input type="text" id="portBackKitSerialNum" class="form-control text-input" />
+                        <span class="input-group-text" style="width: 185px;"><b>Back Module </b></span>
+                        <input type="text" id="portBackModule" class="form-control text-input" />
                     </div>
                 </div>
             </div>
@@ -7997,7 +7997,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 190px">Equipment ID</th>
 														<th style="min-width: 190px">Equipment Name</th>
 														<th style="min-width: 190px">Equipment Type</th>
-														<th style="min-width: 190px">Kit Serial Num </th>
+														<th style="min-width: 190px">Kit Serial # </th>
 														<th style="min-width: 190px">Module</th>
 													    <th style="min-width: 190px">Port #</th>
 													
@@ -8024,7 +8024,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														<th style="min-width: 190px">Equipment ID</th>
 														<th style="min-width: 190px">Equipment Name</th>
 														<th style="min-width: 190px">Equipment Type</th>
-														<th style="min-width: 190px">Kit Serial #</th>
+														<th style="min-width: 190px">Module</th>
 														<th style="min-width: 190px">Port #</th>
                                                         <th style="min-width: 190px">Address</th>
                                                         <th style="min-width: 190px">Junction ID</th>
