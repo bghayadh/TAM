@@ -8078,7 +8078,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										  <option value="frontPort">Front Port</option>
 										  <option value="backPort">Back Port</option>
 										</select></c:if>
-									</form></div></div></div></div></div></div></div></div>				
+									</form></div></div></div></div><div class="modal-footer"></div></div></div></div></div>				
 							<div class="container">
 								<div id="distributionBoardLoaderModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
 									<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
