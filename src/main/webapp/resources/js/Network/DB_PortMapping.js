@@ -193,7 +193,8 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' value='" + DistBoardMappingPts[i][33] + "' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' value='" + DistBoardMappingPts[i][34] + "' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name='BP_equipmentType' value='" + DistBoardMappingPts[i][31] + "' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='backModule'><input name='backModule' value='"
+				+ "<td name='backKitSerialNum'><input name='backKitSerialNum' value='" + DistBoardMappingPts[i][56] + "' id='backKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+				 + "<td name='backModule'><input name='backModule' value='"
                 + (backModuleVal === null || backModuleVal === undefined || backModuleVal === "null"
                     ? "" : backModuleVal)
                 + "' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
@@ -1661,12 +1662,16 @@ function equipmentChange() {
             // Make inputs editable
             row.find("input[name='backModule']").prop("readonly", false);
             row.find("input[name='backModule']").val('');
+			row.find("input[name='backKitSerialNum']").prop("readonly", false);
+			row.find("input[name='backKitSerialNum']").val('');
             row.find("input[name='backPortNum']").prop("readonly", false);
             row.find("input[name='backPortNum']").val('');
         } else {
             // Make inputs readonly again
             row.find("input[name='backModule']").prop("readonly", true);
             row.find("input[name='backModule']").val('');
+			row.find("input[name='backKitSerialNum']").prop("readonly", false);
+			row.find("input[name='backKitSerialNum']").val('');
             row.find("input[name='backPortNum']").prop("readonly", true);
             row.find("input[name='backPortNum']").val('');
         }
@@ -2013,7 +2018,8 @@ $(document).ready(function() {
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name=' BP_equipmentType' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='backModule'><input name='backModule' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
+				+ "<td name='backKitSerialNum'><input name=' backKitSerialNum' id='backKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+			    + "<td name='backModule'><input name='backModule' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
                 + "<td name='backPortNum'><input name='backPortNum' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
                 + "<td name='BP_Address'><input name='BP_Address' id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionID'><input name='BP_junctionID' id='BP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -2138,7 +2144,7 @@ $(document).ready(function() {
             var farKitSerialNum = $(this).parent().parent().children('td[name="farKitSerialNum"]').children('input').val();
             var farModule = $(this).parent().parent().children('td[name="farModule"]').children('input').val();
             var farPortNum = $(this).parent().parent().children('td[name="farPortNum"]').children('input').val();
-
+			var backKitSerialNum = $(this).parent().parent().children('td[name="backKitSerialNum"]').children('input').val();
             var backModule = $(this).parent().parent().children('td[name="backModule"]').children('input').val();
             var backPortNum = $(this).parent().parent().children('td[name="backPortNum"]').children('input').val();
 
@@ -2192,7 +2198,7 @@ $(document).ready(function() {
                 bP_JunctionName,
                 nearModule, nearPortNum, nearPatchType,
                 farKitSerialNum, farModule, farPortNum,
-                backModule, backPortNum
+                backModule, backPortNum, backKitSerialNum
             ]);
         });
 
