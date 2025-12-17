@@ -3625,7 +3625,7 @@ public class PhysicalLayerController {
 
 				List<Object[]> DistBoardMappingPts = session.createNativeQuery(
 						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_NB,FP_TUBE_NB,BP_STRAND_NB,BP_TUBE_NB,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, "
-						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM, BACK_KIT_MODULE, BACK_PORT_NUM FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM, BACK_MODULE, BACK_PORT_NUM FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
 								+ selectedDistBoardContext + "' ORDER BY ROW_COL_INDEX ASC")
 						.getResultList();
 
@@ -3692,7 +3692,7 @@ public class PhysicalLayerController {
 
 				List<Object[]> panelPortData = session.createNativeQuery(
 						"SELECT DISTINCT ROW_COL_INDEX,ROW_NUMBER,COLUMN_NUMBER,DB_PORT_ID,FP_STATUS,FP_LOCATION_TYPE,FP_LOCATION_ID,FP_LOCATION_NAME,FP_LOCATION,FP_EQUIPMENT_TYPE,FP_EQUIPMENT,FP_EQUIPMENT_ID,FP_EQUIPMENT_NAME,FP_ADDRESS,BP_STATUS,BP_STRAND_ID,BP_STRAND_NAME,BP_TUBE_ID,BP_TUBE_NAME,BP_FIBER_ID,BP_FIBER_NAME,FP_STRAND_ID,FP_STRAND_NAME,FP_TUBE_ID,FP_TUBE_NAME,FP_FIBER_ID,FP_FIBER_NAME,BP_LOCATION_TYPE,BP_LOCATION_ID,BP_LOCATION_NAME,BP_LOCATION,BP_EQUIPMENT_TYPE,BP_EQUIPMENT,BP_EQUIPMENT_ID,BP_EQUIPMENT_NAME,BP_ADDRESS,FP_STRAND_NB,FP_TUBE_NB,BP_STRAND_NB,BP_TUBE_NB,FP_STRAND_COLOR,FP_TUBE_COLOR,BP_STRAND_COLOR,BP_TUBE_COLOR,FP_JUNCTION_ID,FP_JUNCTION_NAME,BP_JUNCTION_ID,BP_JUNCTION_NAME, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, "
-						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM, BACK_KIT_MODULE, BACK_PORT_NUM FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
+						+ "FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM, BACK_MODULE, BACK_PORT_NUM FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.DB_ID='"
 								+ selectedDistBoardContext + "' AND ROW_COL_INDEX= '" + portIndex +"'")
 						.getResultList();
 
@@ -9554,9 +9554,9 @@ public class PhysicalLayerController {
 											? itemParameters.getDictParameter().get(i).get("farPortNum")
 											: "");
 							
-							distributionBoardMapping.setBackKitModule(
-									itemParameters.getDictParameter().get(i).get("backKitModule") != ""
-											? itemParameters.getDictParameter().get(i).get("backKitModule")
+							distributionBoardMapping.setBackModule(
+									itemParameters.getDictParameter().get(i).get("backModule") != ""
+											? itemParameters.getDictParameter().get(i).get("backModule")
 											: "");
 							
 							distributionBoardMapping.setBackportNum(
@@ -10027,7 +10027,7 @@ public class PhysicalLayerController {
 	            distributionBoardMapping.setFarKitSerialNum(request.getParameter("portFrontKitSerialNum"));
 	            distributionBoardMapping.setFarModule(request.getParameter("portFrontModuleValue"));
 	            distributionBoardMapping.setFarPortNum(request.getParameter("portFrontNum"));
-	            distributionBoardMapping.setBackKitModule(request.getParameter("portBackKitSerialNum"));
+	            distributionBoardMapping.setBackModule(request.getParameter("portBackKitSerialNum"));
 	            distributionBoardMapping.setBackportNum(request.getParameter("portBackNum"));
 
 	            // SAVE
