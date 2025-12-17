@@ -183,6 +183,9 @@ public class DistributionBoardMapping {
 	@Column(name = "BACK_MODULE")
 	private String backModule;
 	
+	@Column(name = "BACK_KIT_SERIAL_NUM")
+	private String backKitSerialNum;
+	
 	@Column(name = "BACK_PORT_NUM")
 	private String backportNum;
 	
@@ -299,7 +302,7 @@ public class DistributionBoardMapping {
 			String fP_StrandColor, String fP_TubeColor, String bP_TubeColor, String bP_JunctionId,
 			String bP_JunctionName, String fP_JunctionId, String fP_JunctionName, 
 			String nearModule, String nearPortNum, String nearPatchType, String farKitSerialNum, String farModule, 
-			String farPortNum, String backModule, String backportNum) {
+			String farPortNum, String backModule, String backportNum, String backKitSerialNum) {
 		super();
 		this.db_Port_Id = db_Port_Id;
 		this.distributionBoardId = distributionBoardId;
@@ -311,6 +314,7 @@ public class DistributionBoardMapping {
 		this.farKitSerialNum=farKitSerialNum;
 		this.farModule=farModule;
 		this.farPortNum=farPortNum;
+		this.backKitSerialNum=backKitSerialNum;
 		this.backModule=backModule;
 		this.backportNum=backportNum;
 		this.colNum = colNum;
@@ -362,6 +366,14 @@ public class DistributionBoardMapping {
 			
 			////
 	
+
+	public String getBackKitSerialNum() {
+		return backKitSerialNum;
+	}
+
+	public void setBackKitSerialNum(String backKitSerialNum) {
+		this.backKitSerialNum = backKitSerialNum;
+	}
 
 	public String getNearModule() {
 		return nearModule;
