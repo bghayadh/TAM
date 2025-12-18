@@ -9516,6 +9516,27 @@ $("#saveController").click(function () {
                         	if(data.controllerDBCount != "0"){
                     		$("#"+data.controllerId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li>");
                         	}
+
+                        	if(markersController[data.controllerId]){                    			
+                  			   markersController[data.controllerId].setMap(null);
+                  	            markerClusterController.removeMarker(markersController[data.controllerId]);
+                  	        	delete markersController[data.controllerId];
+                      		}
+                         	createControllerMarkerClick(
+         							data.controllerId,
+         							data.controllerName,
+         						    data.lng, 
+         						    data.lat, 
+         						    markersController,
+         					        markerClusterController
+         							
+         						);
+         					controllerCheckFilter(
+         							data.controllerId,
+         							markerClusterController
+         							); 
+         				
+         					markerClusterController.addMarker(markersController[data.controllerId]);
                     	}                        	 
                     }
                     var childrenInitial=$("#initial_ul_CurrentPhysicalLayer").find(' > ul > li');
