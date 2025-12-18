@@ -2213,9 +2213,9 @@ $(document).ready(function() {
     });
 
     if (writeDB === '1') {
-        $("#BP_assignCable").autocomplete({
+        $("#dbPort_assignCable").autocomplete({
             source: function(request, response, event, ui) {
-                var searchId = $("#BP_assignCable").val();
+                var searchId = $("#dbPort_assignCable").val();
                 $.ajax({
                     type: "GET",
                     contentType: "application/json; charset=utf-8",
@@ -2236,9 +2236,14 @@ $(document).ready(function() {
                 });
 
             }, minLength: 0, maxShowItems: 4, scroll: true,
+			position: {
+			    my: "left top",
+			    at: "left bottom",
+			    collision: "flipfit"
+			},
             select: function(event, ui) {
                 fibercable_arr = [];
-                $("#BP_assignCable").val(ui.item[0]);
+                $("#dbPort_assignCable").val(ui.item[0]);
                 fibercable_arr.push(ui.item[1]);
                 fibercable_arr.push(ui.item[0]);
 
@@ -2250,7 +2255,7 @@ $(document).ready(function() {
                     item[0] + '</span><br><span class="desc">' +
                     item[1] + '</span></div>').appendTo(ul);
         };
-        $("#BP_assignCable").focus(function() {
+        $("#dbPort_assignCable").focus(function() {
             if (this.value == "") {
                 $(this).autocomplete("search");
             }
@@ -2275,7 +2280,7 @@ $(document).ready(function() {
             }
         });
 
-        $("#BP_assignTube").autocomplete({
+        $("#dbPort_assignTube").autocomplete({
             source: function(request, response, event, ui) {
                 searchId = $("#BP_assignTube").val();
 
@@ -2300,6 +2305,11 @@ $(document).ready(function() {
                 });
 
             }, minLength: 0, maxShowItems: 4, scroll: true,
+			position: {
+			    my: "left top",
+			    at: "left bottom",
+			    collision: "flipfit"
+			},
             select: function(event, ui) {
                 fibertube_arr = [];
                 $("#BP_assignTube").val(ui.item[0]);

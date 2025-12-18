@@ -8070,10 +8070,10 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<button type="button" id="delete_RackRow">Delete Row</button>
 										<button type="button" id="sortByIndex">Sort By Index</button>
 										<button type="button" id="assign_Cable">Assign Cable</button>
-										<input name="fiber_Cable" id="BP_assignCable" class="form-control text-input" type="text" style="width:150px;display: inline-block;" <c:if test="${writeDB == 0}">readonly</c:if>/>
+										<input name="fiber_Cable" id="dbPort_assignCable" class="form-control text-input" type="text" style="width:150px;display: inline-block;" <c:if test="${writeDB == 0}">readonly</c:if>/>
 										<button type="button" id="assign_Tube">Assign Tube</button>
-										<input name="fiber_Tube" id="BP_assignTube" class="form-control text-input" type="text" style="width:170px;display: inline-block;" <c:if test="${writeDB == 0}">readonly</c:if>/>
-										<select id="selected_Port" aria-label="Default select example" class="form-select" style="height:35px; " <c:if test="${writeDB == 0}">disabled</c:if>/>
+										<input name="fiber_Tube" id="dbPort_assignTube" class="form-control text-input" type="text" style="width:170px;display: inline-block;" <c:if test="${writeDB == 0}">readonly</c:if>/>
+										<select id="selected_Port" aria-label="Default select example" class="form-select" style="height:35px; " <c:if test="${writeDB == 0}">disabled</c:if>>
 										  <option value="title"  selected>Front/back</option>
 										  <option value="frontPort">Front Port</option>
 										  <option value="backPort">Back Port</option>
