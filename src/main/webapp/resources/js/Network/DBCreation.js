@@ -345,7 +345,7 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
 
         google.maps.event.addListener(Mapmarker, "click", function(e) {
             var IdSelected = this.ID;
-
+		
             dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
             if (!dbFileId) {
                 dbFileId = $("#" + IdSelected).parent().parent().parent().parent().attr('id').split("__")[1];
@@ -651,41 +651,50 @@ function createControllerMarkerClick(Id, name, long, lat, markers, markerCluster
         markers[Id] = Mapmarker; // store marker only (not yet added to cluster!)
 
         // --- CLICK EVENT on marker ---
-        google.maps.event.addListener(Mapmarker, "click", function(e) {
-            const IdSelected = this.ID;
+		google.maps.event.addListener(Mapmarker, "click", function(e) {
+		           var IdSelected = this.ID;
+				   markerType = "DistributionBoard";
+		           dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
+		           if (!dbFileId) {
+		               dbFileId = $("#" + IdSelected).parent().parent().parent().parent().attr('id').split("__")[1];
+		           }
+		           var childrenInitial = $("#initial_ul_" + dbFileId + "").find(' > ul > li');
+		           var children = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li');
+		           var networkLevelFolder = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ');
+		           var networkControllerFolders = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ul > li');
+		          
+		           if (IdSelected != IdSelectedTemp) {
+		               if (IdSelectedTemp != "") {
+		                   $("#" + IdSelectedTemp + " > .TreeSpan").removeClass("selected-span");
+		                   $("#" + IdSelectedTemp + " > .TreeSpan").css("background", "");
+		               }
+		               IdSelectedTemp = IdSelected;
+		           }
+		           childrenInitial.show('fast');
+		           if (!children.is(":visible")) {
+		               children.show();
+		           }
+		           networkLevelFolder.show();
+		           networkControllerFolders.show();
+		        
+		           $("#" + IdSelected + " > .TreeSpan").addClass("selected-span");
+		           $("#" + IdSelected + " > .TreeSpan").css("background-color", "#97b9cc");
+		           $("#initial_ul_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+		           $("#" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+		           $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+		           $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li  > ul > li > .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li  > ul > li > ul > li>  .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
 
-            dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
-            const childrenInitial = $("#initial_ul_" + dbFileId + "").find(' > ul > li ');
-            var children = $("#DistributionBoard_f_" + dbFileId + "").find(' > ul > li > ul >li');
-            const networkLevelFolder = $("#DistributionBoard_f_" + dbFileId + "").find(' > ul > li > ul > li  ul > li');
-
-            // Selection logic
-            if (IdSelected != IdSelectedTemp) {
-                if (IdSelectedTemp != "") {
-                    $("#" + IdSelectedTemp + " > .TreeSpan").removeClass("selected-span").css("background", "");
-                }
-                IdSelectedTemp = IdSelected;
-            }
-
-            childrenInitial.show('fast');
-            if (!children.is(":visible")) {
-                children.show();
-            }
-            networkLevelFolder.show();
-            $("#" + IdSelected + " > .TreeSpan").addClass("selected-span").css("background-color", "#97b9cc");
-            $("#initial_ul_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-            $("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-            $("#" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-            $("#Controller_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-            $("#Controller_f_" + dbFileId + "").find(' > ul > li > .Parentfolder >svg').removeClass('fa fa-folder').addClass('fa-folder-open');
-
-            const offset = $("#" + IdSelected).offset().top;
-            const projectOffset = $("#initial_ul_" + dbFileId).offset().top;
-            const offsetTotal = (offset - projectOffset);
-            $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
-        });
-
-    } else {
+		           offset = $("#" + IdSelected).offset().top;
+		           projectOffset = $("#initial_ul_" + dbFileId).offset().top;
+		           offsetTotal = (offset - projectOffset);
+		           $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
+		          
+		       });
+		   }else {
         // Update existing marker position
         if (markers[Id].map !== map) {
             markers[Id].setMap(map);
