@@ -2262,6 +2262,8 @@ $(document).ready(function() {
         });
 
         $("#assign_Cable").on('click', function() {
+			console.log(fibercable_arr.length);
+			console.log(fibercable_arr);
             var selected_port = $('#selected_Port').find(":selected").val();
             $('#selected_Port').children('option[value="title"]').css('display', 'none');
             if (fibercable_arr.length) {
@@ -2278,6 +2280,27 @@ $(document).ready(function() {
                     }
                 });
             }
+			
+			 if(document.getElementById("dbPort_assignCable").value ==="") {
+				$("#DbMappingTable > tbody").find('input[name="record"]').each(function() {
+				                   if ($(this).is(":checked")) {
+				                       if (selected_port == "frontPort") {
+				                           $(this).parent().parent().children('td[name="FP_FiberID"]').children('input').val(" ");
+				                           $(this).parent().parent().children('td[name="FP_FiberName"]').children('input').val(" ");
+				                       }
+				                       else if (selected_port == "backPort") {
+				                           $(this).parent().parent().children('td[name="BP_FiberID"]').children('input').val(" ");
+				                           $(this).parent().parent().children('td[name="BP_FiberName"]').children('input').val(" ");
+				                       }
+				                   }
+				               });
+				
+				
+				
+				
+				
+			}
+			
         });
 
         $("#dbPort_assignTube").autocomplete({
@@ -2353,6 +2376,26 @@ $(document).ready(function() {
                     }
                 });
             }
+			
+			if(document.getElementById("dbPort_assignTube").value ==="") {
+				$("#DbMappingTable > tbody").find('input[name="record"]').each(function() {
+				                   if ($(this).is(":checked")) {
+				                       if (selected_port == "frontPort") {
+				                           $(this).parent().parent().children('td[name="FP_TubeID"]').children('input').val(" ");
+				                           $(this).parent().parent().children('td[name="FP_TubeName"]').children('input').val(" ");
+				                       }
+				                       else if (selected_port == "backPort") {
+				                           $(this).parent().parent().children('td[name="BP_TubeID"]').children('input').val(" ");
+				                           $(this).parent().parent().children('td[name="BP_TubeID"]').children('input').val(" ");
+				                       }
+				                   }
+				               });
+				
+				
+				
+				
+				
+			}
         });
     }
 });
