@@ -241,7 +241,7 @@ function htmlBOQRowInsertion(rowParams){
     	     	+"<input name='procClassName' type='text' value='"+ rowParams.className +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
 				+"<td name='procStartDateTime'>"
 				+"<div class='input-group'>"
-				+"<input type='text' name='procStartDateTime' value='"+ (rowParams.startDateTime || "") +"'class='form-control proc-start-time' placeholder='Select start date/time' style='width:200px;' />"
+				+"<input type='text' name='procStartDateTime' autocomplete='off' value='"+ (rowParams.startDateTime || "") +"'class='form-control proc-start-time' placeholder='Select Start Date/Time' style='width:200px;' />"
 				+"<div class='input-group-append'>"
 				+"<button class='btn btn-outline-secondary calendar-btn' type='button'><i class='fa fa-calendar'></i></button>"
 				+"</div></div></td>"				
