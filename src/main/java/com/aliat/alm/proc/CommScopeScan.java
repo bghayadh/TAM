@@ -62,11 +62,25 @@ public class CommScopeScan implements Job, ExecutableOperation {
 					+ "(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num))";
 				
 				session.createNativeQuery(str).executeUpdate();
-
+				
 				// This is for manual or dynamic execution
-				String processName = (String) params[0];
+				String processName = null;
+				String cronExpr = null;
+
+				if (params != null) {
+				    if (params.length > 0) {
+				        processName = String.valueOf(params[0]);
+				    }
+				    if (params.length > 1) {
+				        cronExpr = String.valueOf(params[1]);
+				    }
+				}
+
 				System.out.println(
-						"Running Process Name: " + processName + " with cron expression: " + (String) params[1]);
+				    "Running Process Name: " + processName +
+				    (cronExpr != null ? " with cron expression: " + cronExpr : "")
+				);				
+
 				performSync();
 			} catch (Exception e) {
 				logger.info(
