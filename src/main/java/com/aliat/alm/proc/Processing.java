@@ -78,7 +78,7 @@ public class Processing {
 			notifications.headerNotifications(session, model);
 			try {
 				listDiscovery = session.createQuery(
-						"select t.linkName,t.processName,t.status,TO_CHAR(t.lastRunningTime, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(t.nextRunningTime, 'YYYY-MM-DD HH24:MI:SS') from Process t order by t.lastRunningTime DESC")
+						"select t.linkName,t.processName, TO_CHAR(t.lastRunningTime, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(t.nextRunningTime, 'YYYY-MM-DD HH24:MI:SS'), t.status from Process t order by t.lastRunningTime DESC")
 						.list();
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(listDiscovery));
 				System.out.println("listDiscovery is " + mapper.writeValueAsString(listDiscovery));
