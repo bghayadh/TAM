@@ -1,6 +1,9 @@
 package com.aliat.alm.proc;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import com.aliat.alm.models.ProcessOperation;
 import com.aliat.alm.utils.CronExpressionAdapter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SchedulerService {
@@ -26,6 +30,8 @@ public class SchedulerService {
 
 	@Resource(name = "quartzScheduler")
 	private Scheduler scheduler;
+	
+	private ObjectMapper mapper = new ObjectMapper();
 
 	@SuppressWarnings("unchecked")
 	public void scheduleJob(ProcessOperation operation, String procStatus) throws Exception {
@@ -141,5 +147,56 @@ public class SchedulerService {
 		}
 
 		System.out.println("======================================");
+	}
+
+	// get all the operations, it returns the result in list of hashmap.
+	public List<Map<String, Object>> getAllJobs() throws Exception {
+		List<Map<String, Object>> rtn = new ArrayList<>();
+		System.out.println("===== Getting all scheduled jobs =====");
+
+		for (String groupName : scheduler.getJobGroupNames()) {
+			for (JobKey jobKey : scheduler
+					.getJobKeys(org.quartz.impl.matchers.GroupMatcher.jobGroupEquals(groupName))) {
+
+				JobDetail jobDetail = scheduler.getJobDetail(jobKey);
+				if (jobDetail == null)
+					continue;
+
+				// Job class that will execute
+				String jobClassName = jobDetail.getJobClass().getName();
+
+				// Get all triggers for this job
+				for (org.quartz.Trigger trigger : scheduler.getTriggersOfJob(jobKey)) {
+					String triggerType = trigger.getClass().getSimpleName();
+
+					// Only print cron expression for CronTriggers
+					String cronExpr = "";
+					if (trigger instanceof CronTrigger) {
+						cronExpr = ((CronTrigger) trigger).getCronExpression();
+					}
+					Map<String, Object> job = new HashMap<>();
+					job.put("Job ID", jobKey.getName());
+					job.put("Group", jobKey.getGroup());
+					job.put("Class", jobClassName);
+					job.put("Cron", (cronExpr.isEmpty() ? "N/A" : cronExpr));
+					job.put("Next Fire", trigger.getNextFireTime());
+					job.put("Previous", trigger.getPreviousFireTime());					
+
+					System.out.println("--------------------------------------------------");
+					System.out.println("Job ID:      " + jobKey.getName());
+					System.out.println("Group:       " + jobKey.getGroup());
+					System.out.println("Class:       " + jobClassName);
+					System.out.println("Trigger:     " + trigger.getKey().getName() + " (" + triggerType + ")");
+					System.out.println("Cron:        " + (cronExpr.isEmpty() ? "N/A" : cronExpr));
+					System.out.println("Next Fire:   " + trigger.getNextFireTime());
+					System.out.println("Previous:    " + trigger.getPreviousFireTime());
+					rtn.add(job);
+				}
+			}
+		}
+
+		System.out.println("======================================");
+		System.out.println("rtn is " +mapper.writeValueAsString(rtn));
+		return rtn;
 	}
 }

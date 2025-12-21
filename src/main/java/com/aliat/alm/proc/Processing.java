@@ -1,45 +1,29 @@
 package com.aliat.alm.proc;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.math.BigDecimal; // Add this import statement
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.json.simple.JSONArray;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.aliat.alm.common.AlmDbSession;
-import com.aliat.alm.common.Form;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.common.Permissions;
-import com.aliat.alm.models.Process;
 import com.aliat.alm.models.ProcessOperation;
-import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -54,11 +38,18 @@ public class Processing {
 	private ObjectMapper mapper = new ObjectMapper();
 	private String str = null;
 	private Object[] row = null;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private final SchedulerService schedulerService;
 
 	@SuppressWarnings("rawtypes")
 	private Query query = null;
 
 	private static final Logger logger = LoggerFactory.getLogger(Processing.class);
+
+	@Autowired
+	public Processing(SchedulerService schedulerService) {
+		this.schedulerService = schedulerService;
+	}
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ProcessListView", method = RequestMethod.GET)
@@ -71,17 +62,56 @@ public class Processing {
 			return "Login";
 			// return "redirect:/";
 		}
-		List<Process> listDiscovery = new ArrayList<Process>();
+		List<Object[]> listProcess;
+		List<Object[]> listOperation;
+		List<Map<String, Object>> jobs = new ArrayList<>();
+		Map<String, String> jobIdToLinkName = new HashMap<>();
 		session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			notifications.headerNotifications(session, model);
 			try {
-				listDiscovery = session.createQuery(
+				jobs = schedulerService.getAllJobs();
+				listProcess = session.createQuery(
 						"select t.linkName,t.processName, TO_CHAR(t.lastRunningTime, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(t.nextRunningTime, 'YYYY-MM-DD HH24:MI:SS'), t.status from Process t order by t.lastRunningTime DESC")
 						.list();
-				model.addAttribute("ListGridTable", mapper.writeValueAsString(listDiscovery));
-				System.out.println("listDiscovery is " + mapper.writeValueAsString(listDiscovery));
+				listOperation = session.createNativeQuery("select id, link_name from process_operation").list();
+				for (Object[] op : listOperation) {
+					String opId = String.valueOf(op[0]);
+					String opLink = String.valueOf(op[1]);
+					jobIdToLinkName.put(opId, opLink);
+				}
+				for (Object[] process : listProcess) {
+					Date latestNextFireTime = null;
+					String linkName = (String) process[0];
+					Iterator<Map<String, Object>> it = jobs.iterator();
+					while (it.hasNext()) {
+						Map<String, Object> job = it.next();
+						Object jobID = job.get("Job ID");
+						if (jobID == null)
+							continue;
+						String opLink = jobIdToLinkName.get(jobID.toString()); // fast lookup
+						if (opLink == null)
+							continue;
+						if (StringUtils.equalsIgnoreCase(opLink, linkName)) {
+							Date nft = (Date) job.get("Next Fire");
+							if (nft == null)
+								continue;
+
+							if (latestNextFireTime == null || nft.after(latestNextFireTime)) {
+								latestNextFireTime = nft;
+							}
+							it.remove();
+						}
+					}
+					if (latestNextFireTime != null) {
+						process[3] = sdf.format(latestNextFireTime);
+					} else {
+						process[3] = null;
+					}
+				}
+				model.addAttribute("ListGridTable", mapper.writeValueAsString(listProcess));
+				System.out.println("listDiscovery is " + mapper.writeValueAsString(listProcess));
 			} catch (Exception e) {
 				logger.info("Error on the level of Process Listview with a message : " + e + "\n" + e.getMessage());
 				model.addAttribute("ListGridTable", "");
