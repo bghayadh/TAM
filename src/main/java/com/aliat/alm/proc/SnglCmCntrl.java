@@ -276,9 +276,7 @@ public class SnglCmCntrl {
 		cntrl = session.get(ControllerPanel.class, controllerID);
 
 		seq = ((Number) session.createNativeQuery("SELECT DB_SEQ.NEXTVAL FROM DUAL").uniqueResult()).intValue();
-		System.out.println("seq is " + seq);
 		dbID = "DB_" + year + "_" + seq;
-		System.out.println("dbID is " + dbID);
 
 		dbIDs.add(dbID);
 		distributionBoard.setDistributionBoardId(dbID);
@@ -302,15 +300,6 @@ public class SnglCmCntrl {
 		distributionBoard.setDBDeploymentType("");
 		distributionBoard.setDBAdaptorPanelType("");
 		distributionBoard.setDistributionBoardType("active");
-		/*
-		 * String projectId= request.getParameter("ProjectId"); if(projectId == null ||
-		 * projectId == "SC") {
-		 * 
-		 * projectId="CurrentPhysicalLayer";
-		 * 
-		 * }
-		 */
-
 		distributionBoard.setDistributionBoardProjectId("CurrentPhysicalLayer");
 		distributionBoard.setDistributionBoardRowsNum(totalPanelPorts < 24 ? 1f : totalPanelPorts / 24f);
 		distributionBoard.setDistributionBoardColsNum((float) Math.min(totalPanelPorts, 24));
@@ -362,7 +351,6 @@ public class SnglCmCntrl {
 			} // End for loop for modules.
 		} // End for loop for kits.
 		session.flush();
-		System.out.println("In the end of method, the dbID is" + dbID);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -386,12 +374,10 @@ public class SnglCmCntrl {
 			str = "SELECT DB_ID, NUM_ROWS, NUM_COLUMNS, MAX_CAPACITY FROM DISTRIBUTION_BOARD WHERE CONTROLLER_ID = '"
 					+ ID + "'";
 			panelsInfo = session.createNativeQuery(str).list();
-			System.out.println("ID is " +ID);
 			str = " select serial_numb from controller where controller_id ='" + ID + "'"; 
 			rtn = commscopeService.patchesAPI(token, ipAddress, session.createNativeQuery(str).uniqueResult().toString());
 			if (rtn.containsKey("responseBody")
 					&& !StringUtils.equalsIgnoreCase(rtn.get("status").toString(), "Failed")) {
-				System.out.println("Passing patchesAPI");
 				rtnBody = (Map<String, Object>) rtn.get("responseBody");
 				if (rtnBody.containsKey("patches")) {
 					patches = (List<Map<String, Object>>) rtnBody.get("patches");
@@ -408,9 +394,7 @@ public class SnglCmCntrl {
 						}
 					}
 				}
-			}
-			
-			System.out.println("patchMap is " +mapper.writeValueAsString(patchMap));
+			}			
 
 			for (Object[] panel_Info : panelsInfo) {
 				portIndex = 0;
@@ -442,7 +426,6 @@ public class SnglCmCntrl {
 					String key = dbPort[5] + "-" + dbPort[6];
 					portsMap.put(key, dbPort);
 				}
-				System.out.println("portsMap is " +mapper.writeValueAsString(portsMap));
 				int j = 0;
 				for (Object[] panelModule : panelModules) {
 					int modulePortCount = Integer.parseInt(panelModule[4].toString());
@@ -457,17 +440,10 @@ public class SnglCmCntrl {
 							rowModuleNum = 3;
 							colModuleNum = (i + 1) - 2 * colPerModule + (j * colPerModule);
 						}
-						System.out.println("panelModule[2] is: " +panelModule[2]);
 						String key = panelModule[2] + "-" + (i + 1);
-						System.out.println("key is " + key);
-						System.out.println("portsMap.get(key) is " +mapper.writeValueAsString(portsMap.get(key)));
-						Object[] matchedDbPort = portsMap.get(key);
-						System.out.println("matchedDbPor is " +matchedDbPort);						
+						Object[] matchedDbPort = portsMap.get(key);						
 						key = panelModule[3] + "-" + key;
-						System.out.println("panelModule[3] is " +panelModule[3] + " and new key is " +key);
-						System.out.println("patchMap.get(key) is " +mapper.writeValueAsString(patchMap.get(key)));
 						Map<String, Object> matchedPatchPort = patchMap.get(key);
-						System.out.println("matchedPatchPort is " +mapper.writeValueAsString(matchedPatchPort));
 						portIndex = (i + 1) + (Integer.parseInt(panelModule[0].toString()) - 1) * modulePortCount;
 						str = "update distribution_board_mapping set ROW_COL_INDEX = :portIndex, ROW_NUMBER = :rowNum, COLUMN_NUMBER = :colNum,"
 								+ " NEAR_MODULE = :nearModule, NEAR_PORT_NUM = :nearPortNum, fp_status = :fpStatus";
