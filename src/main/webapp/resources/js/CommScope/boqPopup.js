@@ -238,7 +238,7 @@ function htmlBOQRowInsertion(rowParams){
 				+statusSwitch+"</td>"				
     			//+"<input name='procStatus' type='text' value='"+ rowParams.status +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"												
     			+"<td name='procClassName'>"
-    	     	+"<input name='procClassName' type='text' value='"+ rowParams.className +"' style='width:200px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
+    	     	+"<input name='procClassName' type='text' value='"+ rowParams.className +"' style='width:330px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'/></td>"
 				+"<td name='procStartDateTime'>"
 				+"<div class='input-group'>"
 				+"<input type='text' name='procStartDateTime' autocomplete='off' value='"+ (rowParams.startDateTime || "") +"'class='form-control proc-start-time' placeholder='Select Start Date/Time' style='width:200px;' />"

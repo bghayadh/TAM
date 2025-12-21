@@ -73,7 +73,7 @@ public class Processing {
 			try {
 				jobs = schedulerService.getAllJobs();
 				listProcess = session.createQuery(
-						"select t.linkName,t.processName, TO_CHAR(t.lastRunningTime, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(t.nextRunningTime, 'YYYY-MM-DD HH24:MI:SS'), t.status from Process t order by t.lastRunningTime DESC")
+						"select t.linkName,t.processName, TO_CHAR(t.lastRunningTime, 'YYYY-MM-DD HH24:MI:SS'), TO_CHAR(t.nextRunningTime, 'YYYY-MM-DD HH24:MI:SS'), '',t.status from Process t order by t.lastRunningTime DESC")
 						.list();
 				listOperation = session.createNativeQuery("select id, link_name from process_operation").list();
 				for (Object[] op : listOperation) {
@@ -100,15 +100,16 @@ public class Processing {
 
 							if (latestNextFireTime == null || nft.after(latestNextFireTime)) {
 								latestNextFireTime = nft;
+								process[4] = job.get("Class");
 							}
 							it.remove();
 						}
 					}
 					if (latestNextFireTime != null) {
-						process[3] = sdf.format(latestNextFireTime);
+						process[3] = sdf.format(latestNextFireTime);						
 					} else {
 						process[3] = null;
-					}
+					}				
 				}
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(listProcess));
 				System.out.println("listDiscovery is " + mapper.writeValueAsString(listProcess));

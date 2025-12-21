@@ -62,6 +62,7 @@ public class CommScopeScan implements Job, ExecutableOperation {
 					+ "(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num))";
 				
 				session.createNativeQuery(str).executeUpdate();
+				session.createNativeQuery("update process set last_running_time = sysdate where link_name = 'CommScope'").executeUpdate();
 				
 				// This is for manual or dynamic execution
 				String processName = null;
