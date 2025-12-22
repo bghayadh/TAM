@@ -160,7 +160,7 @@ public class Processing {
 				model.addAttribute("processParams", processParams);
 
 				listProcessOperation = session
-						.createQuery("from ProcessOperation where linkName = :param1 order by creation_date desc")
+						.createQuery("from ProcessOperation where linkName = :param1 order by creation_date asc")
 						.setParameter("param1", processParams.get("linkName").toString()).list();
 				mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 				model.addAttribute("listProcessOperation", mapper.writeValueAsString(listProcessOperation));
