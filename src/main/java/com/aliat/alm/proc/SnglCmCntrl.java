@@ -446,15 +446,15 @@ public class SnglCmCntrl {
 						Map<String, Object> matchedPatchPort = patchMap.get(key);
 						portIndex = (i + 1) + (Integer.parseInt(panelModule[0].toString()) - 1) * modulePortCount;
 						str = "update distribution_board_mapping set ROW_COL_INDEX = :portIndex, ROW_NUMBER = :rowNum, COLUMN_NUMBER = :colNum,"
-								+ " NEAR_MODULE = :nearModule, NEAR_PORT_NUM = :nearPortNum, fp_status = :fpStatus";
+								+ " NEAR_MODULE = :nearModule, NEAR_PORT_NUM = :nearPortNum, fp_status = :fpStatus, near_patch_type = :nearPatchType,"
+								+ " FAR_NEAR_KIT_SERIAL_NUM = :farNearKitSerialNum, FAR_NEAR_MODULE = :farNearModule,"
+								+ " FAR_NEAR_PORT_NUM = :farNearPortNum";								
 
 						String equipment = "";
-
+						
 						if (matchedDbPort != null) {
 							// Found matching port and will use matchedPatchPort
 							if (matchedPatchPort != null) {
-								//str = str + ", near_patch_type = :nearPatchType, fp_equipment = :fpEquipment";
-								str = str + ", near_patch_type = :nearPatchType";
 								if (matchedPatchPort.containsKey("eEquipment")) {
 									//equipment = "Custom";
 									str = str + " where DB_PORT_ID = :dbPortID";
@@ -464,12 +464,13 @@ public class SnglCmCntrl {
 											.setParameter("nearPortNum", i + 1)
 											.setParameter("nearPatchType", matchedPatchPort.get("type"))
 											.setParameter("fpStatus", "Connected")
-											//.setParameter("fpEquipment", equipment)
+											.setParameter("farNearKitSerialNum", "")
+											.setParameter("farNearModule", "")
+											.setParameter("farNearPortNum", "")											
 											.setParameter("dbPortID", matchedDbPort[0].toString()).executeUpdate();
 								} else {
 									equipment = "DistBoard";
-									str = str + ", fp_equipment = :fpEquipment, FAR_NEAR_KIT_SERIAL_NUM = :farNearKitSerialNum, "
-										+ "FAR_NEAR_MODULE = :farNearModule, FAR_NEAR_PORT_NUM = :farNearPortNum where DB_PORT_ID = :dbPortID";
+									str = str + ", fp_equipment = :fpEquipment where DB_PORT_ID = :dbPortID";
 									session.createNativeQuery(str).setParameter("portIndex", portIndex)
 											.setParameter("rowNum", rowModuleNum).setParameter("colNum", colModuleNum)
 											.setParameter("nearModule", panelModule[2])
@@ -487,7 +488,11 @@ public class SnglCmCntrl {
 								session.createNativeQuery(str).setParameter("portIndex", portIndex)
 										.setParameter("rowNum", rowModuleNum).setParameter("colNum", colModuleNum)
 										.setParameter("nearModule", panelModule[2]).setParameter("nearPortNum", i + 1)
+										.setParameter("nearPatchType", "")
 										.setParameter("fpStatus", "Disconnected")
+										.setParameter("farNearKitSerialNum", "")
+										.setParameter("farNearModule", "")
+										.setParameter("farNearPortNum", "")
 										.setParameter("dbPortID", matchedDbPort[0].toString()).executeUpdate();
 							}
 						} else {
@@ -499,14 +504,12 @@ public class SnglCmCntrl {
 									+ "near_module, near_port_num, fp_status";
 
 							if (matchedPatchPort != null) { // Case: new port and has patch
-								//str = str + ", near_patch_type, fp_equipment";
 								str = str + ", near_patch_type";
 								if (matchedPatchPort.containsKey("eEquipment")) { // The patch of type that is connected to equipment.
 									//equipment = "Custom";
 									str = str
 											+ ") values (:dbPortID, :dbID, :portIndex, :rowNum, :colNum, :nearModule, :nearPortNum, "
-											//+ ":fpStatus, :nearPatchType, :fpEquipment)";
-											+ ":fpStatus, :nearPatchType)";									
+											+ ":fpStatus, :nearPatchType)";
 
 									session.createNativeQuery(str).setParameter("dbPortID", dbPortID)
 											.setParameter("dbID", panel_Info[0].toString())
