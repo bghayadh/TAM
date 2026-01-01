@@ -24,7 +24,7 @@ public class SnglCmCntrlEvent {
 
 	private String str = "";
 	private ObjectMapper mapper = new ObjectMapper();
-	private final Logger logger = LoggerFactory.getLogger(SnglCmCntrl.class);
+	private final Logger logger = LoggerFactory.getLogger(SnglCmCntrlEvent.class);
 
 	public void login(String controllerID, String ipAddress, String username, String password, int requestedDuration,
 			String serialNo, Object[] latestEvent, Session session) {
