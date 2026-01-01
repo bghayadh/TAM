@@ -83,14 +83,14 @@ public class SnglCmCntrlEvent {
 
 		try {
 			for (Map<String, Object> event : events) {
-				ipatchEventID = "IPATCH_EVENT_" + year + ((Number) session
+				ipatchEventID = "IPATCH_EVENT_" + year + "_" + ((Number) session
 						.createNativeQuery("SELECT IPATCH_EVENT_SEQ.NEXTVAL FROM DUAL").uniqueResult()).longValue();
 				str = "insert into ipatch_event (id, event_id, event_type, event_timestamp, controller_id, raw_payload) "
 						+ "values (:ipatchEventId, :eventID, :eventType, :ts, :cntrlID, :payload)";
 				session.createNativeQuery(str).setParameter("ipatchEventId", ipatchEventID)
 						.setParameter("eventID", ((Number) event.get("eventId")).longValue())
 						.setParameter("eventType", event.get("eventType").toString())
-						.setParameter("ts", (Timestamp) event.get("ts")).setParameter("cntrlID", serialNo)
+						.setParameter("ts", (Timestamp) event.get("timestamp")).setParameter("cntrlID", serialNo)
 						.setParameter("payload", mapper.writeValueAsString(event)).executeUpdate();
 				// --- Insert attributes into IPATCH_EVENT_ATTR ---
 				for (Map.Entry<String, Object> entry : event.entrySet()) {
@@ -102,16 +102,16 @@ public class SnglCmCntrlEvent {
 							|| key.equals("controllerId"))
 						continue;
 
-					ipatchEventAttrID = "IPATCH_EVENT_ATTR" + year
+					ipatchEventAttrID = "IPATCH_EVENT_ATTR_" + year + "_"
 							+ ((Number) session.createNativeQuery("SELECT IPATCH_EVENT_ATTR_SEQ.NEXTVAL FROM DUAL")
 									.uniqueResult()).longValue();
 
 					str = "insert into ipatch_event_attr (id, event_id, attr_key, attr_val) "
-							+ "values (:ipatchEventAtrrId, :eventID, :attrKey, :attrVal)";
+							+ "values (:ipatchEventAttrId, :eventID, :attrKey, :attrVal)";
 
-					session.createNativeQuery(str).setParameter("ipatchEventAtrrId", ipatchEventAttrID)
+					session.createNativeQuery(str).setParameter("ipatchEventAttrId", ipatchEventAttrID)
 							.setParameter("eventID", ipatchEventID).setParameter("attrKey", key)
-							.setParameter("attrVal", value.toString()).executeUpdate();
+							.setParameter("attrVal", value != null ? value.toString() : null).executeUpdate();
 				}
 			}
 		} catch (Exception e) {
