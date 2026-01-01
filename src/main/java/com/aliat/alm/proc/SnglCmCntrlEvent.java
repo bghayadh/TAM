@@ -1,6 +1,7 @@
 package com.aliat.alm.proc;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -28,8 +29,8 @@ public class SnglCmCntrlEvent {
 
 	public void login(String controllerID, String ipAddress, String username, String password, int requestedDuration,
 			String serialNo, Object[] latestEvent, Session session) {
+		System.out.println("Welcome to login");
 		Map<String, Object> rtn = new LinkedHashMap<>();
-
 		try {
 			rtn = commscopeService.loginAPI(ipAddress, username, password, requestedDuration);
 			if (rtn.containsKey("accessToken")) {
@@ -52,6 +53,8 @@ public class SnglCmCntrlEvent {
 		Map<String, Object> rtnBody = new LinkedHashMap<>();
 		List<Map<String, Object>> eventList = new ArrayList<>();
 		String latestEventID = "1";
+		
+		System.out.println("Welcome to controllerEvent");
 
 		try {
 			if (latestEvent != null && latestEvent.length > 0 && latestEvent[0] != null) {
@@ -80,9 +83,13 @@ public class SnglCmCntrlEvent {
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(date);
 		int year = calendar.get(Calendar.YEAR);
+		
+		System.out.println("Welcome to insertEvent");
 
 		try {
 			for (Map<String, Object> event : events) {
+				String tsStr = event.get("timestamp").toString();
+				Timestamp ts = Timestamp.from(Instant.parse(tsStr + "Z"));
 				ipatchEventID = "IPATCH_EVENT_" + year + "_" + ((Number) session
 						.createNativeQuery("SELECT IPATCH_EVENT_SEQ.NEXTVAL FROM DUAL").uniqueResult()).longValue();
 				str = "insert into ipatch_event (id, event_id, event_type, event_timestamp, controller_id, raw_payload) "
@@ -90,7 +97,7 @@ public class SnglCmCntrlEvent {
 				session.createNativeQuery(str).setParameter("ipatchEventId", ipatchEventID)
 						.setParameter("eventID", ((Number) event.get("eventId")).longValue())
 						.setParameter("eventType", event.get("eventType").toString())
-						.setParameter("ts", (Timestamp) event.get("timestamp")).setParameter("cntrlID", serialNo)
+						.setParameter("ts", ts).setParameter("cntrlID", serialNo)
 						.setParameter("payload", mapper.writeValueAsString(event)).executeUpdate();
 				// --- Insert attributes into IPATCH_EVENT_ATTR ---
 				for (Map.Entry<String, Object> entry : event.entrySet()) {

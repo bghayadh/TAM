@@ -38,7 +38,8 @@ public class CommScopeEvents implements Job, ExecutableOperation {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Object... params) {
-
+		System.out.println("Welcome to CommScopeEvents");
+		Object[] latestEvent = null;
 		Session session = AlmDbSession.getInstance().getSession();
 		if (session != null && session.isOpen()) {
 			Transaction tx = session.beginTransaction();
@@ -50,10 +51,14 @@ public class CommScopeEvents implements Job, ExecutableOperation {
 				for (Object[] cntrl_login : cntrls_login) {
 					str = "SELECT event_id, event_timestamp FROM (SELECT event_id, event_timestamp,"
 							+ " ROW_NUMBER() OVER (PARTITION BY controller_id ORDER BY event_timestamp DESC) AS rn"
-							+ " FROM ipatch_event WHERE controller_id = = :cntrlId) WHERE rn = 1";
+							+ " FROM ipatch_event WHERE controller_id = :cntrl_Id) WHERE rn = 1";
+					System.out.println("(String) cntrl_login[4] is " + (String) cntrl_login[4]);
+					List<Object[]> result = (List<Object[]>) session.createNativeQuery(str)
+							.setParameter("cntrl_Id", (String) cntrl_login[4]).getResultList();
 
-					Object[] latestEvent = (Object[]) session.createNativeQuery(str)
-							.setParameter("cntrlId", (String) cntrl_login[0]).getSingleResult();
+					if (!result.isEmpty()) {
+						latestEvent = result.get(0);
+					}
 					snglCmCntrlEvent.login((String) cntrl_login[0], (String) cntrl_login[1], (String) cntrl_login[2],
 							(String) cntrl_login[3], 900, (String) cntrl_login[4], latestEvent, session);
 				}
