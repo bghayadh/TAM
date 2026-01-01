@@ -1,10 +1,7 @@
 package com.aliat.alm.proc;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.quartz.Job;
@@ -21,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CommScopeEvents implements Job, ExecutableOperation {
 
 	private List<Object[]> cntrls_login = new ArrayList<Object[]>();
-	private Map<String, Object> cntrl_info = new LinkedHashMap<>();
 	private String str = "";
 	private static ObjectMapper mapper = new ObjectMapper();
 
@@ -29,7 +25,7 @@ public class CommScopeEvents implements Job, ExecutableOperation {
 
 	@Autowired
 	CommScopeService commscopeService;
-	
+
 	@Autowired
 	SnglCmCntrlEvent snglCmCntrlEvent;
 
@@ -53,39 +49,31 @@ public class CommScopeEvents implements Job, ExecutableOperation {
 						.list();
 				for (Object[] cntrl_login : cntrls_login) {
 					str = "SELECT event_id, event_timestamp FROM (SELECT event_id, event_timestamp,"
-						+ " ROW_NUMBER() OVER (PARTITION BY controller_id ORDER BY event_timestamp DESC) AS rn"
-						+ " FROM ipatch_event WHERE controller_id = = :cntrlId) WHERE rn = 1";
+							+ " ROW_NUMBER() OVER (PARTITION BY controller_id ORDER BY event_timestamp DESC) AS rn"
+							+ " FROM ipatch_event WHERE controller_id = = :cntrlId) WHERE rn = 1";
 
-					Object [] latestEvent = (Object[]) session.createNativeQuery(str).setParameter("cntrlId", (String) cntrl_login[0]).getSingleResult(); 
+					Object[] latestEvent = (Object[]) session.createNativeQuery(str)
+							.setParameter("cntrlId", (String) cntrl_login[0]).getSingleResult();
 					snglCmCntrlEvent.login((String) cntrl_login[0], (String) cntrl_login[1], (String) cntrl_login[2],
 							(String) cntrl_login[3], 900, (String) cntrl_login[4], latestEvent, session);
 				}
 				session.flush();
-				str = "update distribution_board_mapping a set a.fp_equipment_type = 'Distribution Board', a.fp_equipment_id = "
-					+"(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num), "
-					+"a.fp_equipment_name = (select db_name from distribution_board where db_id = "
-					+ "(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num))";
-				
-				session.createNativeQuery(str).executeUpdate();
-				session.createNativeQuery("update process set last_running_time = sysdate where link_name = 'CommScope'").executeUpdate();
-				
+
 				// This is for manual or dynamic execution
 				String processName = null;
 				String cronExpr = null;
 
 				if (params != null) {
-				    if (params.length > 0) {
-				        processName = String.valueOf(params[0]);
-				    }
-				    if (params.length > 1) {
-				        cronExpr = String.valueOf(params[1]);
-				    }
+					if (params.length > 0) {
+						processName = String.valueOf(params[0]);
+					}
+					if (params.length > 1) {
+						cronExpr = String.valueOf(params[1]);
+					}
 				}
 
-				System.out.println(
-				    "Running Process Name: " + processName +
-				    (cronExpr != null ? " with cron expression: " + cronExpr : "")
-				);				
+				System.out.println("Running Process Name: " + processName
+						+ (cronExpr != null ? " with cron expression: " + cronExpr : ""));
 
 				performSync();
 			} catch (Exception e) {
