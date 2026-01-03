@@ -1,272 +1,278 @@
 <style>
-    li.nav-item a svg, li.dropdown a svg
-    {
-/*          color:gold !important; */
-		  color:#6AA84F !important;
-    }
-    
- li.nav-item span.active svg {
-    color: #FFD966 !important;
+li.nav-item a svg, li.dropdown a svg {
+	/*          color:gold !important; */
+	color: #6AA84F !important;
 }
 
-  .icon-button__badge { 
-   padding:1px 12px; 
-   background: red;  
-   border-radius: 20%;
-   position: relative;
-   display: inline-block;
-   left: -20px; 
-   text-align: center;
-   margin-top:-20px;
-/*   top:-9px; */
-   color: #ffffff;    
-  }
-  
-    .icon-button__badge:hover {
-        color:#6FA8DC !important;    
-    }
-  
+li.nav-item span.active svg {
+	color: #FFD966 !important;
+}
 
-   .all { 
-   height: 25px; 
-   width: 25px; 
-   background-color: grey; 
-   border-radius: 50%; 
-   padding:1px 12px; 
-   color: white; 
-   margin:10px; 
-   text-align:center; 
-   font-size: 14px; 
-   justify-content: center; 
-  
-   } 
-   .uncmp { 
-   height: 25px; 
-   width: 25px; 
-   background-color: red; 
-   border-radius: 50%; 
-   padding:1px 12px; 
-   color: white; 
-   text-align:center; 
-   font-size: 14px; 
-   justify-content: center; 
-   } 
-  
+.icon-button__badge {
+	padding: 1px 12px;
+	background: red;
+	border-radius: 20%;
+	position: relative;
+	display: inline-block;
+	left: -20px;
+	text-align: center;
+	margin-top: -20px;
+	/*   top:-9px; */
+	color: #ffffff;
+}
 
-  
-  
-   #drop-menu-notification { 
- 	left:-30px; 
- 	overflow: auto; 
- 	height: 280px; 
- 	border:none; 
- } 
- 
-  	.dropdown-item-notification {
-  	  text-align: center;
-  	  color:blue  !important; 
-  	}
-  	
-   	#drop-menu-notification a:hover {  
-   	color:#008080 !important;
-   	text-decoration: none;
-   	 } 
-    
-   
-   .dropdown-menu-right{margin-right: 0px;
-  font-size:100%;
-    
-   width:200px ;
-   
-   }
-  
-   .dropdown-menu-left{
-   position: absolute;
-    top: 180px;
-    margin-top: 0px;
-   font-size:90%;
-   
-   width:200px ;
-   margin-left: 359px;
-  }  
-   
- /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+.icon-button__badge:hover {
+	color: #6FA8DC !important;
+}
+
+.all {
+	height: 25px;
+	width: 25px;
+	background-color: grey;
+	border-radius: 50%;
+	padding: 1px 12px;
+	color: white;
+	margin: 10px;
+	text-align: center;
+	font-size: 14px;
+	justify-content: center;
+}
+
+.uncmp {
+	height: 25px;
+	width: 25px;
+	background-color: red;
+	border-radius: 50%;
+	padding: 1px 12px;
+	color: white;
+	text-align: center;
+	font-size: 14px;
+	justify-content: center;
+}
+
+#drop-menu-notification {
+	left: -30px;
+	overflow: auto;
+	height: 280px;
+	border: none;
+}
+
+.dropdown-item-notification {
+	text-align: center;
+	color: blue !important;
+}
+
+#drop-menu-notification a:hover {
+	color: #008080 !important;
+	text-decoration: none;
+}
+
+.dropdown-menu-right {
+	margin-right: 0px;
+	font-size: 100%;
+	width: 200px;
+}
+
+.dropdown-menu-left {
+	position: absolute;
+	top: 180px;
+	margin-top: 0px;
+	font-size: 90%;
+	width: 200px;
+	margin-left: 359px;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
-  .input[type=text] {
-    width: 100%;
-    margin-top: 0;
-  }
+	.input[type=text] {
+		width: 100%;
+		margin-top: 0;
+	}
 }
-
-
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-  .modal-content, .modal-dialog {
-  max-height: 100%;
-  max-width: 100%;
-  
- }
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+	}
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (max-width: 600px) {
-.modal-content, .modal-dialog {
-max-height: 100%;
-max-width: 100%;
-
-}
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+	}
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (max-width: 768px) {
- .modal-content, .modal-dialog {
-  max-height: 100%;
-  max-width: 100%;
-  
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+	}
+	.dropdown-menu-left {
+		position: absolute;
+		top: 180px;
+		margin-top: 0px;
+		font-size: 90%;
+		width: 200px;
+		margin-left: 200px;
+	}
 }
-.dropdown-menu-left{
-   position: absolute;
-    top: 180px;
-    margin-top: 0px;
-   font-size:90%;
-   
-   width:200px ;
-   margin-left: 200px;
-  }  
-} 
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (max-width: 992px) {
-  .modal-content, .modal-dialog {
-  
-  max-height: 100%;
-        max-width: 100%;
-  
- }
- .dropdown-menu-left{
-   position: absolute;
-    top: 180px;
-    margin-top: 0px;
-   font-size:90%;
-   
-   width:200px ;
-   margin-left: 200px;
-  }  
- 
-} 
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+	}
+	.dropdown-menu-left {
+		position: absolute;
+		top: 180px;
+		margin-top: 0px;
+		font-size: 90%;
+		width: 200px;
+		margin-left: 200px;
+	}
+}
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (max-width: 1200px) {
- .modal-content, .modal-dialog {
- 
- max-height: 100%;
- max-width: 100%;
+	.modal-content, .modal-dialog {
+		max-height: 100%;
+		max-width: 100%;
+	}
 }
 
+.dropdown-submenu {
+	position: relative;
+}
 
-}
-   
- .dropdown-submenu {
-    position:relative;
-}
 .dropdown-submenu>.dropdown-menu {
-    top:0;
-    left:-10rem; /* 10rem is the min-width of dropdown-menu */
-    margin-top:-6px;
+	top: 0;
+	left: -10rem; /* 10rem is the min-width of dropdown-menu */
+	margin-top: -6px;
 }
 
 /* rotate caret on hover */
-.dropdown-menu > li > a:hover:after {
-    text-decoration: underline;
-    transform: rotate(-90deg);
-} 
+.dropdown-menu>li>a:hover:after {
+	text-decoration: underline;
+	transform: rotate(-90deg);
+}
 
 .caret {
-    margin-left:30px;
+	margin-left: 30px;
+}
 
-}  
 .caret2 {
-    margin-left:40px;
-
-
-}    
-
-.caret3{
-	margin-left:5px;
+	margin-left: 40px;
 }
 
-.m1{
-display:block;
-
-}
-.m2{
-display:none;
-}
-.m3{
-display:none;
-}
-.m4{
-display:none;
+.caret3 {
+	margin-left: 5px;
 }
 
-
-@media (max-width: 1270px){
-.m1{
-display:none;
-}
-.m2{
-display:block;
-}
-.m3{
-display:none;
-}
-.m4{
-display:none;
-}
-}
-@media (max-width: 1100px){
-.m1{
-display:none;
-}
-.m2{
-display:none;
-}
-.m3{
-display:block;
-}
-.m4{
-display:none;
-}
-}
-@media (max-width: 990px){
-.m1{
-display:none;
-}
-.m2{
-display:none;
-}
-.m3{
-display:none;
-}
-.m4{
-display:block;
-}
-}
-@media (max-width:899px){
-.m1{
-display:block;
-}
-.m2{
-display:none;
-}
-.m3{
-display:none;
-}
-.m4{
-display:none;
-}
+.m1 {
+	display: block;
 }
 
+.m2 {
+	display: none;
+}
+
+.m3 {
+	display: none;
+}
+
+.m4 {
+	display: none;
+}
+
+@media ( max-width : 1270px) {
+	.m1 {
+		display: none;
+	}
+	.m2 {
+		display: block;
+	}
+	.m3 {
+		display: none;
+	}
+	.m4 {
+		display: none;
+	}
+}
+
+@media ( max-width : 1100px) {
+	.m1 {
+		display: none;
+	}
+	.m2 {
+		display: none;
+	}
+	.m3 {
+		display: block;
+	}
+	.m4 {
+		display: none;
+	}
+}
+
+@media ( max-width : 990px) {
+	.m1 {
+		display: none;
+	}
+	.m2 {
+		display: none;
+	}
+	.m3 {
+		display: none;
+	}
+	.m4 {
+		display: block;
+	}
+}
+
+@media ( max-width :899px) {
+	.m1 {
+		display: block;
+	}
+	.m2 {
+		display: none;
+	}
+	.m3 {
+		display: none;
+	}
+	.m4 {
+		display: none;
+	}
+	/* Fix the empty space / height calculation issue */
+	.navbar-nav .dropdown-menu {
+		position: static !important;
+		width: auto;
+		max-width: 95%;
+		min-width: unset;
+	}
+
+	/* Nested dropdowns: flow normally, JS controls visibility */
+	.navbar-nav .dropdown-submenu>.dropdown-menu {
+		position: static !important;
+		margin-left: 15px; /* optional indent for hierarchy */
+	}
+
+	/* REQUIRED: allow JS-controlled menus to appear */
+	.navbar-nav .dropdown-menu.show {
+		display: block;
+	}
+	.dropdown-submenu > a.dropdown-toggle {
+		font-weight: 600;
+	}
+	.dropdown-submenu>.dropdown-menu {
+		border-left: 2px solid #ddd;
+		padding-left: 10px;
+	}
+}
 </style>
 
 
@@ -391,6 +397,14 @@ display:none;
            	<ul class="dropdown-menu dropdown-menu-left">
           		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li> 
           		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/CableBreakReport">Cable Break</a></li> 
+            </ul>
+          </li>
+          
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Intelligent Panel
+			<span class="caret2" ></span></a>
+           	<ul class="dropdown-menu dropdown-menu-left">
+          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/iPanelEvents">Events</a></li>  
             </ul>
           </li>
           
@@ -608,7 +622,15 @@ display:none;
          		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li>
          		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/CableBreakReport">Cable Break</a></li>  
             </ul>
-          </li>         
+          </li>
+          
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Intelligent Panel
+			<span class="caret2" ></span></a>
+           	<ul class="dropdown-menu dropdown-menu-left">
+          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/iPanelEvents">Events</a></li>  
+            </ul>
+          </li>                   
            
         </ul>
       </li>
@@ -877,7 +899,13 @@ display:none;
             </ul>
           </li>    
           
-         
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Intelligent Panel
+			<span class="caret2" ></span></a>
+           	<ul class="dropdown-menu dropdown-menu-left">
+          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/iPanelEvents">Events</a></li>  
+            </ul>
+          </li>
           
         </ul>
       </li>
@@ -1166,7 +1194,15 @@ display:none;
          		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li>
          		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/CableBreakReport">Cable Break</a></li> 
             </ul>
-          </li>              
+          </li>
+          
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Intelligent Panel
+			<span class="caret2" ></span></a>
+           	<ul class="dropdown-menu dropdown-menu-left">
+          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/iPanelEvents">Events</a></li>  
+            </ul>
+          </li>
           
         </ul>
       </li>
