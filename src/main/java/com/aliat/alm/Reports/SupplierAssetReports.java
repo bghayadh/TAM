@@ -1,4 +1,4 @@
-package com.aliat.alm.controller;
+package com.aliat.alm.Reports;
 
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -36,7 +36,7 @@ public class SupplierAssetReports {
 	Query query;
 	Object[] result;
 
-	private static final Logger logger = LoggerFactory.getLogger(NodeAssetReportController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SupplierAssetReports.class);
 	private static ObjectMapper mapper = new ObjectMapper();
 	@RequestMapping(value = "/SupplierAssetReport", method = RequestMethod.GET)
 	public String SupplierAssetReport(Locale locale, Model model, HttpServletRequest request,

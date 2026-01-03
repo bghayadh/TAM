@@ -1,4 +1,4 @@
-package com.aliat.alm.controller;
+package com.aliat.alm.Reports;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
