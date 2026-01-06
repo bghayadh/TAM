@@ -44,10 +44,8 @@ public class CommScopeEvents implements Job, ExecutableOperation {
 		if (session != null && session.isOpen()) {
 			Transaction tx = session.beginTransaction();
 			try {
-				cntrls_login = session
-						.createNativeQuery(
-								"select controller_id, ip_address, user_name, password, serial_numb from controller")
-						.list();
+				str = "select controller_id, ip_address, user_name, password, serial_numb, site, site_name, warehouse, longitude, latitude from controller";
+				cntrls_login = session.createNativeQuery(str).list();
 				for (Object[] cntrl_login : cntrls_login) {
 					str = "SELECT event_id, event_timestamp FROM (SELECT event_id, event_timestamp,"
 							+ " ROW_NUMBER() OVER (PARTITION BY controller_id ORDER BY event_timestamp DESC) AS rn"
@@ -59,8 +57,7 @@ public class CommScopeEvents implements Job, ExecutableOperation {
 					if (!result.isEmpty()) {
 						latestEvent = result.get(0);
 					}
-					snglCmCntrlEvent.login((String) cntrl_login[0], (String) cntrl_login[1], (String) cntrl_login[2],
-							(String) cntrl_login[3], 900, (String) cntrl_login[4], latestEvent, session);
+					snglCmCntrlEvent.login(cntrl_login, 900, latestEvent, session);
 				}
 				session.flush();
 
