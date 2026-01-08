@@ -223,21 +223,6 @@
 	visibility: visible;
 	opacity: 1;
 }
-
-.mapDropdown {
-	margin-left: 10px;
-	padding: 5px;
-	font-size: 1.2em;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-	background-color: #4CAF50;
-	color: white;
-	cursor: pointer;
-}
-
-.mapDropdown option {
-	color: black;
-}
 </style>
 <body>
 	<c:set var="pg" value="report" scope="session" />
