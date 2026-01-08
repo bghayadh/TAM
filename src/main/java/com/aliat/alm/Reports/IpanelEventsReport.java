@@ -85,7 +85,10 @@ public class IpanelEventsReport {
 			try {
 				session = AlmDbSession.getInstance().getSession();
 				if (session != null && session.isOpen()) {
-					String str = "select id, event_id, event_type, event_timestamp, created_at, controller_id, serial_numb, raw_payload, site, site_name, warehouse, longitude, latitude from ipatch_event order by event_timestamp desc";
+					String str = "select id, event_id, event_type, event_timestamp, created_at, controller_id, serial_numb, raw_payload, "
+							+ "CASE WHEN warehouse LIKE 'WARE_%' THEN 'Site' WHEN site LIKE 'CUST_%' THEN 'Customer' "
+							+ "ELSE NULL END AS location_type, "
+							+ "site, site_name, warehouse, longitude, latitude from ipatch_event order by event_timestamp desc";
 					NativeQuery<?> qry = session.createNativeQuery(str);
 					List<Map<String, String>> iPanelEvents = ((List<Object[]>) qry.getResultList()).stream()
 							.map(arr -> {
@@ -98,12 +101,13 @@ public class IpanelEventsReport {
 								newMap.put("controller_id", String.valueOf(arr[5]));
 								newMap.put("serial_numb", String.valueOf(arr[6]));								
 								newMap.put("raw_payload", clobToString(arr[7]));
-								newMap.put("site", String.valueOf(arr[8]));
-								newMap.put("site_name", String.valueOf(arr[9]));
-								newMap.put("warehouse", String.valueOf(arr[10]));
-								newMap.put("longitude", String.valueOf(arr[11]));
-								newMap.put("latitude", String.valueOf(arr[12]));
-								newMap.put("show_location", String.valueOf(arr[8]));
+								newMap.put("location_type", String.valueOf(arr[8]));
+								newMap.put("location", String.valueOf(arr[9]));
+								newMap.put("location_name", String.valueOf(arr[10]));
+								newMap.put("warehouse", String.valueOf(arr[11]));
+								newMap.put("longitude", String.valueOf(arr[12]));
+								newMap.put("latitude", String.valueOf(arr[13]));
+								newMap.put("show_location", String.valueOf(arr[9]));
 								return newMap;
 							}).collect(Collectors.toList());
 					System.out.println("iPanelEvents is " +mapper.writeValueAsString(iPanelEvents));
