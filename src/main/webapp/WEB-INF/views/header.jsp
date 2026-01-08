@@ -334,12 +334,11 @@ li.nav-item span.active svg {
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/AreaSiteReport" >Area Sites Report</a></li>
           <div class="dropdown-divider"></div> -->
           
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue Reports
-           <span class="caret" ></span></a>
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue<span class="caret" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left">
              <!--  <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportCell">Cell Revenue Report</a></li> 
              <div class="dropdown-divider"></div>-->
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue</a></li>
            <!--    <div class="dropdown-divider"></div>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportArea">Area Revenue Report</a></li>
               <div class="dropdown-divider"></div>
@@ -378,21 +377,21 @@ li.nav-item span.active svg {
           </li>
           
        <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial
            <span class="caret2" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left"  Style="width:230px;">
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset Report</a></li>
-               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset</a></li>
+               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio</a></li>
             </ul>
           </li>
          
          <div class="dropdown-divider"></div>
           
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
           		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li> 
@@ -426,13 +425,13 @@ li.nav-item span.active svg {
           <!--  <div class="dropdown-divider" ></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>-->
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Application</a></li>
           
            <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance</a></li>
           
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/ActionDashboard" >Action Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/ActionDashboard" >Action</a></li>
          
          
           <div class="dropdown-divider"></div>
@@ -509,9 +508,6 @@ li.nav-item span.active svg {
     <div class = "m2">
     <nav class="navbar navbar-expand-lg  navbar-light bg-light mynav">
 	<a class="navbar-brand">TAM</a>
-    
-
-
               <div class="collapse navbar-collapse" id="navbarmenu">
                   <ul class="navbar-nav">
                   <c:choose>
@@ -558,12 +554,12 @@ li.nav-item span.active svg {
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/AreaSiteReport" >Area Sites Report</a></li>
           <div class="dropdown-divider"></div> -->
           
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue Reports
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue
            <span class="caret" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left">
           <!--     <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportCell">Cell Revenue Report</a></li>
              <div class="dropdown-divider"></div> -->
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue</a></li>
             <!--  <div class="dropdown-divider"></div>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportArea">Area Revenue Report</a></li>
               <div class="dropdown-divider"></div>
@@ -602,21 +598,21 @@ li.nav-item span.active svg {
           </li>
           
             <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial
            <span class="caret2" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left" Style="width:230px;" >
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
-        	  <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset Report</a></li>
-        	   <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset</a></li>
+        	  <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset</a></li>
+        	   <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio</a></li>
             </ul>
           </li>
           
           <div class="dropdown-divider"></div>
           
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
          		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li>
@@ -628,7 +624,7 @@ li.nav-item span.active svg {
           <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Intelligent Panel
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
-          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/iPanelEvents">Events</a></li>  
+          		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/iPanelEvents">Events</a></li>
             </ul>
           </li>                   
            
@@ -649,11 +645,11 @@ li.nav-item span.active svg {
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>
           <div class="dropdown-divider"></div> -->
           
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Mobile Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Mobile Application</a></li>
           
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance</a></li>
           
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/ActionDashboard" >Action Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/ActionDashboard" >Action</a></li>
           <!--  <div class="dropdown-divider" href="#"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Dashboard">Tasks</a></li>
            <div class="dropdown-divider" href="#"></div>
@@ -780,9 +776,6 @@ li.nav-item span.active svg {
 						class="dropdown-item"><i class="fa fa-power-off"
 						aria-hidden="true"></i> Logout</a>
 					</div></li>
-					
-					 
-                
             </ul>
         </div>
 
@@ -833,12 +826,12 @@ li.nav-item span.active svg {
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/AreaSiteReport" >Area Sites Report</a></li>
           <div class="dropdown-divider"></div> -->
           
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue Reports
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue
            <span class="caret" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left">
             <!--   <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportCell">Cell Revenue Report</a></li>
              <div class="dropdown-divider"></div> -->
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue</a></li>
         <!--      <div class="dropdown-divider"></div>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportArea">Area Revenue Report</a></li>
               <div class="dropdown-divider"></div>
@@ -877,21 +870,21 @@ li.nav-item span.active svg {
           </li>
           
         <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial
            <span class="caret2" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left" Style="width:230px;">
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset Report</a></li>
-               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset</a></li>
+               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio</a></li>
             </ul>
           </li>
           
           <div class="dropdown-divider"></div>
           
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
          		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a> </li>
@@ -922,13 +915,13 @@ li.nav-item span.active svg {
           <div class="dropdown-divider" ></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>
           <div class="dropdown-divider"></div>-->
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Application</a></li>
           
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance</a></li>
           
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/ActionDashboard" >Action Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/ActionDashboard" >Action</a></li>
           
             <!--<div class="dropdown-divider" href="#"></div>
           <li><a class="dropdown-item"  href="${pageContext.request.contextPath}/Dashboard">Tasks</a></li>
@@ -1066,12 +1059,8 @@ li.nav-item span.active svg {
 						class="dropdown-item"><i class="fa fa-power-off"
 						aria-hidden="true"></i> Logout</a>
 					</div></li>
-					
-					 
-                
             </ul>
         </div>
-
     </nav>
     </div>
     
@@ -1131,12 +1120,12 @@ li.nav-item span.active svg {
           <div class="dropdown-divider"></div>--> 
           
            
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue Reports
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Revenue
            <span class="caret" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left">
             <!--   <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportCell">Cell Revenue Report</a></li>
              <div class="dropdown-divider"></div> -->
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteRevenueReport">Site Revenue</a></li>
         <!--      <div class="dropdown-divider"></div>
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueReportArea">Area Revenue Report</a></li>
               <div class="dropdown-divider"></div>
@@ -1166,7 +1155,6 @@ li.nav-item span.active svg {
 			<span class="caret3" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
               <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SpeedCoverageReport" >Average Speed and Coverage</a></li>
- 
             </ul>
           </li>
           
@@ -1175,20 +1163,20 @@ li.nav-item span.active svg {
           </li>
           
         <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial Report
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial
            <span class="caret2" ></span></a>
             <ul class="dropdown-menu dropdown-menu-left" Style="width:230px;">
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset Report</a></li>
-              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset Report</a></li>
-           	  <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset Report</a></li>
-           	   <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio Report</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinancialReport">Item Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/NodeAssetReport">Node Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SupplierAssetReport">Supplier Asset</a></li>
+              <li><a class="dropdown-item" href="${pageContext.request.contextPath}/VendorAssetReport">Vendor Asset</a></li>
+           	  <li><a class="dropdown-item" href="${pageContext.request.contextPath}/SiteAssetReport">Site Asset</a></li>
+           	   <li><a class="dropdown-item" href="${pageContext.request.contextPath}/RevenueToAssetRatioReport">Revenue To Asset Ratio</a></li>
             </ul>
           </li>
           <div class="dropdown-divider"></div>
           
-          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber Reports
+          <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Fiber
 			<span class="caret2" ></span></a>
            	<ul class="dropdown-menu dropdown-menu-left">
          		 <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/StrandUtilizationReport">Strand Utilization</a></li>
@@ -1202,8 +1190,7 @@ li.nav-item span.active svg {
            	<ul class="dropdown-menu dropdown-menu-left">
           		<li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/iPanelEvents">Events</a></li>  
             </ul>
-          </li>
-          
+          </li>          
         </ul>
       </li>
        
@@ -1219,10 +1206,10 @@ li.nav-item span.active svg {
           <div class="dropdown-divider" ></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/Dashboard" >Inventory</a></li>
           <div class="dropdown-divider"></div>-->
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/MobileDashboard" >Mobile Application</a></li>
           
           <div class="dropdown-divider"></div>
-          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance Dashboard</a></li>
+          <li><a class="dropdown-item" href="${pageContext.request.contextPath}/FinanceDashboard" >Finance</a></li>
           
           <div class="dropdown-divider"></div>
           <li><a class="dropdown-item" href="${pageContext.request.contextPath}/ActionDashboard" >Action Dashboard</a></li>
