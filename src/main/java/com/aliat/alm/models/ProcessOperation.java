@@ -8,7 +8,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
-
 @Entity
 @Table(name = "PROCESS_OPERATION")
 public class ProcessOperation {
@@ -16,7 +15,7 @@ public class ProcessOperation {
 	@Id
 	@Column(name = "ID", nullable = false)
 	private String ID;
-	
+
 	@Column(name = "LINK_NAME")
 	private String linkName;
 
@@ -28,27 +27,30 @@ public class ProcessOperation {
 
 	@Column(name = "CLASS_NAME")
 	private String className;
-	
+
 	@Column(name = "START_DATE_TIME")
 	private Timestamp startDateTime;
-	
+
 	@Column(name = "CRON_EXPRESSION")
 	private String cronExpression;
-	
+
 	@Column(name = "CREATION_DATE", updatable = false)
 	private Timestamp creationDate;
 
 	@Column(name = "LAST_MODIFICATION_DATE")
-	private Timestamp lastModificationDate;	
-	
-	
+	private Timestamp lastModificationDate;
+
+	@Column(name = "LAST_EXECUTION_DATE")
+	private Timestamp lastExecutionDate;
+
 	public ProcessOperation() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public ProcessOperation(String iD, String linkName, String operationName, String status, String className,
-			Timestamp startDateTime, String cronExpression, Timestamp creationDate, Timestamp lastModificationDate) {
+			Timestamp startDateTime, String cronExpression, Timestamp creationDate, Timestamp lastModificationDate,
+			Timestamp lastExecutionDate) {
 		super();
 		ID = iD;
 		this.linkName = linkName;
@@ -59,17 +61,18 @@ public class ProcessOperation {
 		this.cronExpression = cronExpression;
 		this.creationDate = creationDate;
 		this.lastModificationDate = lastModificationDate;
+		this.lastExecutionDate = lastExecutionDate;
 	}
 
 	@PrePersist
 	protected void onCreate() {
-	    creationDate = new Timestamp(System.currentTimeMillis());
-	    lastModificationDate = creationDate;
+		creationDate = new Timestamp(System.currentTimeMillis());
+		lastModificationDate = creationDate;
 	}
 
 	@PreUpdate
 	protected void onUpdate() {
-	    lastModificationDate = new Timestamp(System.currentTimeMillis());
+		lastModificationDate = new Timestamp(System.currentTimeMillis());
 	}
 
 	public String getID() {
@@ -142,5 +145,13 @@ public class ProcessOperation {
 
 	public void setLastModificationDate(Timestamp lastModificationDate) {
 		this.lastModificationDate = lastModificationDate;
+	}
+
+	public Timestamp getLastExecutionDate() {
+		return lastExecutionDate;
+	}
+
+	public void setLastExecutionDate(Timestamp lastExecutionDate) {
+		this.lastExecutionDate = lastExecutionDate;
 	}
 }

@@ -845,6 +845,7 @@ td[name="procStatus"] {
 						    <th>Cron Expression</th>
 						    <th>Calendar Cron</th>
 						    <th>Run Manually</th>
+						    <th>Last Execution Date</th>
 						    <th>Process ID</th>
 						</tr>
 					</thead>
@@ -975,7 +976,19 @@ td[name="procStatus"] {
 									</div>
 								</div>
 							</div>
-							
+
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+									<div class="input-group-prepend">
+									<span class="input-group-text">Last Execution Date</span>
+									<input id="popupProcLastExeDate" class="ui-widget ui-widget-content ui-corner-all form-control text-input" style="width:675px; height:37px" readonly/>									
+									</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>

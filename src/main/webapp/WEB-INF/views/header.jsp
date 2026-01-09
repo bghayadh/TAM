@@ -373,8 +373,7 @@ li.nav-item span.active svg {
           </li>
           
           <div class="dropdown-divider"></div>
-          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a>
-          </li>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/NetworkTransactionsReport">Network Transactions</a></li>
           
        <div class="dropdown-divider"></div>
           <li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="#">Financial
@@ -407,6 +406,8 @@ li.nav-item span.active svg {
             </ul>
           </li>
           
+          <div class="dropdown-divider"></div>
+          <li class="dropdown-submenu"><a class="dropdown-item" href="${pageContext.request.contextPath}/Process_SchedulingReport">Process Scheduling</a></li>
           
         </ul>
       </li>

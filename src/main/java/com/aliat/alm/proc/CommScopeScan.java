@@ -55,6 +55,8 @@ public class CommScopeScan implements Job, ExecutableOperation {
 					snglCmCntrl.login((String) cntrl_login[0], (String) cntrl_login[1], (String) cntrl_login[2],
 							(String) cntrl_login[3], 900, (String) cntrl_login[4], session);
 				}
+				str = "update process_operation set last_execution_date = systimestamp where class_name = 'com.aliat.alm.proc.CommScopeScan'";
+				session.createNativeQuery(str).executeUpdate();
 				session.flush();
 				str = "update distribution_board_mapping a set a.fp_equipment_type = 'Distribution Board', a.fp_equipment_id = "
 					+"(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num), "

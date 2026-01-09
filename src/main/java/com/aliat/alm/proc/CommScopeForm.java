@@ -153,6 +153,16 @@ public class CommScopeForm {
 														: null);
 						procOperation
 								.setCronExpression(itemParameters.getDictParameterProcess().get(i).get("procCronExpr"));
+						procOperation
+								.setLastExecutionDate(
+										(itemParameters.getDictParameterProcess().get(i).get("procLastExeDate") != null
+												&& !itemParameters.getDictParameterProcess().get(i)
+														.get("procLastExeDate").isEmpty())
+																? new Timestamp(formatter
+																		.parse(itemParameters.getDictParameterProcess()
+																				.get(i).get("procLastExeDate"))
+																		.getTime())
+																: null);
 						session.saveOrUpdate(procOperation);
 						processOperations.add(procOperation);
 					}

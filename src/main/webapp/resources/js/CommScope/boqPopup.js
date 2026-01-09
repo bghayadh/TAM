@@ -19,6 +19,7 @@ function sendValBoqToPopup(indxRow){
 	$('#popupProcStatus').next('label').text($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text()); 
 	$('#popupProcClassName').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val());	
 	$('#popupProcCronExpr').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val());
+	$('#popupProcLastExeDate').val($("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procLastExeDate"]').children('input').val());
 	
 	initPopupCron($('#popupProcCronExpr').val());
 
@@ -44,6 +45,7 @@ function sendValPopupToBoq(indxRow){
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procStatus"]').find('input[type="checkbox"]').next('label').text($('#popupProcStatus').next('label').text());		
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procClassName"]').children('input').val($('#popupProcClassName').val());
 	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procCronExpr"]').children('input').val($('#popupProcCronExpr').val());
+	$("#boqTable >tbody").find("tr").eq(indxRow).find('td[name="procLastExeDate"]').children('input').val($('#popupProcLastExeDate').val());
 		
 	fpInput = $("#boqTable > tbody").find("tr").eq(indxRow).find('td[name="procStartDateTime"] input.proc-start-time');
 	newValue = $('#popupProcStartTime').val();
@@ -169,7 +171,7 @@ function runProc (element) {
 
 
 function addNewRow(position){
-	rowParams = {"name" : "", "status" : 0, "className" : "", "startDateTime": "", "cronExpr": "", "procID" : 0}; 	
+	rowParams = {"name" : "", "status" : 0, "className" : "", "startDateTime": "", "cronExpr": "", "lastExeDate": "", "procID" : 0}; 	
 	var markup = htmlBOQRowInsertion(rowParams);
 	if (position == "next"){
 		$("#boqTable > tbody").append(markup);			
@@ -248,7 +250,9 @@ function htmlBOQRowInsertion(rowParams){
  				+"<td name='procCronExpr'>"
 				+"<input name='procCronExpr' type='text' value='"+  rowParams.cronExpr +"'style='width:140px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td>"
 				+"<td name='procCalend' style='text-align:center;'><button type='button' name='popUpMenu' href = '#' onclick='openPop(this)' class='btn btn-default' style='margin:0;'><i class='fas fa-calendar-alt'></i></button></td>"
-				+"<td name='procRunManual' style='text-align:center;'><button type='button' name='procRunManual' href = '#' onclick='runProc(this)' class='btn btn-primary BtnActive' style='margin:0;'>Run Now</button></td>"				
+				+"<td name='procRunManual' style='text-align:center;'><button type='button' name='procRunManual' href = '#' onclick='runProc(this)' class='btn btn-primary BtnActive' style='margin:0;'>Run Now</button></td>"
+				+"<td name='procLastExeDate'>"
+				+"<input name='procLastExeDate' type='text' value='"+  (rowParams.lastExeDate || "") +"'style='width:170px;' class='ui-widget ui-widget-content ui-corner-all form-control text-input' readonly></td>"								
 				+"<td name='procID'><input type='text' style='width:200px;' readonly value='" + rowParams.procID + "' class='ui-widget ui-widget-content ui-corner-all form-control text-input'></td></tr>"; 
 	return markup;
 }

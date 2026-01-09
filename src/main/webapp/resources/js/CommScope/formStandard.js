@@ -65,7 +65,8 @@ function getBoq (boqDict) {
 			"procClassName" : $row.find('td[name="procClassName"] input').val(),
 			"procCronExpr" : $row.find('td[name="procCronExpr"] input').val(),
 			"procID" : $row.find('td[name="procID"] input').val(),
-			"procStartDateTime" : $row.find('td[name="procStartDateTime"] input').val()
+			"procStartDateTime" : $row.find('td[name="procStartDateTime"] input').val(),
+			"procLastExeDate": $row.find('td[name="procLastExeDate"] input').val()
 		});
 	});
 }  // end of getBoq
@@ -74,7 +75,7 @@ function getBoq (boqDict) {
 function formLoad(boqArray) {
 	var markup = "";
 	for (i = 0; i < boqArray.length; i++){
-		rowParams = {"name" : boqArray[i].operationName, "status" : boqArray[i].status, "className" : boqArray[i].className, "startDateTime" : boqArray[i].startDateTime, "cronExpr": boqArray[i].cronExpression, "procID" : boqArray[i].id};	
+		rowParams = {"name" : boqArray[i].operationName, "status" : boqArray[i].status, "className" : boqArray[i].className, "startDateTime" : boqArray[i].startDateTime, "cronExpr": boqArray[i].cronExpression, "lastExeDate": boqArray[i].lastExecutionDate, "procID" : boqArray[i].id};	
 		markup += htmlBOQRowInsertion(rowParams);
 	}
 	$("#boqTable > tbody").append(markup);

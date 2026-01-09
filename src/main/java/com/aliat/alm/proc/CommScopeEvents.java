@@ -59,6 +59,8 @@ public class CommScopeEvents implements Job, ExecutableOperation {
 					}
 					snglCmCntrlEvent.login(cntrl_login, 900, latestEvent, session);
 				}
+				str = "update process_operation set last_execution_date = systimestamp where class_name = 'com.aliat.alm.proc.CommScopeEvents'";
+				session.createNativeQuery(str).executeUpdate();				
 				session.flush();
 
 				// This is for manual or dynamic execution
