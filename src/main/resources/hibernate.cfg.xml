@@ -165,5 +165,7 @@
 <mapping class="com.aliat.alm.models.ControllerPanel"/>
 <mapping class="com.aliat.alm.models.PanelKit"/>
 <mapping class="com.aliat.alm.models.PanelModule"/>
+<mapping class="com.aliat.alm.models.PatchingWorkOrder"/>
+<mapping class="com.aliat.alm.models.WorkOrderTask"/>
    </session-factory>
 </hibernate-configuration>
