@@ -73,6 +73,9 @@
                         
                         <li class="b"><a href="${pageContext.request.contextPath}/WorkOrderListView" style="position:relative;left:-30px;"><i class="fas fa-fighter-jet"style="color:#DCF8C6"></i> Work Order </a>
                         <span class="circle1" style="position:relative;left:-30px;">${WoAll}</span> <span class="circle2" style="position:relative;left:-30px;">${WoUnCmp}</span></li>
+                        
+                         <li class="b"><a href="${pageContext.request.contextPath}/PatchingWorkOrderTree" style="position:relative;left:-30px;"><i class="fas fa-fighter-jet"style="color:#DCF8C6"></i>Patching Work Order </a>
+                        </li>
                         <!-- 
                         <li class="b"><a href="${pageContext.request.contextPath}/WorkOrderListView" style="position:relative;left:-30px;"><i class="fas fa-file-invoice-dollar"style="color:#DCF8C6"></i> Work Order </a></li>
                          -->

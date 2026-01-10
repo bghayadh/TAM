@@ -8074,7 +8074,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<button type="button" id="assign_Tube">Assign Tube</button>
 										<input name="fiber_Tube" id="dbPort_assignTube" class="form-control text-input" type="text" style="width:170px;display: inline-block;" <c:if test="${writeDB == 0}">readonly</c:if>/>
 										<select id="selected_Port" aria-label="Default select example" class="form-select" style="height:35px; " <c:if test="${writeDB == 0}">disabled</c:if>>
-										  <option value="title"  selected>Front/back</option>
+										  <option value="frontAndBack"  selected>Front and back</option>
 										  <option value="frontPort">Front Port</option>
 										  <option value="backPort">Back Port</option>
 										</select></c:if>
@@ -8514,7 +8514,7 @@ function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng
 
                       totalGeoDistance += segmentDistance;
             } else {
-                console.warn(`â ï¸ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
+                console.warn(`⚠️ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
             }
         }
     } else {
@@ -8782,7 +8782,7 @@ async function updateCities(item) {
 
 	        resolve(city);
 	      } else {
-	        console.warn("Geocoder failed for", lat, lng, "â", status);
+	        console.warn("Geocoder failed for", lat, lng, "→", status);
 	        resolve("");  // Resolve with empty string if geocoding fails
 	      }
 	    });
@@ -9322,7 +9322,7 @@ $("#saveController").click(function () {
     	                    			        markerClusterBackboneDistBoard.removeMarker(marker);
     	                    			        marker.setMap(null);
     	                    			        delete markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterBackboneDistBoard.repaint(); // Ã°ÂÂÂ¥ force refresh
+    	                    			        markerClusterBackboneDistBoard.repaint(); // ð¥ force refresh
     	                    			    }
     	                    			}
     	                    			else if (data.oldNetworkLevel == "metro") {
@@ -10066,7 +10066,7 @@ function scrollToController(id) {
 }	  
 //zeinaaa
 function siteControllerChanged(checkbox) {
-    console.log("Site Controller changed Ã¢ÂÂ checked =", checkbox.checked);
+    console.log("Site Controller changed â checked =", checkbox.checked);
     if ($(checkbox).is(":checked")) {
         document.getElementById("customer_ControllerAutoComplete").checked = false;
         $('#customer_ControllerAutoComplete').val('0');
@@ -10100,7 +10100,7 @@ function siteControllerChanged(checkbox) {
 }
 
 function customerControllerChanged(checkbox) {
-    console.log("Customer Controller changed Ã¢ÂÂ checked =", checkbox.checked);
+    console.log("Customer Controller changed â checked =", checkbox.checked);
 
     if ($(checkbox).is(":checked")) {
         document.getElementById("site_ControllerAutoComplete").checked = false;
@@ -10485,6 +10485,7 @@ function customerControllerChanged(checkbox) {
 		});
 
 </script>
+
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
 <script type="text/javascript"
