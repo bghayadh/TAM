@@ -77,7 +77,6 @@ public class IpanelEventsReport {
 	public Map<String, Object> GenerateiPanelEventsReport(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 		Map<String, Object> rtn = new LinkedHashMap<>();
-		String fiberCableID = request.getParameter("cableID");
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
