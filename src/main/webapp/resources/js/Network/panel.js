@@ -527,6 +527,10 @@ console.log(statusResult.length);
 						if (data.panelPortData[0][51] != null) {
 							$("#portFrontKitSerialNum").val(data.panelPortData[0][51]);
 						}
+						
+						if (data.panelPortData[0][56] != null) {
+							$("#portBackKitSerialNum").val(data.panelPortData[0][56]);
+						}						
 
 						if (data.panelPortData[0][54] != null) {
 							$("#portBackModule").val(data.panelPortData[0][54]);
