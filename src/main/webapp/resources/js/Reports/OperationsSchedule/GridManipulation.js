@@ -12,6 +12,10 @@ function loadGrid(ReportArrayGlobal) {
 			let totalEnabled = 0;
 			let processArray = [];
             $(tableBody).empty();
+			$('#totalOperations').val("");
+			$('#totalEnabledOperations').val("");
+			$('#totalProcesses').val("");
+
 
             if (dataArray.length > 0) {
                 var ArrayKeys = Object.keys(dataArray[0]).filter(key => key !== "next_execution_date");
@@ -35,7 +39,6 @@ function loadGrid(ReportArrayGlobal) {
 					
                     for (var j = 0;j < ArrayKeys.length;j++) {
                         columnVal = ArrayKeys[j];
-                        console.log("columnVal is " + columnVal);
 						data.push(dataArray[i][ArrayKeys[j]]);						
                     }
                 }
@@ -43,6 +46,12 @@ function loadGrid(ReportArrayGlobal) {
                 $('#totalOperations').val(dataArray.length);
                 $('#totalEnabledOperations').val(totalEnabled);
                 $('#totalProcesses').val(processArray.length);
+				
+				if (totalEnabled > 0) {
+					console.log("totalEnabled is " +totalEnabled);
+					createExecutionCounterUI(dataArray[0]['link_name'] + " - " + dataArray[0]['operation_name'], dataArray[0]['class_name']);
+					startExecutionCountdown(dataArray[0]['next_execution_date_str']);
+				}
             } else {
                 filteredGridData = [];
             }

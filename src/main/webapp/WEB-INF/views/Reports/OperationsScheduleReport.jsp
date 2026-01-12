@@ -60,6 +60,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/html2canvas-1.3.2-html2canvas.min.js"></script>
 
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Reports/OperationsSchedule/GridManipulation.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/Reports/OperationsSchedule/RemainingTimeToExecute.js"></script>
 
 
 </head>
@@ -553,7 +554,7 @@
 function getContext() {
 	return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
 }
-
+var executionCountdownInterval = null;
 $(document).ready(function() {
 	
 	//collapse active class	
