@@ -61,7 +61,8 @@ public class CommScopeScan implements Job, ExecutableOperation {
 				str = "update distribution_board_mapping a set a.fp_equipment_type = 'Distribution Board', a.fp_equipment_id = "
 					+"(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num), "
 					+"a.fp_equipment_name = (select db_name from distribution_board where db_id = "
-					+ "(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num))";
+					+ "(select distinct db_id from panel_kit b where b.kit_serial_num = a.far_near_kit_serial_num)) "
+					+"where far_near_kit_serial_num is not null and FAR_NEAR_KIT_SERIAL_NUM != 'null'";
 				
 				session.createNativeQuery(str).executeUpdate();
 				session.createNativeQuery("update process set last_running_time = sysdate where link_name = 'CommScope'").executeUpdate();

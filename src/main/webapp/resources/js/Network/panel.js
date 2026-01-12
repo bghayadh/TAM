@@ -475,15 +475,14 @@ console.log(statusResult.length);
 
 
 						// ===================== FRONT EQUIPMENT =====================
-						if (data.panelPortData[0][10] != null) {
-							let value = data.panelPortData[0][10];
+						if (data.panelPortData[0][10] != null && data.panelPortData[0][10] != 'null') {
+							let value = data.panelPortData[0][10];							
 
 							if ($("#portFrontEquipment option[value='" + value + "']").length === 0) {
 								$("#portFrontEquipment").append(
 									$("<option></option>").val(value).text(value)
 								);
 							}
-
 							$("#portFrontEquipment").val(value);
 						}
 
@@ -534,19 +533,21 @@ console.log(statusResult.length);
 						}
 
 						if (data.panelPortData[0][49] != null) {
-							$("#PortFrontNum").val(data.panelPortData[0][49]);
+							$("#PortFrontNum").val(data.panelPortData[0][53]);
+							console.log("PortFrontNum is " +data.panelPortData[0][53]);
 						}
-						
+/*						
 						if (data.panelPortData[0][56] != null) {
 						$("#PortFrontNum").val(data.panelPortData[0][49]);
-												}
+						}
+*/						
 
 						if (data.panelPortData[0][55] != null) {
 							$("#PortBackNum").val(data.panelPortData[0][55]);
 						}
 
-						if (data.panelPortData[0][48] != null) {
-							$("#portFrontModule").val(data.panelPortData[0][48]);
+						if (data.panelPortData[0][52] != null) {
+							$("#portFrontModule").val(data.panelPortData[0][52]);
 						}
 
 						if (data.panelPortData[0][13] != null) {

@@ -3697,8 +3697,7 @@ public class PhysicalLayerController {
 								+ selectedDistBoardContext + "' AND ROW_COL_INDEX= '" + portIndex +"'")
 						.getResultList();
 
-				rtn.put("panelPortData", panelPortData);
-				
+				rtn.put("panelPortData", panelPortData);				
 				Object[] panelInfo = (Object[]) session.createNativeQuery(
 					    "SELECT DISTINCT B.ROW_PER_MODULE, B.TOTAL_NUM_MODULE, B.NUM_ROWS,B.NUM_COLUMNS,  ROW_COUNTING  " +
 					    "FROM DISTRIBUTION_BOARD B WHERE B.DB_ID = :dbId"
