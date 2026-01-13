@@ -9,8 +9,10 @@ import com.aliat.alm.models.AssetRegistry;
 import com.aliat.alm.models.DNIFormView;
 import com.aliat.alm.models.DiscoveryNewItemNode;
 import com.aliat.alm.models.FixedAssetRegistry;
+import com.aliat.alm.models.PatchingWorkOrder;
 import com.aliat.alm.models.PurchaseOrder;
 import com.aliat.alm.models.PurchaseRequest;
+import com.aliat.alm.models.WorkOrderTask;
 import com.aliat.alm.models.FarNode;
 import com.aliat.alm.models.FarPartNumber;
 import com.aliat.alm.models.FarSerialNumber;
@@ -254,14 +256,324 @@ public class PatchingWorkOrderTreeController {
 
 	
 	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/savePatchingOrder", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> savePatchingOrder(
+	        Locale locale,
+	        Model model,
+	        HttpServletRequest request,
+	        @ModelAttribute ItemParameters itemParameters,
+	        HttpServletResponse response) {
+
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", "redirect:/");
+	        return rtn;
+	    }
+
+	    Session session = AlmDbSession.getInstance().getSession();
+
+	    if (session != null && session.isOpen()) {
+
+	        notifications.headerNotifications(session, model);
+
+	        try {
+	        	tx = session.beginTransaction();
+	            Calendar calendar = new GregorianCalendar();
+	            calendar.setTime(new Date());
+	            int year = calendar.get(Calendar.YEAR);
+
+	            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+	            String patchingId = request.getParameter("patchingId");
+	            String patchingStatus = request.getParameter("patchingStatus");
+	            String assignedTo = request.getParameter("assignedTo");
+	            String patchingNote = request.getParameter("patchingNote");
+
+	            Timestamp plannedExecutionDate = null;
+	            Timestamp actualExecutionDate = null;
+	            Timestamp creationDate = null;
+
+	            String plannedExecutionStr = request.getParameter("plannedExecutionDate");
+	            if (plannedExecutionStr != null && !plannedExecutionStr.isEmpty()) {
+	                plannedExecutionDate =
+	                        new Timestamp(formatter.parse(plannedExecutionStr).getTime());
+	            }
+
+	            String actualExecutionStr = request.getParameter("actualExecutionDate");
+	            if (actualExecutionStr != null && !actualExecutionStr.isEmpty()) {
+	                actualExecutionDate =
+	                        new Timestamp(formatter.parse(actualExecutionStr).getTime());
+	            }
+
+	            String creationDateStr = request.getParameter("creationDate");
+	            if (creationDateStr != null && !creationDateStr.isEmpty()) {
+	                creationDate =
+	                        new Timestamp(formatter.parse(creationDateStr).getTime());
+	            } else {
+	                creationDate = new Timestamp(System.currentTimeMillis());
+	            }
+
+	            Timestamp lastModifiedDate = new Timestamp(System.currentTimeMillis());
+
+	            PatchingWorkOrder pwo = new PatchingWorkOrder();
+	            pwo.setPatchingId(patchingId);
+	            pwo.setPatchingStatus(patchingStatus);
+	            pwo.setAssignedTo(assignedTo);
+	            pwo.setPlannedExecutionDate(plannedExecutionDate);
+	            pwo.setActualExecutionDate(actualExecutionDate);
+	            pwo.setCreatedDate(creationDate);
+	            pwo.setLastModifiedDate(lastModifiedDate);
+	            pwo.setPatchingNote(patchingNote);
+
+	            if (patchingId == null || patchingId.isEmpty()) {
+	                patchingId = "PATCHING_WO_" + year + "_"
+	                        + ((Number) session.createNativeQuery(
+	                        "SELECT PATCHING_WO_SEQ.NEXTVAL FROM DUAL"
+	                ).uniqueResult()).intValue();
+	                pwo.setPatchingId(patchingId);
+	            }
+
+	            session.saveOrUpdate(pwo);
+	            session.flush();
+	            session.clear();
+
+	            rtn.put("status", patchingStatus);
+
+	        } catch (Exception e) {
+	            logger.info("Error at PatchingWorkOrderTree: " + e);
+	            e.printStackTrace();
+	            model.addAttribute("PatchingList", "");
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                session.close();
+	            }
+	        }
+	    }
+
+	    return rtn;
+	}
+
 	
 	
 	
-	
-	
-	
-	
-	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/saveTaskOrder", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> saveTaskOrder(
+	        Locale locale,
+	        Model model,
+	        HttpServletRequest request,
+	        @ModelAttribute ItemParameters itemParameters,
+	        HttpServletResponse response) {
+
+	    Map<String, Object> rtn = new LinkedHashMap<>();
+
+	    if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	        rtn.put("Login", "redirect:/");
+	        return rtn;
+	    }
+
+	    Session session = AlmDbSession.getInstance().getSession();
+
+	    if (session != null && session.isOpen()) {
+
+	        notifications.headerNotifications(session, model);
+
+	        try {
+	            tx = session.beginTransaction();
+
+	            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+
+	            // -------- BASIC FIELDS --------
+	            String woTaskId = request.getParameter("woTaskId");
+	            String patchingId = request.getParameter("patchingId");
+	            String taskType = request.getParameter("taskType");
+	            String taskStatus = request.getParameter("taskStatus");
+
+	            // -------- DATES --------
+	            Timestamp creationDate = null;
+	            Timestamp completionDate = null;
+
+	            String creationDateStr = request.getParameter("creationDate");
+	            if (creationDateStr != null && !creationDateStr.isEmpty()) {
+	                creationDate = new Timestamp(formatter.parse(creationDateStr).getTime());
+	            } else {
+	                creationDate = new Timestamp(System.currentTimeMillis());
+	            }
+
+	            String completionDateStr = request.getParameter("completionDate");
+	            if (completionDateStr != null && !completionDateStr.isEmpty()) {
+	                completionDate = new Timestamp(formatter.parse(completionDateStr).getTime());
+	            }
+
+	            Timestamp lastModifiedDate = new Timestamp(System.currentTimeMillis());
+
+	            // -------- CREATE ENTITY --------
+	            WorkOrderTask task = new WorkOrderTask();
+	            task.setWoTaskId(woTaskId);
+	            task.setPatchingId(patchingId);
+	            task.setTaskType(taskType);
+	            task.setTaskStatus(taskStatus);
+	            task.setCreationDate(creationDate);
+	            task.setCompletionDate(completionDate);
+	            task.setLastModifiedDate(lastModifiedDate);
+
+	            // -------- LOCATION / DB --------
+	            task.setDbId(request.getParameter("dbId"));
+	            task.setDbPortId(request.getParameter("dbPortId"));
+
+	            // -------- NUMERIC FIELDS --------
+	            task.setRowColIndex(Integer.parseInt(request.getParameter("rowColIndex")));
+	            task.setRowNumber(Integer.parseInt(request.getParameter("rowNumber")));
+	            task.setColumnNumber(Integer.parseInt(request.getParameter("columnNumber")));
+
+	            // -------- NEAR --------
+	            task.setNearModule(request.getParameter("nearModule"));
+	            task.setNearPortNum(request.getParameter("nearPortNum"));
+	            task.setNearPatchType(request.getParameter("nearPatchType"));
+
+	            // -------- FP LOCATION --------
+	            task.setFpLocationType(request.getParameter("fpLocationType"));
+	            task.setFpLocationId(request.getParameter("fpLocationId"));
+	            task.setFpLocationName(request.getParameter("fpLocationName"));
+	            task.setFpLocation(request.getParameter("fpLocation"));
+	            task.setPatchingId(request.getParameter("taskPatchingId"));
+
+	            // -------- FP EQUIPMENT --------
+	            task.setFpEquipmentType(request.getParameter("fpEquipmentType"));
+	            task.setFpEquipment(request.getParameter("fpEquipment"));
+	            task.setFpEquipmentId(request.getParameter("fpEquipmentId"));
+	            task.setFpEquipmentName(request.getParameter("fpEquipmentName"));
+
+	            // -------- FP CABLE --------
+	            task.setFpAddress(request.getParameter("fpAddress"));
+	            task.setFpTubeNb(request.getParameter("fpTubeNb"));
+	            task.setFpStrandColor(request.getParameter("fpStrandColor"));
+	            task.setFpTubeColor(request.getParameter("fpTubeColor"));
+	            task.setFpStrandName(request.getParameter("fpStrandName"));
+	            task.setFpTubeId(request.getParameter("fpTubeId"));
+	            task.setFpTubeName(request.getParameter("fpTubeName"));
+	            task.setFpFiberId(request.getParameter("fpFiberId"));
+	            task.setFpFiberName(request.getParameter("fpFiberName"));
+	            task.setFpKitSerialNum(request.getParameter("fpKitSerialNum"));
+
+	            // -------- MODULE / PORT / JUNCTION --------
+	            task.setFpModule(request.getParameter("fpModule"));
+	            task.setFpPortNum(request.getParameter("fpPortNum"));
+	            task.setFpJunctionId(request.getParameter("fpJunctionId"));
+	            task.setFpJunctionName(request.getParameter("fpJunctionName"));
+
+	            // -------- GENERATE ID IF NEW --------
+	            if (woTaskId == null || woTaskId.isEmpty()) {
+	                woTaskId = "WO_TASK_"
+	                        + ((Number) session.createNativeQuery(
+	                        "SELECT WO_TASK_SEQ.NEXTVAL FROM DUAL"
+	                ).uniqueResult()).intValue();
+	                task.setWoTaskId(woTaskId);
+	            }
+
+	            session.saveOrUpdate(task);
+	            tx.commit();
+
+	            rtn.put("taskStatus", taskStatus);
+	            rtn.put("woTaskId", woTaskId);
+
+	        } catch (Exception e) {
+	            if (tx != null) tx.rollback();
+	            logger.info("Error at saveWorkOrderTask: " + e);
+	            e.printStackTrace();
+	        } finally {
+	            if (session != null && session.isOpen()) {
+	                session.close();
+	            }
+	        }
+	    }
+
+	    return rtn;
+	}
+
+	@RequestMapping(value = "/deletePatchingWO", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> deletePatchingWO(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		String patchingId = request.getParameter("patchingId");
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				query = session.createQuery("delete PatchingWorkOrder where patchingId =:param1");
+				query.setParameter("param1", patchingId);
+				query.executeUpdate();
+
+				query = session.createQuery("delete WorkOrderTask where patchingId =:param1");
+				query.setParameter("param1", patchingId);
+				query.executeUpdate();
+
+				
+
+			} catch (Exception e) {
+				logger.info("Error in deleting on the level of patching Work order Tree with a message : " + e + "\n"
+						+ e.getMessage());
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					
+				}
+			}
+		}
+
+		return rtn;
+
+	}
+
+	@RequestMapping(value = "/deleteWOTask", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> deleteWOTask(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		String taskId = request.getParameter("taskId");
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				query = session.createQuery("delete WorkOrderTask where woTaskId =:param1");
+				query.setParameter("param1", taskId);
+				query.executeUpdate();
+
+				
+
+			} catch (Exception e) {
+				logger.info("Error in deleting on the level of patching Work order Tree with a message : " + e + "\n"
+						+ e.getMessage());
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					
+				}
+			}
+		}
+
+		return rtn;
+
+	}
+
 	
 
 	}
