@@ -126,11 +126,13 @@ console.log(t);
 				
 	            populateForm(PatchingList, foundIndex);
 				document.getElementById("saveButton").disabled = false;
+				document.getElementById("deleteButton").disabled = false;
 				patchForm=1;
 				taskForm=0;
 	        } else {
 	            console.warn("Patching not found for liId:", liId);
 				document.getElementById("saveButton").disabled = true;
+				document.getElementById("deleteButton").disabled = true;
 	        }
 	    }
 
@@ -156,6 +158,7 @@ console.log(t);
 						patchForm=0;
 						taskForm=1;
 						document.getElementById("saveButton").disabled = false;
+						document.getElementById("deleteButton").disabled = false;
 						
 						// ✅ send task object directly
 	                    taskFound = true;
@@ -169,6 +172,7 @@ console.log(t);
 	        if (!taskFound) {
 	            console.warn("Task not found for liId:", liId);
 				document.getElementById("saveButton").disabled = true;
+				document.getElementById("deleteButton").disabled = true;
 	        }
 	    }
 
@@ -276,11 +280,12 @@ function MouseHoveringSpans(selector) {
 
 	    // --- Basic Task Info ---
 	    $("#woTaskId").val(task.woTaskId || "");
+		$("#taskPatchingId").val(task.patchingId || "");
 	    $("#taskType").val(task.taskType || "");
 	    $("#taskStatus").val(task.taskStatus || "-- Select Option --");
 
 	    $("#creationDate").val(convertToDatetimeLocal(task.creationDate));
-	    $("#lastModifiedDate").val(convertToDatetimeLocal(task.lastModifiedDate));
+	    $("#lastModificationDate").val(convertToDatetimeLocal(task.lastModifiedDate));
 	    $("#completionDate").val(convertToDatetimeLocal(task.completionDate));
 
 	    // --- DB Info ---
@@ -328,12 +333,429 @@ function MouseHoveringSpans(selector) {
 	    // --- FP Junction ---
 	    $("#fpJunctionId").val(task.fpJunctionId || "");
 	    $("#fpJunctionName").val(task.fpJunctionName || "");
+		
+		
 	}
 
 function savePatchAndTask(){
 
 	
+	if(patchForm === 1){
+		var patchingId = document.getElementById("patchingId").value;
+		var assignedTo = document.getElementById("assignedTo").value;
+		var createdDate = document.getElementById("createdDate").value;
+		var lastModifiedDate = document.getElementById("lastModifiedDate").value;
+
+		// SELECT
+		var patchingStatus = document.getElementById("patchingStatus").value;
+
+		// DATETIME
+		var plannedExecutionDate = document.getElementById("plannedExecutionDate").value;
+		var actualExecutionDate = document.getElementById("actualExecutionDate").value;
+
+		// TEXTAREA
+		var patchingNote = document.getElementById("patchingNote").value;
+		var token = $('input[name="csrfToken"]').attr('value');
+
+		       
+		          $.ajax({
+		              type: "POST",
+		              headers: {
+		                  'X-CSRFToken': token
+		              },
+		              url: getContext() + '/savePatchingOrder',
+		              async: false,
+		          
+		
+		                   data: {
+							"patchingId": patchingId,
+						    "patchingStatus" : patchingStatus,
+						    "assignedTo" : assignedTo,
+							"plannedExecutionDate" : plannedExecutionDate,
+						     "actualExecutionDate" : actualExecutionDate,
+							 "createdDate"  : createdDate,
+							  "lastModifiedDate" : lastModifiedDate,
+							  "patchingNote" : patchingNote
+		                   },
+		                   dataType: "json",
+		                   success: function(data) {
+							alert("Saved done");
+							
+		                      if(data.status === "Completed"){
+								
+								
+								disablePatchingForm();
+								
+							  }
+							  else{
+								
+								enablePatchingForm();
+							  }
+		                   },
+		                   error: function(result) {
+		                       alert("Error");
+		                   }
+		               });
+		
+		
+		
+		
+		
+	}
+	
+	else if(taskForm === 1){
+		
+	
+
+		    // BASIC TASK INFO
+		    var woTaskId = document.getElementById("woTaskId").value;
+		    var taskStatus = document.getElementById("taskStatus").value;
+		    var taskType = document.getElementById("taskType").value; 
+			var taskPatchingId = document.getElementById("taskPatchingId").value;
+			
+		    // DATES
+		    var creationDate = document.getElementById("creationDate").value;
+		    var lastModifiedDate = document.getElementById("lastModificationDate").value;
+		    var completionDate = document.getElementById("completionDate").value;
+
+		    // DB INFO
+		    var dbId = document.getElementById("dbId").value;
+		    var dbPortId = document.getElementById("dbPortId").value;
+
+		    // POSITIONING
+		    var rowColIndex = document.getElementById("rowColIndex").value;
+		    var rowNumber = document.getElementById("rowNumber").value;
+		    var columnNumber = document.getElementById("columnNumber").value;
+
+		    // NEAR SIDE
+		    var nearModule = document.getElementById("nearModule").value;
+		    var nearPortNum = document.getElementById("nearPortNum").value;
+		    var nearPatchType = document.getElementById("nearPatchType").value;
+
+		    // FP LOCATION
+		    var fpLocationType = document.getElementById("fpLocationType").value;
+		    var fpLocationId = document.getElementById("fpLocationId").value;
+		    var fpLocationName = document.getElementById("fpLocationName").value;
+		    var fpLocation = document.getElementById("fpLocation").value;
+
+		    // FP EQUIPMENT
+		    var fpEquipmentType = document.getElementById("fpEquipmentType").value;
+		    var fpEquipment = document.getElementById("fpEquipment").value;
+		    var fpEquipmentId = document.getElementById("fpEquipmentId").value;
+		    var fpEquipmentName = document.getElementById("fpEquipmentName").value;
+
+		    // FP ADDRESS / TUBE
+		    var fpAddress = document.getElementById("fpAddress").value;
+		    var fpTubeNb = document.getElementById("fpTubeNb").value;
+
+		    // STRAND / TUBE COLORS
+		    var fpStrandColor = document.getElementById("fpStrandColor").value;
+		    var fpTubeColor = document.getElementById("fpTubeColor").value;
+
+		    // STRAND / TUBE IDENTIFIERS
+		    var fpStrandName = document.getElementById("fpStrandName").value;
+		    var fpTubeId = document.getElementById("fpTubeId").value;
+		    var fpTubeName = document.getElementById("fpTubeName").value;
+
+		    // FIBER / KIT
+		    var fpFiberId = document.getElementById("fpFiberId").value;
+		    var fpFiberName = document.getElementById("fpFiberName").value;
+		    var fpKitSerialNum = document.getElementById("fpKitSerialNum").value;
+
+		    // MODULE / PORT
+		    var fpModule = document.getElementById("fpModule").value;
+		    var fpPortNum = document.getElementById("fpPortNum").value;
+
+		    // JUNCTION
+		    var fpJunctionId = document.getElementById("fpJunctionId").value;
+		    var fpJunctionName = document.getElementById("fpJunctionName").value;
+
+		    
+			$.ajax({
+			    type: "POST",
+			    headers: {
+			        'X-CSRFToken': token
+			    },
+			    url: getContext() + '/saveTaskOrder',
+			    async: false,
+
+			    data: {
+			        "woTaskId": woTaskId,
+			        "taskStatus": taskStatus,
+			        "taskType": taskType,
+					"taskPatchingId" : taskPatchingId,
+
+			        "creationDate": creationDate,
+			        "lastModifiedDate": lastModifiedDate,
+			        "completionDate": completionDate,
+
+			        "dbId": dbId,
+			        "dbPortId": dbPortId,
+
+			        "rowColIndex": rowColIndex,
+			        "rowNumber": rowNumber,
+			        "columnNumber": columnNumber,
+
+			        "nearModule": nearModule,
+			        "nearPortNum": nearPortNum,
+			        "nearPatchType": nearPatchType,
+
+			        "fpLocationType": fpLocationType,
+			        "fpLocationId": fpLocationId,
+			        "fpLocationName": fpLocationName,
+			        "fpLocation": fpLocation,
+
+			        "fpEquipmentType": fpEquipmentType,
+			        "fpEquipment": fpEquipment,
+			        "fpEquipmentId": fpEquipmentId,
+			        "fpEquipmentName": fpEquipmentName,
+
+			        "fpAddress": fpAddress,
+			        "fpTubeNb": fpTubeNb,
+
+			        "fpStrandColor": fpStrandColor,
+			        "fpTubeColor": fpTubeColor,
+
+			        "fpStrandName": fpStrandName,
+			        "fpTubeId": fpTubeId,
+			        "fpTubeName": fpTubeName,
+			        "fpFiberId": fpFiberId,
+
+			        "fpFiberName": fpFiberName,
+			        "fpKitSerialNum": fpKitSerialNum,
+
+			        "fpModule": fpModule,
+			        "fpPortNum": fpPortNum,
+
+			        "fpJunctionId": fpJunctionId,
+			        "fpJunctionName": fpJunctionName
+			    },
+
+			    dataType: "json",
+
+			    success: function (data) {
+			        alert("Saved done");
+
+			        if (data.taskStatus === "Completed") {
+			            disableTaskForm();
+			        }
+					else{
+						
+						enableTaskForm();
+					}
+			    },
+
+			    error: function (result) {
+			        alert("Error");
+			    }
+			});
+
+	
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 }
+function getContext() {
+   return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
+}
 
+function disablePatchingForm() {
 
+    document.getElementById("patchingId").disabled = true;
+    document.getElementById("patchingStatus").disabled = true;
+    document.getElementById("assignedTo").disabled = true;
+
+    document.getElementById("plannedExecutionDate").disabled = true;
+    document.getElementById("actualExecutionDate").disabled = true;
+
+    document.getElementById("createdDate").disabled = true;
+    document.getElementById("lastModifiedDate").disabled = true;
+
+    document.getElementById("patchingNote").disabled = true;
+}
+function enablePatchingForm() {
+
+    document.getElementById("patchingId").disabled = false;
+    document.getElementById("patchingStatus").disabled = false;
+    document.getElementById("assignedTo").disabled = false;
+
+    document.getElementById("plannedExecutionDate").disabled = false;
+    document.getElementById("actualExecutionDate").disabled = false;
+
+    // keep these read-only if you want
+    document.getElementById("createdDate").disabled = true;
+    document.getElementById("lastModifiedDate").disabled = true;
+
+    document.getElementById("patchingNote").disabled = false;
+}
+function disableTaskForm() {
+
+    document.getElementById("woTaskId").disabled = true;
+    document.getElementById("taskStatus").disabled = true;
+	document.getElementById("taskPatchingId").disabled = true;
+    document.getElementById("taskType").disabled = true;
+
+    document.getElementById("creationDate").disabled = true;
+    document.getElementById("lastModificationDate").disabled = true;
+    document.getElementById("completionDate").disabled = true;
+
+    document.getElementById("dbId").disabled = true;
+    document.getElementById("dbPortId").disabled = true;
+
+    document.getElementById("rowColIndex").disabled = true;
+    document.getElementById("rowNumber").disabled = true;
+    document.getElementById("columnNumber").disabled = true;
+
+    document.getElementById("nearModule").disabled = true;
+    document.getElementById("nearPortNum").disabled = true;
+    document.getElementById("nearPatchType").disabled = true;
+
+    document.getElementById("fpLocationType").disabled = true;
+    document.getElementById("fpLocationId").disabled = true;
+    document.getElementById("fpLocationName").disabled = true;
+    document.getElementById("fpLocation").disabled = true;
+
+    document.getElementById("fpEquipmentType").disabled = true;
+    document.getElementById("fpEquipment").disabled = true;
+    document.getElementById("fpEquipmentId").disabled = true;
+    document.getElementById("fpEquipmentName").disabled = true;
+
+    document.getElementById("fpAddress").disabled = true;
+    document.getElementById("fpTubeNb").disabled = true;
+
+    document.getElementById("fpStrandColor").disabled = true;
+    document.getElementById("fpTubeColor").disabled = true;
+
+    document.getElementById("fpStrandName").disabled = true;
+    document.getElementById("fpTubeId").disabled = true;
+    document.getElementById("fpTubeName").disabled = true;
+    document.getElementById("fpFiberId").disabled = true;
+
+    document.getElementById("fpFiberName").disabled = true;
+    document.getElementById("fpKitSerialNum").disabled = true;
+
+    document.getElementById("fpModule").disabled = true;
+    document.getElementById("fpPortNum").disabled = true;
+
+    document.getElementById("fpJunctionId").disabled = true;
+    document.getElementById("fpJunctionName").disabled = true;
+}
+
+function enableTaskForm() {
+
+    document.getElementById("woTaskId").disabled = false;
+    document.getElementById("taskStatus").disabled = false;
+    document.getElementById("taskType").disabled = false;
+
+    document.getElementById("creationDate").disabled = false;
+    document.getElementById("completionDate").disabled = false;
+
+    // keep these read-only like patching
+    document.getElementById("lastModificationDate").disabled = true;
+
+    document.getElementById("dbId").disabled = false;
+    document.getElementById("dbPortId").disabled = false;
+
+    document.getElementById("rowColIndex").disabled = false;
+    document.getElementById("rowNumber").disabled = false;
+    document.getElementById("columnNumber").disabled = false;
+
+    document.getElementById("nearModule").disabled = false;
+    document.getElementById("nearPortNum").disabled = false;
+    document.getElementById("nearPatchType").disabled = false;
+
+    document.getElementById("fpLocationType").disabled = false;
+    document.getElementById("fpLocationId").disabled = false;
+    document.getElementById("fpLocationName").disabled = false;
+    document.getElementById("fpLocation").disabled = false;
+
+    document.getElementById("fpEquipmentType").disabled = false;
+    document.getElementById("fpEquipment").disabled = false;
+    document.getElementById("fpEquipmentId").disabled = false;
+    document.getElementById("fpEquipmentName").disabled = false;
+
+    document.getElementById("fpAddress").disabled = false;
+    document.getElementById("fpTubeNb").disabled = false;
+
+    document.getElementById("fpStrandColor").disabled = false;
+    document.getElementById("fpTubeColor").disabled = false;
+
+    document.getElementById("fpStrandName").disabled = false;
+    document.getElementById("fpTubeId").disabled = false;
+    document.getElementById("fpTubeName").disabled = false;
+    document.getElementById("fpFiberId").disabled = false;
+
+    document.getElementById("fpFiberName").disabled = false;
+    document.getElementById("fpKitSerialNum").disabled = false;
+
+    document.getElementById("fpModule").disabled = false;
+    document.getElementById("fpPortNum").disabled = false;
+
+    document.getElementById("fpJunctionId").disabled = false;
+    document.getElementById("fpJunctionName").disabled = false;
+	document.getElementById("taskPatchingId").disabled = false;
+}
+
+function deletePatchAndTask(){
+	
+	if(patchForm === 1){
+		var patchingId = document.getElementById("patchingId").value;
+
+		$.ajax({
+		         type: "GET",
+		         contentType: "application/json; charset=utf-8",
+		         url: getContext()+'/deletePatchingWO',
+		         data: {
+		        	 "patchingId": patchingId,
+		      
+		         },
+		         dataType: "json",
+		         success: function (data) {
+		        	
+					alert ("delete Patching WO done");
+					location.reload();
+		     		
+		         },
+		         error: function(result) {
+		             alert("Error");
+		         }
+		     });
+		
+		
+	}
+	
+	
+	else if(taskForm === 1){
+		
+		var taskId = document.getElementById("woTaskId").value;
+
+				$.ajax({
+				         type: "GET",
+				         contentType: "application/json; charset=utf-8",
+				         url: getContext()+'/deleteWOTask',
+				         data: {
+				        	 "taskId": taskId,
+				      
+				         },
+				         dataType: "json",
+				         success: function (data) {
+				        	
+				     		alert ("delete WO Task done");
+							location.reload();
+				     		
+				         },
+				         error: function(result) {
+				             alert("Error");
+				         }
+				     });
+		}
+	
+	
+	
+}
