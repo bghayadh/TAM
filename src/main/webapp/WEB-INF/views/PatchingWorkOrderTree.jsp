@@ -228,15 +228,21 @@
 
 								<button type="button" id="saveButton"
         class="btn btn-primary BtnActive"
-        onclick="savePatchAndTask()">
+        onclick="savePatchAndTask()" disabled>
     <i class="fa fa-save"></i> Save
 </button>
 
+						<button type="button" id="deleteButton"
+        class="btn btn-primary BtnActive"
+        onclick="deletePatchAndTask()" disabled>
+    <i class="fa fa-trash"></i> Delete
+</button>
 								
 								 
 							</li>
 		           
-									
+				
+				   			
 		     </ul>
 		     
 		</div>
@@ -264,7 +270,7 @@
             <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" style="color:green;">Patching ID</span>
-                    <input type="text" id="patchingId" class="form-control text-input" />
+                    <input type="text" id="patchingId" class="form-control text-input" readonly />
                 </div>
             </div>
         </div>
@@ -423,7 +429,7 @@
             <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" style="color:green;">Last Modified</span>
-                    <input type="datetime-local" id="lastModifiedDate" class="form-control text-input" />
+                    <input type="datetime-local" id="lastModificationDate" class="form-control text-input" />
                 </div>
             </div>
         </div>
@@ -736,6 +742,18 @@
             </div>
         </div>
     </div>
+    
+     <div class="row" style="margin-left:90px;">
+       
+        <div class="col-md-6">
+            <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="color:green;">Patching ID</span>
+                    <input type="text" id="taskPatchingId" class="form-control text-input" style="display:none"/>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -752,38 +770,7 @@
 <script>
 
 
-function disableAllFields() {
-    // Disable all input fields inside #right
-    document.querySelectorAll('#right input').forEach(function(input) {
-        input.disabled = true;
-    });
 
-    // Disable all select elements inside #right
-    document.querySelectorAll('#right select').forEach(function(select) {
-        select.disabled = true;
-    });
-
-    // Optionally, disable all buttons if needed
-    document.querySelectorAll('#right button').forEach(function(button) {
-        button.disabled = true;
-    });
-}
-function enableAllFields() {
-    // Disable all input fields inside #right
-    document.querySelectorAll('#right input').forEach(function(input) {
-        input.disabled = false;
-    });
-
-    // Disable all select elements inside #right
-    document.querySelectorAll('#right select').forEach(function(select) {
-        select.disabled = false;
-    });
-
-    // Optionally, disable all buttons if needed
-    document.querySelectorAll('#right button').forEach(function(button) {
-        button.disabled = false;
-    });
-}
 
 
 //zeinaaaaa
