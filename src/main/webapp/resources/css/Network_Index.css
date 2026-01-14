@@ -1205,4 +1205,30 @@ input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
-}					 
+}
+
+/* Base button and icon color */
+.input-group-append .btn {
+    color: #495057;          /* normal gray */
+    background-color: transparent;
+    border-color: #ced4da;   /* Bootstrap 4 default border */
+    box-shadow: none;
+}
+
+/* Icon inherits color */
+.input-group-append .btn .fas {
+    color: inherit;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+}
+
+/* Hover, focus, active */
+.input-group-append .btn:hover,
+.input-group-append .btn:focus,
+.input-group-append .btn:active {
+    color: #1E8F04;           /* darker gray on hover/click */
+    border-color: #212529;    /* optional: darker border */
+    background-color: transparent;
+    box-shadow: none;
+    outline: none;
+}

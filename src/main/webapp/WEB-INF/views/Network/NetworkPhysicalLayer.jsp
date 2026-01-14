@@ -932,7 +932,9 @@
 														class="input-group-text"><b>Password </b></span>
 														<input type="password" id="password" class="form-control text-input" autocomplete="off" autocapitalize="off" spellcheck="false"/>
 										                <div class="input-group-append">
-										                    <button type="button" class="btn btn-outline-secondary" onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()">👁</button>
+										                    <button type="button" class="btn btn-outline-secondary" onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()">
+										                    	<i id="pwdIcon" class="fas fa-eye"></i>
+										                    </button>
 										                </div>														
 												</div>
 											</div>
@@ -9104,13 +9106,24 @@ var actiondistControllerContext = "";
 var dbContNtLevel= "";
 
 function showPassword() {
-    document.getElementById("password").type = "text";
+    const pwd = document.getElementById("password");
+    pwd.type = "text";
+
+    const icon = document.getElementById("pwdIcon");
+    if(icon.classList.contains('fa-eye')) {
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    }
 }
 
 function hidePassword() {
-    document.getElementById("password").type = "password";
-}
+    const pwd = document.getElementById("password");
+    pwd.type = "password";
 
+    const icon = document.getElementById("pwdIcon");
+    if(icon.classList.contains('fa-eye-slash')) {
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
 $("#saveController").click(function () {
 
     // Validate longitude
