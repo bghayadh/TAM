@@ -1,6 +1,6 @@
- <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <html>
 <head>
 <meta charset="utf-8">
@@ -929,8 +929,11 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 120px;"
-														class="input-group-text"><b>Password </b></span> 
-														<input type="text" id="password" class="form-control text-input" />
+														class="input-group-text"><b>Password </b></span>
+														<input type="password" id="password" class="form-control text-input" autocomplete="off" autocapitalize="off" spellcheck="false"/>
+										                <div class="input-group-append">
+										                    <button type="button" class="btn btn-outline-secondary" onmousedown="showPassword()" onmouseup="hidePassword()" onmouseleave="hidePassword()">👁</button>
+										                </div>														
 												</div>
 											</div>
 										</div>
@@ -8514,7 +8517,7 @@ function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng
 
                       totalGeoDistance += segmentDistance;
             } else {
-                console.warn(`⚠️ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
+                console.warn(`â ï¸ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
             }
         }
     } else {
@@ -8782,7 +8785,7 @@ async function updateCities(item) {
 
 	        resolve(city);
 	      } else {
-	        console.warn("Geocoder failed for", lat, lng, "→", status);
+	        console.warn("Geocoder failed for", lat, lng, "â", status);
 	        resolve("");  // Resolve with empty string if geocoding fails
 	      }
 	    });
@@ -9100,6 +9103,14 @@ document.addEventListener("DOMContentLoaded", function() {
 var actiondistControllerContext = ""; 
 var dbContNtLevel= "";
 
+function showPassword() {
+    document.getElementById("password").type = "text";
+}
+
+function hidePassword() {
+    document.getElementById("password").type = "password";
+}
+
 $("#saveController").click(function () {
 
     // Validate longitude
@@ -9322,7 +9333,7 @@ $("#saveController").click(function () {
     	                    			        markerClusterBackboneDistBoard.removeMarker(marker);
     	                    			        marker.setMap(null);
     	                    			        delete markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterBackboneDistBoard.repaint(); // ð¥ force refresh
+    	                    			        markerClusterBackboneDistBoard.repaint(); // Ã°ÂÂÂ¥ force refresh
     	                    			    }
     	                    			}
     	                    			else if (data.oldNetworkLevel == "metro") {
@@ -10066,7 +10077,7 @@ function scrollToController(id) {
 }	  
 //zeinaaa
 function siteControllerChanged(checkbox) {
-    console.log("Site Controller changed â checked =", checkbox.checked);
+    console.log("Site Controller changed Ã¢ÂÂ checked =", checkbox.checked);
     if ($(checkbox).is(":checked")) {
         document.getElementById("customer_ControllerAutoComplete").checked = false;
         $('#customer_ControllerAutoComplete').val('0');
@@ -10100,7 +10111,7 @@ function siteControllerChanged(checkbox) {
 }
 
 function customerControllerChanged(checkbox) {
-    console.log("Customer Controller changed â checked =", checkbox.checked);
+    console.log("Customer Controller changed Ã¢ÂÂ checked =", checkbox.checked);
 
     if ($(checkbox).is(":checked")) {
         document.getElementById("site_ControllerAutoComplete").checked = false;
