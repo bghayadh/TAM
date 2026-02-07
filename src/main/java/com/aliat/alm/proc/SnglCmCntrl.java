@@ -303,8 +303,8 @@ public class SnglCmCntrl {
 		distributionBoard.setDistributionBoardControllerId(controllerID);
 		distributionBoard.setDistributionBoardControllerName(cntrl.getControllerName());
 		distributionBoard.setDistributionBoardSerialNum("");
-		distributionBoard.setDBDeploymentType("");
-		distributionBoard.setDBAdaptorPanelType("");
+		distributionBoard.setDBDeploymentType("rackMount");
+		distributionBoard.setDBAdaptorPanelType("LC");
 		distributionBoard.setDistributionBoardType("active");
 		distributionBoard.setDistributionBoardProjectId("CurrentPhysicalLayer");
 		distributionBoard.setDistributionBoardRowsNum(totalPanelPorts < 24 ? 1f : totalPanelPorts / 24f);

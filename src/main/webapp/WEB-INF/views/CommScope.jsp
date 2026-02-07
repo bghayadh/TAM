@@ -23,7 +23,10 @@
 	<link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
+	
+	<!-- 
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/jquerysctipttop.css">
+	 -->
 
 <!--  	
 	<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>

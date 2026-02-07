@@ -270,7 +270,7 @@ console.log(numRowsFromDb);
 	panelGroup.add(panelBackground);
 
 	panelBackground.on("click", function() {
-		alert("Whole panel clicked");
+		//alert("Whole panel clicked");
 	});
 
 	// existing connector points (kept for compatibility)
