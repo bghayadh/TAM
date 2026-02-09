@@ -577,8 +577,6 @@ function Create_TreeSites(id){
 				var listSuppNodes=data.listSuppNodes;
 				var listCells=data.listCells;
 				if(siteChildren<listSuppNodes.length){
-					//Create_TreeNode(listSuppNodes,1,3);	
-					//Create_TreeNode_Cell(listSuppNodes,"FindOnClick_SuppSiteNodeCell",siteChildren,true,true,2,"Sup",4,"Sup",selectedItem);		
 					Create_TreeNode_CellGeneral(listSuppNodes,listCells,siteChildren, true,selectedItem);
 		            Tree_PropagationAppendedNodes(selectedItem + "_" +supplier+"_f  .Node");
 		            tree_prop_selection("#" +selectedItem + "_" +supplier+"_f .Node .TreeSpan");

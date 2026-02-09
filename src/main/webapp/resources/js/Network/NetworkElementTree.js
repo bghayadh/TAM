@@ -53,22 +53,18 @@ function tree_PropInitial_li(){
 		    $(this).parent('li.parent_li').children('.folder').find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
 		    }
 		e.stopPropagation();                  
-            });
-	}
+	});
+}
 
 function tree_Prop(selector){
-	//console.log(" tree_Prop");
 	$(selector).on('click', function (e) {
 		children = $(this).parent('li.parent_li').find(' > ul > li');
-		//console.log(" children "+ children);
 		if ($(this).parent().find('> ul > li').is(":visible")) {
 			$(this).parent('li').children('.folder').find('> svg').addClass('fa-folder').removeClass('fa-folder-open');
 			children.toggle();
-			//console.log(" children closed");
 		} else {							
 			$(this).parent('li').children('.folder').find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
 			children.toggle();
-			//console.log(" children opened");
 		}				
 	});
 }	
@@ -85,7 +81,6 @@ function Site_Boq(SiteId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -110,7 +105,6 @@ if(arrayParam[3]==1){
 }else{
 	var paramCore = false;
 }
-
 		 $.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -155,7 +149,6 @@ function SiteVen_Boq(SiteId,VenId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -226,7 +219,6 @@ function SiteVenNT_Boq(SiteId,VenId,SelectedNodeType){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -298,7 +290,6 @@ function Supp_Boq(SuppId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -370,7 +361,6 @@ function SiteSupp_Boq(SiteId,SuppId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -396,11 +386,11 @@ if(arrayParam[3]==1){
 	var paramCore = false;
 }
 
-		 $.ajax({
-			type: "GET",
-			contentType: "application/json; charset=utf-8",
-			url: getContext()+'/GetSiteSupBoqList',
-			data: {
+	$.ajax({
+		type: "GET",
+		contentType: "application/json; charset=utf-8",
+		url: getContext()+'/GetSiteSupBoqList',
+		data: {
 			    "SiteId" : SiteId,
 			    "SuppId" : SuppId,
 			    "paramEnterprise" : paramEnterprise,
@@ -409,14 +399,13 @@ if(arrayParam[3]==1){
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam,
 			    "date" : date,
-			    },
-			success : function(data)
-			    {
-				 $('#boq_table').empty();				 
-				 siteList.push(SiteId);	          	 
-				 $.each(data , function( key, value ) {	
-					boqList.push({ SiteId,key,value });    
-					var tr = "<tr>"+
+		},
+		success : function(data) {
+			$('#boq_table').empty();				 
+			siteList.push(SiteId);	          	 
+			$.each(data , function( key, value ) {	
+				boqList.push({ SiteId,key,value });    
+				var tr = "<tr>"+
 					"<td class='title'> "+key+"</td>"+
 					"<td> "+value+" </td>"+
 					"</tr>";
@@ -427,12 +416,12 @@ if(arrayParam[3]==1){
 				alert("Error");
 									}			
 		});
-	 $("#boqBtn").removeClass().addClass("tablinks active");
-	 $("#Defaultbutton").removeClass().addClass("tablinks");
-	 $("#optionBtn").removeClass().addClass("tablinks");
-	 Boq.css({ display:'block'});
-	 Layers.css({ display:'none'});
-	 Options.css({ display:'none'});
+	$("#boqBtn").removeClass().addClass("tablinks active");
+	$("#Defaultbutton").removeClass().addClass("tablinks");
+	$("#optionBtn").removeClass().addClass("tablinks");
+	Boq.css({ display:'block'});
+	Layers.css({ display:'none'});
+	Options.css({ display:'none'});
 	Boq.tab('show');	 	   	 	      
 }
 
@@ -511,7 +500,6 @@ function Ven_Boq(VenId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 		
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -582,7 +570,6 @@ function VenSite_Boq(VenId,siteId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -653,8 +640,7 @@ function SupSite_Boq(SupId,siteId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
+	var date=$("#ParsingDate").val();	
 	
 if(arrayParam[0]==1){
 	var paramEnterprise = true;
@@ -726,7 +712,6 @@ function SitePO_Boq(SiteId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -798,8 +783,6 @@ function POSite_Boq(SiteId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
-	
 
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -875,7 +858,6 @@ function  Node_Boq(WareId,NodeId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -946,13 +928,11 @@ function  Node_Boq(WareId,NodeId){
 var siteNTList=[];
 var boqNTList=[];
 
-function  NodeT_Boq(SiteId,NodeTId){
-	
+function  NodeT_Boq(SiteId,NodeTId){	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -1006,7 +986,7 @@ function  NodeT_Boq(SiteId,NodeTId){
 			},
 			error: function(result) {
 				alert("Error");
-									}
+			}
 				});
 	 $("#boqBtn").removeClass().addClass("tablinks active");
 	 $("#Defaultbutton").removeClass().addClass("tablinks");
@@ -1022,7 +1002,6 @@ function  SuppNdTyp_Boq(SuppId,NodeTId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -1087,8 +1066,7 @@ function  SuppNdTyp_Boq(SuppId,NodeTId){
 	 Boq.tab('show');	      	 	      
 }
 
-function  SiteNodeType_Boq(SiteId,NodeTId){
-	
+function  SiteNodeType_Boq(SiteId,NodeTId){	
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
@@ -1118,7 +1096,6 @@ function  SiteNodeType_Boq(SiteId,NodeTId){
 	}else{
 		var paramCore = false;
 	}
-
 		 $.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -1165,7 +1142,6 @@ function  VenNdTyp_Boq(VenId,NodeTId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -1237,7 +1213,6 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 	var Layers= $('#Layers');
 	var Options= $('#Options');
 	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
 	
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -1262,7 +1237,6 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 	}else{
 		var paramCore = false;
 	}
-	
 		 $.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -1294,7 +1268,6 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 				alert("Error");
 									}
 				});
-		
 	 $("#boqBtn").removeClass().addClass("tablinks active");
 	 $("#Defaultbutton").removeClass().addClass("tablinks");
 	 $("#optionBtn").removeClass().addClass("tablinks");
@@ -1309,8 +1282,7 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 	var Boq = $('#Boq');
 	var Layers= $('#Layers');
 	var Options= $('#Options');
-	var date=$("#ParsingDate").val();
-	console.log("date << ",date);
+	var date=$("#ParsingDate").val();	
 
 	if(arrayParam[0]==1){
 		var paramEnterprise = true;
@@ -1335,7 +1307,6 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 	}else{
 		var paramCore = false;
 	}
-
 		 $.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
@@ -1381,7 +1352,6 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 //////////////////////////////////////////////
 
 var boqList=[];
-//var sitePList=[];
 
 function PO_Boq(SiteId){
 	var Boq = $('#Boq');
@@ -1480,7 +1450,6 @@ function hideContext(){
 
 
 function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,SiteName) {
-
 	for(j=ChildrenLength;j<lstNodes.length;j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
 	{																        	
 	var str= "<ul><li class='Node' id='" + lstNodes[j][0] +"' style='display:none; margin-left:-18px' class='folder'>";
@@ -1499,9 +1468,9 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 		}
 	}
 	else{
-		if(lstNodes[j][5]>0 || lstNodes[j][6]>0 || lstNodes[j][7]>0){		
+		if(lstNodes[j][5]>0 || lstNodes[j][6]>0 || lstNodes[j][7]>0){
 			str+="<span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
-			str += "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";
+			str += "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";			
 			$("ul").find("#"+lstNodes[j][4]+"_f").append(str);								        																	        				
 			str ="<ul><li id='" + lstNodes[j][0] +"_f' style='display:none; margin-left:-10px;'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Cells </span></span></li></ul>";
 			$("#"+lstNodes[j][0]).append(str);				
@@ -1514,7 +1483,6 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 
 	$("#"+lstNodes[j][0]+" > .folder").on('click',function () {	
 		var selectedNode=$(this).parent().attr('id');
-		//Node_Boq(SiteName,selectedNode);
 		var NdChildrenLength=$("#" + selectedNode+"_f").find(' > ul > li').length;															
 		if(NdChildrenLength==0){		
 			var lstCellsFiltered=[];
@@ -1545,9 +1513,76 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 				   }
 			]
 	});
-	}
-	
+	}	
 	Tree_PropagationAppendedNodes(SiteName+"_f .Node");
-	tree_prop_selection("#" +SiteName+"_f .Node .TreeSpan");
-	//console.log("the end");	
+	tree_prop_selection("#" +SiteName+"_f .Node .TreeSpan");	
+}
+
+function Create_TreeNode_Cell_Vendor(lstNodes,lstCells,ChildrenLength,concat,SiteName,selectedVen) {	
+	for(j=ChildrenLength;j<lstNodes.length;j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
+	{																        	
+	var str= "<ul><li class='Node' id='" + lstNodes[j][0] +"' style='display:none; margin-left:-18px' class='folder'>";
+	if(concat==true)
+	{	
+		if(lstNodes[j][5]>0 || lstNodes[j][6]>0 || lstNodes[j][7]>0){		
+			str+="<span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
+			str += "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";
+			$("ul").find("#"+ selectedVen + "_" + lstNodes[j][3]+"_"+lstNodes[j][4]+"_f").append(str);								        																	        				
+			str ="<ul><li id='" + lstNodes[j][0] +"_f' style='display:none; margin-left:-10px;'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Cells </span></span></li></ul>";
+			$("#"+lstNodes[j][0]).append(str);
+		}																	        			
+		else{
+			str += "<span class='TreeSpan' style='width:395px; margin-left:18px;'><span class='tree-span'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";
+			$("ul").find("#"+ selectedVen + "_" +lstNodes[j][3]+"_"+lstNodes[j][4]+"_f").append(str);
+		}
+	}
+	else{
+		if(lstNodes[j][5]>0 || lstNodes[j][6]>0 || lstNodes[j][7]>0){		
+			str+="<span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
+			str += "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";
+			$("ul").find("#"+lstNodes[j][4]+"_f").append(str);								        																	        				
+			str ="<ul><li id='" + lstNodes[j][0] +"_f' style='display:none; margin-left:-10px;'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Cells </span></span></li></ul>";
+			$("#"+lstNodes[j][0]).append(str);
+		}																	        			
+		else{
+			str += "<span class='TreeSpan' style='width:395px; margin-left:18px;'><span class='tree-span'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";
+			$("ul").find("#"+lstNodes[j][4]+"_f").append(str);
+		}
+	}		
+
+	$("#"+lstNodes[j][0]+" > .folder").on('click',function () {	
+		var selectedNode=$(this).parent().attr('id');
+		var NdChildrenLength=$("#" + selectedNode+"_f").find(' > ul > li').length;															
+		if(NdChildrenLength==0){		
+			var lstCellsFiltered=[];
+			for(var c=0;c<lstCells.length;c++){
+				if(lstCells[c][2]==selectedNode){
+					lstCellsFiltered.push(lstCells[c]);
+				}
+			}
+				for (k = 0; k <lstCellsFiltered.length; k++) {
+					var str="<ul><li class='Cell' id='" + lstCellsFiltered[k][0] + "' style='display:none; margin-left:-15px;''><span class='TreeSpan' style='width:395px'><span class='tree-span'>  <i class='fas fa-vector-square fa-2x'></i> "+lstCellsFiltered[k][1]+" </span></span></li></ul>";
+					$("#"+lstCellsFiltered[k][2]+"_f").append(str);
+				}
+			tree_prop_selection("#" +selectedNode+"_f .Cell .TreeSpan");
+		}	
+	});	
+	
+	$(".Node > .TreeSpan").contextmenu(function(){				
+		selectedNodeIdContext=$(this).parent().attr('id');
+		menuName=singleNode;			
+		openContext(selectedNodeIdContext,"",singleNode,event);
+	});
+	singleNode = new ContextMenu({
+		  'theme': 'default',
+		  'items': [
+			  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
+					Node_Boq(SiteName,selectedNodeIdContext);
+				}	
+				}
+			]
+	});
+	}	
+	Tree_PropagationAppendedNodes(SiteName+"_f .Node");
+	tree_prop_selection("#" +SiteName+"_f .Node .TreeSpan");	
 }

@@ -3080,6 +3080,7 @@ public class NetworkController {
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			return "redirect:/";
 		} else {
+			System.out.println("Welcome to Network Site Vendor Node Type Node Cell");
 			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				String enterprise = request.getParameter("enterprise");
@@ -3118,29 +3119,11 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					/*strSites = AppendQuery("w", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("c", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countGcells,(select COUNT(*) FROM NODE_4GCELL d where d.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("d", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countLcells,(select COUNT(*) FROM NODE_3GCELL e where e.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
 							+ "FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null  "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
+					System.out.println("strSites is " +strSites);
 					//System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
@@ -3192,9 +3175,6 @@ public class NetworkController {
 				arrayParam[3] = 0; // core
 
 				String strSites = "SELECT DISTINCT b.SITE_ID,b.WARE_NAME,b.WARE_ID,b.LATITUDE,b.LONGITUDE ";
-						/*+ "(select COUNT(*) from NODE_ACTIVE w where w.WARE_ID=b.WARE_ID  "
-						+ generateDateCondition(parsingDate, "w");*/
-
 				try {
 					notifications.headerNotifications(session, model);
 					if (enterprise != null && !enterprise.equals("null")) {
@@ -3213,30 +3193,10 @@ public class NetworkController {
 						arrayParam[3] = 1;
 						model.addAttribute("CoreBtn", arrayParam[3]);
 					}
-					/*strSites = AppendQuery("w", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countNodes,(select COUNT(*) FROM NODE_2GCELL c where c.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("c", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countGcells,(select COUNT(*) FROM NODE_4GCELL d where d.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("d", arrayParam, strSites);
-					strSites = strSites
-							+ ") as countLcells,(select COUNT(*) FROM NODE_3GCELL e where e.NODE_PK IN (select NODE_PK  from NODE_ACTIVE o where o.WARE_ID=b.WARE_ID "
-							+ generateDateCondition(parsingDate, "o");
-					strSites = AppendQuery("o", arrayParam, strSites);
-					strSites = strSites + " ) ";
-					strSites = AppendQuery("e", arrayParam, strSites);*/
 					strSites = strSites
 							+ "FROM NODE_ACTIVE b WHERE b.WARE_ID!='0' and b.WARE_ID!='null' and b.WARE_ID is not null and b.VENDOR!='null' and b.VENDOR!='0' and b.VENDOR is not null "
 							+ generateDateCondition(parsingDate, "b");
 					strSites = AppendQuery("b", arrayParam, strSites);
-					//System.out.println("strSites "+strSites);
 					model.addAttribute("listSites",
 							mapper.writeValueAsString(session.createNativeQuery(strSites).list()));
 					model.addAttribute("arrayParam", mapper.writeValueAsString(arrayParam));
@@ -3281,8 +3241,6 @@ public class NetworkController {
 				List<?> areaList = session.createNativeQuery(
 						"SELECT  distinct B.AREA_ID,B.AREA_NAME,A.LONGITUDE,A.LATITUDE FROM WAREHOUSE B,AREA A,NODE_ACTIVE C WHERE A.AREA_ID=B.AREA_ID AND B.WARE_ID=C.WARE_ID AND C.ACTIVE_RECORD='1'")
 						.list();
-				// (select count(*) from NODE_ACTIVE b where b.WARE_ID = a.WARE_ID and
-				// b.ACTIVE_RECORD = '1') as countNode
 
 				List<Object> area_Result = new ArrayList<>();
 
@@ -3341,7 +3299,6 @@ public class NetworkController {
 		if (paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true")
 				|| paramCore.equals("true")) {
 			String[] words = str.split(" ");
-			// Check if the last word is "WHERE" (case-insensitive)
 			if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
 			} else {
 				str = str + " and ( ";
@@ -3372,13 +3329,10 @@ public class NetworkController {
 				}
 			}
 			if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
-				// System.out.println("The last word is 'WHERE'");
 			} else {
-				// System.out.println("The last word is not 'WHERE'");
 				str = str + " ) ";
 			}
 		}
-		// System.out.println("str >> "+str);
 		return str;
 	}
 
@@ -3387,7 +3341,6 @@ public class NetworkController {
 		if (paramEnterprise.equals("true") || paramTransmission.equals("true") || paramRAN.equals("true")
 				|| paramCore.equals("true")) {
 			String[] words = str.split(" ");
-			// Check if the last word is "WHERE" (case-insensitive)
 			if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
 			} else {
 				str = str + " and ( ";
@@ -3418,9 +3371,7 @@ public class NetworkController {
 				}
 			}
 			if (words.length > 0 && "WHERE".equalsIgnoreCase(words[words.length - 1])) {
-				// System.out.println("The last word is 'WHERE'");
 			} else {
-				// System.out.println("The last word is not 'WHERE'");
 				str = str + " ) ";
 			}
 		}

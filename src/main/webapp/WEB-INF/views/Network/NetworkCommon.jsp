@@ -884,6 +884,7 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	///////////////////////////////////////////////
 
 	function Tree_PropagationAppendedNodes(selector) {
+		console.log("selector is ", selector);
 		$("#" + selector + " .folder").on('click', function (e) {
         //console.log("clicked folder Nodes and Cells");
         var parentLi = $(this).closest('li');
@@ -2583,14 +2584,5 @@ function tree_prop_general(){
 			map.controls[google.maps.ControlPosition.LEFT_CENTER].push(controlDiv2);
 		}
 
-//routeDrawing
-//drawStraightPath
-//Tree_Propagation
-//Tree_PropagationInit
-//Tree_PropagationAppendedCells
-//updateMap
-//resetMAP
-
-	
-	</script>
+</script>
 </html>

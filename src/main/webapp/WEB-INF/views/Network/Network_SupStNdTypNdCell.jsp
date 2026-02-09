@@ -700,8 +700,6 @@ function SupNdCellCore(id){
 					if (data != null) {
 						var listNodes=data.listNodes;
 						var listCells=data.listCells;
-
-							//Create_TreeNode_Cell(listNodes,"FindOnClick_SuppStNdTypNdCell",NdTypeChildrenLength,true,true,4,"Sup",6,"Sup",selectedItem);
 							Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem);
 				            Tree_PropagationAppendedNodes(selectedNodetType+ "_" +selectedItem+"_f  .Node");
 				            tree_prop_selection("#" + selectedNodetType+ "_" +selectedItem+"_f .Node .TreeSpan");
