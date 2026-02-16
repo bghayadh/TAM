@@ -8,6 +8,7 @@ import com.aliat.alm.models.ArSite;
 import com.aliat.alm.models.AssetRegistry;
 import com.aliat.alm.models.DNIFormView;
 import com.aliat.alm.models.DiscoveryNewItemNode;
+import com.aliat.alm.models.DistributionBoardMapping;
 import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.models.PatchingWorkOrder;
 import com.aliat.alm.models.PurchaseOrder;
@@ -136,71 +137,113 @@ public class PatchingWorkOrderTreeController {
 	                "ORDER BY t.LAST_MODIFIED_DATE DESC"
 	            ).getResultList();
 
+	            System.out.println(mapper.writeValueAsString(patchingOrders));
 	            /* ===============================
 	             * 2️⃣ GET ALL WORK ORDER TASKS
 	             * =============================== */
 	            List<Object[]> tasks = session.createNativeQuery(
-	                "SELECT " +
-	                "WO_TASK_ID, PATCHING_ID, TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),  TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'), TO_CHAR(COMPLETION_DATE, 'MM/dd/YYYY HH:MI AM')  , " +
-	                "TASK_TYPE, TASK_STATUS, DB_ID, DB_PORT_ID, ROW_COL_INDEX, " +
-	                "ROW_NUMBER, COLUMN_NUMBER, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, " +
-	                "FP_LOCATION_TYPE, FP_LOCATION_ID, FP_LOCATION_NAME, FP_LOCATION, " +
-	                "FP_EQUIPMENT_TYPE, FP_EQUIPMENT, FP_EQUIPMENT_ID, FP_EQUIPMENT_NAME, FP_ADDRESS, " +
-	                "FP_TUBE_NB, FP_STRAND_COLOR, FP_TUBE_COLOR, FP_STRAND_NAME, " +
-	                "FP_TUBE_ID, FP_TUBE_NAME, FP_FIBER_ID, FP_FIBER_NAME, " +
-	                "FP_KIT_SERIAL_NUM, FP_MODULE, FP_PORT_NUM, " +
-	                "FP_JUNCTION_ID, FP_JUNCTION_NAME " +
-	                "FROM WORK_ORDER_TASK"
-	            ).getResultList();
+	            	    "SELECT " +
+	            	    "WO_TASK_ID, PATCHING_ID, TO_CHAR(CREATION_DATE, 'MM/dd/YYYY HH:MI AM'),  TO_CHAR(LAST_MODIFIED_DATE, 'MM/dd/YYYY HH:MI AM'), TO_CHAR(COMPLETION_DATE, 'MM/dd/YYYY HH:MI AM')  , " +
+	            	    "TASK_TYPE, TASK_STATUS, DB_ID, DB_PORT_ID, ROW_COL_INDEX, " +
+	            	    "ROW_NUMBER, COLUMN_NUMBER, NEAR_MODULE, NEAR_PORT_NUM, NEAR_PATCH_TYPE, " +
+	            	    "FP_LOCATION_TYPE, FP_LOCATION_ID, FP_LOCATION_NAME, FP_LOCATION, " +
+	            	    "FP_EQUIPMENT_TYPE, FP_EQUIPMENT, FP_EQUIPMENT_ID, FP_EQUIPMENT_NAME, FP_ADDRESS, " +
+	            	    "FP_TUBE_NB, FP_STRAND_COLOR, FP_TUBE_COLOR, FP_STRAND_NAME, " +
+	            	    "FP_TUBE_ID, FP_TUBE_NAME, FP_FIBER_ID, FP_FIBER_NAME, " +
+	            	    "FP_KIT_SERIAL_NUM, FP_MODULE, FP_PORT_NUM, " +
+	            	    "FP_JUNCTION_ID, FP_JUNCTION_NAME, " +
+	            	    // NEW BP COLUMNS (37-58)
+	            	    "BP_STRAND_COLOR, BP_TUBE_COLOR, BP_LOCATION_TYPE, BP_LOCATION_ID, BP_LOCATION_NAME, BP_LOCATION, " +
+	            	    "BP_EQUIPMENT_TYPE, BP_EQUIPMENT, BP_STRAND_NB, BP_TUBE_NB, " +
+	            	    "BP_EQUIPMENT_ID, BP_EQUIPMENT_NAME, BP_ADDRESS, BP_STATUS, " +
+	            	    "BP_STRAND_ID, BP_STRAND_NAME, BP_TUBE_ID, BP_TUBE_NAME, BP_FIBER_ID, BP_FIBER_NAME, " +
+	            	    "BP_JUNCTION_ID, BP_JUNCTION_NAME, " +
+	            	    // NEW BACK COLUMNS (59-61)
+	            	    "BACK_MODULE, BACK_KIT_SERIAL_NUM, BACK_PORT_NUM, " +
+	            	    " FAR_NEAR_KIT_SERIAL_NUM, FAR_NEAR_MODULE, FAR_NEAR_PORT_NUM, FP_STRAND_NB, FP_STRAND_ID  FROM WORK_ORDER_TASK"
+	            	).getResultList();
 
-	            /* ===============================
-	             * 3️⃣ GROUP TASKS BY PATCHING_ID
-	             * =============================== */
-	            Map<String, List<Map<String, Object>>> tasksByPatchingId = new LinkedHashMap<>();
+	            	/* ===============================
+	            	 * 3️⃣ GROUP TASKS BY PATCHING_ID
+	            	 * =============================== */
+	            	Map<String, List<Map<String, Object>>> tasksByPatchingId = new LinkedHashMap<>();
 
-	            for (Object[] r : tasks) {
-	                String patchingId = (String) r[1];
+	            	for (Object[] r : tasks) {
+	            	    String patchingId = (String) r[1];
 
-	                Map<String, Object> task = new LinkedHashMap<>();
-	                task.put("woTaskId", r[0]);
-	                task.put("patchingId", r[1]);
-	                task.put("creationDate", r[2]);
-	                task.put("lastModifiedDate", r[3]);
-	                task.put("completionDate", r[4]);
-	                task.put("taskType", r[5]);
-	                task.put("taskStatus", r[6]);
-	                task.put("dbId", r[7]);
-	                task.put("dbPortId", r[8]);
-	                task.put("rowColIndex", r[9]);
-	                task.put("rowNumber", r[10]);
-	                task.put("columnNumber", r[11]);
-	                task.put("nearModule", r[12]);
-	                task.put("nearPortNum", r[13]);
-	                task.put("nearPatchType", r[14]);
-	                task.put("fpLocationType", r[15]);
-	                task.put("fpLocationId", r[16]);
-	                task.put("fpLocationName", r[17]);
-	                task.put("fpLocation", r[18]);
-	                task.put("fpEquipmentType", r[19]);
-	                task.put("fpEquipment", r[20]);
-	                task.put("fpEquipmentId", r[21]);
-	                task.put("fpEquipmentName", r[22]);
-	                task.put("fpAddress", r[23]);
-	                task.put("fpTubeNb", r[24]);
-	                task.put("fpStrandColor", r[25]);
-	                task.put("fpTubeColor", r[26]);
-	                task.put("fpStrandName", r[27]);
-	                task.put("fpTubeId", r[28]);
-	                task.put("fpTubeName", r[29]);
-	                task.put("fpFiberId", r[30]);
-	                task.put("fpFiberName", r[31]);
-	                task.put("fpKitSerialNum", r[32]);
-	                task.put("fpModule", r[33]);
-	                task.put("fpPortNum", r[34]);
-	                task.put("fpJunctionId", r[35]);
-	                task.put("fpJunctionName", r[36]);
-
-	                tasksByPatchingId
+	            	    Map<String, Object> task = new LinkedHashMap<>();
+	            	    task.put("woTaskId", r[0]);
+	            	    task.put("patchingId", r[1]);
+	            	    task.put("creationDate", r[2]);
+	            	    task.put("lastModifiedDate", r[3]);
+	            	    task.put("completionDate", r[4]);
+	            	    task.put("taskType", r[5]);
+	            	    task.put("taskStatus", r[6]);
+	            	    task.put("dbId", r[7]);
+	            	    task.put("dbPortId", r[8]);
+	            	    task.put("rowColIndex", r[9]);
+	            	    task.put("rowNumber", r[10]);
+	            	    task.put("columnNumber", r[11]);
+	            	    task.put("nearModule", r[12]);
+	            	    task.put("nearPortNum", r[13]);
+	            	    task.put("nearPatchType", r[14]);
+	            	    task.put("fpLocationType", r[15]);
+	            	    task.put("fpLocationId", r[16]);
+	            	    task.put("fpLocationName", r[17]);
+	            	    task.put("fpLocation", r[18]);
+	            	    task.put("fpEquipmentType", r[19]);
+	            	    task.put("fpEquipment", r[20]);
+	            	    task.put("fpEquipmentId", r[21]);
+	            	    task.put("fpEquipmentName", r[22]);
+	            	    task.put("fpAddress", r[23]);
+	            	    task.put("fpTubeNb", r[24]);
+	            	    task.put("fpStrandColor", r[25]);
+	            	    task.put("fpTubeColor", r[26]);
+	            	    task.put("fpStrandName", r[27]);
+	            	    task.put("fpTubeId", r[28]);
+	            	    task.put("fpTubeName", r[29]);
+	            	    task.put("fpFiberId", r[30]);
+	            	    task.put("fpFiberName", r[31]);
+	            	    task.put("fpKitSerialNum", r[32]);
+	            	    task.put("fpModule", r[33]);
+	            	    task.put("fpPortNum", r[34]);
+	            	    task.put("fpJunctionId", r[35]);
+	            	    task.put("fpJunctionName", r[36]);
+	            	    
+	            	    // NEW BP FIELDS (r[37] to r[58])
+	            	    task.put("bpStrandColor", r[37]);
+	            	    task.put("bpTubeColor", r[38]);
+	            	    task.put("bpLocationType", r[39]);
+	            	    task.put("bpLocationId", r[40]);
+	            	    task.put("bpLocationName", r[41]);
+	            	    task.put("bpLocation", r[42]);
+	            	    task.put("bpEquipmentType", r[43]);
+	            	    task.put("bpEquipment", r[44]);
+	            	    task.put("bpStrandNb", r[45]);
+	            	    task.put("bpTubeNb", r[46]);
+	            	    task.put("bpEquipmentId", r[47]);
+	            	    task.put("bpEquipmentName", r[48]);
+	            	    task.put("bpAddress", r[49]);
+	            	    task.put("bpStatus", r[50]);
+	            	    task.put("bpStrandId", r[51]);
+	            	    task.put("bpStrandName", r[52]);
+	            	    task.put("bpTubeId", r[53]);
+	            	    task.put("bpTubeName", r[54]);
+	            	    task.put("bpFiberId", r[55]);
+	            	    task.put("bpFiberName", r[56]);
+	            	    task.put("bpJunctionId", r[57]);
+	            	    task.put("bpJunctionName", r[58]);
+	            	    
+	            	    // NEW BACK FIELDS (r[59] to r[61])
+	            	    task.put("backModule", r[59]);
+	            	    task.put("backKitSerialNum", r[60]);
+	            	    task.put("backPortNum", r[61]);
+	            	    task.put("farNearKitSerialNum", r[62]);
+	            	    task.put("farNearModule", r[63]);
+	            	    task.put("farNearPortNum", r[64]);
+	            	    task.put("fpStrandNb", r[65]);
+	            	    task.put("fpStrandId", r[66]);
+	                    tasksByPatchingId
 	                    .computeIfAbsent(patchingId, k -> new ArrayList<>())
 	                    .add(task);
 	            }
@@ -340,7 +383,13 @@ public class PatchingWorkOrderTreeController {
 	            session.flush();
 	            session.clear();
 
+	            formatter = new SimpleDateFormat("MM/dd/yyyy");
+	         // ✅ FORMAT Timestamp → String
+	            String formattedLastModified = formatter.format(lastModifiedDate);  // "02/04/2026 10:57 PM"
+
 	            rtn.put("status", patchingStatus);
+	            rtn.put("id", patchingId);
+	            rtn.put("lastModifiedDate", formattedLastModified);  // Send STRING directly
 
 	        } catch (Exception e) {
 	            logger.info("Error at PatchingWorkOrderTree: " + e);
@@ -465,7 +514,51 @@ public class PatchingWorkOrderTreeController {
 	            task.setFpPortNum(request.getParameter("fpPortNum"));
 	            task.setFpJunctionId(request.getParameter("fpJunctionId"));
 	            task.setFpJunctionName(request.getParameter("fpJunctionName"));
+	         // -------- BP LOCATION --------
+	            task.setBpLocationType(request.getParameter("bpLocationType"));
+	            task.setBpLocationId(request.getParameter("bpLocationId"));
+	            task.setBpLocationName(request.getParameter("bpLocationName"));
+	            task.setBpLocation(request.getParameter("bpLocation"));
 
+	            // -------- BP EQUIPMENT --------
+	            task.setBpEquipmentType(request.getParameter("bpEquipmentType"));
+	            task.setBpEquipment(request.getParameter("bpEquipment"));
+	            task.setBpEquipmentId(request.getParameter("bpEquipmentId"));
+	            task.setBpEquipmentName(request.getParameter("bpEquipmentName"));
+
+	            // -------- BP CABLE / STATUS --------
+	            task.setBpAddress(request.getParameter("bpAddress"));
+	            task.setBpStatus(request.getParameter("bpStatus"));
+
+	            task.setBpStrandColor(request.getParameter("bpStrandColor"));
+	            task.setBpTubeColor(request.getParameter("bpTubeColor"));
+
+	            task.setBpStrandId(request.getParameter("bpStrandId"));
+	            task.setBpStrandName(request.getParameter("bpStrandName"));
+	            task.setBpStrandNb(request.getParameter("bpStrandNb"));
+	            
+	            task.setBpTubeId(request.getParameter("bpTubeId"));
+	            task.setBpTubeName(request.getParameter("bpTubeName"));
+	            task.setBpTubeNb(request.getParameter("bpTubeNb"));
+	            
+	            task.setBpFiberId(request.getParameter("bpFiberId"));
+	            task.setBpFiberName(request.getParameter("bpFiberName"));
+
+	            // -------- BP JUNCTION --------
+	            task.setBpJunctionId(request.getParameter("bpJunctionId"));
+	            task.setBpJunctionName(request.getParameter("bpJunctionName"));
+
+	            // -------- BACK --------
+	            task.setBackModule(request.getParameter("backModule"));
+	            task.setBackKitSerialNum(request.getParameter("backKitSerialNum"));
+	            task.setBackPortNum(request.getParameter("backPortNum"));
+	            task.setFarNearKitSerialNum(request.getParameter("farNearKitSerialNum"));
+	            task.setFarNearModule(request.getParameter("farNearModule"));
+	            task.setFarNearPortNum(request.getParameter("farNearPortNum"));
+	            task.setFpStrandNb(request.getParameter("fpStrandNb"));
+	            task.setFpStrandId(request.getParameter("fpStrandId"));
+	            task.setBpStrandNb(request.getParameter("bpStrandNb"));
+	           
 	            // -------- GENERATE ID IF NEW --------
 	            if (woTaskId == null || woTaskId.isEmpty()) {
 	                woTaskId = "WO_TASK_"
@@ -474,12 +567,103 @@ public class PatchingWorkOrderTreeController {
 	                ).uniqueResult()).intValue();
 	                task.setWoTaskId(woTaskId);
 	            }
+	            
+	            
 
 	            session.saveOrUpdate(task);
+	            
+	            if ("Completed".equalsIgnoreCase(taskStatus)) {
+	             DistributionBoardMapping mapping =
+	                    session.get(DistributionBoardMapping.class, request.getParameter("dbPortId"));
+
+	            if (mapping != null) {
+
+	            // -------- BASIC INFO --------
+	            mapping.setDb_Port_Id(request.getParameter("dbPortId"));
+	            mapping.setDistributionBoardId(request.getParameter("dbId"));
+	            mapping.setRowColIndex(request.getParameter("rowColIndex"));
+	            mapping.setRowNum(request.getParameter("rowNumber"));
+	            mapping.setColNum(request.getParameter("columnNumber"));
+
+	            // -------- FP --------
+	            mapping.setfP_Status("Connected");
+	            mapping.setfP_LocationType(request.getParameter("fpLocationType"));
+	            mapping.setfP_LocationId(request.getParameter("fpLocationId"));
+	            mapping.setfP_LocationName(request.getParameter("fpLocationName"));
+	            mapping.setfP_Location(request.getParameter("fpLocation"));
+
+	            mapping.setfP_EquipmentType(request.getParameter("fpEquipmentType"));
+	            mapping.setfP_Equipment(request.getParameter("fpEquipment"));
+	            mapping.setfP_EquipmentId(request.getParameter("fpEquipmentId"));
+	            mapping.setfP_EquipmentName(request.getParameter("fpEquipmentName"));
+
+	            mapping.setfP_Address(request.getParameter("fpAddress"));
+	            mapping.setfP_StrandId(request.getParameter("fpStrandId"));
+	            mapping.setfP_StrandName(request.getParameter("fpStrandName"));
+	            mapping.setfP_TubeId(request.getParameter("fpTubeId"));
+	            mapping.setfP_TubeName(request.getParameter("fpTubeName"));
+	            mapping.setbP_TubeNb(request.getParameter("bpTubeNb"));
+	            
+	            mapping.setfP_FiberId(request.getParameter("fpFiberId"));
+	            mapping.setfP_FiberName(request.getParameter("fpFiberName"));
+	            mapping.setfP_StrandColor(request.getParameter("fpStrandColor"));
+	            mapping.setfP_StrandNb(request.getParameter("fbStrandNb"));
+	            mapping.setfP_TubeColor(request.getParameter("fpTubeColor"));
+	            mapping.setfP_TubeNb(request.getParameter("fpTubeNb"));
+
+	            mapping.setfP_JunctionId(request.getParameter("fpJunctionId"));
+	            mapping.setfP_JunctionName(request.getParameter("fpJunctionName"));
+
+	            // -------- BP --------
+	            mapping.setbP_Status(request.getParameter("bpStatus"));
+	            mapping.setbP_LocationType(request.getParameter("bpLocationType"));
+	            mapping.setbP_LocationId(request.getParameter("bpLocationId"));
+	            mapping.setbP_LocationName(request.getParameter("bpLocationName"));
+	            mapping.setbP_Location(request.getParameter("bpLocation"));
+
+	            mapping.setbP_EquipmentType(request.getParameter("bpEquipmentType"));
+	            mapping.setbP_Equipment(request.getParameter("bpEquipment"));
+	            mapping.setbP_EquipmentId(request.getParameter("bpEquipmentId"));
+	            mapping.setbP_EquipmentName(request.getParameter("bpEquipmentName"));
+
+	            mapping.setbP_Address(request.getParameter("bpAddress"));
+	            mapping.setbP_StrandId(request.getParameter("bpStrandId"));
+	            mapping.setbP_StrandName(request.getParameter("bpStrandName"));
+	            mapping.setbP_TubeId(request.getParameter("bpTubeId"));
+	            mapping.setbP_TubeName(request.getParameter("bpTubeName"));
+	            mapping.setbP_FiberId(request.getParameter("bpFiberId"));
+	            mapping.setbP_FiberName(request.getParameter("bpFiberName"));
+	            mapping.setbP_StrandColor(request.getParameter("bpStrandColor"));
+	            mapping.setbP_TubeColor(request.getParameter("bpTubeColor"));
+
+	            mapping.setbP_JunctionId(request.getParameter("bpJunctionId"));
+	            mapping.setbP_JunctionName(request.getParameter("bpJunctionName"));
+
+	            // -------- NEAR --------
+	            mapping.setNearModule(request.getParameter("nearModule"));
+	            mapping.setNearPortNum(request.getParameter("nearPortNum"));
+	            mapping.setNearPatchType(request.getParameter("nearPatchType"));
+
+	            // -------- BACK --------
+	            mapping.setBackModule(request.getParameter("backModule"));
+	            mapping.setBackportNum(request.getParameter("backPortNum"));
+	            mapping.setBackKitSerialNum(request.getParameter("backKitSerialNum"));
+	            mapping.setFarKitSerialNum(request.getParameter("farNearKitSerialNum"));
+	            mapping.setFarModule(request.getParameter("farNearModule"));
+	            mapping.setFarPortNum(request.getParameter("farNearPortNum"));
+	            mapping.setfP_StrandNb(request.getParameter("fpStrandNb"));
+	            mapping.setfP_StrandId(request.getParameter("fpStrandId"));
+	            mapping.setbP_StrandNb(request.getParameter("bpStrandNb"));
+	       
+	            session.saveOrUpdate(mapping);
+	            }
+	            }
 	            tx.commit();
 
 	            rtn.put("taskStatus", taskStatus);
 	            rtn.put("woTaskId", woTaskId);
+	            rtn.put("patchingId", patchingId);
+	            rtn.put("taskType", taskType);
 
 	        } catch (Exception e) {
 	            if (tx != null) tx.rollback();
@@ -516,6 +700,50 @@ public class PatchingWorkOrderTreeController {
 
 				query = session.createQuery("delete WorkOrderTask where patchingId =:param1");
 				query.setParameter("param1", patchingId);
+				query.executeUpdate();
+
+				
+
+			} catch (Exception e) {
+				logger.info("Error in deleting on the level of patching Work order Tree with a message : " + e + "\n"
+						+ e.getMessage());
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					
+				}
+			}
+		}
+
+		return rtn;
+
+	}
+	
+	@RequestMapping(value = "/deletePatchingWoTree", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> deletePatchingWoTree(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		String[] checkedPatchingIds = request.getParameterValues("checkedPatchingIds[]");
+		  List<String> patchingIdList = checkedPatchingIds != null ? 
+                  Arrays.asList(checkedPatchingIds) : new ArrayList<>();
+		System.out.println(checkedPatchingIds);
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				query = session.createQuery("delete PatchingWorkOrder where patchingId IN (:patchingIds)");
+				query.setParameter("patchingIds", patchingIdList);
+				query.executeUpdate();
+
+				query = session.createQuery("delete WorkOrderTask where patchingId IN (:patchingIds)");
+				query.setParameter("patchingIds", patchingIdList);
 				query.executeUpdate();
 
 				
@@ -573,7 +801,47 @@ public class PatchingWorkOrderTreeController {
 		return rtn;
 
 	}
+	
+	@RequestMapping(value = "/deleteTaskTree", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> deleteTaskTree(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
 
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+		String[] checkedTaskIds = request.getParameterValues("checkedTaskIds[]");
+		  List<String> taskIdList = checkedTaskIds != null ? 
+                  Arrays.asList(checkedTaskIds) : new ArrayList<>();
+		System.out.println(taskIdList);
+		session = AlmDbSession.getInstance().getSession();
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				query = session.createQuery("delete WorkOrderTask where woTaskId IN (:taskIds)");
+				query.setParameter("taskIds", taskIdList);
+				query.executeUpdate();
+
+				
+
+			} catch (Exception e) {
+				logger.info("Error in deleting on the level of task Work order Tree with a message : " + e + "\n"
+						+ e.getMessage());
+			} finally {
+				if (session != null && session.isOpen()) {
+					tx.commit();
+					session.close();
+					
+				}
+			}
+		}
+
+		return rtn;
+
+	}
 	
 
 	}
