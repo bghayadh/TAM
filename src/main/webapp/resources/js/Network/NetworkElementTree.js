@@ -1312,9 +1312,9 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 			contentType: "application/json; charset=utf-8",
 			url: getContext()+'/GetNtypeVenBoqList',
 			data: {
-			    "SiteId":SiteId,
-			    "NodeTId":NodeTId,
-			    "VendorId":VendorId,
+			    "SiteId": SiteId,
+			    "NodeTId": NodeTId,
+			    "VendorId": VendorId,
 			    "paramEnterprise": paramEnterprise,
 			    "paramTransmission":paramTransmission,
 			    "paramRAN":paramRAN,
@@ -1336,8 +1336,8 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 			},
 			error: function(result) {
 				alert("Error");
-									}
-				});
+				}
+			});
 			
 	 $("#boqBtn").removeClass().addClass("tablinks active");
 	 $("#Defaultbutton").removeClass().addClass("tablinks");
@@ -1507,7 +1507,7 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 	singleNode = new ContextMenu({
 		  'theme': 'default',
 		  'items': [
-			  {'icon': 'braille', 'name': 'Show BoQ', action: () => {				
+			  {'icon': 'braille', 'name': 'Show BoQ', action: () => {
 					Node_Boq(SiteName,selectedNodeIdContext);
 				}	
 				   }

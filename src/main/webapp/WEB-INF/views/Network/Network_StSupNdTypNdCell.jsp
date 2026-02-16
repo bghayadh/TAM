@@ -281,8 +281,9 @@ function StVenNdTypNdCell(id){
 
 function RequestingNodeType(id) {
 	var index = id.id.indexOf('WARE_2');
+	var selectedSupp = "";
 	if (index !== -1) {
-		var selectedSupp = id.id.substring(0, index-1);
+		selectedSupp = id.id.substring(0, index-1);
 	}
 	var selectedItem = id.id.substring(index);
 	
@@ -331,35 +332,33 @@ function RequestingNodeType(id) {
 				if (data != null) {					            		
 					var listNodesType=data.listNodesType;
 					for(j=0;j<listNodesType.length;j++)	{												
-						var str= "<ul><li class='NodeType' id='" + listNodesType[j][0] +"_"+listNodesType[j][1]+"' style='display:none;margin-left:-20px;' class='folder'>";								  															
-						str+="<span class='folder' onclick='SupNdCellCore(" + listNodesType[j][0] +"_"+listNodesType[j][1]+")'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
-						str+= "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-cogs'></i>"+listNodesType[j][0]+"</span></span></li></ul>";						
+						var str= "<ul><li class='NodeType' id='"+ selectedSupp + "_" + listNodesType[j][0] +"_"+listNodesType[j][1]+"' style='display:none;margin-left:-20px;' class='folder'>";								  															
+						str+="<span class='folder' onclick='SupNdCellCore(" + selectedSupp + "_" + listNodesType[j][0] +"_"+listNodesType[j][1]+")'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
+						str+= "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-cogs'></i>"+listNodesType[j][0]+"</span></span></li></ul>";												
 						$("#"+selectedSupp +"_" + selectedItem+"_f").append(str);
-						str="<ul><li id='" +listNodesType[j][0] +"_"+listNodesType[j][1]+"_f' class='NodeFolder' style='display:none; margin-left:-20px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node </span></span></li></ul>";				
-						$("#" + listNodesType[j][0] +"_"+listNodesType[j][1]).append(str);								
-				        var selectedSingleNt;
-				        var selectedSite;
-			            $(".NodeType > .TreeSpan").contextmenu(function(){				
-			        		selectedSingleNtIdContext=$(this).parent().attr('id');
-			        		var index = selectedSingleNtIdContext.indexOf('WARE_2');
-			        		if (index !== -1) {
-			        			selectedSingleNt = selectedSingleNtIdContext.substring(0, index-1);
-			        		}
-			        		var selectedItem = selectedSingleNtIdContext.substring(index);	
-			        		menuName=SingleNt;	
-			        		openContext(selectedSingleNtIdContext,"",SingleNt,event);
-			        	});
-			            SingleNt = new ContextMenu({
-			        	  'theme': 'default',
-			        	  'items': [
-			        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {
-			        			  NodeTSup_Boq(selectedItem,selectedSingleNt,selectedSupp);
-			        			  selectedItem="";
-			        			}	
-			        		}
-			        	]
-			        });
+						str="<ul><li id='"+ selectedSupp + "_" +listNodesType[j][0] +"_"+listNodesType[j][1]+"_f' class='NodeFolder' style='display:none; margin-left:-20px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node </span></span></li></ul>";				
+						$("#" + selectedSupp + "_" + listNodesType[j][0] +"_"+listNodesType[j][1]).append(str);
 					}
+			        var selectedSingleNt;
+			        var selectedSite;
+		            $(".NodeType > .TreeSpan").contextmenu(function(){
+		        		selectedSingleNtIdContext=$(this).parent().attr('id');
+		        		selectedSingleNt = selectedSingleNtIdContext.split("_WARE")[0].split("_").pop();		        		
+		        		var index = selectedSingleNtIdContext.indexOf('WARE_2');
+		        		var selectedItem = selectedSingleNtIdContext.substring(index);
+		        		menuName=SingleNt;
+		        		openContext(selectedSingleNtIdContext,"",SingleNt,event);
+		        	});
+		            SingleNt = new ContextMenu({
+		        	  'theme': 'default',
+		        	  'items': [
+		        		  {'icon': 'braille', 'name': 'Show BoQ', action: () => {
+		        			  		NodeTSup_Boq(selectedItem,selectedSingleNt,selectedSupp);
+		        			  		selectedItem="";
+		        				}	
+		        			}
+		        		]
+		        	});
 					tree_prop_selection("#" +selectedSupp +"_" + selectedItem +"_f .NodeType .TreeSpan");
 			        Tree_PropagationAppendedNodes(selectedSupp +"_" + selectedItem +"_f .NodeType");
 				}
@@ -395,18 +394,16 @@ function PanTreeSites(id){
 
 
 function SupNdCellCore(id){
-	var index = id.id.indexOf('WARE_2');
-	if (index !== -1) {
-		var selectedNodetType = id.id.substring(0, index-1);
+	var indexSite = id.id.indexOf('WARE_2');
+	var selectedNodetType = "";
+	var indexNdType = id.id.indexOf('_')
+	if (indexSite !== -1) {
+		selectedNodetType = id.id.split("_WARE")[0].split("_").pop();
 	}
-	var selectedItem = id.id.substring(index);	
-	var sup_ware = $("#" + id.id).closest("li.SingleSupplier").attr("id"); 
-	var index = sup_ware.indexOf('WARE_2');
-	if (index !== -1) {
-		var selectedSupp = sup_ware.substring(0, index-1);
-	}
-
-	var NdTypeChildrenLength=$("#" + selectedNodetType+"_"+selectedItem+"_f").find(' > ul > li').length;
+	var selectedItem = id.id.substring(indexSite);
+	var sup_ware = $("#" + id.id).closest("li.SingleSupplier").attr("id");
+	var selectedSupp = sup_ware.split("_WARE")[0];
+	var NdTypeChildrenLength=$("#" + selectedSupp + "_" + selectedNodetType+"_"+selectedItem+"_f").find(' > ul > li').length;
 	
 	if(NdTypeChildrenLength==0){
 		if(arrayParam[0]==1){
@@ -452,7 +449,8 @@ function SupNdCellCore(id){
 					if (data != null) {
 						var listNodes=data.listNodes;
 						var listCells=data.listCells;
-						Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem);
+						Create_TreeNode_Cell_Vendor(listNodes,listCells,NdTypeChildrenLength, true,selectedItem,selectedSupp);
+						//Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem);
 			            tree_prop_selection("#" +selectedNodetType+"_"+selectedItem+"_f .Node .TreeSpan");
 				}
 					data= null;

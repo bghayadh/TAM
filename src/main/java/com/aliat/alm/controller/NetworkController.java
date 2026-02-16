@@ -5836,7 +5836,7 @@ public class NetworkController {
 
 		session = AlmDbSession.getInstance().getSession();
 		LinkedHashMap<String, String> BoqHM = new LinkedHashMap<String, String>();
-
+		
 		try {
 			String strEmpty = "SELECT COUNT(distinct a.WARE_ID) FROM NODE_ACTIVE a WHERE a.NODE_TYPE='" + NodeTId
 					+ "' AND a.VENDOR = '" + VendorId
@@ -5850,6 +5850,7 @@ public class NetworkController {
 			String Site_Query = SiteId == "" ? strEmpty : strExist;
 			// System.out.println(Site_Query);
 			Object Sites = session.createNativeQuery(Site_Query).uniqueResult();
+			System.out.println("Sites are " +Sites.toString());
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
@@ -5865,6 +5866,7 @@ public class NetworkController {
 			String Node_Active_Query = SiteId == "" ? strEmpty : strExist;
 			// System.out.println(Node_Active_Query);
 			Object CountNodes_Active = session.createNativeQuery(Node_Active_Query).uniqueResult();
+			System.out.println("CountNodes_Active is " +CountNodes_Active.toString());
 			strEmpty = "";
 			strExist = "";
 			////////////////////////////
