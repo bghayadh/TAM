@@ -23188,3 +23188,5 @@ function appendAttachmentRow(attachmentID, jctAttachmentIndex, attachmentName, a
     var myDiv = document.getElementById("" + tableID);
     myDiv.scrollTop = myDiv.scrollHeight;
 }
+
+
