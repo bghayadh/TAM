@@ -13707,6 +13707,7 @@ else if ($("#portModal").is(':visible')){
 c=$("#portModal");
 
 }
+
 var result= confirm('are you sure you want to close?')
 	if (result== false){
 		c.modal('show');
