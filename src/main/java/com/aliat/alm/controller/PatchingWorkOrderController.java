@@ -13,6 +13,10 @@ import com.aliat.alm.models.FixedAssetRegistry;
 import com.aliat.alm.models.PatchingWorkOrder;
 import com.aliat.alm.models.PurchaseOrder;
 import com.aliat.alm.models.PurchaseRequest;
+import com.aliat.alm.models.Warehouse;
+import com.aliat.alm.models.WorkOrder;
+import com.aliat.alm.models.WorkOrderDestination;
+import com.aliat.alm.models.WorkOrderSource;
 import com.aliat.alm.models.WorkOrderTask;
 import com.aliat.alm.models.FarNode;
 import com.aliat.alm.models.FarPartNumber;
@@ -21,6 +25,8 @@ import com.aliat.alm.models.FarSite;
 
 import java.awt.PageAttributes.MediaType;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -76,7 +82,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-public class PatchingWorkOrderTreeController {
+public class PatchingWorkOrderController {
 	@Autowired
 	Notify notifications;
 	@Autowired
@@ -99,6 +105,8 @@ public class PatchingWorkOrderTreeController {
 	@Autowired
 	Permissions permissions;
 	
+	@Autowired
+	Form form;
 	
 	@RequestMapping(value = "/PatchingWorkOrderTree", method = RequestMethod.GET)
 	public String PatchingWorkOrderTree(
@@ -433,9 +441,19 @@ public class PatchingWorkOrderTreeController {
 
 	        try {
 	            tx = session.beginTransaction();
-
-	            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-
+	            DateFormat formatter;
+	          
+	         
+	            if(request.getParameter("formview")== null) {
+	            	 formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+	            	
+	           
+	            }
+	            else{
+	            	
+	            	 formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+	            }
+	            System.out.println(formatter);
 	            // -------- BASIC FIELDS --------
 	            String woTaskId = request.getParameter("woTaskId");
 	            String patchingId = request.getParameter("patchingId");
@@ -656,6 +674,19 @@ public class PatchingWorkOrderTreeController {
 	            mapping.setbP_StrandNb(request.getParameter("bpStrandNb"));
 	       
 	            session.saveOrUpdate(mapping);
+	            
+	            
+	            
+	            String result[] = new String[4];
+				int SelectedIndex = 0;
+			String	navAction = request.getParameter("NavAction");
+				result = form.NavigationNP(session, "WORK_ORDER_TASK", "WO_TASK_ID", woTaskId, "LAST_MODIFIED_DATE",
+							navAction);
+					SelectedIndex = Integer.parseInt(result[1]);
+					woTaskId = result[2];
+					model.addAttribute("workOrderCount", Integer.parseInt(result[0]));
+					model.addAttribute("SelectedIndex", SelectedIndex);
+				
 	            }
 	            }
 	            tx.commit();
@@ -843,7 +874,373 @@ public class PatchingWorkOrderTreeController {
 
 	}
 	
+	@RequestMapping(value = "/PatchingWorkOrderTaskListView", method = RequestMethod.GET)
+	public String PatchingWorkOrderListView(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response){
 
+		
+		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+			return "redirect:/";
+		} else {
+			
+			session = AlmDbSession.getInstance().getSession();
+			if (session!=null && session.isOpen()) {
+				tx = session.beginTransaction();
+				notifications.headerNotifications(session, model);
+				
+				try {
+					
+				   
+				       query = session.createSQLQuery(
+				    		    "SELECT " +
+				    		    "  w.WO_TASK_ID, " +
+				    		    "  w.WO_TASK_ID AS ID, " +
+				    		    "  w.PATCHING_ID, " +
+				    		    "  w.ROW_COL_INDEX, " +
+				    		    "  w.TASK_TYPE, " +
+				    		    "  w.TASK_STATUS, " +
+				    		    "  TO_CHAR(w.COMPLETION_DATE, 'YYYY-MM-DD HH24:MI:SS') AS COMPLETION_DATE, " +
+				    		    "  TO_CHAR(w.LAST_MODIFIED_DATE, 'YYYY-MM-DD HH24:MI:SS') AS LAST_MODIFIED_DATE, " +
+				    		    "  TO_CHAR(w.CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CREATION_DATE, " +
+				    		    "  w.DB_PORT_ID, " +
+				    		    "  w.DB_ID, " +
+				    		    "  d.DB_NAME, " +
+				    		    "  d.SITE, " +
+				    		    "  d.SITE_NAME, " +
+				    		    "  d.WAREHOUSE " +
+				    		    "FROM WORK_ORDER_TASK w " +
+				    		    "LEFT JOIN DISTRIBUTION_BOARD d ON w.DB_ID = d.DB_ID " +
+				    		    "ORDER BY w.LAST_MODIFIED_DATE DESC"
+				    		);
+
+				    		System.out.println("query " + mapper.writeValueAsString(query.list()));
+				    		model.addAttribute("WorkOrderTaskDt", mapper.writeValueAsString(query.list()));
+
+				} catch (Exception e) {
+						
+					model.addAttribute("WorkOrderDt", "");
+				}finally {
+					if (session!=null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}else {
+				logger.info("Could not connect to DB in WorkOrderListView method");
+			
+			}
+			return "PatchingWorkOrderTaskListView";
+		}
+		
+	}
+	@RequestMapping(value = "/WoTaskListDelete", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> WoTaskListDelete(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
+
+	Map<String, Object> rtn = new LinkedHashMap<>();
+	if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+		rtn.put("Login", "redirect:/");
+		return rtn;
+	}else {
+		session = AlmDbSession.getInstance().getSession();
+		if(session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				
+				String[] valuesWorkOrderTaskIds = request.getParameterValues("workOrdTaskId[]");
+				System.out.println(mapper.writeValueAsString(valuesWorkOrderTaskIds));
+				for(int i = 0;i<valuesWorkOrderTaskIds.length;i++) {
+					System.out.println(valuesWorkOrderTaskIds[i]);
+					query = session.createSQLQuery("DELETE WORK_ORDER_TASK WHERE WO_TASK_ID='"+valuesWorkOrderTaskIds[i]+"'");
+					query.executeUpdate();
+					
+						
+				}
+		
+				
+
+			}catch (Exception e) {
+				logger.info("Error in Controller Deleting WorkOrder, WorkOrder Source, WorkOrder Destination: "+e.getMessage());
+			} finally {
+				if(session !=null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}
+		}
+		
+
+	}
+
+	rtn.put("YaraTest", "DeleteDone");
+	return rtn;
+
+	}
+	@RequestMapping(value = "/PatchingWorkOrderTaskFormView", method = RequestMethod.GET)
+	public String PatchingWorkOrderTaskFormView(Locale locale, Model model, HttpServletRequest request,HttpServletResponse response) {
+
+		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+			return "redirect:/";
+		}
+		else {
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				
+				notifications.headerNotifications(session, model);
+				String result[] = new String[4];
+				int SelectedIndex = 0;
+				Date date;
+				WorkOrderTask workOrder = null;
+				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+				String navAction = "2";
+				String workOrderTaskId = request.getParameter("workOrdTaskId");
+				ObjectMapper mapper = new ObjectMapper();
+				
+				
+				try {
+					
+					System.out.println( request.getParameter("NavAction"));
+					
+					navAction = request.getParameter("NavAction");
+					if(workOrderTaskId == null) {
+
+						 date = new Timestamp(System.currentTimeMillis());
+						 model.addAttribute("wocreationDate", formatter.format(date).toString());
+						 model.addAttribute("wolastModifiedDate", formatter.format(date).toString());
+						 model.addAttribute("docStatus", "addNew");
+						 model.addAttribute("SelectedIndex", "addNew");
+						 model.addAttribute("workOrderCount", "addNew");
+						 model.addAttribute("woPatchingId",request.getParameter("woPatchingId"));
+						 model.addAttribute("patchingOrderNote", request.getParameter("patchingOrderNote"));
+						return "PatchingWorkOrderTaskFormView";
+					}
+					
+					System.out.println(workOrderTaskId);
+					result = form.NavigationNP(session, "WORK_ORDER_TASK", "WO_TASK_ID", workOrderTaskId, "LAST_MODIFIED_DATE",
+							navAction);
+					SelectedIndex = Integer.parseInt(result[1]);
+					workOrderTaskId = result[2];
+					workOrder = (WorkOrderTask) session.get(WorkOrderTask.class, workOrderTaskId);
+					model.addAttribute("workOrderCount", Integer.parseInt(result[0]));
+					model.addAttribute("SelectedIndex", SelectedIndex);
+					
+					WorkOrderTask workOrderObject= (WorkOrderTask) session.get(WorkOrderTask.class, workOrderTaskId);	
+				
+					PatchingWorkOrder patchingOrder = (PatchingWorkOrder) session.get(PatchingWorkOrder.class,  workOrderObject.getPatchingId());	
+					
+					if(workOrderObject != null) {
+					    // ID fields
+					    model.addAttribute("workOrdIdTask", workOrderObject.getWoTaskId());
+					    model.addAttribute("woPatchingId", workOrderObject.getPatchingId());
+					    
+					    // Date fields - handle null with current timestamp
+					 
+					    
+					    // Creation Date
+					    if (workOrderObject.getCreationDate() == null) {
+					        date = new Timestamp(System.currentTimeMillis());
+					        model.addAttribute("wocreationDate", formatter.format(date).toString());
+					    } else {
+					        date = workOrderObject.getCreationDate();
+					        model.addAttribute("wocreationDate", formatter.format(date).toString());
+					    }
+					    
+					    // Last Modified Date
+					    if (workOrderObject.getLastModifiedDate() == null) {
+					        date = new Timestamp(System.currentTimeMillis());
+					        model.addAttribute("wolastModifiedDate", formatter.format(date).toString());
+					    } else {
+					        date = workOrderObject.getLastModifiedDate();
+					        model.addAttribute("wolastModifiedDate", formatter.format(date).toString());
+					    }
+					    
+					    // Completion Date
+					    if (workOrderObject.getCompletionDate() == null) {
+					        date = new Timestamp(System.currentTimeMillis());
+					        model.addAttribute("wocompletionDate", formatter.format(date).toString());
+					    } else {
+					        date = workOrderObject.getCompletionDate();
+					        model.addAttribute("wocompletionDate", formatter.format(date).toString());
+					    }
+					    
+					    // String fields - direct assignment (null-safe)
+					    model.addAttribute("woTaskType", workOrderObject.getTaskType());
+					    model.addAttribute("woStatus", workOrderObject.getTaskStatus());
+					    model.addAttribute("woDbId", workOrderObject.getDbId());
+					    model.addAttribute("woDbPortId", workOrderObject.getDbPortId());
+					    
+					    // Integer fields - handle null with default 0
+					    model.addAttribute("woRowColIndex", workOrderObject.getRowColIndex() != null ? workOrderObject.getRowColIndex() : 0);
+					    model.addAttribute("woRowNumber", workOrderObject.getRowNumber() != null ? workOrderObject.getRowNumber() : 0);
+					    model.addAttribute("woColumnNumber", workOrderObject.getColumnNumber() != null ? workOrderObject.getColumnNumber() : 0);
+					    
+					    // NEAR fields
+					    model.addAttribute("woNearModule", workOrderObject.getNearModule());
+					    model.addAttribute("woNearPortNum", workOrderObject.getNearPortNum());
+					    model.addAttribute("woNearPatchType", workOrderObject.getNearPatchType());
+					    
+					    // FP fields (Far Patch)
+					    model.addAttribute("woFpLocationType", workOrderObject.getFpLocationType());
+					    model.addAttribute("woFpLocationId", workOrderObject.getFpLocationId());
+					    model.addAttribute("woFpLocationName", workOrderObject.getFpLocationName());
+					    model.addAttribute("woFpLocation", workOrderObject.getFpLocation());
+					    model.addAttribute("woFpEquipmentType", workOrderObject.getFpEquipmentType());
+					    model.addAttribute("woFpEquipment", workOrderObject.getFpEquipment());
+					    model.addAttribute("woFpEquipmentId", workOrderObject.getFpEquipmentId());
+					    model.addAttribute("woFpEquipmentName", workOrderObject.getFpEquipmentName());
+					    model.addAttribute("woFpAddress", workOrderObject.getFpAddress());
+					    model.addAttribute("woFpTubeNb", workOrderObject.getFpTubeNb());
+					    model.addAttribute("woFpStrandNb", workOrderObject.getFpStrandNb());
+					    model.addAttribute("woFpStrandId", workOrderObject.getFpStrandId());
+					    model.addAttribute("woFpStrandColor", workOrderObject.getFpStrandColor());
+					    model.addAttribute("woFpTubeColor", workOrderObject.getFpTubeColor());
+					    model.addAttribute("woFpStrandName", workOrderObject.getFpStrandName());
+					    model.addAttribute("woFpTubeId", workOrderObject.getFpTubeId());
+					    model.addAttribute("woFpTubeName", workOrderObject.getFpTubeName());
+					    model.addAttribute("woFpFiberId", workOrderObject.getFpFiberId());
+					    model.addAttribute("woFpFiberName", workOrderObject.getFpFiberName());
+					    model.addAttribute("woFpKitSerialNum", workOrderObject.getFpKitSerialNum());
+					    model.addAttribute("woFpModule", workOrderObject.getFpModule());
+					    model.addAttribute("woFpPortNum", workOrderObject.getFpPortNum());
+					    model.addAttribute("woFpJunctionId", workOrderObject.getFpJunctionId());
+					    model.addAttribute("woFpJunctionName", workOrderObject.getFpJunctionName());
+					    
+					    // FAR_NEAR fields
+					    model.addAttribute("woFarNearKitSerialNum", workOrderObject.getFarNearKitSerialNum());
+					    model.addAttribute("woFarNearModule", workOrderObject.getFarNearModule());
+					    model.addAttribute("woFarNearPortNum", workOrderObject.getFarNearPortNum());
+					    
+					    // BP fields (Back Patch)
+					    model.addAttribute("woBpStrandColor", workOrderObject.getBpStrandColor());
+					    model.addAttribute("woBpTubeColor", workOrderObject.getBpTubeColor());
+					    model.addAttribute("woBpLocationType", workOrderObject.getBpLocationType());
+					    model.addAttribute("woBpLocationId", workOrderObject.getBpLocationId());
+					    model.addAttribute("woBpLocationName", workOrderObject.getBpLocationName());
+					    model.addAttribute("woBpLocation", workOrderObject.getBpLocation());
+					    model.addAttribute("woBpEquipmentType", workOrderObject.getBpEquipmentType());
+					    model.addAttribute("woBpEquipment", workOrderObject.getBpEquipment());
+					    model.addAttribute("woBpStrandNb", workOrderObject.getBpStrandNb());
+					    model.addAttribute("woBpTubeNb", workOrderObject.getBpTubeNb());
+					    model.addAttribute("woBpEquipmentId", workOrderObject.getBpEquipmentId());
+					    model.addAttribute("woBpEquipmentName", workOrderObject.getBpEquipmentName());
+					    model.addAttribute("woBpAddress", workOrderObject.getBpAddress());
+					    model.addAttribute("woBpStatus", workOrderObject.getBpStatus());
+					    model.addAttribute("woBpStrandId", workOrderObject.getBpStrandId());
+					    model.addAttribute("woBpStrandName", workOrderObject.getBpStrandName());
+					    model.addAttribute("woBpTubeId", workOrderObject.getBpTubeId());
+					    model.addAttribute("woBpTubeName", workOrderObject.getBpTubeName());
+					    model.addAttribute("woBpFiberId", workOrderObject.getBpFiberId());
+					    model.addAttribute("woBpFiberName", workOrderObject.getBpFiberName());
+					    model.addAttribute("woBpJunctionId", workOrderObject.getBpJunctionId());
+					    model.addAttribute("woBpJunctionName", workOrderObject.getBpJunctionName());
+					    
+					    // BACK fields
+					    model.addAttribute("woBackModule", workOrderObject.getBackModule());
+					    model.addAttribute("woBackKitSerialNum", workOrderObject.getBackKitSerialNum());
+					    model.addAttribute("woBackPortNum", workOrderObject.getBackPortNum());
+					    model.addAttribute("patchingOrderNote", patchingOrder.getPatchingNote());
+					    System.out.println(patchingOrder);
+					}
+					
+					    
+		  
+			}catch (Exception e) {
+				StringWriter sw = new StringWriter();
+				e.printStackTrace(new PrintWriter(sw));
+				String exceptionAsString = sw.toString();
+				logger.info("Error in WorkOrderFormView due to \n "+ exceptionAsString);
+			}finally {
+				if (session!=null && session.isOpen()) {
+					tx.commit();
+					session.close();
+				}
+			}	
+			
+				
+				
+			}
+			return "PatchingWorkOrderTaskFormView";
+		}
+	}
+	
+	@RequestMapping(value = "/GetAllWorkOrdersTask", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> GetAllWorkOrders(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		} else {
+			String workOrder=request.getParameter("workOrder");
+			session = AlmDbSession.getInstance().getSession();
+			if(session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				
+				System.out.println("workOrder :: " + workOrder);
+				try {
+					query= session.createSQLQuery("Select WO_TASK_ID,PATCHING_ID,TASK_TYPE,TASK_STATUS from WORK_ORDER_TASK"
+					+ " where upper(WO_TASK_ID) like '%" + workOrder + "%' OR upper(PATCHING_ID) LIKE upper('%" + workOrder + "%') "
+					+ " OR upper(TASK_TYPE) LIKE upper('%" + workOrder + "%') OR upper(TASK_STATUS) LIKE upper('%" + workOrder + "%') " );
+					query.setFirstResult(0);
+					query.setMaxResults(20);
+					//model.addAttribute("allWorkOrders", mapper.writeValueAsString(query.list()));
+					rtn.put("allWorkOrders", query.list());
+					System.out.println(mapper.writeValueAsString(query.list()));
+				}catch (Exception e) {
+					logger.info("Errorrrrrrr");
+				}finally {
+					if(session !=null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}
+			
+			return rtn;
+		}		
+	}	
+	
+
+	
+	@RequestMapping(value = "/GetAllWorkPatchingOrders", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> GetAllWorkPatchingOrders(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response){
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		if(LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		} else {
+			String workOrder=request.getParameter("workOrder");
+			session = AlmDbSession.getInstance().getSession();
+			if(session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				
+				System.out.println("workOrder :: " + workOrder);
+				try {
+					query= session.createSQLQuery("Select PATCHING_ID,PATCHING_NOTE from PATCHING_WORK_ORDER"
+					+ " where upper(PATCHING_ID) like '%" + workOrder + "%' OR upper(PATCHING_NOTE) LIKE upper('%" + workOrder + "%') "
+					 );
+					query.setFirstResult(0);
+					query.setMaxResults(20);
+					//model.addAttribute("allWorkOrders", mapper.writeValueAsString(query.list()));
+					rtn.put("allWorkOrders", query.list());
+					System.out.println(mapper.writeValueAsString(query.list()));
+				}catch (Exception e) {
+					logger.info("Errorrrrrrr");
+				}finally {
+					if(session !=null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
+				}
+			}
+			
+			return rtn;
+		}		
+	}	
+	
+	
+	
 	}
 
 
