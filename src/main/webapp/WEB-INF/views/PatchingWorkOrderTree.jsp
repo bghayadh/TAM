@@ -146,12 +146,12 @@
 						</button>
 			 			<button  type="button" id="Fview"  class="btn btn-light" data-toggle="tooltip" 
 			 				data-placement="top" title="Form View"
-			 				onclick='window.location.href = "${pageContext.request.contextPath}/PatchingWorkOrderFormView"'> 
+			 				onclick='window.location.href = "${pageContext.request.contextPath}/PatchingWorkOrderTaskFormView"'> 
 			 				<i class="fa fa-edit"></i>
 			        	</button>
 			        	<button type="button" id="Lview"  class="btn btn-light" data-toggle="tooltip"
 			        			data-placement="top" title="List View"
-			        			onclick='window.location.href = "${pageContext.request.contextPath}/PatchingWorkOrderListView"'
+			        			onclick='window.location.href = "${pageContext.request.contextPath}/PatchingWorkOrderTaskListView"'
 			        			> 
 			        			<i class="fa fa-bars"></i>
 			        	</button>
