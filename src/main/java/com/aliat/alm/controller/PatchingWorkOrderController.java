@@ -394,7 +394,28 @@ public class PatchingWorkOrderController {
 	            formatter = new SimpleDateFormat("MM/dd/yyyy");
 	         // ✅ FORMAT Timestamp → String
 	            String formattedLastModified = formatter.format(lastModifiedDate);  // "02/04/2026 10:57 PM"
+	            Map<String, Object> patchingNode = new LinkedHashMap<>();
 
+	            patchingNode.put("patchingId", patchingId);
+	            patchingNode.put("patchingStatus", patchingStatus);
+	            patchingNode.put("assignedTo", assignedTo);
+	            patchingNode.put("patchingNote", patchingNote);
+
+	            patchingNode.put("plannedExecutionDate", plannedExecutionDate);
+	            patchingNode.put("actualExecutionDate", actualExecutionDate);
+	            patchingNode.put("createdDate", creationDate);
+
+	            // formatted date for UI
+	            patchingNode.put("lastModifiedDate", formattedLastModified);
+
+	            // EMPTY TASK LIST (NEW PATCHING)
+	            patchingNode.put("tasks", new ArrayList<>());
+
+	            // ===============================
+	            // RESPONSE (READY FOR PUSH)
+	            // ===============================
+	            rtn.put("type", "PATCHING");
+	            rtn.put("node", patchingNode);
 	            rtn.put("status", patchingStatus);
 	            rtn.put("id", patchingId);
 	            rtn.put("lastModifiedDate", formattedLastModified);  // Send STRING directly
@@ -589,7 +610,127 @@ public class PatchingWorkOrderController {
 	            
 
 	            session.saveOrUpdate(task);
-	            
+	            Map<String, Object> taskMap = new LinkedHashMap<>();
+
+	         // =========================
+	         // BASIC INFO
+	         // =========================
+	         taskMap.put("woTaskId", task.getWoTaskId());
+	         taskMap.put("patchingId", task.getPatchingId());
+	         taskMap.put("taskType", task.getTaskType());
+	         taskMap.put("taskStatus", task.getTaskStatus());
+	         taskMap.put("creationDate", task.getCreationDate());
+	         taskMap.put("lastModifiedDate", task.getLastModifiedDate());
+	         taskMap.put("completionDate", task.getCompletionDate());
+
+	         // =========================
+	         // DB INFO
+	         // =========================
+	         taskMap.put("dbId", task.getDbId());
+	         taskMap.put("dbPortId", task.getDbPortId());
+
+	         // =========================
+	         // POSITION INFO
+	         // =========================
+	         taskMap.put("rowColIndex", task.getRowColIndex());
+	         taskMap.put("rowNumber", task.getRowNumber());
+	         taskMap.put("columnNumber", task.getColumnNumber());
+
+	         // =========================
+	         // NEAR INFO
+	         // =========================
+	         taskMap.put("nearModule", task.getNearModule());
+	         taskMap.put("nearPortNum", task.getNearPortNum());
+	         taskMap.put("nearPatchType", task.getNearPatchType());
+
+	         // =========================
+	         // FP LOCATION
+	         // =========================
+	         taskMap.put("fpLocationType", task.getFpLocationType());
+	         taskMap.put("fpLocationId", task.getFpLocationId());
+	         taskMap.put("fpLocationName", task.getFpLocationName());
+	         taskMap.put("fpLocation", task.getFpLocation());
+
+	         // =========================
+	         // FP EQUIPMENT
+	         // =========================
+	         taskMap.put("fpEquipmentType", task.getFpEquipmentType());
+	         taskMap.put("fpEquipment", task.getFpEquipment());
+	         taskMap.put("fpEquipmentId", task.getFpEquipmentId());
+	         taskMap.put("fpEquipmentName", task.getFpEquipmentName());
+
+	         // =========================
+	         // FP CABLE INFO
+	         // =========================
+	         taskMap.put("fpAddress", task.getFpAddress());
+	         taskMap.put("fpTubeNb", task.getFpTubeNb());
+	         taskMap.put("fpStrandColor", task.getFpStrandColor());
+	         taskMap.put("fpTubeColor", task.getFpTubeColor());
+	         taskMap.put("fpStrandName", task.getFpStrandName());
+	         taskMap.put("fpStrandNb", task.getFpStrandNb());
+	         taskMap.put("fpStrandId", task.getFpStrandId());
+	         taskMap.put("fpTubeId", task.getFpTubeId());
+	         taskMap.put("fpTubeName", task.getFpTubeName());
+	         taskMap.put("fpFiberId", task.getFpFiberId());
+	         taskMap.put("fpFiberName", task.getFpFiberName());
+	         taskMap.put("fpKitSerialNum", task.getFpKitSerialNum());
+
+	         // =========================
+	         // FP MODULE / PORT / JUNCTION
+	         // =========================
+	         taskMap.put("fpModule", task.getFpModule());
+	         taskMap.put("fpPortNum", task.getFpPortNum());
+	         taskMap.put("fpJunctionId", task.getFpJunctionId());
+	         taskMap.put("fpJunctionName", task.getFpJunctionName());
+
+	         // =========================
+	         // BP INFO
+	         // =========================
+	         taskMap.put("bpLocationType", task.getBpLocationType());
+	         taskMap.put("bpLocationId", task.getBpLocationId());
+	         taskMap.put("bpLocationName", task.getBpLocationName());
+	         taskMap.put("bpLocation", task.getBpLocation());
+
+	         taskMap.put("bpEquipmentType", task.getBpEquipmentType());
+	         taskMap.put("bpEquipment", task.getBpEquipment());
+	         taskMap.put("bpEquipmentId", task.getBpEquipmentId());
+	         taskMap.put("bpEquipmentName", task.getBpEquipmentName());
+
+	         taskMap.put("bpAddress", task.getBpAddress());
+	         taskMap.put("bpStatus", task.getBpStatus());
+
+	         taskMap.put("bpStrandColor", task.getBpStrandColor());
+	         taskMap.put("bpTubeColor", task.getBpTubeColor());
+
+	         taskMap.put("bpStrandId", task.getBpStrandId());
+	         taskMap.put("bpStrandName", task.getBpStrandName());
+	         taskMap.put("bpStrandNb", task.getBpStrandNb());
+
+	         taskMap.put("bpTubeId", task.getBpTubeId());
+	         taskMap.put("bpTubeName", task.getBpTubeName());
+	         taskMap.put("bpTubeNb", task.getBpTubeNb());
+
+	         taskMap.put("bpFiberId", task.getBpFiberId());
+	         taskMap.put("bpFiberName", task.getBpFiberName());
+
+	         taskMap.put("bpJunctionId", task.getBpJunctionId());
+	         taskMap.put("bpJunctionName", task.getBpJunctionName());
+
+	         // =========================
+	         // BACK INFO
+	         // =========================
+	         taskMap.put("backModule", task.getBackModule());
+	         taskMap.put("backKitSerialNum", task.getBackKitSerialNum());
+	         taskMap.put("backPortNum", task.getBackPortNum());
+
+	         taskMap.put("farNearKitSerialNum", task.getFarNearKitSerialNum());
+	         taskMap.put("farNearModule", task.getFarNearModule());
+	         taskMap.put("farNearPortNum", task.getFarNearPortNum());
+
+	         // =========================
+	         // ADD TO RESPONSE
+	         // =========================
+	         rtn.put("task", taskMap);
 	            if ("Completed".equalsIgnoreCase(taskStatus)) {
 	             DistributionBoardMapping mapping =
 	                    session.get(DistributionBoardMapping.class, request.getParameter("dbPortId"));
@@ -675,11 +816,12 @@ public class PatchingWorkOrderController {
 	       
 	            session.saveOrUpdate(mapping);
 	            
-	            
+	            }
 	            
 	            String result[] = new String[4];
 				int SelectedIndex = 0;
 			String	navAction = request.getParameter("NavAction");
+			if (navAction != null && !navAction.isEmpty()) {
 				result = form.NavigationNP(session, "WORK_ORDER_TASK", "WO_TASK_ID", woTaskId, "LAST_MODIFIED_DATE",
 							navAction);
 					SelectedIndex = Integer.parseInt(result[1]);
@@ -687,14 +829,14 @@ public class PatchingWorkOrderController {
 					model.addAttribute("workOrderCount", Integer.parseInt(result[0]));
 					model.addAttribute("SelectedIndex", SelectedIndex);
 				
-	            }
+			}
 	            }
 	            tx.commit();
 
 	            rtn.put("taskStatus", taskStatus);
 	            rtn.put("woTaskId", woTaskId);
 	            rtn.put("patchingId", patchingId);
-	            rtn.put("taskType", taskType);
+	            rtn.put("taskType", taskType);//zeina 
 
 	        } catch (Exception e) {
 	            if (tx != null) tx.rollback();
@@ -1240,6 +1382,60 @@ public class PatchingWorkOrderController {
 	}	
 	
 	
+	@RequestMapping(value = "/getAllDbPort", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getAllDbPort(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException {
+		System.out.println("Passes here strand");
+		Map<String, Object> rtn = new LinkedHashMap<>();
+		session = AlmDbSession.getInstance().getSession();
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		}
+
+		else {
+
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+
+				try {
+					String searchId = request.getParameter("searchId");
+					query = session.createNativeQuery(
+						    "SELECT * FROM (" +
+						    "  SELECT A.DB_PORT_ID, A.DB_ID " +
+						    "  FROM DISTRIBUTION_BOARD_MAPPING A " +
+						    "  WHERE UPPER(A.DB_PORT_ID) LIKE UPPER(:param) " +
+						    "     OR UPPER(A.DB_ID) LIKE UPPER(:param) " +
+						    ") WHERE ROWNUM <= 40"
+						);	// query.setParameter("param", "%" + sId + "%");
+					// query.setParameter("param2", "%" + sId + "%");
+					query.setParameter("param", "%" + searchId + "%");
+
+					rtn.put("glist", query.getResultList());
+
+				} catch (Exception e) {
+					StringWriter sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					String exceptionAsString = sw.toString();
+					logger.info("Error in getAllDbData due to \n " + exceptionAsString);
+					rtn.put("glist", null);
+				}
+
+				finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+
+					}
+				}
+
+			}
+		}
+
+		return rtn;
+
+	}
 	
 	}
 
