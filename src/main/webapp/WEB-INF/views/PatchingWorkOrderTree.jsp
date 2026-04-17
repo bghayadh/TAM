@@ -394,21 +394,24 @@
     <!-- DB ID / DB PORT -->
     <div class="row" style="margin-left:90px;">
         <div class="col-md-5">
-            <div class="form-group">
+          <div class="form-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" style="color:green;">DB Port ID</span>
+                    <input type="text" id="dbPortId" class="form-control text-input" />
+                </div>
+            </div>
+           
+        </div>
+        <div class="col-md-6">
+           <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" style="color:green;">DB ID</span>
                     <input type="text" id="dbId" class="form-control text-input" />
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text" style="color:green;">DB Port ID</span>
-                    <input type="text" id="dbPortId" class="form-control text-input" />
-                </div>
-            </div>
-        </div>
+        
+        
     </div>
 
     <!-- ROW COL INDEX / ROW NUMBER -->
@@ -506,7 +509,16 @@
             <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" style="color:green;">FP Location Type</span>
-                    <input type="text" id="fpLocationType" class="form-control text-input" />
+                    
+                    
+                          <select id="fpLocationType" class="form-control">
+                   
+                <option value='None' selected>Select an Option</option>
+                <option value='Customer'>Customer</option>
+                <option value='Site'>Site</option>
+                <option value='Manhole'>Manhole</option>
+                <option value='Handhole'>Handhole</option> </select>
+            
                 </div>
             </div>
         </div>
@@ -794,7 +806,14 @@
     <div class="form-group">
      <div class="input-group-prepend">
         <span class="input-group-text" style="color:green;">BP Location Type</span>
-        <input type="text" id="bpLocationType" class="form-control text-input"/>
+        
+                              <select id="bpLocationType" class="form-control">
+                   
+                <option value='None' selected>Select an Option</option>
+                <option value='Customer'>Customer</option>
+                <option value='Site'>Site</option>
+                <option value='Manhole'>Manhole</option>
+                <option value='Handhole'>Handhole</option> </select>
         </div></div>
     </div>
     </div>
