@@ -26,7 +26,8 @@ console.log(PatchingList);
 					        document.querySelectorAll('.second-div').forEach(div => div.style.display = 'none');
 							document.querySelectorAll('.third-div').forEach(div => div.style.display = 'none');
 							clearFields();
-
+							document.getElementById("patchingStatus").value = "Draft";
+							console.log("yessss");
 	               
 	         }},
 		 {
@@ -37,7 +38,7 @@ console.log(PatchingList);
 						taskForm=1;
 		 				document.getElementById("saveButton").disabled = false;
 		 				document.getElementById("deleteButton").disabled = false;
-						
+						taskAutoComplete();
 		 				// show patching form
 		 				        document.querySelectorAll('.first-div').forEach(div => div.style.display = 'none');
 		 				        document.querySelectorAll('.second-div').forEach(div => div.style.display = 'none');
@@ -299,819 +300,10 @@ console.log(t);
 	        document.querySelectorAll('.second-div').forEach(div => div.style.display = 'none');
 			document.querySelectorAll('.third-div').forEach(div => div.style.display = 'block');
 			
-			$("#fpStrandId").autocomplete({
-											source: debounce(function(request, response, event, ui) {
-
-												let sId = $("#fpStrandId").val();
-												console.log("strand id:", sId);
-
-												$.ajax({
-													type: "GET",
-													url: getContext() + '/SearchMappingStrand',
-													contentType: "application/json; charset=utf-8",
-													dataType: "json",
-													data: {
-														searchId: sId
-													},
-													success: function(data) {
-														if (data != null) {
-															console.log(data.glist);
-															response(data.glist);
-														}
-													},
-													error: function() {
-														alert("Error");
-													}
-												});
-
-											}, 900),
-
-											minLength: 0,
-											maxShowItems: 4,
-											scroll: true,
-
-											select: function(event, ui) {
-
-												if (!ui.item) return false;
-
-												this.value = ui.item[0];
-
-												$("#fpStrandName").val(ui.item[1]);
-												$("#fpTubeId").val(ui.item[2]);
-												$("#fpFiberId").val(ui.item[3]);
-												$("#fpTubeName").val(ui.item[5]);
-												$("#fpFiberName").val(ui.item[4]);
-												$("#fpStrandNb").val(ui.item[6]);
-												$("#fpTubeNb").val(ui.item[8]);
-
-												if (ui.item[7] !== "" && ui.item[7] != null) {
-
-													$("#fpTubeColor").val(ui.item[9]);
-													$("#fpStrandColor").val(ui.item[7]);
-
-													tubeStrandSetColor("fpStrandColor", "fpStrandNb");
-													tubeStrandSetColor("fpTubeColor", "fpTubeNb");
-												}
-
-												return false;
-											}
-										})
-											.data("ui-autocomplete")._renderItem = function(ul, item) {
-
-												return $("<li class='each'></li>")
-													.data("ui-autocomplete-item", item)
-													.append(
-														"<div class='acItem'>" +
-														"<span class='name' style='font-weight:bold'>" + item[0] + "</span><br>" +
-														"<span class='desc'>" + item[1] + ", " + item[4] + ", " + item[5] + "</span>" +
-														"</div>"
-													)
-													.appendTo(ul);
-											};
-
-										$("#fpStrandId").focus(function() {
-											if (this.value === "") {
-												$(this).autocomplete("search");
-											}
-										});
-
-
-										$("#fpStrandName").autocomplete({
-											source: debounce(function(request, response) {
-
-												let sName = $("#fpStrandName").val();
-
-												$.ajax({
-													type: "GET",
-													url: getContext() + '/SearchMappingStrand',
-													contentType: "application/json; charset=utf-8",
-													dataType: "json",
-													data: {
-														"searchId": sName
-													},
-													success: function(data) {
-														if (data != null) {
-															response(data.glist);
-														}
-													},
-													error: function() {
-														alert("Error");
-													}
-												});
-
-											}, 900),
-
-											minLength: 0,
-											maxShowItems: 4,
-											scroll: true,
-
-											select: function(event, ui) {
-
-												if (!ui.item) return false;
-
-												this.value = ui.item[1];
-
-												$("#fpStrandId").val(ui.item[0]);
-												$("#fpTubeId").val(ui.item[2]);
-												$("#fpFiberId").val(ui.item[3]);
-												$("#fpTubeName").val(ui.item[5]);
-												$("#fpFiberName").val(ui.item[4]);
-												$("#fpStrandNb").val(ui.item[6]);
-												$("#fpTubeNb").val(ui.item[8]);
-
-												// Correct condition AND correct ID names
-												if (ui.item[7] !== "" && ui.item[7] != null) {
-
-													$("#fpTubeColor").val(ui.item[9]);
-													$("#fpStrandColor").val(ui.item[7]); // FIXED CAPITAL LETTER
-
-													// Set colors correctly
-													tubeStrandSetColor("fpStrandColor", "fpStrandNb");
-													tubeStrandSetColor("fpTubeColor", "fpTubeNb");
-												}
-
-												return false;
-											}
-										})
-											.data("ui-autocomplete")._renderItem = function(ul, item) {
-
-												return $('<li class="each"></li>')
-													.data("ui-autocomplete-item", item)
-													.append(
-														'<div class="acItem">' +
-														'<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
-														'<span class="desc">' + item[0] + ', ' + item[4] + ', ' + item[5] + '</span>' +
-														'</div>'
-													)
-													.appendTo(ul);
-											};
-
-										// FIXED selector (lowercase p)
-										$("#fpStrandName").focus(function() {
-											if (this.value === "") {
-												$(this).autocomplete("search");
-											}
-										});
-
-
-
-
-
-
-
-										$("#bpStrandId").autocomplete({
-											source: debounce(function(request, response, event, ui) {
-
-												let sId = $("#bpStrandId").val();
-												console.log("strand id:", sId);
-
-												$.ajax({
-													type: "GET",
-													url: getContext() + '/SearchMappingStrand',
-													contentType: "application/json; charset=utf-8",
-													dataType: "json",
-													data: {
-														searchId: sId
-													},
-													success: function(data) {
-														if (data != null) {
-															console.log(data.glist);
-															response(data.glist);
-														}
-													},
-													error: function() {
-														alert("Error");
-													}
-												});
-
-											}, 900),
-
-											minLength: 0,
-											maxShowItems: 4,
-											scroll: true,
-
-											select: function(event, ui) {
-
-												if (!ui.item) return false;
-
-												this.value = ui.item[0];
-
-												$("#bpStrandName").val(ui.item[1]);
-												$("#bpTubeId").val(ui.item[2]);
-												$("#bpFiberId").val(ui.item[3]);
-												$("#bpTubeName").val(ui.item[5]);
-												$("#bpFiberName").val(ui.item[4]);
-												$("#bpStrandNb").val(ui.item[6]);
-												$("#bpTubeNb").val(ui.item[8]);
-
-												if (ui.item[7] !== "" && ui.item[7] != null) {
-
-													$("#bpTubeColor").val(ui.item[9]);
-													$("#bpStrandColor").val(ui.item[7]);
-
-													tubeStrandSetColor("bpStrandColor", "bpStrandNb");
-													tubeStrandSetColor("bpTubeColor", "bpTubeNb");
-												}
-
-												return false;
-											}
-										})
-											.data("ui-autocomplete")._renderItem = function(ul, item) {
-
-												return $("<li class='each'></li>")
-													.data("ui-autocomplete-item", item)
-													.append(
-														"<div class='acItem'>" +
-														"<span class='name' style='font-weight:bold'>" + item[0] + "</span><br>" +
-														"<span class='desc'>" + item[1] + ", " + item[4] + ", " + item[5] + "</span>" +
-														"</div>"
-													)
-													.appendTo(ul);
-											};
-
-										$("#bpStrandId").focus(function() {
-											if (this.value === "") {
-												$(this).autocomplete("search");
-											}
-										});
-
-
-										$("#bpStrandName").autocomplete({
-											source: debounce(function(request, response) {
-
-												let sName = $("#bpStrandName").val();
-
-												$.ajax({
-													type: "GET",
-													url: getContext() + '/SearchMappingStrand',
-													contentType: "application/json; charset=utf-8",
-													dataType: "json",
-													data: {
-														"searchId": sName
-													},
-													success: function(data) {
-														if (data != null) {
-															response(data.glist);
-														}
-													},
-													error: function() {
-														alert("Error");
-													}
-												});
-
-											}, 900),
-
-											minLength: 0,
-											maxShowItems: 4,
-											scroll: true,
-
-											select: function(event, ui) {
-
-												if (!ui.item) return false;
-
-												this.value = ui.item[1];
-
-												$("#bpStrandId").val(ui.item[0]);
-												$("#bpTubeId").val(ui.item[2]);
-												$("#bpFiberId").val(ui.item[3]);
-												$("#bpTubeName").val(ui.item[5]);
-												$("#bpFiberName").val(ui.item[4]);
-												$("#bpStrandNb").val(ui.item[6]);
-												$("#bpTubeNb").val(ui.item[8]);
-
-												// Correct condition AND correct ID names
-												if (ui.item[7] !== "" && ui.item[7] != null) {
-
-													$("#bpTubeColor").val(ui.item[9]);
-													$("#bpStrandColor").val(ui.item[7]); // FIXED CAPITAL LETTER
-
-													// Set colors correctly
-													tubeStrandSetColor("bpStrandColor", "bpStrandNb");
-													tubeStrandSetColor("bpTubeColor", "bpTubeNb");
-												}
-
-												return false;
-											}
-										})
-											.data("ui-autocomplete")._renderItem = function(ul, item) {
-
-												return $('<li class="each"></li>')
-													.data("ui-autocomplete-item", item)
-													.append(
-														'<div class="acItem">' +
-														'<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
-														'<span class="desc">' + item[0] + ', ' + item[4] + ', ' + item[5] + '</span>' +
-														'</div>'
-													)
-													.appendTo(ul);
-											};
-
-										// FIXED selector (lowercase p)
-										$("#bpStrandName").focus(function() {
-											if (this.value === "") {
-												$(this).autocomplete("search");
-											}
-										});
-
-
-
-
-										$("#fpFiberId").autocomplete({
-															source: debounce(function(request, response, event, ui) {
-																console.log("fiber id");
-																var fId = $("#fpFiberId").val();
-																var cId = $("#fpFiberId").val();
-																var sId = $("#fpStrandId").val();
-																if (sId != "") {
-																	searchId = sId;
-																} else if (cId != "") {
-																	searchId = cId;
-																} else {
-																	searchId = fId;
-																}
-																$.ajax({
-																	type: "GET",
-																	contentType: "application/json; charset=utf-8",
-																	url: getContext() + '/SearchFiber',
-																	data: {
-																		"searchId": searchId,
-																	},
-																	dataType: "json",
-																	success: function(data) {
-																		if (data != null) {
-																			response(data.glist);
-																			console.log(data.glist);
-																		}
-																	},
-																	error: function(result) {
-																		alert("Error");
-																	}
-																});
-															}, 900), minLength: 0, maxShowItems: 4, scroll: true,
-															select: function(event, ui) {
-																this.value = (ui.item ? ui.item[0] : '');
-																$("#fpFiberName").val(ui.item[1]);
-
-
-																return false;
-															}
-														}).data("ui-autocomplete")._renderItem = function(ul, item) {
-															return $('<li class="each"></li>').data("ui-autocomplete-item", item)
-																.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-																	item[0] + '</span><br><span class="desc">' +
-																	item[1] + '</span></div>').appendTo(ul);
-														};
-														$("#fpFiberId").focus(function() {
-															if (this.value == "") {
-																$(this).autocomplete("search");
-															}
-														});
-														///////////////////////////////
-														$("#fpFiberName").autocomplete({
-															source: debounce(function(request, response, event, ui) {
-																var fName = $("#fpFiberName").val();
-																var cId = $("#fpTubeId").val();
-																var sId = $("#fpStrandId").val();
-																if (sId != "") {
-																	searchId = sId;
-																} else if (cId != "") {
-																	searchId = cId;
-																} else {
-																	searchId = fName;
-																}
-																$.ajax({
-																	type: "GET",
-																	contentType: "application/json; charset=utf-8",
-
-																	url: getContext() + '/SearchFiber',
-																	data: {
-																		"searchId": searchId,
-																	},
-																	dataType: "json",
-																	success: function(data) {
-																		if (data != null) {
-																			response(data.glist);
-																		}
-																	},
-																	error: function(result) {
-																		alert("Error");
-																	}
-																});
-															}, 900), minLength: 0, maxShowItems: 4, scroll: true,
-															select: function(event, ui) {
-
-																this.value = (ui.item ? ui.item[1] : '');
-																$("#fpFiberId").val(ui.item[0]);
-
-
-																return false;
-															}
-														}).data("ui-autocomplete")._renderItem = function(ul, item) {
-															return $('<li class="each"></li>').data("ui-autocomplete-item", item)
-																.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-																	item[1] + '</span><br><span class="desc">' +
-																	item[0] + '</span></div>').appendTo(ul);
-														};
-														$("#fpFiberName").focus(function() {
-															if (this.value == "") {
-																$(this).autocomplete("search");
-															}
-														});
-
-
-
-
-														$("#bpFiberId").autocomplete({
-															source: debounce(function(request, response, event, ui) {
-																console.log("fiber id");
-
-																var fId = $("#bpFiberId").val();
-																var cId = $("#bpTubeId").val();
-																var sId = $("#bpStrandId").val();
-
-																if (sId != "") {
-																	searchId = sId;
-																} else if (cId != "") {
-																	searchId = cId;
-																} else {
-																	searchId = fId;
-																}
-
-																$.ajax({
-																	type: "GET",
-																	contentType: "application/json; charset=utf-8",
-																	url: getContext() + '/SearchFiber',
-																	data: {
-																		"searchId": searchId
-																	},
-																	dataType: "json",
-																	success: function(data) {
-																		if (data != null) {
-																			response(data.glist);
-																			console.log(data.glist);
-																		}
-																	},
-																	error: function(result) {
-																		alert("Error");
-																	}
-																});
-
-															}, 900),
-															minLength: 0,
-															maxShowItems: 4,
-															scroll: true,
-															select: function(event, ui) {
-																this.value = (ui.item ? ui.item[0] : '');
-																$("#bpFiberName").val(ui.item[1]);
-																return false;
-															}
-														}).data("ui-autocomplete")._renderItem = function(ul, item) {
-															return $('<li class="each"></li>')
-																.data("ui-autocomplete-item", item)
-																.append(
-																	'<div class="acItem">' +
-																	'<span class="name" style="font-weight:bold">' + item[0] + '</span><br>' +
-																	'<span class="desc">' + item[1] + '</span>' +
-																	'</div>'
-																)
-																.appendTo(ul);
-														};
-
-														$("#bpFiberId").focus(function() {
-															if (this.value == "") {
-																$(this).autocomplete("search");
-															}
-														});
-
-														//////////////////////////////////////////
-
-														$("#bpFiberName").autocomplete({
-															source: debounce(function(request, response, event, ui) {
-
-																var fName = $("#bpFiberName").val();
-																var cId = $("#bpTubeId").val();
-																var sId = $("#bpStrandId").val();
-
-																if (sId != "") {
-																	searchId = sId;
-																} else if (cId != "") {
-																	searchId = cId;
-																} else {
-																	searchId = fName;
-																}
-
-																$.ajax({
-																	type: "GET",
-																	contentType: "application/json; charset=utf-8",
-																	url: getContext() + '/SearchFiber',
-																	data: {
-																		"searchId": searchId
-																	},
-																	dataType: "json",
-																	success: function(data) {
-																		if (data != null) {
-																			response(data.glist);
-																		}
-																	},
-																	error: function(result) {
-																		alert("Error");
-																	}
-																});
-
-															}, 900),
-															minLength: 0,
-															maxShowItems: 4,
-															scroll: true,
-															select: function(event, ui) {
-																this.value = (ui.item ? ui.item[1] : '');
-																$("#bpFiberId").val(ui.item[0]);
-																return false;
-															}
-														}).data("ui-autocomplete")._renderItem = function(ul, item) {
-															return $('<li class="each"></li>')
-																.data("ui-autocomplete-item", item)
-																.append(
-																	'<div class="acItem">' +
-																	'<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
-																	'<span class="desc">' + item[0] + '</span>' +
-																	'</div>'
-																)
-																.appendTo(ul);
-														};
-
-														$("#bpFiberName").focus(function() {
-															if (this.value == "") {
-																$(this).autocomplete("search");
-															}
-														});
-
-
-
-
-
-
-
-														$("#fpTubeId").autocomplete({
-															source: debounce(function(request, response, event, ui) {
-																var cName = $("#fpTubeId").val();
-																var sId = $("#fpStrandId").val();
-																if (sId != "") {
-																	searchId = sId;
-
-																	console.log("tube id");
-																} else {
-																	searchId = cName;
-																	//url="SearchStrandTube";
-																}
-																console.log("sid " + searchId);
-																$.ajax({
-																	type: "GET",
-																	contentType: "application/json; charset=utf-8",
-
-																	url: getContext() + '/SearchTube',
-																	data: {
-																		"searchId": searchId,
-																	},
-																	dataType: "json",
-																	success: function(data) {
-																		if (data != null) {
-																			response(data.clist);
-																		}
-																	},
-																	error: function(result) {
-																		alert("Error");
-																	}
-																});
-															}, 900), minLength: 0, maxShowItems: 4, scroll: true,
-															select: function(event, ui) {
-																this.value = (ui.item ? ui.item[0] : '');
-																$("#fpFiberId").val(ui.item[2]);
-																$("#fpTubeName").val(ui.item[1]);
-																$("#fpFiberName").val(ui.item[3]);
-																$("#fpTubeNb").val(ui.item[4]);
-
-																if (ui.item[5] != "" || ui.item[5] != null) {
-																	$("#fpTubeColor").val(ui.item[5]);
-																	tubeStrandSetColor("fpTubeColor", "fpTubeNb");
-																}
-
-
-																return false;
-															}
-														}).data("ui-autocomplete")._renderItem = function(ul, item) {
-															return $('<li class="each"></li>').data("ui-autocomplete-item", item)
-																.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-																	item[0] + '</span><br><span class="desc">' +
-																	item[1] + ', ' + item[3] + '</span></div>').appendTo(ul);
-														};
-														$("#fpTubeId").focus(function() {
-															if (this.value == "") {
-																$(this).autocomplete("search");
-															}
-														});
-
-														$("#fpTubeName").autocomplete({
-															source: debounce(function(request, response, event, ui) {
-																var cName = $("#fpTubeName").val();
-																var sId = $("#fpStrandId").val();
-																if (sId != "") {
-																	searchId = sId;
-																	//  url="SearchStrandTube";
-																} else {
-																	searchId = cName;
-																	// url="SearchStrandTube";
-																}
-																$.ajax({
-																	type: "GET",
-																	contentType: "application/json; charset=utf-8",
-
-																	url: getContext() + '/SearchTube',
-																	data: {
-																		"searchId": searchId,
-																	},
-																	dataType: "json",
-																	success: function(data) {
-																		if (data != null) {
-																			response(data.clist);
-																		}
-																	},
-																	error: function(result) {
-																		alert("Error");
-																	}
-																});
-
-															}, 900), minLength: 0, maxShowItems: 4, scroll: true,
-															select: function(event, ui) {
-																this.value = (ui.item ? ui.item[1] : '');
-
-																$("#fpFiberId").val(ui.item[2]);
-																$("#fpTubeId").val(ui.item[0]);
-																$("#fpFiberName").val(ui.item[3]);
-																$("#fpTubeNb").val(ui.item[4]);
-
-																if (ui.item[5] != "" || ui.item[5] != null) {
-																	$("#fpTubeColor").val(ui.item[5]);
-																	tubeStrandSetColor("fpTubeColor", "fpTubeNb");
-																}
-
-																return false;
-															}
-														}).data("ui-autocomplete")._renderItem = function(ul, item) {
-															return $('<li class="each"></li>').data("ui-autocomplete-item", item)
-																.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-																	item[1] + '</span><br><span class="desc">' +
-																	item[0] + ', ' + item[3] + '</span></div>').appendTo(ul);
-														};
-														$("#fpTubeName").focus(function() {
-															if (this.value == "") {
-																$(this).autocomplete("search");
-															}
-														});
-
-
-
-														$("#bpTubeId").autocomplete({
-															source: debounce(function(request, response, event, ui) {
-
-																var cName = $("#bpTubeId").val();
-																var sId = $("#bpStrandId").val();
-
-																if (sId != "") {
-																	searchId = sId;
-																	console.log("tube id");
-																} else {
-																	searchId = cName;
-																}
-
-																console.log("sid " + searchId);
-
-																$.ajax({
-																	type: "GET",
-																	contentType: "application/json; charset=utf-8",
-																	url: getContext() + '/SearchTube',
-																	data: {
-																		"searchId": searchId
-																	},
-																	dataType: "json",
-																	success: function(data) {
-																		if (data != null) {
-																			response(data.clist);
-																		}
-																	},
-																	error: function(result) {
-																		alert("Error");
-																	}
-																});
-
-															}, 900),
-															minLength: 0,
-															maxShowItems: 4,
-															scroll: true,
-															select: function(event, ui) {
-
-																this.value = (ui.item ? ui.item[0] : '');
-
-																$("#bpFiberId").val(ui.item[2]);
-																$("#bpTubeName").val(ui.item[1]);
-																$("#bpFiberName").val(ui.item[3]);
-																$("#bpTubeNb").val(ui.item[4]);
-
-																if (ui.item[5] != "" || ui.item[5] != null) {
-																	$("#bpTubeColor").val(ui.item[5]);
-																	tubeStrandSetColor("bpTubeColor", "bpTubeNb");
-																}
-
-																return false;
-															}
-														}).data("ui-autocomplete")._renderItem = function(ul, item) {
-
-															return $('<li class="each"></li>')
-																.data("ui-autocomplete-item", item)
-																.append(
-																	'<div class="acItem">' +
-																	'<span class="name" style="font-weight:bold">' + item[0] + '</span><br>' +
-																	'<span class="desc">' + item[1] + ', ' + item[3] + '</span>' +
-																	'</div>'
-																)
-																.appendTo(ul);
-														};
-
-														$("#bpTubeId").focus(function() {
-															if (this.value == "") {
-																$(this).autocomplete("search");
-															}
-														});
-
-														$("#bpTubeName").autocomplete({
-														    source: debounce(function (request, response, event, ui) {
-
-														        var cName = $("#bpTubeName").val();
-														        var sId = $("#bpStrandId").val();
-														        var searchId;
-
-														        if (sId !== "") {
-														            searchId = sId;
-														        } else {
-														            searchId = cName;
-														        }
-
-														        $.ajax({
-														            type: "GET",
-														            contentType: "application/json; charset=utf-8",
-														            url: getContext() + '/SearchTube',
-														            data: {
-														                "searchId": searchId
-														            },
-														            dataType: "json",
-														            success: function (data) {
-														                if (data != null) {
-														                    response(data.clist);
-														                }
-														            },
-														            error: function (result) {
-														                alert("Error");
-														            }
-														        });
-
-														    }, 900),
-														    minLength: 0,
-														    maxShowItems: 4,
-														    scroll: true,
-														    select: function (event, ui) {
-
-														        this.value = (ui.item ? ui.item[1] : '');
-
-														        $("#bpFiberId").val(ui.item[2]);
-														        $("#bpTubeId").val(ui.item[0]);
-														        $("#bpFiberName").val(ui.item[3]);
-														        $("#bpTubeNb").val(ui.item[4]);
-
-														        // Better check: use && instead of || so it must be non-empty AND non-null
-														        if (ui.item[5] !== "" && ui.item[5] != null) {
-														            $("#bpTubeColor").val(ui.item[5]);
-														            tubeStrandSetColor("bpTubeColor", "bpTubeNb");
-														        }
-
-														        return false;
-														    }
-														}).data("ui-autocomplete")._renderItem = function (ul, item) {
-
-														    return $('<li class="each"></li>')
-														        .data("ui-autocomplete-item", item)
-														        .append(
-														            '<div class="acItem">' +
-														            '<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
-														            '<span class="desc">' + item[0] + ', ' + item[3] + '</span>' +
-														            '</div>'
-														        )
-														        .appendTo(ul);
-														};
-
-														$("#bpTubeName").focus(function () {
-														    if (this.value === "") {
-														        $(this).autocomplete("search");
-														    }
-														});
+			
+			
+			
+			taskAutoComplete();
 			
 	        var taskFound = false;
 
@@ -1468,6 +660,8 @@ function savePatchAndTask(){
 
 						       // add new WO under root
 						       $("#initial_ul_CurrentPatchingLayer").append(patchingLi);
+							   PatchingList.push(data.node);//zeina
+							   bindTreeEventsForNewNodes();
 							   $("#"+data.id+" > .TreeSpan").contextmenu(function() {
 							   
 							   	       selectedWorkOrderIdContext = $(this).parent().attr('id');
@@ -1772,7 +966,9 @@ function savePatchAndTask(){
 				                $patchLi.append(patchHtml);
 								// Enable tree folder collapse/expand functionality
 								
-								  treeCollapseFolder(".folder", "fast", ".folder");
+								  treeCollapseFolder(".folder", "fast", ".folder");//zeina 
+								  
+								  
 				            }
 
 				            // 2) ADD NEW TASK
@@ -1791,7 +987,19 @@ function savePatchAndTask(){
 				            $childUl.append($newTaskLi);
 
 				            // ✅ REBIND EVENTS for new nodes
+							var newTask = data.task;
+
+							      // 🔥 find correct patching
+							      var patching = PatchingList.find(p => p.patchingId === patchingId);
+
+							      if (patching) {
+							          // 🔥 add task
+							          patching.tasks.push(newTask);
+
+							          console.log("Task added successfully");
+}
 				            bindTreeEventsForNewNodes();
+							
 				        }
 
 				        $("#woTaskId").val(data.woTaskId);
@@ -2586,3 +1794,1093 @@ function openContext(id, name, menuName, event) {
 												      }, delay);
 												    };
 												  };
+function taskAutoComplete(){
+	$("#dbPortId").autocomplete({
+															source: debounce(function(request, response) {
+
+																let sName = $("#dbPortId").val();
+																var url = "";
+																      var dataTarget = {};
+
+																$.ajax({
+																	type: "GET",
+																	url: getContext() + '/getAllDbPort',
+																	contentType: "application/json; charset=utf-8",
+																	dataType: "json",
+																	data: {
+																		"searchId": sName
+																	},
+																	success: function(data) {
+																		if (data != null) {
+																			response(data.glist);
+																			console.log(data.glist)
+																		}
+																	},
+																	error: function() {
+																		alert("Error");
+																	}
+																});
+
+															}, 900),
+
+															minLength: 0,
+															maxShowItems: 4,
+															scroll: true,
+
+															select: function(event, ui) {
+
+																if (!ui.item) return false;
+
+																this.value = ui.item[0];
+
+																$("#dbId").val(ui.item[1]);
+														
+
+															
+
+																return false;
+															}
+														})
+															.data("ui-autocomplete")._renderItem = function(ul, item) {
+
+																return $('<li class="each"></li>')
+																	.data("ui-autocomplete-item", item)
+																	.append(
+																		'<div class="acItem">' +
+																		'<span class="name" style="font-weight:bold">' + item[0] + '</span><br>' +
+																		'<span class="desc">' + item[1]  + '</span>' +
+																		'</div>'
+																	)
+																	.appendTo(ul);
+															};
+
+														// FIXED selector (lowercase p)
+														$("#dbPortId").focus(function() {
+															if (this.value === "") {
+																$(this).autocomplete("search");
+															}
+});
+
+ var  locationType="";
+$("#fpLocationId").autocomplete({
+															source: debounce(function(request, response) {
+
+																var  searchVal = $("#fpLocationId").val();
+															  locationType = $("#fpLocationType").val();
+																        console.log("locationType is " + locationType);
+																        if (locationType == "Customer") {
+																            url = 'GetAllNetworkCustomer';
+																            dataTarget = {
+																                "search": searchVal,
+																            }
+																        }
+																        else if (locationType == "Site") {
+																            url = 'GetAllWarehouse';
+																            dataTarget = {
+																                "WareName": searchVal,
+																                "warehouseName": searchVal,
+																                "SiteId": searchVal,
+																            }
+																        }
+																        else if (locationType == "Manhole") {
+																            url = 'getManholeData';
+																            dataTarget = {
+																                "search": searchVal,
+																            }
+																        }
+																        else if (locationType == "Handhole") {
+																            url = 'getHandholeData';
+																            dataTarget = {
+																                "search": searchVal,
+																            }
+																        }
+																        else if (locationType == "DB") {
+																            url = 'getDbData';
+																            dataTarget = {
+																                "search": searchVal,
+																            }
+																        }
+																        else {
+																            url = 'emptyUrl';
+																        }
+
+																        if (url != "emptyUrl") {
+																            $.ajax({
+																                type: "GET",
+																                contentType: "application/json; charset=utf-8",
+																                url: getContext() + '/' + url,
+																                data: dataTarget,
+																                dataType: "json",
+																                success: function(data) {
+																                    if (data != null) response(data.globalList);
+																                },
+																                error: function() { alert("Error"); }
+																            });
+																        }
+																    }, 900),
+																    minLength: 0,
+																    maxShowItems: 4,
+																    scroll: true,
+																	position: {
+																	    my: "left top",
+																	    at: "left bottom",
+																	    collision: "flipfit"
+																	},
+																    select: function(event, ui) {
+																      
+																		document.getElementById("fpLocationName").value=ui.item[1];
+																      
+																        if (locationType == "Customer" || locationType == "Manhole" || locationType == "Handhole" || locationType == "DB") {
+																            this.value = ui.item ? ui.item[0] : "";
+																        }
+																        else if (locationType == "Site") {
+																            this.value = ui.item ? ui.item[2] : "";
+																         
+																        }
+																        return false;
+																    }
+																}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																    if (item[0].split("_")[0] == "WARE") {
+																        return $("<li class='each'>")
+																            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+																                item[2] + "</span><br><span class='desc'>" +
+																                item[0] + ', ' + item[1] + "</span></div>")
+																            .appendTo(ul);
+																    }
+																    else {
+																        return $("<li class='each'>")
+																            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+																                item[0] + "</span><br><span class='desc'>" +
+																                item[1] + ', ' + item[2] + "</span></div>")
+																            .appendTo(ul);
+																    }
+																};
+
+																	$("#fpLocationId").focus(function() {
+																    if (this.value === "") $(this).autocomplete("search");
+																});
+															
+
+				
+				
+				
+
+				
+				
+				
+				$("#fpStrandId").autocomplete({
+												source: debounce(function(request, response, event, ui) {
+
+													let sId = $("#fpStrandId").val();
+													console.log("strand id:", sId);
+
+													$.ajax({
+														type: "GET",
+														url: getContext() + '/SearchMappingStrand',
+														contentType: "application/json; charset=utf-8",
+														dataType: "json",
+														data: {
+															searchId: sId
+														},
+														success: function(data) {
+															if (data != null) {
+																console.log(data.glist);
+																response(data.glist);
+															}
+														},
+														error: function() {
+															alert("Error");
+														}
+													});
+
+												}, 900),
+
+												minLength: 0,
+												maxShowItems: 4,
+												scroll: true,
+
+												select: function(event, ui) {
+
+													if (!ui.item) return false;
+
+													this.value = ui.item[0];
+
+													$("#fpStrandName").val(ui.item[1]);
+													$("#fpTubeId").val(ui.item[2]);
+													$("#fpFiberId").val(ui.item[3]);
+													$("#fpTubeName").val(ui.item[5]);
+													$("#fpFiberName").val(ui.item[4]);
+													$("#fpStrandNb").val(ui.item[6]);
+													$("#fpTubeNb").val(ui.item[8]);
+
+													if (ui.item[7] !== "" && ui.item[7] != null) {
+
+														$("#fpTubeColor").val(ui.item[9]);
+														$("#fpStrandColor").val(ui.item[7]);
+
+														tubeStrandSetColor("fpStrandColor", "fpStrandNb");
+														tubeStrandSetColor("fpTubeColor", "fpTubeNb");
+													}
+
+													return false;
+												}
+											})
+												.data("ui-autocomplete")._renderItem = function(ul, item) {
+
+													return $("<li class='each'></li>")
+														.data("ui-autocomplete-item", item)
+														.append(
+															"<div class='acItem'>" +
+															"<span class='name' style='font-weight:bold'>" + item[0] + "</span><br>" +
+															"<span class='desc'>" + item[1] + ", " + item[4] + ", " + item[5] + "</span>" +
+															"</div>"
+														)
+														.appendTo(ul);
+												};
+
+											$("#fpStrandId").focus(function() {
+												if (this.value === "") {
+													$(this).autocomplete("search");
+												}
+											});
+
+
+											$("#fpStrandName").autocomplete({
+												source: debounce(function(request, response) {
+
+													let sName = $("#fpStrandName").val();
+
+													$.ajax({
+														type: "GET",
+														url: getContext() + '/SearchMappingStrand',
+														contentType: "application/json; charset=utf-8",
+														dataType: "json",
+														data: {
+															"searchId": sName
+														},
+														success: function(data) {
+															if (data != null) {
+																response(data.glist);
+															}
+														},
+														error: function() {
+															alert("Error");
+														}
+													});
+
+												}, 900),
+
+												minLength: 0,
+												maxShowItems: 4,
+												scroll: true,
+
+												select: function(event, ui) {
+
+													if (!ui.item) return false;
+
+													this.value = ui.item[1];
+
+													$("#fpStrandId").val(ui.item[0]);
+													$("#fpTubeId").val(ui.item[2]);
+													$("#fpFiberId").val(ui.item[3]);
+													$("#fpTubeName").val(ui.item[5]);
+													$("#fpFiberName").val(ui.item[4]);
+													$("#fpStrandNb").val(ui.item[6]);
+													$("#fpTubeNb").val(ui.item[8]);
+
+													// Correct condition AND correct ID names
+													if (ui.item[7] !== "" && ui.item[7] != null) {
+
+														$("#fpTubeColor").val(ui.item[9]);
+														$("#fpStrandColor").val(ui.item[7]); // FIXED CAPITAL LETTER
+
+														// Set colors correctly
+														tubeStrandSetColor("fpStrandColor", "fpStrandNb");
+														tubeStrandSetColor("fpTubeColor", "fpTubeNb");
+													}
+
+													return false;
+												}
+											})
+												.data("ui-autocomplete")._renderItem = function(ul, item) {
+
+													return $('<li class="each"></li>')
+														.data("ui-autocomplete-item", item)
+														.append(
+															'<div class="acItem">' +
+															'<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+															'<span class="desc">' + item[0] + ', ' + item[4] + ', ' + item[5] + '</span>' +
+															'</div>'
+														)
+														.appendTo(ul);
+												};
+
+											// FIXED selector (lowercase p)
+											$("#fpStrandName").focus(function() {
+												if (this.value === "") {
+													$(this).autocomplete("search");
+												}
+											});
+
+
+
+
+
+
+
+											$("#bpStrandId").autocomplete({
+												source: debounce(function(request, response, event, ui) {
+
+													let sId = $("#bpStrandId").val();
+													console.log("strand id:", sId);
+
+													$.ajax({
+														type: "GET",
+														url: getContext() + '/SearchMappingStrand',
+														contentType: "application/json; charset=utf-8",
+														dataType: "json",
+														data: {
+															searchId: sId
+														},
+														success: function(data) {
+															if (data != null) {
+																console.log(data.glist);
+																response(data.glist);
+															}
+														},
+														error: function() {
+															alert("Error");
+														}
+													});
+
+												}, 900),
+
+												minLength: 0,
+												maxShowItems: 4,
+												scroll: true,
+
+												select: function(event, ui) {
+
+													if (!ui.item) return false;
+
+													this.value = ui.item[0];
+
+													$("#bpStrandName").val(ui.item[1]);
+													$("#bpTubeId").val(ui.item[2]);
+													$("#bpFiberId").val(ui.item[3]);
+													$("#bpTubeName").val(ui.item[5]);
+													$("#bpFiberName").val(ui.item[4]);
+													$("#bpStrandNb").val(ui.item[6]);
+													$("#bpTubeNb").val(ui.item[8]);
+
+													if (ui.item[7] !== "" && ui.item[7] != null) {
+
+														$("#bpTubeColor").val(ui.item[9]);
+														$("#bpStrandColor").val(ui.item[7]);
+
+														tubeStrandSetColor("bpStrandColor", "bpStrandNb");
+														tubeStrandSetColor("bpTubeColor", "bpTubeNb");
+													}
+
+													return false;
+												}
+											})
+												.data("ui-autocomplete")._renderItem = function(ul, item) {
+
+													return $("<li class='each'></li>")
+														.data("ui-autocomplete-item", item)
+														.append(
+															"<div class='acItem'>" +
+															"<span class='name' style='font-weight:bold'>" + item[0] + "</span><br>" +
+															"<span class='desc'>" + item[1] + ", " + item[4] + ", " + item[5] + "</span>" +
+															"</div>"
+														)
+														.appendTo(ul);
+												};
+
+											$("#bpStrandId").focus(function() {
+												if (this.value === "") {
+													$(this).autocomplete("search");
+												}
+											});
+
+
+											$("#bpStrandName").autocomplete({
+												source: debounce(function(request, response) {
+
+													let sName = $("#bpStrandName").val();
+
+													$.ajax({
+														type: "GET",
+														url: getContext() + '/SearchMappingStrand',
+														contentType: "application/json; charset=utf-8",
+														dataType: "json",
+														data: {
+															"searchId": sName
+														},
+														success: function(data) {
+															if (data != null) {
+																response(data.glist);
+															}
+														},
+														error: function() {
+															alert("Error");
+														}
+													});
+
+												}, 900),
+
+												minLength: 0,
+												maxShowItems: 4,
+												scroll: true,
+
+												select: function(event, ui) {
+
+													if (!ui.item) return false;
+
+													this.value = ui.item[1];
+
+													$("#bpStrandId").val(ui.item[0]);
+													$("#bpTubeId").val(ui.item[2]);
+													$("#bpFiberId").val(ui.item[3]);
+													$("#bpTubeName").val(ui.item[5]);
+													$("#bpFiberName").val(ui.item[4]);
+													$("#bpStrandNb").val(ui.item[6]);
+													$("#bpTubeNb").val(ui.item[8]);
+
+													// Correct condition AND correct ID names
+													if (ui.item[7] !== "" && ui.item[7] != null) {
+
+														$("#bpTubeColor").val(ui.item[9]);
+														$("#bpStrandColor").val(ui.item[7]); // FIXED CAPITAL LETTER
+
+														// Set colors correctly
+														tubeStrandSetColor("bpStrandColor", "bpStrandNb");
+														tubeStrandSetColor("bpTubeColor", "bpTubeNb");
+													}
+
+													return false;
+												}
+											})
+												.data("ui-autocomplete")._renderItem = function(ul, item) {
+
+													return $('<li class="each"></li>')
+														.data("ui-autocomplete-item", item)
+														.append(
+															'<div class="acItem">' +
+															'<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+															'<span class="desc">' + item[0] + ', ' + item[4] + ', ' + item[5] + '</span>' +
+															'</div>'
+														)
+														.appendTo(ul);
+												};
+
+											// FIXED selector (lowercase p)
+											$("#bpStrandName").focus(function() {
+												if (this.value === "") {
+													$(this).autocomplete("search");
+												}
+											});
+
+
+
+
+											$("#fpFiberId").autocomplete({
+																source: debounce(function(request, response, event, ui) {
+																	console.log("fiber id");
+																	var fId = $("#fpFiberId").val();
+																	var cId = $("#fpFiberId").val();
+																	var sId = $("#fpStrandId").val();
+																	if (sId != "") {
+																		searchId = sId;
+																	} else if (cId != "") {
+																		searchId = cId;
+																	} else {
+																		searchId = fId;
+																	}
+																	$.ajax({
+																		type: "GET",
+																		contentType: "application/json; charset=utf-8",
+																		url: getContext() + '/SearchFiber',
+																		data: {
+																			"searchId": searchId,
+																		},
+																		dataType: "json",
+																		success: function(data) {
+																			if (data != null) {
+																				response(data.glist);
+																				console.log(data.glist);
+																			}
+																		},
+																		error: function(result) {
+																			alert("Error");
+																		}
+																	});
+																}, 900), minLength: 0, maxShowItems: 4, scroll: true,
+																select: function(event, ui) {
+																	this.value = (ui.item ? ui.item[0] : '');
+																	$("#fpFiberName").val(ui.item[1]);
+
+
+																	return false;
+																}
+															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																return $('<li class="each"></li>').data("ui-autocomplete-item", item)
+																	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+																		item[0] + '</span><br><span class="desc">' +
+																		item[1] + '</span></div>').appendTo(ul);
+															};
+															$("#fpFiberId").focus(function() {
+																if (this.value == "") {
+																	$(this).autocomplete("search");
+																}
+															});
+															///////////////////////////////
+															$("#fpFiberName").autocomplete({
+																source: debounce(function(request, response, event, ui) {
+																	var fName = $("#fpFiberName").val();
+																	var cId = $("#fpTubeId").val();
+																	var sId = $("#fpStrandId").val();
+																	if (sId != "") {
+																		searchId = sId;
+																	} else if (cId != "") {
+																		searchId = cId;
+																	} else {
+																		searchId = fName;
+																	}
+																	$.ajax({
+																		type: "GET",
+																		contentType: "application/json; charset=utf-8",
+
+																		url: getContext() + '/SearchFiber',
+																		data: {
+																			"searchId": searchId,
+																		},
+																		dataType: "json",
+																		success: function(data) {
+																			if (data != null) {
+																				response(data.glist);
+																			}
+																		},
+																		error: function(result) {
+																			alert("Error");
+																		}
+																	});
+																}, 900), minLength: 0, maxShowItems: 4, scroll: true,
+																select: function(event, ui) {
+
+																	this.value = (ui.item ? ui.item[1] : '');
+																	$("#fpFiberId").val(ui.item[0]);
+
+
+																	return false;
+																}
+															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																return $('<li class="each"></li>').data("ui-autocomplete-item", item)
+																	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+																		item[1] + '</span><br><span class="desc">' +
+																		item[0] + '</span></div>').appendTo(ul);
+															};
+															$("#fpFiberName").focus(function() {
+																if (this.value == "") {
+																	$(this).autocomplete("search");
+																}
+															});
+
+
+
+
+															$("#bpFiberId").autocomplete({
+																source: debounce(function(request, response, event, ui) {
+																	console.log("fiber id");
+
+																	var fId = $("#bpFiberId").val();
+																	var cId = $("#bpTubeId").val();
+																	var sId = $("#bpStrandId").val();
+
+																	if (sId != "") {
+																		searchId = sId;
+																	} else if (cId != "") {
+																		searchId = cId;
+																	} else {
+																		searchId = fId;
+																	}
+
+																	$.ajax({
+																		type: "GET",
+																		contentType: "application/json; charset=utf-8",
+																		url: getContext() + '/SearchFiber',
+																		data: {
+																			"searchId": searchId
+																		},
+																		dataType: "json",
+																		success: function(data) {
+																			if (data != null) {
+																				response(data.glist);
+																				console.log(data.glist);
+																			}
+																		},
+																		error: function(result) {
+																			alert("Error");
+																		}
+																	});
+
+																}, 900),
+																minLength: 0,
+																maxShowItems: 4,
+																scroll: true,
+																select: function(event, ui) {
+																	this.value = (ui.item ? ui.item[0] : '');
+																	$("#bpFiberName").val(ui.item[1]);
+																	return false;
+																}
+															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																return $('<li class="each"></li>')
+																	.data("ui-autocomplete-item", item)
+																	.append(
+																		'<div class="acItem">' +
+																		'<span class="name" style="font-weight:bold">' + item[0] + '</span><br>' +
+																		'<span class="desc">' + item[1] + '</span>' +
+																		'</div>'
+																	)
+																	.appendTo(ul);
+															};
+
+															$("#bpFiberId").focus(function() {
+																if (this.value == "") {
+																	$(this).autocomplete("search");
+																}
+															});
+
+															//////////////////////////////////////////
+
+															$("#bpFiberName").autocomplete({
+																source: debounce(function(request, response, event, ui) {
+
+																	var fName = $("#bpFiberName").val();
+																	var cId = $("#bpTubeId").val();
+																	var sId = $("#bpStrandId").val();
+
+																	if (sId != "") {
+																		searchId = sId;
+																	} else if (cId != "") {
+																		searchId = cId;
+																	} else {
+																		searchId = fName;
+																	}
+
+																	$.ajax({
+																		type: "GET",
+																		contentType: "application/json; charset=utf-8",
+																		url: getContext() + '/SearchFiber',
+																		data: {
+																			"searchId": searchId
+																		},
+																		dataType: "json",
+																		success: function(data) {
+																			if (data != null) {
+																				response(data.glist);
+																			}
+																		},
+																		error: function(result) {
+																			alert("Error");
+																		}
+																	});
+
+																}, 900),
+																minLength: 0,
+																maxShowItems: 4,
+																scroll: true,
+																select: function(event, ui) {
+																	this.value = (ui.item ? ui.item[1] : '');
+																	$("#bpFiberId").val(ui.item[0]);
+																	return false;
+																}
+															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																return $('<li class="each"></li>')
+																	.data("ui-autocomplete-item", item)
+																	.append(
+																		'<div class="acItem">' +
+																		'<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+																		'<span class="desc">' + item[0] + '</span>' +
+																		'</div>'
+																	)
+																	.appendTo(ul);
+															};
+
+															$("#bpFiberName").focus(function() {
+																if (this.value == "") {
+																	$(this).autocomplete("search");
+																}
+															});
+
+
+
+
+
+
+
+															$("#fpTubeId").autocomplete({
+																source: debounce(function(request, response, event, ui) {
+																	var cName = $("#fpTubeId").val();
+																	var sId = $("#fpStrandId").val();
+																	if (sId != "") {
+																		searchId = sId;
+
+																		console.log("tube id");
+																	} else {
+																		searchId = cName;
+																		//url="SearchStrandTube";
+																	}
+																	console.log("sid " + searchId);
+																	$.ajax({
+																		type: "GET",
+																		contentType: "application/json; charset=utf-8",
+
+																		url: getContext() + '/SearchTube',
+																		data: {
+																			"searchId": searchId,
+																		},
+																		dataType: "json",
+																		success: function(data) {
+																			if (data != null) {
+																				response(data.clist);
+																			}
+																		},
+																		error: function(result) {
+																			alert("Error");
+																		}
+																	});
+																}, 900), minLength: 0, maxShowItems: 4, scroll: true,
+																select: function(event, ui) {
+																	this.value = (ui.item ? ui.item[0] : '');
+																	$("#fpFiberId").val(ui.item[2]);
+																	$("#fpTubeName").val(ui.item[1]);
+																	$("#fpFiberName").val(ui.item[3]);
+																	$("#fpTubeNb").val(ui.item[4]);
+
+																	if (ui.item[5] != "" || ui.item[5] != null) {
+																		$("#fpTubeColor").val(ui.item[5]);
+																		tubeStrandSetColor("fpTubeColor", "fpTubeNb");
+																	}
+
+
+																	return false;
+																}
+															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																return $('<li class="each"></li>').data("ui-autocomplete-item", item)
+																	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+																		item[0] + '</span><br><span class="desc">' +
+																		item[1] + ', ' + item[3] + '</span></div>').appendTo(ul);
+															};
+															$("#fpTubeId").focus(function() {
+																if (this.value == "") {
+																	$(this).autocomplete("search");
+																}
+															});
+
+															$("#fpTubeName").autocomplete({
+																source: debounce(function(request, response, event, ui) {
+																	var cName = $("#fpTubeName").val();
+																	var sId = $("#fpStrandId").val();
+																	if (sId != "") {
+																		searchId = sId;
+																		//  url="SearchStrandTube";
+																	} else {
+																		searchId = cName;
+																		// url="SearchStrandTube";
+																	}
+																	$.ajax({
+																		type: "GET",
+																		contentType: "application/json; charset=utf-8",
+
+																		url: getContext() + '/SearchTube',
+																		data: {
+																			"searchId": searchId,
+																		},
+																		dataType: "json",
+																		success: function(data) {
+																			if (data != null) {
+																				response(data.clist);
+																			}
+																		},
+																		error: function(result) {
+																			alert("Error");
+																		}
+																	});
+
+																}, 900), minLength: 0, maxShowItems: 4, scroll: true,
+																select: function(event, ui) {
+																	this.value = (ui.item ? ui.item[1] : '');
+
+																	$("#fpFiberId").val(ui.item[2]);
+																	$("#fpTubeId").val(ui.item[0]);
+																	$("#fpFiberName").val(ui.item[3]);
+																	$("#fpTubeNb").val(ui.item[4]);
+
+																	if (ui.item[5] != "" || ui.item[5] != null) {
+																		$("#fpTubeColor").val(ui.item[5]);
+																		tubeStrandSetColor("fpTubeColor", "fpTubeNb");
+																	}
+
+																	return false;
+																}
+															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																return $('<li class="each"></li>').data("ui-autocomplete-item", item)
+																	.append('<div class="acItem"><span class="name" style="font-weight:bold">' +
+																		item[1] + '</span><br><span class="desc">' +
+																		item[0] + ', ' + item[3] + '</span></div>').appendTo(ul);
+															};
+															$("#fpTubeName").focus(function() {
+																if (this.value == "") {
+																	$(this).autocomplete("search");
+																}
+															});
+
+
+
+															$("#bpTubeId").autocomplete({
+																source: debounce(function(request, response, event, ui) {
+
+																	var cName = $("#bpTubeId").val();
+																	var sId = $("#bpStrandId").val();
+
+																	if (sId != "") {
+																		searchId = sId;
+																		console.log("tube id");
+																	} else {
+																		searchId = cName;
+																	}
+
+																	console.log("sid " + searchId);
+
+																	$.ajax({
+																		type: "GET",
+																		contentType: "application/json; charset=utf-8",
+																		url: getContext() + '/SearchTube',
+																		data: {
+																			"searchId": searchId
+																		},
+																		dataType: "json",
+																		success: function(data) {
+																			if (data != null) {
+																				response(data.clist);
+																			}
+																		},
+																		error: function(result) {
+																			alert("Error");
+																		}
+																	});
+
+																}, 900),
+																minLength: 0,
+																maxShowItems: 4,
+																scroll: true,
+																select: function(event, ui) {
+
+																	this.value = (ui.item ? ui.item[0] : '');
+
+																	$("#bpFiberId").val(ui.item[2]);
+																	$("#bpTubeName").val(ui.item[1]);
+																	$("#bpFiberName").val(ui.item[3]);
+																	$("#bpTubeNb").val(ui.item[4]);
+
+																	if (ui.item[5] != "" || ui.item[5] != null) {
+																		$("#bpTubeColor").val(ui.item[5]);
+																		tubeStrandSetColor("bpTubeColor", "bpTubeNb");
+																	}
+
+																	return false;
+																}
+															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+
+																return $('<li class="each"></li>')
+																	.data("ui-autocomplete-item", item)
+																	.append(
+																		'<div class="acItem">' +
+																		'<span class="name" style="font-weight:bold">' + item[0] + '</span><br>' +
+																		'<span class="desc">' + item[1] + ', ' + item[3] + '</span>' +
+																		'</div>'
+																	)
+																	.appendTo(ul);
+															};
+
+															$("#bpTubeId").focus(function() {
+																if (this.value == "") {
+																	$(this).autocomplete("search");
+																}
+															});
+
+															$("#bpTubeName").autocomplete({
+															    source: debounce(function (request, response, event, ui) {
+
+															        var cName = $("#bpTubeName").val();
+															        var sId = $("#bpStrandId").val();
+															        var searchId;
+
+															        if (sId !== "") {
+															            searchId = sId;
+															        } else {
+															            searchId = cName;
+															        }
+
+															        $.ajax({
+															            type: "GET",
+															            contentType: "application/json; charset=utf-8",
+															            url: getContext() + '/SearchTube',
+															            data: {
+															                "searchId": searchId
+															            },
+															            dataType: "json",
+															            success: function (data) {
+															                if (data != null) {
+															                    response(data.clist);
+															                }
+															            },
+															            error: function (result) {
+															                alert("Error");
+															            }
+															        });
+
+															    }, 900),
+															    minLength: 0,
+															    maxShowItems: 4,
+															    scroll: true,
+															    select: function (event, ui) {
+
+															        this.value = (ui.item ? ui.item[1] : '');
+
+															        $("#bpFiberId").val(ui.item[2]);
+															        $("#bpTubeId").val(ui.item[0]);
+															        $("#bpFiberName").val(ui.item[3]);
+															        $("#bpTubeNb").val(ui.item[4]);
+
+															        // Better check: use && instead of || so it must be non-empty AND non-null
+															        if (ui.item[5] !== "" && ui.item[5] != null) {
+															            $("#bpTubeColor").val(ui.item[5]);
+															            tubeStrandSetColor("bpTubeColor", "bpTubeNb");
+															        }
+
+															        return false;
+															    }
+															}).data("ui-autocomplete")._renderItem = function (ul, item) {
+
+															    return $('<li class="each"></li>')
+															        .data("ui-autocomplete-item", item)
+															        .append(
+															            '<div class="acItem">' +
+															            '<span class="name" style="font-weight:bold">' + item[1] + '</span><br>' +
+															            '<span class="desc">' + item[0] + ', ' + item[3] + '</span>' +
+															            '</div>'
+															        )
+															        .appendTo(ul);
+															};
+
+															$("#bpTubeName").focus(function () {
+															    if (this.value === "") {
+															        $(this).autocomplete("search");
+															    }
+															});
+															$("#bpLocationId").autocomplete({
+																														source: debounce(function(request, response) {
+
+																															var  searchVal = $("#bpLocationId").val();
+																														  locationType = $("#bpLocationType").val();
+																															        console.log("locationType is " + locationType);
+																															        if (locationType == "Customer") {
+																															            url = 'GetAllNetworkCustomer';
+																															            dataTarget = {
+																															                "search": searchVal,
+																															            }
+																															        }
+																															        else if (locationType == "Site") {
+																															            url = 'GetAllWarehouse';
+																															            dataTarget = {
+																															                "WareName": searchVal,
+																															                "warehouseName": searchVal,
+																															                "SiteId": searchVal,
+																															            }
+																															        }
+																															        else if (locationType == "Manhole") {
+																															            url = 'getManholeData';
+																															            dataTarget = {
+																															                "search": searchVal,
+																															            }
+																															        }
+																															        else if (locationType == "Handhole") {
+																															            url = 'getHandholeData';
+																															            dataTarget = {
+																															                "search": searchVal,
+																															            }
+																															        }
+																															        else if (locationType == "DB") {
+																															            url = 'getDbData';
+																															            dataTarget = {
+																															                "search": searchVal,
+																															            }
+																															        }
+																															        else {
+																															            url = 'emptyUrl';
+																															        }
+
+																															        if (url != "emptyUrl") {
+																															            $.ajax({
+																															                type: "GET",
+																															                contentType: "application/json; charset=utf-8",
+																															                url: getContext() + '/' + url,
+																															                data: dataTarget,
+																															                dataType: "json",
+																															                success: function(data) {
+																															                    if (data != null) response(data.globalList);
+																															                },
+																															                error: function() { alert("Error"); }
+																															            });
+																															        }
+																															    }, 900),
+																															    minLength: 0,
+																															    maxShowItems: 4,
+																															    scroll: true,
+																																position: {
+																																    my: "left top",
+																																    at: "left bottom",
+																																    collision: "flipfit"
+																																},
+																															    select: function(event, ui) {
+																															      
+																																	document.getElementById("bpLocationName").value=ui.item[1];
+																															      
+																															        if (locationType == "Customer" || locationType == "Manhole" || locationType == "Handhole" || locationType == "DB") {
+																															            this.value = ui.item ? ui.item[0] : "";
+																															        }
+																															        else if (locationType == "Site") {
+																															            this.value = ui.item ? ui.item[2] : "";
+																															         
+																															        }
+																															        return false;
+																															    }
+																															}).data("ui-autocomplete")._renderItem = function(ul, item) {
+																															    if (item[0].split("_")[0] == "WARE") {
+																															        return $("<li class='each'>")
+																															            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+																															                item[2] + "</span><br><span class='desc'>" +
+																															                item[0] + ', ' + item[1] + "</span></div>")
+																															            .appendTo(ul);
+																															    }
+																															    else {
+																															        return $("<li class='each'>")
+																															            .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+																															                item[0] + "</span><br><span class='desc'>" +
+																															                item[1] + ', ' + item[2] + "</span></div>")
+																															            .appendTo(ul);
+																															    }
+																															};
+
+																																$("#bpLocationId").focus(function() {
+																															    if (this.value === "") $(this).autocomplete("search");
+																															});
+																														
+
+																			
+																			
+																			
+}
