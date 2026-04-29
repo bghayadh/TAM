@@ -1371,9 +1371,11 @@ $(document).ready(function() {
 		              }
   		          	else{
   		          		filteredGridData=[];
+/*  		          		
   						$('#totalStrands').val('0');
   					  	$('#totalUsedStrands').val('0');
   					 	$('#totalNotUsedStrands').val('0');
+*/  					 	
   	      			}
   				  
   		         	        // Method for pagination almgrid-pagecount-box
