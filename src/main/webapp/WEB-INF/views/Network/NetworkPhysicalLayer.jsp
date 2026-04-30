@@ -9125,7 +9125,6 @@ function hidePassword() {
     }
 }
 
-
 </script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/DBCreation.js"></script>
 <script
