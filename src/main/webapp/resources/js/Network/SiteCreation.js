@@ -42,17 +42,11 @@ function getSite(type,id){
     					}
     					siteFlag = 1;
     					//treeCollapseFolder("#Site_f_CurrentPhysicalLayer .parentFolder","",".folder");
-    					tree_prop_selection("#Site_f_CurrentPhysicalLayer .TreeSpan");
     					MouseHoveringSpans("#Site_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
-    					
-    					console.log("allSiteID "+allSiteID.length)
-    					console.log("markersSite "+markersSite.length)
-    					
-    					if(id != null & type === "addMaker"){
-							
-							
-						sitMarker(id);
-    				}
+    					    					
+    					if(id != null & type === "addMaker"){							
+							sitMarker(id);
+    					}
     				}
     				
     				$("#loading").remove();	

@@ -893,8 +893,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
     treeCollapseFolder(".Parentfolder", null, ".Parentfolder");
     treeCollapseFolder(".folder", "fast", ".folder");
 
-    tree_prop_selection(null);
-    MouseHoveringSpans(null);		//>>>>>>>>>>>> Hover event in tree elements
+    //tree_prop_selection(null);
+	tree_prop_selection();
+    //MouseHoveringSpans(null);		//>>>>>>>>>>>> Hover event in tree elements
+	MouseHoveringSpans();		//>>>>>>>>>>>> Hover event in tree elements
     boqCheckFilter();
 
 
@@ -11046,8 +11048,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                             });
 
 
-                            allProjectElementsCheckFilter(data.ProjectId);
-                            tree_prop_selection("#" + data.ProjectId + " .TreeSpan");
+                            allProjectElementsCheckFilter(data.ProjectId);                            
                             window["" + data.ProjectId] = "";
                             window["" + data.ProjectId] = [data.ProjectId, data.ProjectName];
                             if (typeof infowindow !== 'undefined') {
@@ -11226,21 +11227,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         });
 
                         CreateJunctionClickEvent(data.JunctionID, " ");
-                        MouseHoveringSpans("#" + data.JunctionID + " .TreeSpan");
-                        tree_prop_selection("#" + data.JunctionID + " .TreeSpan");
-
 
                         $("#JunctionModal").find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
                         map.setZoom(11);
 
-                        /*if(typeof infowindow!=='undefined'){
-                            infowindow.close();
-                        }else{
-                            markersJunction[data.JunctionID].setLabel({text: junctionName, className:"marker-position-junction",color:"orange"});
-                        }*/
-                        //if($("#manholesMapCheck_Labels").prop("checked")==true){
-                        //	markersManhole[data.ManholeId].setLabel({text: ManholeName, className:"marker-position-manhole",color:"red"});
-                        //}
                         panTo(junctionLat, junctionLong);
                         if (typeof infowindow !== 'undefined') {
                             infowindow.close();
@@ -11498,13 +11488,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         });
 
                         CreateJunctionClickEvent(data.JunctionID, "Manhole");
-                        MouseHoveringSpans("#" + manholeId + " .TreeSpan");
-                        tree_prop_selection("#" + manholeId + " .TreeSpan");
-
-                        //for junction
-                        MouseHoveringSpans("#" + data.JunctionID + " .TreeSpan");
-                        tree_prop_selection("#" + data.JunctionID + " .TreeSpan");
-
                     } // End if data != null 
                     $("#manholeJunctionModal").modal('hide');
                     data = null;
@@ -11519,12 +11502,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
         } // End of if statement that Junction name of the manhole is not empty
         else {
-            /*if(alertType=="alertEmptyStrand"){
-                alert("The Strand is empty! Please enter a corresponding Strand.");
-            }
-            else{*/
             alert("Junction Name is empty! Please enter a junction name. ");
-            //}
         }
     }); // End of saveManholeJunction 
     $("#saveHandholeJunction").click(function() {
@@ -11721,11 +11699,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                             menuName = singleHandholeJunction;
                             openContext(selectedHandIdContext, "", singleHandholeJunction, event);
                         });
-
                         CreateJunctionClickEvent(data.JunctionID, "Handhole");
 
-                        MouseHoveringSpans("#" + handholeID + " .TreeSpan");
-                        tree_prop_selection("#" + handholeID + " .TreeSpan");
                         treeCollapseFolder("#" + handholeID + " .folder", "fast", ".folder");
                     }
                     $("#handholeJunctionModal").modal('hide');
@@ -11738,21 +11713,11 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     alert("Error");
                 }
             });
-
         }
         else {
 
-            /*if(alertType=="alertEmptyStrand"){
-                alert("The Strand is empty! Please enter a corresponding Strand.");
-            }
-            else{*/
-
             alert("Junction Name is empty! Please enter a junction name. ");
-            //}
-
-
         }
-
     });
 
     $("#handholeJctAddRow").on('click', function() {
@@ -12178,7 +12143,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         $("#" + data.ManholeId + " > .TreeSpan").css("display", "inline");
                         $("#manholeModal").modal('hide');
 
-                        tree_prop_selection("#" + data.ManholeId + " .TreeSpan");
                         // bind context menu event to Manhole 
                         $("#" + data.ManholeId + " > .TreeSpan").bind("contextmenu", function() {
                             selectedManIdContext = $(this).parent().attr('id');
@@ -12217,7 +12181,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         $("#" + data.ManholeId + " > .TreeSpan").css("background-color", "#97b9cc");
                         IdSelectedTemp = data.ManholeId;
 
-                        MouseHoveringSpans("#" + data.ManholeId + " .Tree_Span");
                         $("#manholeModal").find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
                         map.setZoom(11);
 
@@ -12385,7 +12348,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
 
                         $("#" + data.handholeId + " > .TreeSpan").css("display", "inline");
-                        tree_prop_selection("#" + data.handholeId + " .TreeSpan");
                         // bind context menu event to Handhole
                         $("#" + data.handholeId + " > .TreeSpan").contextmenu(function() {
                             selectedHandIdContext = $(this).parent().attr('id');
@@ -12424,7 +12386,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         $("#" + data.handholeId + " > .TreeSpan").css("background-color", "#97b9cc");
                         IdSelectedTemp = data.handholeId;
 
-                        MouseHoveringSpans("#" + data.handholeId + " .TreeSpan");
                         $("#handholeModal").modal('hide');
 
                         $("#handholeModal").find("input,textarea,select").val('').end().find("input[type=checkbox], input[type=radio]").prop("checked", "").end();
@@ -12770,9 +12731,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 selectedDistBoardName = $(this).text();
                                 openContext(selectedDistBoardContext, selectedDistBoardName, singleDistBoard, event);
                             });
-                            MouseHoveringSpans("#" + data.distributionBoardId + " .TreeSpan");
 
-                            tree_prop_selection("#" + data.distributionBoardId + " .TreeSpan");
                             if (dbNetLevel == "backbone") {
                                 create_DB_Marker_Click(data.distributionBoardId, DistributionBoardName, DistributionBoardLong, DistributionBoardLat, markersDistBoard, markerClusterBackboneDistBoard, "", "");
 
@@ -14348,10 +14307,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                             selectedDistBoardName = $(this).text();
                             openContext(selectedDistBoardContext, selectedDistBoardName, singleDistBoard, event);
                         });
-
-                        MouseHoveringSpans("#" + data.distributionBoardDetails[i][0] + " .TreeSpan");
-
-                        tree_prop_selection("#" + data.distributionBoardDetails[i][0] + " .TreeSpan");
 
                         if (data.distributionBoardDetails[i][7] == "backbone") {
                             create_Marker_Click(data.distributionBoardDetails[i][0], data.distributionBoardDetails[i][3], data.distributionBoardDetails[i][1], data.distributionBoardDetails[i][2], markersDistBoard, markerClusterBackboneDistBoard, "", data.distributionBoardDetails[i][6]);
@@ -20092,6 +20047,7 @@ function hideContext() {
     }
 }
 
+/*
 function MouseHoveringSpans(selector) {
     if (selector == null) {
         selector = "li > .TreeSpan";
@@ -20105,7 +20061,22 @@ function MouseHoveringSpans(selector) {
     });
 
 }
+*/
 
+function MouseHoveringSpans() {
+
+    $(document)
+        .off('mouseover.treeHover mouseout.treeHover')
+        .on('mouseover.treeHover', '#network_tree .TreeSpan', function () {
+            $(this).addClass('backgroundTree');
+        })
+        .on('mouseout.treeHover', '#network_tree .TreeSpan', function () {
+            $(this).removeClass('backgroundTree');
+        });
+}
+
+
+/*
 function tree_prop_selection(selector) {
     if (selector == null) {
         selector = ".tree li > .TreeSpan";
@@ -20125,8 +20096,40 @@ function tree_prop_selection(selector) {
     $("#network_tree i").css('margin-right', '5px');
 }
 
+*/
+/*
+function tree_prop_selection() {
+    $(document)
+        .off('click.treeSelection')
+        .on('click.treeSelection', '.TreeSpan', function () {
 
+            $(".TreeSpan.selected-span")
+                .removeClass("selected-span")
+                .css("background", "");
 
+            $(this)
+                .addClass("selected-span")
+                .css("background-color", "#97b9cc");
+				console.log("CLICKED:", this);
+				console.log("CLASS:", $(this).attr("class"));
+        });
+}
+*/
+
+function tree_prop_selection() {
+    $("#network_tree")
+        .off('click.treeSelection')
+        .on('click.treeSelection', '.TreeSpan', function () {
+
+            $("#network_tree .TreeSpan.selected-span")
+                .removeClass("selected-span")
+                .css("background", "");
+
+            $(this)
+                .addClass("selected-span")
+                .css("background-color", "#97b9cc");
+        });
+}
 
 function tree_prop_generalPhysical() {
 

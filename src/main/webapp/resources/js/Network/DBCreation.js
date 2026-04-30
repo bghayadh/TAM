@@ -11,14 +11,14 @@ let singleControllerMenu = [
             $('#site_ControllerAutoComplete').val('1');
             siteControllerChanged("#site_ControllerAutoComplete");
 
-             
+
             $('#controllerModal').find('input:text').val('');
             actiondistControllerContext = "Insert";
 
             let select = document.getElementById("networkLayer");
             let targetText = networkLayer;
 
-            for (let i = 0; i < select.options.length; i++) {
+            for (let i = 0;i < select.options.length;i++) {
                 if (select.options[i].text === targetText) {
                     select.selectedIndex = i;
                     break;
@@ -41,170 +41,170 @@ let singleControllerMenu = [
                     "selectedControllerContext": selectedControllerId
                 },
                 dataType: "json",
-                success: function (data) {
-                console.log(data);
-                	$("#controllerModal").find("input").val('').end();
-					
-					$("#controllerHeader").text("Controller: "+data.ControllerDetails[0][0]);
-					
-					$("#controllerId").val(selectedControllerId);
-					if(data.ControllerDetails[0][9]!=null){
-						if(data.ControllerDetails[0][9].split("_")[0] == "CUST"){//for check box site or client
-							document.getElementById("customer_ControllerAutoComplete").checked = true;
-							$('#customer_ControllerAutoComplete').val('1');
-							document.getElementById("site_ControllerAutoComplete").checked = false;
-							$('#site_ControllerAutoComplete').val('0');
-							  document.getElementById("ContClientId").style.display = "block";
-						    	document.getElementById("ContClientName").style.display = "block";
-						    	document.getElementById("ContClientPhoneNb").style.display = "block";
-						    	document.getElementById("ContWarehouse").style.display = "none";
-						    	document.getElementById("ContSite").style.display = "none";
-						    	document.getElementById("ContSiteName").style.display = "none";
+                success: function(data) {
+                    console.log(data);
+                    $("#controllerModal").find("input").val('').end();
 
-							
-						}else{
-							document.getElementById("site_ControllerAutoComplete").checked = true;
-							$('#site_ControllerAutoComplete').val('1');
-							document.getElementById("customer_ControllerAutoComplete").checked = false;
-							$('#customer_ControllerAutoComplete').val('0');
-							  document.getElementById("ContClientId").style.display = "none";
-						    	document.getElementById("ContClientName").style.display = "none";
-						    	document.getElementById("ContClientPhoneNb").style.display = "none";
-						    	document.getElementById("ContWarehouse").style.display = "block";
-						    	document.getElementById("ContSite").style.display = "block";
-						    	document.getElementById("ContSiteName").style.display = "block";
+                    $("#controllerHeader").text("Controller: " + data.ControllerDetails[0][0]);
 
-						}
-					}
-					//
-					if(data.ControllerDetails[0][9] == null){
-						document.getElementById("site_ControllerAutoComplete").checked = true;
-						$('#site_ControllerAutoComplete').val('1');
-						document.getElementById("customer_ControllerAutoComplete").checked = false;
-						$('#customer_ControllerAutoComplete').val('0');
-						  document.getElementById("ContClientId").style.display = "none";
-					    	document.getElementById("ContClientName").style.display = "none";
-					    	document.getElementById("ContClientPhoneNb").style.display = "none";
-					    	document.getElementById("ContWarehouse").style.display = "block";
-					    	document.getElementById("ContSite").style.display = "block";
-					    	document.getElementById("ContSiteName").style.display = "block";
-					}
-
-					if(data.ControllerDetails[0][1]!=null){
-						$("#ControllerName").val(""+data.ControllerDetails[0][1]);
-					}
+                    $("#controllerId").val(selectedControllerId);
+                    if (data.ControllerDetails[0][9] != null) {
+                        if (data.ControllerDetails[0][9].split("_")[0] == "CUST") {//for check box site or client
+                            document.getElementById("customer_ControllerAutoComplete").checked = true;
+                            $('#customer_ControllerAutoComplete').val('1');
+                            document.getElementById("site_ControllerAutoComplete").checked = false;
+                            $('#site_ControllerAutoComplete').val('0');
+                            document.getElementById("ContClientId").style.display = "block";
+                            document.getElementById("ContClientName").style.display = "block";
+                            document.getElementById("ContClientPhoneNb").style.display = "block";
+                            document.getElementById("ContWarehouse").style.display = "none";
+                            document.getElementById("ContSite").style.display = "none";
+                            document.getElementById("ContSiteName").style.display = "none";
 
 
-					if(data.ControllerDetails[0][9]!=null){
-						if(data.ControllerDetails[0][9].split("_")[0] == "CUST"){
-							 $("#ControllerClient").val(""+data.ControllerDetails[0][9]);
-						}
-						else{
-							 $("#ControllerSite").val(""+data.ControllerDetails[0][9]);
-						}
-					}
-					if(data.ControllerDetails[0][10]!=null){ 
-						if(data.ControllerDetails[0][9] !=null){
-							if(data.ControllerDetails[0][9].split("_")[0] == "CUST"){
-								   $("#ControllerClientName").val(""+data.ControllerDetails[0][10]);
-								}
-								else{
-									$("#ControllerSiteName").val(""+data.ControllerDetails[0][10]);
-							}
-					}
-						else{
-								$("#ControllerSiteName").val(""+data.ControllerDetails[0][10]);
-						}
-					}
-					
-					
-					if(data.ControllerDetails[0][11]!=null ){
-						if(data.ControllerDetails[0][9] !=null){
-							if(data.ControllerDetails[0][9].split("_")[0] == "CUST"){
-								   $("#ControllerClientPhoneNb").val(""+data.ControllerDetails[0][11]);
-							}
-								else{
-									$("#ControllerWarehouse").val(""+data.ControllerDetails[0][11]);
-								}
-							
-						}
-						else{
-							$("#ControllerWarehouse").val(""+data.ControllerDetails[0][11]);
-						}
-					}
-					if(data.ControllerDetails[0][17]!=null){
-						$("#controllerCity").val(""+data.ControllerDetails[0][17]);
-					}
+                        } else {
+                            document.getElementById("site_ControllerAutoComplete").checked = true;
+                            $('#site_ControllerAutoComplete').val('1');
+                            document.getElementById("customer_ControllerAutoComplete").checked = false;
+                            $('#customer_ControllerAutoComplete').val('0');
+                            document.getElementById("ContClientId").style.display = "none";
+                            document.getElementById("ContClientName").style.display = "none";
+                            document.getElementById("ContClientPhoneNb").style.display = "none";
+                            document.getElementById("ContWarehouse").style.display = "block";
+                            document.getElementById("ContSite").style.display = "block";
+                            document.getElementById("ContSiteName").style.display = "block";
 
-					if(data.ControllerDetails[0][15]!=null){
-						$("#ControllerLong").val(""+data.ControllerDetails[0][15]);
-					}
-					if(data.ControllerDetails[0][16]!=null){
-						$("#ControllerLat").val(""+data.ControllerDetails[0][16]);
-					}
-					if(data.ControllerDetails[0][2]!=null){
-						$("#serialNumb").val(""+data.ControllerDetails[0][2]);
-					}
-					if(data.ControllerDetails[0][3]!=null){
-						$("#macAddress").val(""+data.ControllerDetails[0][3]);
-					}
-					if(data.ControllerDetails[0][18]!=null){
-						$("#controllerCreateDate").val(""+data.ControllerDetails[0][18]);
-					}
+                        }
+                    }
+                    //
+                    if (data.ControllerDetails[0][9] == null) {
+                        document.getElementById("site_ControllerAutoComplete").checked = true;
+                        $('#site_ControllerAutoComplete').val('1');
+                        document.getElementById("customer_ControllerAutoComplete").checked = false;
+                        $('#customer_ControllerAutoComplete').val('0');
+                        document.getElementById("ContClientId").style.display = "none";
+                        document.getElementById("ContClientName").style.display = "none";
+                        document.getElementById("ContClientPhoneNb").style.display = "none";
+                        document.getElementById("ContWarehouse").style.display = "block";
+                        document.getElementById("ContSite").style.display = "block";
+                        document.getElementById("ContSiteName").style.display = "block";
+                    }
 
-					if(data.ControllerDetails[0][20]!=null){
-						$("#controllerLastScanDate").val(""+data.ControllerDetails[0][20]);
-					}
+                    if (data.ControllerDetails[0][1] != null) {
+                        $("#ControllerName").val("" + data.ControllerDetails[0][1]);
+                    }
 
-					if(data.ControllerDetails[0][21]!=null){
-						$("#ControllerStatus").val(""+data.ControllerDetails[0][21]);
-					}
-					if(data.ControllerDetails[0][19]!=null){
-						$("#controllerLastModifiedDate").val(""+data.ControllerDetails[0][19]);
-					}
-					if(data.ControllerDetails[0][4]!=null){
-						$("#ipAddress").val(""+data.ControllerDetails[0][4]);
-					}
 
-					if(data.ControllerDetails[0][5]!=null){
-						$("#subnetMask").val(""+data.ControllerDetails[0][5]);
-					}
-					if(data.ControllerDetails[0][6]!=null){
-						$("#gateWay").val(""+data.ControllerDetails[0][6]);
-					}
+                    if (data.ControllerDetails[0][9] != null) {
+                        if (data.ControllerDetails[0][9].split("_")[0] == "CUST") {
+                            $("#ControllerClient").val("" + data.ControllerDetails[0][9]);
+                        }
+                        else {
+                            $("#ControllerSite").val("" + data.ControllerDetails[0][9]);
+                        }
+                    }
+                    if (data.ControllerDetails[0][10] != null) {
+                        if (data.ControllerDetails[0][9] != null) {
+                            if (data.ControllerDetails[0][9].split("_")[0] == "CUST") {
+                                $("#ControllerClientName").val("" + data.ControllerDetails[0][10]);
+                            }
+                            else {
+                                $("#ControllerSiteName").val("" + data.ControllerDetails[0][10]);
+                            }
+                        }
+                        else {
+                            $("#ControllerSiteName").val("" + data.ControllerDetails[0][10]);
+                        }
+                    }
 
-					if(data.ControllerDetails[0][7]!=null){
-						$("#userName").val(""+data.ControllerDetails[0][7]);
-					}
 
-					if(data.ControllerDetails[0][8]!=null){
-						$("#password").val(""+data.ControllerDetails[0][8]);
-					}
+                    if (data.ControllerDetails[0][11] != null) {
+                        if (data.ControllerDetails[0][9] != null) {
+                            if (data.ControllerDetails[0][9].split("_")[0] == "CUST") {
+                                $("#ControllerClientPhoneNb").val("" + data.ControllerDetails[0][11]);
+                            }
+                            else {
+                                $("#ControllerWarehouse").val("" + data.ControllerDetails[0][11]);
+                            }
 
-					if(data.ControllerDetails[0][12]!=null){
-						$("#numbOfPanels").val(""+data.ControllerDetails[0][12]);
-					}
+                        }
+                        else {
+                            $("#ControllerWarehouse").val("" + data.ControllerDetails[0][11]);
+                        }
+                    }
+                    if (data.ControllerDetails[0][17] != null) {
+                        $("#controllerCity").val("" + data.ControllerDetails[0][17]);
+                    }
 
-					if(data.ControllerDetails[0][13]!=null){
-						$("#numbOfPorts").val(""+data.ControllerDetails[0][13]);
-					}
-					if (data.ControllerDetails[0][14] != null) {
-					    if (data.ControllerDetails[0][14] == "backbone") {
-					        $("#networkLayer").prop("selectedIndex", 1);
-					    } 
-					    else if (data.ControllerDetails[0][14] == "metro") {
-					        $("#networkLayer").prop("selectedIndex", 2);
-					    } 
-					    else if (data.ControllerDetails[0][14] == "access") {
-					        $("#networkLayer").prop("selectedIndex", 3);
-					    }
-					}
-					  dbContNtLevel = document.getElementById("networkLayer").value;
-			          
-						
+                    if (data.ControllerDetails[0][15] != null) {
+                        $("#ControllerLong").val("" + data.ControllerDetails[0][15]);
+                    }
+                    if (data.ControllerDetails[0][16] != null) {
+                        $("#ControllerLat").val("" + data.ControllerDetails[0][16]);
+                    }
+                    if (data.ControllerDetails[0][2] != null) {
+                        $("#serialNumb").val("" + data.ControllerDetails[0][2]);
+                    }
+                    if (data.ControllerDetails[0][3] != null) {
+                        $("#macAddress").val("" + data.ControllerDetails[0][3]);
+                    }
+                    if (data.ControllerDetails[0][18] != null) {
+                        $("#controllerCreateDate").val("" + data.ControllerDetails[0][18]);
+                    }
+
+                    if (data.ControllerDetails[0][20] != null) {
+                        $("#controllerLastScanDate").val("" + data.ControllerDetails[0][20]);
+                    }
+
+                    if (data.ControllerDetails[0][21] != null) {
+                        $("#ControllerStatus").val("" + data.ControllerDetails[0][21]);
+                    }
+                    if (data.ControllerDetails[0][19] != null) {
+                        $("#controllerLastModifiedDate").val("" + data.ControllerDetails[0][19]);
+                    }
+                    if (data.ControllerDetails[0][4] != null) {
+                        $("#ipAddress").val("" + data.ControllerDetails[0][4]);
+                    }
+
+                    if (data.ControllerDetails[0][5] != null) {
+                        $("#subnetMask").val("" + data.ControllerDetails[0][5]);
+                    }
+                    if (data.ControllerDetails[0][6] != null) {
+                        $("#gateWay").val("" + data.ControllerDetails[0][6]);
+                    }
+
+                    if (data.ControllerDetails[0][7] != null) {
+                        $("#userName").val("" + data.ControllerDetails[0][7]);
+                    }
+
+                    if (data.ControllerDetails[0][8] != null) {
+                        $("#password").val("" + data.ControllerDetails[0][8]);
+                    }
+
+                    if (data.ControllerDetails[0][12] != null) {
+                        $("#numbOfPanels").val("" + data.ControllerDetails[0][12]);
+                    }
+
+                    if (data.ControllerDetails[0][13] != null) {
+                        $("#numbOfPorts").val("" + data.ControllerDetails[0][13]);
+                    }
+                    if (data.ControllerDetails[0][14] != null) {
+                        if (data.ControllerDetails[0][14] == "backbone") {
+                            $("#networkLayer").prop("selectedIndex", 1);
+                        }
+                        else if (data.ControllerDetails[0][14] == "metro") {
+                            $("#networkLayer").prop("selectedIndex", 2);
+                        }
+                        else if (data.ControllerDetails[0][14] == "access") {
+                            $("#networkLayer").prop("selectedIndex", 3);
+                        }
+                    }
+                    dbContNtLevel = document.getElementById("networkLayer").value;
+
+
                     // handle data here
                 },
-                error: function (result) {
+                error: function(result) {
                     alert("Error");
                 }
             });
@@ -263,8 +263,8 @@ if (addDB === '1') {
                 async: false,
                 data: { "selectedControllerId": selectedControllerId },
                 dataType: "json",
-                success: function (data) {
-                   
+                success: function(data) {
+
 
                     // Lat/Long
                     document.getElementById("DistributionBoardLat").value = data.ControllerLocation[0][1];
@@ -288,7 +288,7 @@ if (addDB === '1') {
                         document.getElementById("DistributionBoardSite").value = data.ControllerLocation[0][2];
                         document.getElementById("DistributionBoardSiteName").value = data.ControllerLocation[0][3];
                         document.getElementById("DistributionBoardWarehouse").value = data.ControllerLocation[0][4];
-                    } 
+                    }
                     // Client case
                     else {
                         customerDB.checked = true;
@@ -311,13 +311,13 @@ if (addDB === '1') {
 
                     // City
                     document.getElementById("boardCity").value = data.ControllerLocation[0][5];
-        			
+
                     document.getElementById("boardCity").value = data.ControllerLocation[0][5];
 
                     let select = document.getElementById("DBnetlevel");
-                    select.value = data.ControllerLocation[0][6];  
+                    select.value = data.ControllerLocation[0][6];
                 },
-                error: function () {
+                error: function() {
                     alert("Error while fetching ControllerLocation");
                 }
             });
@@ -354,8 +354,6 @@ function getDB(type, url, id, tr, showDBflag) {
                         }
                         $('#DistributionBoard_f_CurrentPhysicalLayer .TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
                         treeCollapseFolder("#DistributionBoard_f_CurrentPhysicalLayer .folder", "fast", ".folder");
-                        tree_prop_selection("#DistributionBoard_f_CurrentPhysicalLayer .TreeSpan");
-                        MouseHoveringSpans("#DistributionBoard_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
 
                         DBFlag = 1;
                     }
@@ -677,7 +675,7 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
 
         google.maps.event.addListener(Mapmarker, "click", function(e) {
             var IdSelected = this.ID;
-		
+
             dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
             if (!dbFileId) {
                 dbFileId = $("#" + IdSelected).parent().parent().parent().parent().attr('id').split("__")[1];
@@ -736,8 +734,10 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
     }
 
     $("#" + Id + " .TreeSpan").on('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
+        /*		
+                e.preventDefault();
+                e.stopPropagation();
+        */
         // Now pan to the marker
         panTo(markers[Id].getPosition().lat(), markers[Id].getPosition().lng());
         map.setZoom(11);
@@ -983,50 +983,50 @@ function createControllerMarkerClick(Id, name, long, lat, markers, markerCluster
         markers[Id] = Mapmarker; // store marker only (not yet added to cluster!)
 
         // --- CLICK EVENT on marker ---
-		google.maps.event.addListener(Mapmarker, "click", function(e) {
-		           var IdSelected = this.ID;
-				   markerType = "DistributionBoard";
-		           dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
-		           if (!dbFileId) {
-		               dbFileId = $("#" + IdSelected).parent().parent().parent().parent().attr('id').split("__")[1];
-		           }
-		           var childrenInitial = $("#initial_ul_" + dbFileId + "").find(' > ul > li');
-		           var children = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li');
-		           var networkLevelFolder = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ');
-		           var networkControllerFolders = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ul > li');
-		          
-		           if (IdSelected != IdSelectedTemp) {
-		               if (IdSelectedTemp != "") {
-		                   $("#" + IdSelectedTemp + " > .TreeSpan").removeClass("selected-span");
-		                   $("#" + IdSelectedTemp + " > .TreeSpan").css("background", "");
-		               }
-		               IdSelectedTemp = IdSelected;
-		           }
-		           childrenInitial.show('fast');
-		           if (!children.is(":visible")) {
-		               children.show();
-		           }
-		           networkLevelFolder.show();
-		           networkControllerFolders.show();
-		        
-		           $("#" + IdSelected + " > .TreeSpan").addClass("selected-span");
-		           $("#" + IdSelected + " > .TreeSpan").css("background-color", "#97b9cc");
-		           $("#initial_ul_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-		           $("#" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-		           $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-		           $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li  > ul > li > .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-		           $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li  > ul > li > ul > li>  .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+        google.maps.event.addListener(Mapmarker, "click", function(e) {
+            var IdSelected = this.ID;
+            markerType = "DistributionBoard";
+            dbFileId = $("#" + IdSelected).parent().parent().attr('id').split("__")[1];
+            if (!dbFileId) {
+                dbFileId = $("#" + IdSelected).parent().parent().parent().parent().attr('id').split("__")[1];
+            }
+            var childrenInitial = $("#initial_ul_" + dbFileId + "").find(' > ul > li');
+            var children = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li');
+            var networkLevelFolder = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ');
+            var networkControllerFolders = $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li ul > li');
 
-		           offset = $("#" + IdSelected).offset().top;
-		           projectOffset = $("#initial_ul_" + dbFileId).offset().top;
-		           offsetTotal = (offset - projectOffset);
-		           $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
-		          
-		       });
-		   }else {
+            if (IdSelected != IdSelectedTemp) {
+                if (IdSelectedTemp != "") {
+                    $("#" + IdSelectedTemp + " > .TreeSpan").removeClass("selected-span");
+                    $("#" + IdSelectedTemp + " > .TreeSpan").css("background", "");
+                }
+                IdSelectedTemp = IdSelected;
+            }
+            childrenInitial.show('fast');
+            if (!children.is(":visible")) {
+                children.show();
+            }
+            networkLevelFolder.show();
+            networkControllerFolders.show();
+
+            $("#" + IdSelected + " > .TreeSpan").addClass("selected-span");
+            $("#" + IdSelected + " > .TreeSpan").css("background-color", "#97b9cc");
+            $("#initial_ul_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#" + markerType + "_f_" + dbFileId + " > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li  > ul > li > .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+            $("#" + markerType + "_f_" + dbFileId + "").find(' > ul > li > ul > li  > ul > li > ul > li>  .folder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
+
+            offset = $("#" + IdSelected).offset().top;
+            projectOffset = $("#initial_ul_" + dbFileId).offset().top;
+            offsetTotal = (offset - projectOffset);
+            $("#network_tree").animate({ scrollTop: offsetTotal }, "slow");
+
+        });
+    } else {
         // Update existing marker position
         if (markers[Id].map !== map) {
             markers[Id].setMap(map);
@@ -1323,7 +1323,7 @@ function deleteModule() {
     }
 };
 
-$("#saveController").click(function () {
+$("#saveController").click(function() {
 
     // Validate longitude
     if (isNaN(document.getElementById("ControllerLong").value)) {
@@ -1337,40 +1337,40 @@ $("#saveController").click(function () {
         return false;
     }
 
-    else if(document.getElementById("controllerCity").value == "" ){
-		alert("City cannot be empty. ");
-		return false;
+    else if (document.getElementById("controllerCity").value == "") {
+        alert("City cannot be empty. ");
+        return false;
     }
     ////
-    else if(document.getElementById("ControllerSite").value == "" && document.getElementById('site_ControllerAutoComplete').checked){
-		alert("SiteID cannot be empty. ");
-		return false;
+    else if (document.getElementById("ControllerSite").value == "" && document.getElementById('site_ControllerAutoComplete').checked) {
+        alert("SiteID cannot be empty. ");
+        return false;
     }
-	else if(document.getElementById("ControllerSiteName").value == "" && document.getElementById('site_ControllerAutoComplete').checked){
-		alert("Site Name cannot be empty. ");
-		return false;
+    else if (document.getElementById("ControllerSiteName").value == "" && document.getElementById('site_ControllerAutoComplete').checked) {
+        alert("Site Name cannot be empty. ");
+        return false;
     }
-	else if(document.getElementById("ControllerWarehouse").value == "" && document.getElementById('site_ControllerAutoComplete').checked){
-		alert("WarehouseID cannot be empty. ");
-		return false;
+    else if (document.getElementById("ControllerWarehouse").value == "" && document.getElementById('site_ControllerAutoComplete').checked) {
+        alert("WarehouseID cannot be empty. ");
+        return false;
     }
-	
-	else if(document.getElementById("ControllerClient").value == "" && document.getElementById('customer_ControllerAutoComplete').checked){
-		alert("ClientID cannot be empty. ");
-		return false;
+
+    else if (document.getElementById("ControllerClient").value == "" && document.getElementById('customer_ControllerAutoComplete').checked) {
+        alert("ClientID cannot be empty. ");
+        return false;
     }
-	else if(document.getElementById("ControllerClientName").value == "" && document.getElementById('customer_ControllerAutoComplete').checked){
-		alert("Client Name cannot be empty. ");
-		return false;
+    else if (document.getElementById("ControllerClientName").value == "" && document.getElementById('customer_ControllerAutoComplete').checked) {
+        alert("Client Name cannot be empty. ");
+        return false;
     }
-	else if(document.getElementById("ControllerClientPhoneNb").value == "" && document.getElementById('customer_ControllerAutoComplete').checked){
-		alert("Phone Number cannot be empty. ");
-		return false;
+    else if (document.getElementById("ControllerClientPhoneNb").value == "" && document.getElementById('customer_ControllerAutoComplete').checked) {
+        alert("Phone Number cannot be empty. ");
+        return false;
     }
 
     // Check that both longitude and latitude are not empty
     else if (document.getElementById("ControllerLong").value !== "" &&
-             document.getElementById("ControllerLat").value !== "") {
+        document.getElementById("ControllerLat").value !== "") {
 
         let controllerId = document.getElementById("controllerId").value;
         let controllerName = document.getElementById("ControllerName").value;
@@ -1389,48 +1389,48 @@ $("#saveController").click(function () {
         let numberOfPanels = document.getElementById("numbOfPanels").value;
         let numberOfPorts = document.getElementById("numbOfPorts").value;
         let networkLayer = document.getElementById("networkLayer").value;
-    	let ControllerSite = document.getElementById("ControllerSite").value;
-		let ControllerSiteName = document.getElementById("ControllerSiteName").value;
-		let ControllerWarehouse = document.getElementById("ControllerWarehouse").value;
-		let ControllerClient = document.getElementById("ControllerClient").value;
-		let ControllerClientName = document.getElementById("ControllerClientName").value;
-		let ControllerClientPhoneNb = document.getElementById("ControllerClientPhoneNb").value;
-		let ControllerCity = document.getElementById("controllerCity").value;
-		let status = document.getElementById("ControllerStatus").value;
-		
-		var locationId =""; 
-		var locationName = ""; 
-		var location = "";
-		var isSiteChecked="";
-		var isClientChecked="";
-		
-		if (document.getElementById('site_ControllerAutoComplete').checked) {
-			isSiteChecked=true;
-		}
-		
-		if (document.getElementById('customer_ControllerAutoComplete').checked) {
-			isClientChecked=true;
-		}
-		if(isSiteChecked == true){
-			locationId = ControllerSite;
-			locationName = ControllerSiteName;
-			location = ControllerWarehouse;
-		}else{
-			locationId = ControllerClient;
-			locationName = ControllerClientName;
-			location = ControllerClientPhoneNb;
-		}
-		isSiteChecked = false;
-		isClientChecked = false;
-	
-    	var token =  $('input[name="csrfToken"]').attr('value');
-		
-		
+        let ControllerSite = document.getElementById("ControllerSite").value;
+        let ControllerSiteName = document.getElementById("ControllerSiteName").value;
+        let ControllerWarehouse = document.getElementById("ControllerWarehouse").value;
+        let ControllerClient = document.getElementById("ControllerClient").value;
+        let ControllerClientName = document.getElementById("ControllerClientName").value;
+        let ControllerClientPhoneNb = document.getElementById("ControllerClientPhoneNb").value;
+        let ControllerCity = document.getElementById("controllerCity").value;
+        let status = document.getElementById("ControllerStatus").value;
+
+        var locationId = "";
+        var locationName = "";
+        var location = "";
+        var isSiteChecked = "";
+        var isClientChecked = "";
+
+        if (document.getElementById('site_ControllerAutoComplete').checked) {
+            isSiteChecked = true;
+        }
+
+        if (document.getElementById('customer_ControllerAutoComplete').checked) {
+            isClientChecked = true;
+        }
+        if (isSiteChecked == true) {
+            locationId = ControllerSite;
+            locationName = ControllerSiteName;
+            location = ControllerWarehouse;
+        } else {
+            locationId = ControllerClient;
+            locationName = ControllerClientName;
+            location = ControllerClientPhoneNb;
+        }
+        isSiteChecked = false;
+        isClientChecked = false;
+
+        var token = $('input[name="csrfToken"]').attr('value');
+
+
         $.ajax({
             type: "POST",
-        	headers: {
-				'X-CSRFToken': token 
-			},
+            headers: {
+                'X-CSRFToken': token
+            },
             url: getContext() + '/saveController',
             data: {
                 "controllerId": controllerId,
@@ -1440,9 +1440,9 @@ $("#saveController").click(function () {
                 "ipAddress": ipAddress,
                 "subnetMask": subnetMask,
                 "gateWay": gateway,
-                "ControllerSite"  	:locationId,
-				"ControllerSiteName" :locationName,
-				"ControllerWarehouse" :location,
+                "ControllerSite": locationId,
+                "ControllerSiteName": locationName,
+                "ControllerWarehouse": location,
                 "userName": userName,
                 "password": password,
                 "numberOfPanels": numberOfPanels,
@@ -1452,362 +1452,358 @@ $("#saveController").click(function () {
                 "latitude": latitude,
                 "city": ControllerCity,
                 "createDate": createDate,
-                "lastScanDate" : lastScanDate,
-                "status" : status,
+                "lastScanDate": lastScanDate,
+                "status": status,
                 "actiondistControllerContext": actiondistControllerContext,
                 "updateModfUser": updateModfUser
             },
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
                 if (data != null) {
-           
+
                     if (data.actiondistControllerContext == "Insert") {
                         allCont.push(data.controllerId);
-                		window[""+data.controllerId]=[];
-                		window[""+data.controllerId]=[data.controllerId, data.lng, data.lat, data.controllerName, data.networkLayer]
-                	
-                    	if (networkLayer == "backbone") {
-            				
-            				
-                    		str="<ul><li id='"+data.controllerId+"'  class='bController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";								
-								$("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
-            					
-            				$(".bController > .TreeSpan").contextmenu(function (event) {
-            				         selectedControllerId = $(this).parent().attr('id');
-            						 console.log(selectedControllerId);
-            				         selectedControllerName = $(this).text();
-            				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-            				    });
-            			
-            			}	
-                    	else  	if (networkLayer == "metro") {
-            				
-            				
-                    		str="<ul><li id='"+data.controllerId+"'  class='mController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";								
-							$("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
-        						
-            				$(".mController > .TreeSpan").contextmenu(function (event) {
-            				         selectedControllerId = $(this).parent().attr('id');
-            						 console.log(selectedControllerId);
-            				         selectedControllerName = $(this).text();
-            				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-            				    });
-            			
-            			}
-                    	else  	if (networkLayer == "access") {
-                    		str="<ul><li id='"+data.controllerId+"'  class='aController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";								
-							$("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
-        					
-            				$(".aController > .TreeSpan").contextmenu(function (event) {
-            				         selectedControllerId = $(this).parent().attr('id');
-            						 console.log(selectedControllerId);
-            				         selectedControllerName = $(this).text();
-            				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-            				    });
-            				//treeCollapseFolder("#DistributionBoard_accessController__CurrentPhysicalLayer" ,".folder","fast",".folder");
-            			}
-                		createControllerMarkerClick(
-    							data.controllerId,
-    							data.controllerName,
-    						    data.lng, 
-    						    data.lat, 
-    						    markersController,
-    					        markerClusterController
-    							
-    						);
-    					controllerCheckFilter(
-    							data.controllerId,
-    							markerClusterController
-    							);
-    					markerClusterController.addMarker(markersController[data.controllerId]);
+                        window["" + data.controllerId] = [];
+                        window["" + data.controllerId] = [data.controllerId, data.lng, data.lat, data.controllerName, data.networkLayer]
+
+                        if (networkLayer == "backbone") {
+
+
+                            str = "<ul><li id='" + data.controllerId + "'  class='bController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+                            $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
+
+                            $(".bController > .TreeSpan").contextmenu(function(event) {
+                                selectedControllerId = $(this).parent().attr('id');
+                                console.log(selectedControllerId);
+                                selectedControllerName = $(this).text();
+                                openContext(selectedControllerId, selectedControllerName, singleController, event);
+                            });
+
+                        }
+                        else if (networkLayer == "metro") {
+
+
+                            str = "<ul><li id='" + data.controllerId + "'  class='mController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+                            $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
+
+                            $(".mController > .TreeSpan").contextmenu(function(event) {
+                                selectedControllerId = $(this).parent().attr('id');
+                                console.log(selectedControllerId);
+                                selectedControllerName = $(this).text();
+                                openContext(selectedControllerId, selectedControllerName, singleController, event);
+                            });
+
+                        }
+                        else if (networkLayer == "access") {
+                            str = "<ul><li id='" + data.controllerId + "'  class='aController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+                            $("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
+
+                            $(".aController > .TreeSpan").contextmenu(function(event) {
+                                selectedControllerId = $(this).parent().attr('id');
+                                console.log(selectedControllerId);
+                                selectedControllerName = $(this).text();
+                                openContext(selectedControllerId, selectedControllerName, singleController, event);
+                            });
+                            //treeCollapseFolder("#DistributionBoard_accessController__CurrentPhysicalLayer" ,".folder","fast",".folder");
+                        }
+                        createControllerMarkerClick(
+                            data.controllerId,
+                            data.controllerName,
+                            data.lng,
+                            data.lat,
+                            markersController,
+                            markerClusterController
+
+                        );
+                        controllerCheckFilter(
+                            data.controllerId,
+                            markerClusterController
+                        );
+                        markerClusterController.addMarker(markersController[data.controllerId]);
                     }
                     // Handle Update
                     else if (actiondistControllerContext == "Update") {
-                    	
-                    	window[""+data.controllerId]=[];
-                		window[""+data.controllerId]=[data.controllerId, data.lng, data.lat, data.controllerName, data.networkLayer]
-                		 var allLis = "";
 
-                	     // loop over your list and collect all <li> from each target
-                	   
-                	       	if (networkLayer != dbContNtLevel){
-                    	       	if(data.DBList){
-                	            var distribBoardList=data.DBList;
-    	                       	for(i=0;i<distribBoardList.length;i++){
-    	                    		
-    	                       		$("#"+distribBoardList[i][0]).remove();
-    	                    			
-    	                    			if (data.oldNetworkLevel == "backbone") {
-    	                    			    console.log("deleting backbone:", distribBoardList[i][0]);
+                        window["" + data.controllerId] = [];
+                        window["" + data.controllerId] = [data.controllerId, data.lng, data.lat, data.controllerName, data.networkLayer]
+                        var allLis = "";
 
-    	                    			    if (markersDistBoard[distribBoardList[i][0]]) {
-    	                    			        let marker = markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterBackboneDistBoard.removeMarker(marker);
-    	                    			        marker.setMap(null);
-    	                    			        delete markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterBackboneDistBoard.repaint(); // Ã°ÂÂÂ¥ force refresh
-    	                    			    }
-    	                    			}
-    	                    			else if (data.oldNetworkLevel == "metro") {
-    	                    			    console.log("deleting metro:", distribBoardList[i][0]);
+                        // loop over your list and collect all <li> from each target
 
-    	                    			    if (markersDistBoard[distribBoardList[i][0]]) {
-    	                    			        let marker = markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterMetroDistBoard.removeMarker(marker);
-    	                    			        marker.setMap(null);
-    	                    			        delete markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterMetroDistBoard.repaint(); // 
-    	                    			    }
-    	                    			}
-    	                    			else {
-    	                    			    console.log("deleting access:", distribBoardList[i][0]);
+                        if (networkLayer != dbContNtLevel) {
+                            if (data.DBList) {
+                                var distribBoardList = data.DBList;
+                                for (i = 0;i < distribBoardList.length;i++) {
 
-    	                    			    if (markersDistBoard[distribBoardList[i][0]]) {
-    	                    			        let marker = markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterAccessDistBoard.removeMarker(marker);
-    	                    			        marker.setMap(null);
-    	                    			        delete markersDistBoard[distribBoardList[i][0]];
-    	                    			        markerClusterAccessDistBoard.repaint(); // 
-    	                    			    }
-    	                    			}
-    	                    }
-                    	       	}
-                    		$("#"+data.controllerId).remove();
-                    		if(markersController[data.controllerId]){                    			
-                    			   markersController[data.controllerId].setMap(null);
-                    	            markerClusterController.removeMarker(markersController[data.controllerId]);
-                    	        	delete markersController[data.controllerId];
-                        		}
+                                    $("#" + distribBoardList[i][0]).remove();
 
-                        	if (data.controllerDBCount != "0"){
-                        		  
-      							
-	                           if (networkLayer == "backbone") {
-                    				
-                    				
-	                        	   str = "<ul><li id='" + data.controllerId + "' class='bController' style='display:none;width:100px;'>"
-	                        	    + "<input type='checkbox' class='ControllerPannel checkFilter filter' />"
-	                        	    + "<span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span>"
-	                        	    + "<span class='TreeSpan' style='color:black;width:355px'>"
-	                        	    + "<img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> "
-	                        	    + data.controllerName + "/" + data.controllerId
-	                        	    + "</span></li></ul>";
+                                    if (data.oldNetworkLevel == "backbone") {
+                                        console.log("deleting backbone:", distribBoardList[i][0]);
 
-	                        	$("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
-		
-                    				$(".bController > .TreeSpan").contextmenu(function (event) {
-                    				         selectedControllerId = $(this).parent().attr('id');
-                    						 console.log(selectedControllerId);
-                    				         selectedControllerName = $(this).text();
-                    				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-                    				    });
-                    				// Correct order: selector, type, clss
-                    				treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
-                    			}	
-                            	else  	if (networkLayer == "metro") {
-                    				
-                    				
-                            		str = "<ul><li id='" + data.controllerId + "' class='mController' style='display:none;width:100px;'>"
-                            	    + "<input type='checkbox' class='ControllerPannel checkFilter filter' />"
-                            	    + "<span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span>"
-                            	    + "<span class='TreeSpan' style='color:black;width:355px'>"
-                            	    + "<img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> "
-                            	    + data.controllerName + "/" + data.controllerId
-                            	    + "</span></li></ul>";
+                                        if (markersDistBoard[distribBoardList[i][0]]) {
+                                            let marker = markersDistBoard[distribBoardList[i][0]];
+                                            markerClusterBackboneDistBoard.removeMarker(marker);
+                                            marker.setMap(null);
+                                            delete markersDistBoard[distribBoardList[i][0]];
+                                            markerClusterBackboneDistBoard.repaint(); // Ã°ÂÂÂ¥ force refresh
+                                        }
+                                    }
+                                    else if (data.oldNetworkLevel == "metro") {
+                                        console.log("deleting metro:", distribBoardList[i][0]);
 
-                            	$("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
-		
-                    				$(".mController > .TreeSpan").contextmenu(function (event) {
-                    				         selectedControllerId = $(this).parent().attr('id');
-                    						 console.log(selectedControllerId);
-                    				         selectedControllerName = $(this).text();
-                    				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-                    				    });
-                    				// Correct order: selector, type, clss
-                    				treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
-		
-                    			}
-                            	else  	if (networkLayer == "access") {                    				
-                            		str = "<ul><li id='" + data.controllerId + "' class='aController' style='display:none;width:100px;'>"
-                            	    + "<input type='checkbox' class='ControllerPannel checkFilter filter' />"
-                            	    + "<span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span>"
-                            	    + "<span class='TreeSpan' style='color:black;width:355px'>"
-                            	    + "<img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> "
-                            	    + data.controllerName + "/" + data.controllerId
-                            	    + "</span></li></ul>";
+                                        if (markersDistBoard[distribBoardList[i][0]]) {
+                                            let marker = markersDistBoard[distribBoardList[i][0]];
+                                            markerClusterMetroDistBoard.removeMarker(marker);
+                                            marker.setMap(null);
+                                            delete markersDistBoard[distribBoardList[i][0]];
+                                            markerClusterMetroDistBoard.repaint(); // 
+                                        }
+                                    }
+                                    else {
+                                        console.log("deleting access:", distribBoardList[i][0]);
 
-                            	$("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
-	
-                    				$(".aController > .TreeSpan").contextmenu(function (event) {
-                    				         selectedControllerId = $(this).parent().attr('id');
-                    						 console.log(selectedControllerId);
+                                        if (markersDistBoard[distribBoardList[i][0]]) {
+                                            let marker = markersDistBoard[distribBoardList[i][0]];
+                                            markerClusterAccessDistBoard.removeMarker(marker);
+                                            marker.setMap(null);
+                                            delete markersDistBoard[distribBoardList[i][0]];
+                                            markerClusterAccessDistBoard.repaint(); // 
+                                        }
+                                    }
+                                }
+                            }
+                            $("#" + data.controllerId).remove();
+                            if (markersController[data.controllerId]) {
+                                markersController[data.controllerId].setMap(null);
+                                markerClusterController.removeMarker(markersController[data.controllerId]);
+                                delete markersController[data.controllerId];
+                            }
 
-                     				         selectedControllerName = $(this).text();
-                    				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-                    				    });
-                				   	    
-                    				// Correct order: selector, type, clss
-                    				treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
-		
-                    			}	
-                   			
-	                   
-	                           createControllerMarkerClick(
-	       							data.controllerId,
-	       							data.controllerName,
-	       						    data.lng, 
-	       						    data.lat, 
-	       						    markersController,
-	       					        markerClusterController
-	       							
-	       						);
-	       					controllerCheckFilter(
-	       							data.controllerId,
-	       							markerClusterController
-	       							); 
-	       				
-	       					markerClusterController.addMarker(markersController[data.controllerId]);
-	       			    
-	                    
-	                          
-	                       createDB(data.DBList);
+                            if (data.controllerDBCount != "0") {
 
 
-                            	}
+                                if (networkLayer == "backbone") {
 
-                        	else {
-                        		
-                            	if (networkLayer == "backbone") {
-                    				
-                    				
-                            		str="<ul><li id='"+data.controllerId+"'  class='bController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";								
-        								$("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
-                    					
-                    				$(".bController > .TreeSpan").contextmenu(function (event) {
-                    				         selectedControllerId = $(this).parent().attr('id');
-                    						 console.log(selectedControllerId);
-                    				         selectedControllerName = $(this).text();
-                    				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-                    				    });
-                    				}	
-                            	else  	if (networkLayer == "metro") {
-                    				
-                    				
-                            		str="<ul><li id='"+data.controllerId+"'  class='mController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";								
-        							$("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
-                						
-                    				$(".mController > .TreeSpan").contextmenu(function (event) {
-                    				         selectedControllerId = $(this).parent().attr('id');
-                    						 console.log(selectedControllerId);
-                    				         selectedControllerName = $(this).text();
-                    				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-                    				    });
-                    			}
-                            	else  	if (networkLayer == "access") {
-                    				
-                    				
-                            		str="<ul><li id='"+data.controllerId+"'  class='aController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";								
-        							$("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
-                					
-                    				$(".aController > .TreeSpan").contextmenu(function (event) {
-                    				         selectedControllerId = $(this).parent().attr('id');
-                    						 console.log(selectedControllerId);
-                    				         selectedControllerName = $(this).text();
-                    				        openContext(selectedControllerId, selectedControllerName, singleController, event);
-                    				    });
-                    					    
 
-                    			}
-                            	createControllerMarkerClick(
-            							data.controllerId,
-            							data.controllerName,
-            						    data.lng, 
-            						    data.lat, 
-            						    markersController,
-            					        markerClusterController
-            							
-            						);
-            					controllerCheckFilter(
-            							data.controllerId,
-            							markerClusterController
-            							); 
-            				
-            					markerClusterController.addMarker(markersController[data.controllerId]);
-                            	}
-                        	}
-                    	else {
-                        	if(data.controllerDBCount != "0"){
-                    		$("#"+data.controllerId+"> .TreeSpan").html("<img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li>");
-                        	}
+                                    str = "<ul><li id='" + data.controllerId + "' class='bController' style='display:none;width:100px;'>"
+                                        + "<input type='checkbox' class='ControllerPannel checkFilter filter' />"
+                                        + "<span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span>"
+                                        + "<span class='TreeSpan' style='color:black;width:355px'>"
+                                        + "<img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> "
+                                        + data.controllerName + "/" + data.controllerId
+                                        + "</span></li></ul>";
 
-                        	if(markersController[data.controllerId]){                    			
-                  			   markersController[data.controllerId].setMap(null);
-                  	            markerClusterController.removeMarker(markersController[data.controllerId]);
-                  	        	delete markersController[data.controllerId];
-                      		}
-                         	createControllerMarkerClick(
-         							data.controllerId,
-         							data.controllerName,
-         						    data.lng, 
-         						    data.lat, 
-         						    markersController,
-         					        markerClusterController
-         							
-         						);
-         					controllerCheckFilter(
-         							data.controllerId,
-         							markerClusterController
-         							); 
-         				
-         					markerClusterController.addMarker(markersController[data.controllerId]);
-                    	}                        	 
+                                    $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
+
+                                    $(".bController > .TreeSpan").contextmenu(function(event) {
+                                        selectedControllerId = $(this).parent().attr('id');
+                                        console.log(selectedControllerId);
+                                        selectedControllerName = $(this).text();
+                                        openContext(selectedControllerId, selectedControllerName, singleController, event);
+                                    });
+                                    // Correct order: selector, type, clss
+                                    treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
+                                }
+                                else if (networkLayer == "metro") {
+
+
+                                    str = "<ul><li id='" + data.controllerId + "' class='mController' style='display:none;width:100px;'>"
+                                        + "<input type='checkbox' class='ControllerPannel checkFilter filter' />"
+                                        + "<span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span>"
+                                        + "<span class='TreeSpan' style='color:black;width:355px'>"
+                                        + "<img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> "
+                                        + data.controllerName + "/" + data.controllerId
+                                        + "</span></li></ul>";
+
+                                    $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
+
+                                    $(".mController > .TreeSpan").contextmenu(function(event) {
+                                        selectedControllerId = $(this).parent().attr('id');
+                                        console.log(selectedControllerId);
+                                        selectedControllerName = $(this).text();
+                                        openContext(selectedControllerId, selectedControllerName, singleController, event);
+                                    });
+                                    // Correct order: selector, type, clss
+                                    treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
+
+                                }
+                                else if (networkLayer == "access") {
+                                    str = "<ul><li id='" + data.controllerId + "' class='aController' style='display:none;width:100px;'>"
+                                        + "<input type='checkbox' class='ControllerPannel checkFilter filter' />"
+                                        + "<span class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span>"
+                                        + "<span class='TreeSpan' style='color:black;width:355px'>"
+                                        + "<img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> "
+                                        + data.controllerName + "/" + data.controllerId
+                                        + "</span></li></ul>";
+
+                                    $("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
+
+                                    $(".aController > .TreeSpan").contextmenu(function(event) {
+                                        selectedControllerId = $(this).parent().attr('id');
+                                        console.log(selectedControllerId);
+
+                                        selectedControllerName = $(this).text();
+                                        openContext(selectedControllerId, selectedControllerName, singleController, event);
+                                    });
+
+                                    // Correct order: selector, type, clss
+                                    treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
+
+                                }
+
+
+                                createControllerMarkerClick(
+                                    data.controllerId,
+                                    data.controllerName,
+                                    data.lng,
+                                    data.lat,
+                                    markersController,
+                                    markerClusterController
+
+                                );
+                                controllerCheckFilter(
+                                    data.controllerId,
+                                    markerClusterController
+                                );
+
+                                markerClusterController.addMarker(markersController[data.controllerId]);
+
+
+
+                                createDB(data.DBList);
+
+
+                            }
+
+                            else {
+
+                                if (networkLayer == "backbone") {
+
+
+                                    str = "<ul><li id='" + data.controllerId + "'  class='bController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+                                    $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
+
+                                    $(".bController > .TreeSpan").contextmenu(function(event) {
+                                        selectedControllerId = $(this).parent().attr('id');
+                                        console.log(selectedControllerId);
+                                        selectedControllerName = $(this).text();
+                                        openContext(selectedControllerId, selectedControllerName, singleController, event);
+                                    });
+                                }
+                                else if (networkLayer == "metro") {
+
+
+                                    str = "<ul><li id='" + data.controllerId + "'  class='mController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+                                    $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
+
+                                    $(".mController > .TreeSpan").contextmenu(function(event) {
+                                        selectedControllerId = $(this).parent().attr('id');
+                                        console.log(selectedControllerId);
+                                        selectedControllerName = $(this).text();
+                                        openContext(selectedControllerId, selectedControllerName, singleController, event);
+                                    });
+                                }
+                                else if (networkLayer == "access") {
+
+
+                                    str = "<ul><li id='" + data.controllerId + "'  class='aController' style='width:100px;'><input type='checkbox' class='DistBoard checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+                                    $("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
+
+                                    $(".aController > .TreeSpan").contextmenu(function(event) {
+                                        selectedControllerId = $(this).parent().attr('id');
+                                        console.log(selectedControllerId);
+                                        selectedControllerName = $(this).text();
+                                        openContext(selectedControllerId, selectedControllerName, singleController, event);
+                                    });
+
+
+                                }
+                                createControllerMarkerClick(
+                                    data.controllerId,
+                                    data.controllerName,
+                                    data.lng,
+                                    data.lat,
+                                    markersController,
+                                    markerClusterController
+
+                                );
+                                controllerCheckFilter(
+                                    data.controllerId,
+                                    markerClusterController
+                                );
+
+                                markerClusterController.addMarker(markersController[data.controllerId]);
+                            }
+                        }
+                        else {
+                            if (data.controllerDBCount != "0") {
+                                $("#" + data.controllerId + "> .TreeSpan").html("<img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li>");
+                            }
+
+                            if (markersController[data.controllerId]) {
+                                markersController[data.controllerId].setMap(null);
+                                markerClusterController.removeMarker(markersController[data.controllerId]);
+                                delete markersController[data.controllerId];
+                            }
+                            createControllerMarkerClick(
+                                data.controllerId,
+                                data.controllerName,
+                                data.lng,
+                                data.lat,
+                                markersController,
+                                markerClusterController
+
+                            );
+                            controllerCheckFilter(
+                                data.controllerId,
+                                markerClusterController
+                            );
+
+                            markerClusterController.addMarker(markersController[data.controllerId]);
+                        }
                     }
-                    var childrenInitial=$("#initial_ul_CurrentPhysicalLayer").find(' > ul > li');
-					var children = $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li');
-					var networkLevelFolder =  $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li');
-					var controllerFolder =  $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li >ul >li');
-				    var singleCont =$("#"+data.controllerId).find(' > ul > li'); 
-				 // FIX: don't overwrite with "yourControllerId"
-				    var controllerId = data.controllerId;
+                    var childrenInitial = $("#initial_ul_CurrentPhysicalLayer").find(' > ul > li');
+                    var children = $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li');
+                    var networkLevelFolder = $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li');
+                    var controllerFolder = $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li >ul >li >ul >li');
+                    var singleCont = $("#" + data.controllerId).find(' > ul > li');
+                    // FIX: don't overwrite with "yourControllerId"
+                    var controllerId = data.controllerId;
 
-				    // Select either <i> or <svg>
-				    var $folderIcon = $("#" + controllerId + " .folder > i, #" + controllerId + " .folder > svg");
+                    // Select either <i> or <svg>
+                    var $folderIcon = $("#" + controllerId + " .folder > i, #" + controllerId + " .folder > svg");
 
-				    if ($folderIcon.length > 0) {
-				          $folderIcon.removeClass("fa-folder").addClass("fa-folder-open");
-				    } else {
-				        console.warn("Folder icon NOT found for controllerId:", controllerId);
-				    }
-					 $("#"+data.controllerId).children(':checkbox').prop( "checked", true );
-			
+                    if ($folderIcon.length > 0) {
+                        $folderIcon.removeClass("fa-folder").addClass("fa-folder-open");
+                    } else {
+                        console.warn("Folder icon NOT found for controllerId:", controllerId);
+                    }
+                    $("#" + data.controllerId).children(':checkbox').prop("checked", true);
+
                     $("#initial_ul_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-					$("#initial_ul_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
-					$("#DistributionBoard_f_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+                    $("#initial_ul_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+                    $("#DistributionBoard_f_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
 
-					$("#DistributionBoard_f_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-					$("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-											
-					children.show('fast');
-					childrenInitial.show('fast');
-					networkLevelFolder.show('fast');
-					controllerFolder.show('fast');
-					singleCont.show('fast');
+                    $("#DistributionBoard_f_CurrentPhysicalLayer > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
+                    $("#DistributionBoard_f_CurrentPhysicalLayer").find(' > ul > li > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
 
-										// scroll to the created db
-										offset=$("#"+data.controllerId).offset().top;																
-										offset2=$("#initial_ul_CurrentPhysicalLayer").offset().top;
-										offsettot=(offset-offset2);
-										
-										$("#network_tree").animate({ scrollTop: offsettot}, "slow");
-				
+                    children.show('fast');
+                    childrenInitial.show('fast');
+                    networkLevelFolder.show('fast');
+                    controllerFolder.show('fast');
+                    singleCont.show('fast');
 
-                    MouseHoveringSpans("#" + data.controllerId + " .TreeSpan");
-                    tree_prop_selection("#" + data.controllerId + " .TreeSpan");
+                    // scroll to the created db
+                    offset = $("#" + data.controllerId).offset().top;
+                    offset2 = $("#initial_ul_CurrentPhysicalLayer").offset().top;
+                    offsettot = (offset - offset2);
+
+                    $("#network_tree").animate({ scrollTop: offsettot }, "slow");
 
                     map.setZoom(11);
                     panTo(data.lat, data.lng);
-                   
-            				
+
+
                     $("#" + data.controllerId + " > .TreeSpan").css("display", "inline");
 
                     // Selection highlight
@@ -1819,38 +1815,38 @@ $("#saveController").click(function () {
                     $("#" + data.controllerId + " > .TreeSpan").css("background-color", "#97b9cc");
                     IdSelectedTemp = data.controllerId;
 
-                 //   expandTreeFolders();
+                    //   expandTreeFolders();
                     scrollToController(data.controllerId);
-             
-                    $("#controllerModal").modal('hide'); 
-                    $("#"+data.controllerId).contextmenu(function(){
-                    	
-            			menuName=singleController;
-            			selectedControllerId=$(this).attr('id');
-            			selectedContName=$(this).text();
-            			
-            			openContext(selectedControllerId,selectedContName,singleController,event);
-            		});		
+
+                    $("#controllerModal").modal('hide');
+                    $("#" + data.controllerId).contextmenu(function() {
+
+                        menuName = singleController;
+                        selectedControllerId = $(this).attr('id');
+                        selectedContName = $(this).text();
+
+                        openContext(selectedControllerId, selectedContName, singleController, event);
+                    });
                 }
             },
-            error: function () {
+            error: function() {
                 alert("Error");
             }
         });
 
-    
+
 
         $("#controllerModel").modal('hide');
         $("#controllerModel").find("input,textarea,select").val('')
             .end().find("input[type=checkbox], input[type=radio]").prop("checked", "");
-        
-    /*    if ($("#dBMapCheck_Labels").prop("checked") == true) {
-            markersDistBoard[data.distributionBoardId].setLabel({
-                text: DistributionBoardName,
-                className: "marker-position-dB",
-                color: "#5665F9"
-            });
-        } */
+
+        /*    if ($("#dBMapCheck_Labels").prop("checked") == true) {
+                markersDistBoard[data.distributionBoardId].setLabel({
+                    text: DistributionBoardName,
+                    className: "marker-position-dB",
+                    color: "#5665F9"
+                });
+            } */
 
     }
     // If longitude or latitude are missing
@@ -1860,53 +1856,53 @@ $("#saveController").click(function () {
 });
 
 // === Helper functions (you can define them above or below) ===
-function appendControllerToTree(data,strdb) {
-	console.log(data.ControllerList);
+function appendControllerToTree(data, strdb) {
+    console.log(data.ControllerList);
     let str = "";
     if (data.networkLayer == "backbone") {
 
-        
-    	str="<ul><li id='"+data.controllerId+"' class='bController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";
-		$("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
-	      
+
+        str = "<ul><li id='" + data.controllerId + "' class='bController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+        $("#DistributionBoard_backboneController__CurrentPhysicalLayer").append(str);
+
     }
     else if (data.networkLayer == "metro") {
-    	str="<ul><li id='"+data.controllerId+"' class='mController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";
-		        $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
+        str = "<ul><li id='" + data.controllerId + "' class='mController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+        $("#DistributionBoard_metroController__CurrentPhysicalLayer").append(str);
     }
     else if (data.networkLayer == "access") {
-    	str="<ul><li id='"+data.controllerId+"' class='aController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='"+getContext()+"/resources/NetworkImages/controller,.png'> "+data.controllerName+"/"+data.controllerId+" </span></li></ul>";
-	    $("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
-        
+        str = "<ul><li id='" + data.controllerId + "' class='aController'  style='display:none;width:100px;'><input type='checkbox' class='ControllerPannel checkFilter' class='filter'  ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/controller,.png'> " + data.controllerName + "/" + data.controllerId + " </span></li></ul>";
+        $("#DistributionBoard_accessController__CurrentPhysicalLayer").append(str);
+
     }
 }
 
 function handleUpdateController(data) {
-	console.log("okay");
-	  console.log(dbContNtLevel);
-      console.log(data.controllerList);
-   
+    console.log("okay");
+    console.log(dbContNtLevel);
+    console.log(data.controllerList);
+
     if (data.networkLayer != dbContNtLevel) {
-      
-      
-  
+
+
+
         var allLis = "";
 
-     // loop over your list and collect all <li> from each target
-   
-         let containerId = "#" + data.controllerId;
-         
-         // find the <li> children inside that container
-         $(containerId).find("li.DistributionBoard").each(function() {
-             allLis += this.outerHTML;
-         });
-     
-         console.log(allLis);
-         console.log("woww");
-     // wrap everything inside one <ul>
-     let str = "<ul>" + allLis + "</ul>";
-     $("#" + data.controllerId).remove();
-     createController(data.ControllerList,data.DBList);
+        // loop over your list and collect all <li> from each target
+
+        let containerId = "#" + data.controllerId;
+
+        // find the <li> children inside that container
+        $(containerId).find("li.DistributionBoard").each(function() {
+            allLis += this.outerHTML;
+        });
+
+        console.log(allLis);
+        console.log("woww");
+        // wrap everything inside one <ul>
+        let str = "<ul>" + allLis + "</ul>";
+        $("#" + data.controllerId).remove();
+        createController(data.ControllerList, data.DBList);
     } else {
         let imgPath = "";
         if (data.networkLayer == "backbone") {
@@ -1953,7 +1949,7 @@ function scrollToController(id) {
     let offset2 = $("#initial_ul_CurrentPhysicalLayer").offset().top;
     let offsettot = (offset - offset2);
     $("#network_tree").animate({ scrollTop: offsettot }, "slow");
-}	  
+}
 //zeinaaa
 function siteControllerChanged(checkbox) {
     console.log("Site Controller changed Ã¢ÂÂ checked =", checkbox.checked);
@@ -1963,14 +1959,14 @@ function siteControllerChanged(checkbox) {
         $(checkbox).val('1');
         isClientChecked = false;
         isSiteChecked = true;
-    	document.getElementById("ContClientId").style.display = "none";
-    	document.getElementById("ContClientName").style.display = "none";
-    	document.getElementById("ContClientPhoneNb").style.display = "none";
-    	document.getElementById("ContWarehouse").style.display = "block";
-    	document.getElementById("ContSite").style.display = "block";
-    	document.getElementById("ContSiteName").style.display = "block";
+        document.getElementById("ContClientId").style.display = "none";
+        document.getElementById("ContClientName").style.display = "none";
+        document.getElementById("ContClientPhoneNb").style.display = "none";
+        document.getElementById("ContWarehouse").style.display = "block";
+        document.getElementById("ContSite").style.display = "block";
+        document.getElementById("ContSiteName").style.display = "block";
         document.getElementById("controllerCity").value = ""; // Make sure ID matches HTML
-      
+
     }
     else {
         $(checkbox).val('0');
@@ -1979,14 +1975,14 @@ function siteControllerChanged(checkbox) {
         document.getElementById("customer_ControllerAutoComplete").checked = true;
         $('#customer_ControllerAutoComplete').val('1');
         document.getElementById("ContClientId").style.display = "block";
-    	document.getElementById("ContClientName").style.display = "block";
-    	document.getElementById("ContClientPhoneNb").style.display = "block";
-    	document.getElementById("ContWarehouse").style.display = "none";
-    	document.getElementById("ContSite").style.display = "none";
-    	document.getElementById("ContSiteName").style.display = "none";
+        document.getElementById("ContClientName").style.display = "block";
+        document.getElementById("ContClientPhoneNb").style.display = "block";
+        document.getElementById("ContWarehouse").style.display = "none";
+        document.getElementById("ContSite").style.display = "none";
+        document.getElementById("ContSiteName").style.display = "none";
         document.getElementById("controllerCity").value = ""; // Make sure ID matches HTML
-   }
-  
+    }
+
 }
 
 function customerControllerChanged(checkbox) {
@@ -1998,14 +1994,14 @@ function customerControllerChanged(checkbox) {
         $(checkbox).val('1');
         isClientChecked = true;
         isSiteChecked = false;
-    	document.getElementById("ContClientId").style.display = "block";
-    	document.getElementById("ContClientName").style.display = "block";
-    	document.getElementById("ContClientPhoneNb").style.display = "block";
-    	document.getElementById("ContWarehouse").style.display = "none";
-    	document.getElementById("ContSite").style.display = "none";
-    	document.getElementById("ContSiteName").style.display = "none";
+        document.getElementById("ContClientId").style.display = "block";
+        document.getElementById("ContClientName").style.display = "block";
+        document.getElementById("ContClientPhoneNb").style.display = "block";
+        document.getElementById("ContWarehouse").style.display = "none";
+        document.getElementById("ContSite").style.display = "none";
+        document.getElementById("ContSiteName").style.display = "none";
         document.getElementById("controllerCity").value = ""; // Make sure ID matches HTML
-      
+
     } else {
         $(checkbox).val('0');
         isClientChecked = false;
@@ -2013,363 +2009,363 @@ function customerControllerChanged(checkbox) {
         document.getElementById("site_ControllerAutoComplete").checked = true;
         $('#site_ControllerAutoComplete').val('1');
         document.getElementById("ContClientId").style.display = "none";
-    	document.getElementById("ContClientName").style.display = "none";
-    	document.getElementById("ContClientPhoneNb").style.display = "none";
-    	document.getElementById("ContWarehouse").style.display = "block";
-    	document.getElementById("ContSite").style.display = "block";
-    	document.getElementById("ContSiteName").style.display = "block";
+        document.getElementById("ContClientName").style.display = "none";
+        document.getElementById("ContClientPhoneNb").style.display = "none";
+        document.getElementById("ContWarehouse").style.display = "block";
+        document.getElementById("ContSite").style.display = "block";
+        document.getElementById("ContSiteName").style.display = "block";
         document.getElementById("controllerCity").value = ""; // Make sure ID matches HTML
-   }
+    }
 }
 
- 
 
 
-	   $("#ControllerSite").autocomplete({
-	   	 source: debounce(function(request, response) {
-	   		var searchkey = $("#ControllerSite").val();
-	   		console.log("siteid");
-	   		  $.ajax({
-	   	             type: "GET",
-	   	             contentType: "application/json; charset=utf-8",
-	   	             url:  getContext()+'/GetAllWarehouse',
-	   	             data:  {					
-	   					 "WareName":searchkey,
-	   					 "warehouseName" : searchkey,
-	   					 "SiteId":searchkey,
-	   				},
-	   	             dataType: "json",
-	   	             success: function (data) {
-	   	                 if (data != null) {
-	   	                    response(data.globalList);             
-	   	                 }
-	   	             },
-	   	             error: function(result) {
-	   	                 alert("Error");
-	   	             }
-	   	         });		   
-	   		 },1000), 
-	   		 minLength:0, maxShowItems: 40, scroll:true,
-	   			select: function(event, ui) {
-	   								
-	   			this.value = (ui.item ? ui.item[2] : '');
-	   			$("#ControllerSiteName").val(ui.item[1]);
-	   			$("#ControllerWarehouse").val(ui.item[0]);
-	   			if (document.getElementById('customControllerCoordinates').checked) {
-	   				console.log("customControllerCoordinates");
-	   				if($("#ControllerLong").val() =="" && $("#ControllerLat").val() =="" ) {
-	   					$("#ControllerLong").val(ui.item[3]);
-	   					$("#ControllerLat").val(ui.item[4]);
-	   				}
-	   			}else{
-	   				$("#ControllerLong").val(ui.item[3]);
-	   				$("#ControllerLat").val(ui.item[4]);
-	   			}
-	   			
-	   			$("#controllerCity").val(ui.item[5]);
-	   			//$("#DistributionBoardName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
-	   			if(($("#ControllerName").val()) ==""){
-	   				$("#ControllerName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
-	   			}
-	   			return false;
-	   			}
-	   	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	   			 return $("<li class='each'>")
-	   		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	   		        item[0] + "</span><br><span class='desc'>" +
-	   		         item[1] +', '+ item[2] + "</span></div>")
-	   		     .appendTo(ul);
-	   	};
 
-	   $("#ControllerSite").focus(function(){
-	   	if (this.value == ""){
-	   		$(this).autocomplete("search");
-	   	}						
-	   });	
+$("#ControllerSite").autocomplete({
+    source: debounce(function(request, response) {
+        var searchkey = $("#ControllerSite").val();
+        console.log("siteid");
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllWarehouse',
+            data: {
+                "WareName": searchkey,
+                "warehouseName": searchkey,
+                "SiteId": searchkey,
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.globalList);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    }, 1000),
+    minLength: 0, maxShowItems: 40, scroll: true,
+    select: function(event, ui) {
 
-	   $("#ControllerSiteName").autocomplete({
-	   	 source: debounce(function(request, response) {
-	   		var searchkey = $("#ControllerSiteName").val();
-	   		console.log("name");
-	   		  $.ajax({
-	   	             type: "GET",
-	   	             contentType: "application/json; charset=utf-8",
-	   	             url:  getContext()+'/GetAllWarehouse',
-	   	             data: {					
-	   					 "WareName":searchkey,
-	   					 "warehouseName" : searchkey,
-	   					 "SiteId":searchkey,
-	   				},
-	   	             dataType: "json",
-	   	             success: function (data) {
-	   	                 if (data != null) {
-	   	                    response(data.globalList);             
-	   	                 }
-	   	             },
-	   	             error: function(result) {
-	   	                 alert("Error");
-	   	             }
-	   	         });	 		 
-	   		},1000), 
-	   		 minLength:0, maxShowItems: 40, scroll:true,
-	   			select: function(event, ui) {
-	   										
-	   			this.value = (ui.item ? ui.item[1] : '');
-	   			$("#ControllerSite").val(ui.item[2]);
-	   			$("#ControllerWarehouse").val(ui.item[0]);
-	   			$("#ControllerLong").val(ui.item[3]);
-	   			$("#ControllerLat").val(ui.item[4]);
-	   			$("#controllerCity").val(ui.item[5]);
-	   			//$("#DistributionBoardName").val(ui.item[1]+"_DB");
-	   			if(($("#ControllerName").val()) ==""){
-	   				$("#ControllerName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
-	   			}
+        this.value = (ui.item ? ui.item[2] : '');
+        $("#ControllerSiteName").val(ui.item[1]);
+        $("#ControllerWarehouse").val(ui.item[0]);
+        if (document.getElementById('customControllerCoordinates').checked) {
+            console.log("customControllerCoordinates");
+            if ($("#ControllerLong").val() == "" && $("#ControllerLat").val() == "") {
+                $("#ControllerLong").val(ui.item[3]);
+                $("#ControllerLat").val(ui.item[4]);
+            }
+        } else {
+            $("#ControllerLong").val(ui.item[3]);
+            $("#ControllerLat").val(ui.item[4]);
+        }
 
-	   			return false;
-	   			}
-	   	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	   			 return $("<li class='each'>")
-	   		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	   		        item[0] + "</span><br><span class='desc'>" +
-	   		         item[1] +', '+ item[2] + "</span></div>")
-	   		     .appendTo(ul);
-	   	};
+        $("#controllerCity").val(ui.item[5]);
+        //$("#DistributionBoardName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
+        if (($("#ControllerName").val()) == "") {
+            $("#ControllerName").val(ui.item[1] + "_DB_" + new Date().getFullYear());
+        }
+        return false;
+    }
+}).data("ui-autocomplete")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+            item[0] + "</span><br><span class='desc'>" +
+            item[1] + ', ' + item[2] + "</span></div>")
+        .appendTo(ul);
+};
 
-	   $("#ControllerSiteName").focus(function(){
-	   	if (this.value == ""){
-	   		$(this).autocomplete("search");
-	   	}						
-	   });	
+$("#ControllerSite").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
 
-	   $("#ControllerWarehouse").autocomplete({
-	   	 source:debounce( function(request, response) {
+$("#ControllerSiteName").autocomplete({
+    source: debounce(function(request, response) {
+        var searchkey = $("#ControllerSiteName").val();
+        console.log("name");
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllWarehouse',
+            data: {
+                "WareName": searchkey,
+                "warehouseName": searchkey,
+                "SiteId": searchkey,
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.globalList);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    }, 1000),
+    minLength: 0, maxShowItems: 40, scroll: true,
+    select: function(event, ui) {
 
-	   		var searchkey = $("#ControllerWarehouse").val();
-	   		  $.ajax({
-	   	             type: "GET",
-	   	             contentType: "application/json; charset=utf-8",
-	   	             url:  getContext()+'/GetAllWarehouse',
-	   	             data: {
-	   	            	 "WareName":searchkey,
-	   					 "warehouseName" : searchkey,
-	   					 "SiteId":searchkey,
-	   				 },
-	   	             dataType: "json",
-	   	             success: function (data) {
-	   	                 if (data != null) {
-	   	                    response(data.globalList);             
-	   	                 }
-	   	             },
-	   	             error: function(result) {
-	   	                 alert("Error");
-	   	             }
-	   	         });
-	   		 },1000), 
-	   		 minLength:0, maxShowItems: 40, scroll:true,
-	   			select: function(event, ui) {
-	   										
-	   			this.value = (ui.item ? ui.item[0] : '');
-	   			$("#ControllerSite").val(ui.item[2]);
-	   			$("#ControllerSiteName").val(ui.item[1]);
-	   			$("#ControllerLong").val(ui.item[3]);
-	   			$("#ControllerLat").val(ui.item[4]);
-	   			$("#controllerCity").val(ui.item[5]);
-	   			//$("#DistributionBoardName").val(ui.item[1]+"_DB");
-	   			if(($("#ControllerName").val()) ==""){
-	   				$("#ControllerName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
-	   			}
+        this.value = (ui.item ? ui.item[1] : '');
+        $("#ControllerSite").val(ui.item[2]);
+        $("#ControllerWarehouse").val(ui.item[0]);
+        $("#ControllerLong").val(ui.item[3]);
+        $("#ControllerLat").val(ui.item[4]);
+        $("#controllerCity").val(ui.item[5]);
+        //$("#DistributionBoardName").val(ui.item[1]+"_DB");
+        if (($("#ControllerName").val()) == "") {
+            $("#ControllerName").val(ui.item[1] + "_DB_" + new Date().getFullYear());
+        }
 
-	   			return false;
-	   			}
-	   	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	   			 return $("<li class='each'>")
-	   		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	   		        item[0] + "</span><br><span class='desc'>" +
-	   		         item[1] +', '+ item[2] + "</span></div>")
-	   		     .appendTo(ul);
-	   	};
+        return false;
+    }
+}).data("ui-autocomplete")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+            item[0] + "</span><br><span class='desc'>" +
+            item[1] + ', ' + item[2] + "</span></div>")
+        .appendTo(ul);
+};
 
-	   $("#ControllerWarehouse").focus(function(){
-	   	if (this.value == ""){
-	   		$(this).autocomplete("search");
-	   	}						
-	   });	
+$("#ControllerSiteName").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
 
-	   //client auto complete
-	   $("#ControllerClient").autocomplete({
-	   	 source: debounce(function(request, response) {
-	   		var searchkey = $("#ControllerClient").val();
-	   		console.log("id");
-	   		  $.ajax({
-	   	             type: "GET",
-	   	             contentType: "application/json; charset=utf-8",
-	   	             url:  getContext()+'/GetAllNetworkCustomer',
-	   	             data:  {					
-	   	            	 "search":searchkey,
-	   				},
-	   	             dataType: "json",
-	   	             success: function (data) {
-	   	                 if (data != null) {
-	   	                    response(data.globalList);             
-	   	                 }
-	   	             },
-	   	             error: function(result) {
-	   	                 alert("Error");
-	   	             }
-	   	         });		   
-	   		 },1000), 
-	   		 minLength:0, maxShowItems: 40, scroll:true,
-	   			select: function(event, ui) {
-	   										
-	   			this.value = (ui.item ? ui.item[0] : '');
-	   			$("#ControllerClientName").val(ui.item[1]);
-	   			$("#ControllerClientPhoneNb").val(ui.item[2]);
-	   			if (document.getElementById('customControllerCoordinates').checked) {
-	   				console.log("customControllerCoordinates");
-	   				if($("#ControllerLong").val() =="" && $("#ControllerLat").val() =="" ) {
-	   					$("#ControllerLong").val(ui.item[4]);
-	   					$("#ControllerLat").val(ui.item[5]);
-	   				}
-	   			}else{
-	   				$("#ControllerLong").val(ui.item[4]);
-	   				$("#ControllerLat").val(ui.item[5]);
-	   			}
-	   			
-	   			$("#controllerCity").val(ui.item[3]);
-	   			//$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
-	   			if(($("#ControllerName").val()) ==""){
-	   				$("#ControllerName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
-	   			}
+$("#ControllerWarehouse").autocomplete({
+    source: debounce(function(request, response) {
 
-	   			return false;
-	   			}
-	   	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	   			 return $("<li class='each'>")
-	   		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	   	    		 item[0] + "</span><br><span class='desc'>" +
-	   		         item[1] +', '+item[2] +"</span></div>")
-	   		     .appendTo(ul);
-	   	};
+        var searchkey = $("#ControllerWarehouse").val();
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllWarehouse',
+            data: {
+                "WareName": searchkey,
+                "warehouseName": searchkey,
+                "SiteId": searchkey,
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.globalList);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    }, 1000),
+    minLength: 0, maxShowItems: 40, scroll: true,
+    select: function(event, ui) {
 
-	   $("#ControllerClient").focus(function(){
-	   	if (this.value == ""){
-	   		$(this).autocomplete("search");
-	   	}						
-	   });	
+        this.value = (ui.item ? ui.item[0] : '');
+        $("#ControllerSite").val(ui.item[2]);
+        $("#ControllerSiteName").val(ui.item[1]);
+        $("#ControllerLong").val(ui.item[3]);
+        $("#ControllerLat").val(ui.item[4]);
+        $("#controllerCity").val(ui.item[5]);
+        //$("#DistributionBoardName").val(ui.item[1]+"_DB");
+        if (($("#ControllerName").val()) == "") {
+            $("#ControllerName").val(ui.item[1] + "_DB_" + new Date().getFullYear());
+        }
 
-	   $("#ControllerClientName").autocomplete({
-	   	 source: debounce(function(request, response) {
-	   		var searchkey = $("#ControllerClientName").val();
-	   		console.log("name");
-	   		
-	   		  $.ajax({
-	   	             type: "GET",
-	   	             contentType: "application/json; charset=utf-8",
-	   	             url:  getContext()+'/GetAllNetworkCustomer',
-	   	             data:  {					
-	   	            	 "search":searchkey,
-	   				},
-	   	             dataType: "json",
-	   	             success: function (data) {
-	   	                 if (data != null) {
-	   	                    response(data.globalList);             
-	   	                 }
-	   	             },
-	   	             error: function(result) {
-	   	                 alert("Error");
-	   	             }
-	   	         });	   
-	   		 },1000), 
-	   		 minLength:0, maxShowItems: 40, scroll:true,
-	   			select: function(event, ui) {
-	   										
-	   			this.value = (ui.item ? ui.item[1] : '');
-	   			$("#ControllerClient").val(ui.item[0]);
-	   			$("#ControllerClientPhoneNb").val(ui.item[2]);
-	   			$("#ControllerLong").val(ui.item[4]);
-	   			$("#ControllerLat").val(ui.item[5]);
-	   			$("#controllerCity").val(ui.item[3]);
-	   			//$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
-	   			if(($("#ControllerName").val()) ==""){
-	   				$("#ControllerName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
-	   			}
+        return false;
+    }
+}).data("ui-autocomplete")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+            item[0] + "</span><br><span class='desc'>" +
+            item[1] + ', ' + item[2] + "</span></div>")
+        .appendTo(ul);
+};
 
-	   			return false;
-	   			}
-	   	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	   			 return $("<li class='each'>")
-	   		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	   	    		 item[1] + "</span><br><span class='desc'>" +
-	   		         item[0] +', '+ item[2] + "</span></div>")
-	   		     .appendTo(ul);
-	   	};
+$("#ControllerWarehouse").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
 
-	   $("#ControllerClientName").focus(function(){
-	   	if (this.value == ""){
-	   		$(this).autocomplete("search");
-	   	}						
-	   });	
+//client auto complete
+$("#ControllerClient").autocomplete({
+    source: debounce(function(request, response) {
+        var searchkey = $("#ControllerClient").val();
+        console.log("id");
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllNetworkCustomer',
+            data: {
+                "search": searchkey,
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.globalList);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    }, 1000),
+    minLength: 0, maxShowItems: 40, scroll: true,
+    select: function(event, ui) {
 
-	   $("#ControllerClientPhoneNb").autocomplete({
-	   	 source: debounce(function(request, response) {
-	   		var searchkey = $("#ControllerClientPhoneNb").val();
-	   		
-	   		  $.ajax({
-	   	             type: "GET",
-	   	             contentType: "application/json; charset=utf-8",
-	   	             url:  getContext()+'/GetAllNetworkCustomer',
-	   	             data:  {					
-	   	            	 "search":searchkey,
-	   				},
-	   	             dataType: "json",
-	   	             success: function (data) {
-	   	                 if (data != null) {
-	   	                    response(data.globalList);             
-	   	                 }
-	   	             },
-	   	             error: function(result) {
-	   	                 alert("Error");
-	   	             }
-	   	         });
-	   		   
-	   		 },1000), 
-	   		 minLength:0, maxShowItems: 40, scroll:true,
-	   			select: function(event, ui) {
-	   										
-	   			this.value = (ui.item ? ui.item[2] : '');
-	   			$("#ControllerClient").val(ui.item[0]);
-	   			$("#ControllerClientName").val(ui.item[1]);
-	   			$("#ControllerLong").val(ui.item[4]);
-	   			$("#ControllerLat").val(ui.item[5]);
-	   			$("#controllerCity").val(ui.item[3]);
-	   			//$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
-	   			if(($("#ControllerName").val()) ==""){
-	   				$("#ControllerName").val(ui.item[1]+"_DB_"+new Date().getFullYear());
-	   			}
+        this.value = (ui.item ? ui.item[0] : '');
+        $("#ControllerClientName").val(ui.item[1]);
+        $("#ControllerClientPhoneNb").val(ui.item[2]);
+        if (document.getElementById('customControllerCoordinates').checked) {
+            console.log("customControllerCoordinates");
+            if ($("#ControllerLong").val() == "" && $("#ControllerLat").val() == "") {
+                $("#ControllerLong").val(ui.item[4]);
+                $("#ControllerLat").val(ui.item[5]);
+            }
+        } else {
+            $("#ControllerLong").val(ui.item[4]);
+            $("#ControllerLat").val(ui.item[5]);
+        }
 
-	   			return false;
-	   			}
-	   	}).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-	   			 return $("<li class='each'>")
-	   		     .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-	   	    		 item[2] + "</span><br><span class='desc'>" +
-	   		         item[0] +', '+ item[1] + "</span></div>")
-	   		     .appendTo(ul);
-	   	};
+        $("#controllerCity").val(ui.item[3]);
+        //$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
+        if (($("#ControllerName").val()) == "") {
+            $("#ControllerName").val(ui.item[1] + "_DB_" + new Date().getFullYear());
+        }
 
-	   $("#ControllerClientPhoneNb").focus(function(){
-	   	if (this.value == ""){
-	   		$(this).autocomplete("search");
-	   	}						
-	   });
+        return false;
+    }
+}).data("ui-autocomplete")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+            item[0] + "</span><br><span class='desc'>" +
+            item[1] + ', ' + item[2] + "</span></div>")
+        .appendTo(ul);
+};
+
+$("#ControllerClient").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
+
+$("#ControllerClientName").autocomplete({
+    source: debounce(function(request, response) {
+        var searchkey = $("#ControllerClientName").val();
+        console.log("name");
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllNetworkCustomer',
+            data: {
+                "search": searchkey,
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.globalList);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    }, 1000),
+    minLength: 0, maxShowItems: 40, scroll: true,
+    select: function(event, ui) {
+
+        this.value = (ui.item ? ui.item[1] : '');
+        $("#ControllerClient").val(ui.item[0]);
+        $("#ControllerClientPhoneNb").val(ui.item[2]);
+        $("#ControllerLong").val(ui.item[4]);
+        $("#ControllerLat").val(ui.item[5]);
+        $("#controllerCity").val(ui.item[3]);
+        //$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
+        if (($("#ControllerName").val()) == "") {
+            $("#ControllerName").val(ui.item[1] + "_DB_" + new Date().getFullYear());
+        }
+
+        return false;
+    }
+}).data("ui-autocomplete")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+            item[1] + "</span><br><span class='desc'>" +
+            item[0] + ', ' + item[2] + "</span></div>")
+        .appendTo(ul);
+};
+
+$("#ControllerClientName").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
+
+$("#ControllerClientPhoneNb").autocomplete({
+    source: debounce(function(request, response) {
+        var searchkey = $("#ControllerClientPhoneNb").val();
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/GetAllNetworkCustomer',
+            data: {
+                "search": searchkey,
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+                    response(data.globalList);
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+
+    }, 1000),
+    minLength: 0, maxShowItems: 40, scroll: true,
+    select: function(event, ui) {
+
+        this.value = (ui.item ? ui.item[2] : '');
+        $("#ControllerClient").val(ui.item[0]);
+        $("#ControllerClientName").val(ui.item[1]);
+        $("#ControllerLong").val(ui.item[4]);
+        $("#ControllerLat").val(ui.item[5]);
+        $("#controllerCity").val(ui.item[3]);
+        //$("#DistributionBoardName").val(ui.item[1]+"_"+ui.item[2]+"_DB");
+        if (($("#ControllerName").val()) == "") {
+            $("#ControllerName").val(ui.item[1] + "_DB_" + new Date().getFullYear());
+        }
+
+        return false;
+    }
+}).data("ui-autocomplete")._renderItem = function(ul, item) {
+    return $("<li class='each'>")
+        .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
+            item[2] + "</span><br><span class='desc'>" +
+            item[0] + ', ' + item[1] + "</span></div>")
+        .appendTo(ul);
+};
+
+$("#ControllerClientPhoneNb").focus(function() {
+    if (this.value == "") {
+        $(this).autocomplete("search");
+    }
+});
 
 
-	   function getContCity(){
-			//console.log("getDBCity ");
-			fillCityByGeocoding("controllerCity",$("#ControllerLat").val(),$("#ControllerLong").val(),geocoder);	
-			
-		}
+function getContCity() {
+    //console.log("getDBCity ");
+    fillCityByGeocoding("controllerCity", $("#ControllerLat").val(), $("#ControllerLong").val(), geocoder);
 
-	   $('#controllerModal').on('hide.bs.modal', function () {
-		    document.activeElement.blur(); // remove focus
-		});
+}
+
+$('#controllerModal').on('hide.bs.modal', function() {
+    document.activeElement.blur(); // remove focus
+});

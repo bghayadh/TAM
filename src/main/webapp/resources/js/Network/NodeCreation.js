@@ -14,16 +14,11 @@ function getNode(type,url,id,tr){
     				if (data.searchResult != "Failed") {
 					    $("#NodeActive_f_CurrentPhysicalLayer input[type=checkbox]").unbind();// removed 
     				    createNode(data.nodeList);
-    				    //if ($('.AllNodeActive').is(':checked') || $('.allElements').is(':checked')){// in order to check all the folders and cables under main fiber folder
     				    if ($('.AllNodeActive').is(':checked') || $('#nodesActiveCheckAllBoq').is(':checked')){
-    				    // AllNodesTreeCheckFilter("NodeActive_f_CurrentPhysicalLayer","");
-    				    	nodeLayerCheckAll();
-    				    	
+    				    	nodeLayerCheckAll();    				    	
 						}
     					$('#NodeActive_f_CurrentPhysicalLayer .TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
     				    treeCollapseFolder("#NodeActive_f_CurrentPhysicalLayer .folder","fast",".folder");
-    					tree_prop_selection("#NodeActive_f_CurrentPhysicalLayer .TreeSpan");
-    					MouseHoveringSpans("#NodeActive_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
     					
     					nodeFlag = 1;	
     				}
@@ -35,10 +30,7 @@ function getNode(type,url,id,tr){
     		}
     		});
     }
-	
-
 }
-
 
 
 
@@ -340,5 +332,4 @@ function create_Node_Marker_Click(Id,Name,Long,Lat,markers,marker_Cluster,Type,c
 	infowindow.open(map,markers[Id]);
 				
 	});
-
 }

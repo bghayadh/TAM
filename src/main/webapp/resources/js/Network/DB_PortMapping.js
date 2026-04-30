@@ -193,8 +193,8 @@ function DBMappingData(DistBoardMappingPts, panelInfo) {
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' value='" + DistBoardMappingPts[i][33] + "' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' value='" + DistBoardMappingPts[i][34] + "' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name='BP_equipmentType' value='" + DistBoardMappingPts[i][31] + "' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-				+ "<td name='backKitSerialNum'><input name='backKitSerialNum' value='" + DistBoardMappingPts[i][56] + "' id='backKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-				 + "<td name='backModule'><input name='backModule' value='"
+                + "<td name='backKitSerialNum'><input name='backKitSerialNum' value='" + DistBoardMappingPts[i][56] + "' id='backKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='backModule'><input name='backModule' value='"
                 + (backModuleVal === null || backModuleVal === undefined || backModuleVal === "null"
                     ? "" : backModuleVal)
                 + "' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' "
@@ -371,11 +371,11 @@ function dbAutoCompleteFiberID(input) {
                 }
             });
         }, 900), minLength: 0, maxShowItems: 4, scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},		
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             this.value = (ui.item ? ui.item[0] : '');
             // Set the next td's input value
@@ -435,11 +435,11 @@ function dbAutoCompleteFiberName(input) {
                 }
             });
         }, 900), minLength: 0, maxShowItems: 4, scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},		
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             this.value = (ui.item ? ui.item[1] : '');
             // Set the next td's input value
@@ -497,13 +497,12 @@ function dbAutoCompleteTubeID(input) {
         }, 900),
 
         minLength: 0, maxShowItems: 4, scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
-
             // Set the TubeID
             this.value = ui.item ? ui.item[0] : '';
 
@@ -594,11 +593,11 @@ function dbAutoCompleteTubeName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
 
             // Set the TubeName
@@ -689,11 +688,11 @@ function dbAutoCompleteStrandID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
 
         select: function(event, ui) {
 
@@ -780,11 +779,11 @@ function dbAutoCompleteStrandName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
 
             // Set StrandName
@@ -870,11 +869,11 @@ function dbAutoCompleteEquipmentID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},		
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             this.value = ui.item ? ui.item[0] : "";
             let row = $(this).closest("tr");
@@ -941,11 +940,11 @@ function dbAutoCompleteEquipmentName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             this.value = ui.item ? ui.item[1] : "";
             row.find(`input[name='${prefix}_equipmentID']`).val(ui.item[0]);
@@ -1009,11 +1008,11 @@ function dbAutoCompleteEquipmentType(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             row.find(`input[name='${prefix}_equipmentID']`).val(ui.item[0]);
             row.find(`input[name='${prefix}_equipmentName']`).val(ui.item[1]);
@@ -1059,11 +1058,11 @@ function dbAutoCompleteJunctionID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             this.value = ui.item ? ui.item[0] : "";
 
@@ -1106,11 +1105,11 @@ function dbAutoCompleteJunctionName(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             this.value = ui.item ? ui.item[1] : "";
 
@@ -1190,11 +1189,11 @@ function dbAutoCompleteLocationID(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             let row = $(this).closest("tr");
             let prefix = input.attr("id").startsWith("FP") ? "FP" : "BP";
@@ -1293,11 +1292,11 @@ function dbAutoCompleteLocationM(input) {
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
-		position: {
-		    my: "left top",
-		    at: "left bottom",
-		    collision: "flipfit"
-		},
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
             this.value = ui.item ? ui.item[1] : "";
 
@@ -1592,7 +1591,7 @@ function locationTypeChange() {
         console.log("before if statement, equipSelect.length is " + equipSelect.length);
         if (equipSelect.length) {
             console.log("after if statement, equipSelect.length is " + equipSelect.length);
-			console.log("loc is " +loc);
+            console.log("loc is " + loc);
             const newOptions = generateEquipmentOptions(loc);
             console.log("newOptions for FP equipment is " + newOptions);
             equipSelect.html(newOptions);
@@ -1662,16 +1661,16 @@ function equipmentChange() {
             // Make inputs editable
             row.find("input[name='backModule']").prop("readonly", false);
             row.find("input[name='backModule']").val('');
-			row.find("input[name='backKitSerialNum']").prop("readonly", false);
-			row.find("input[name='backKitSerialNum']").val('');
+            row.find("input[name='backKitSerialNum']").prop("readonly", false);
+            row.find("input[name='backKitSerialNum']").val('');
             row.find("input[name='backPortNum']").prop("readonly", false);
             row.find("input[name='backPortNum']").val('');
         } else {
             // Make inputs readonly again
             row.find("input[name='backModule']").prop("readonly", true);
             row.find("input[name='backModule']").val('');
-			row.find("input[name='backKitSerialNum']").prop("readonly", false);
-			row.find("input[name='backKitSerialNum']").val('');
+            row.find("input[name='backKitSerialNum']").prop("readonly", false);
+            row.find("input[name='backKitSerialNum']").val('');
             row.find("input[name='backPortNum']").prop("readonly", true);
             row.find("input[name='backPortNum']").val('');
         }
@@ -2018,8 +2017,8 @@ $(document).ready(function() {
                 + "<td name='BP_EquipmentID'><input name='BP_equipmentID' id='BP_equipmentID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentName'><input name='BP_equipmentName' id='BP_equipmentName" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_EquipmentType'><input name=' BP_equipmentType' id='BP_equipmentType" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-				+ "<td name='backKitSerialNum'><input name=' backKitSerialNum' id='backKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
-			    + "<td name='backModule'><input name='backModule' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
+                + "<td name='backKitSerialNum'><input name=' backKitSerialNum' id='backKitSerialNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
+                + "<td name='backModule'><input name='backModule' id='backModule" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
                 + "<td name='backPortNum'><input name='backPortNum' id='backPortNum" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;' readonly/></td>"
                 + "<td name='BP_Address'><input name='BP_Address' id='BP_Address" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_JunctionID'><input name='BP_junctionID' id='BP_junctionID" + dBBoqIndex + "' class='form-control text-input' type='text' style='width:190px;position:relative;'/></td>"
@@ -2144,7 +2143,7 @@ $(document).ready(function() {
             var farKitSerialNum = $(this).parent().parent().children('td[name="farKitSerialNum"]').children('input').val();
             var farModule = $(this).parent().parent().children('td[name="farModule"]').children('input').val();
             var farPortNum = $(this).parent().parent().children('td[name="farPortNum"]').children('input').val();
-			var backKitSerialNum = $(this).parent().parent().children('td[name="backKitSerialNum"]').children('input').val();
+            var backKitSerialNum = $(this).parent().parent().children('td[name="backKitSerialNum"]').children('input').val();
             var backModule = $(this).parent().parent().children('td[name="backModule"]').children('input').val();
             var backPortNum = $(this).parent().parent().children('td[name="backPortNum"]').children('input').val();
 
@@ -2236,11 +2235,11 @@ $(document).ready(function() {
                 });
 
             }, minLength: 0, maxShowItems: 4, scroll: true,
-			position: {
-			    my: "left top",
-			    at: "left bottom",
-			    collision: "flipfit"
-			},
+            position: {
+                my: "left top",
+                at: "left bottom",
+                collision: "flipfit"
+            },
             select: function(event, ui) {
                 fibercable_arr = [];
                 $("#dbPort_assignCable").val(ui.item[0]);
@@ -2262,8 +2261,8 @@ $(document).ready(function() {
         });
 
         $("#assign_Cable").on('click', function() {
-			console.log(fibercable_arr.length);
-			console.log(fibercable_arr);
+            console.log(fibercable_arr.length);
+            console.log(fibercable_arr);
             var selected_port = $('#selected_Port').find(":selected").val();
             $('#selected_Port').children('option[value="title"]').css('display', 'none');
             if (fibercable_arr.length) {
@@ -2280,27 +2279,27 @@ $(document).ready(function() {
                     }
                 });
             }
-			
-			 if(document.getElementById("dbPort_assignCable").value ==="") {
-				$("#DbMappingTable > tbody").find('input[name="record"]').each(function() {
-				                   if ($(this).is(":checked")) {
-				                       if (selected_port == "frontPort") {
-				                           $(this).parent().parent().children('td[name="FP_FiberID"]').children('input').val(" ");
-				                           $(this).parent().parent().children('td[name="FP_FiberName"]').children('input').val(" ");
-				                       }
-				                       else if (selected_port == "backPort") {
-				                           $(this).parent().parent().children('td[name="BP_FiberID"]').children('input').val(" ");
-				                           $(this).parent().parent().children('td[name="BP_FiberName"]').children('input').val(" ");
-				                       }
-				                   }
-				               });
-				
-				
-				
-				
-				
-			}
-			
+
+            if (document.getElementById("dbPort_assignCable").value === "") {
+                $("#DbMappingTable > tbody").find('input[name="record"]').each(function() {
+                    if ($(this).is(":checked")) {
+                        if (selected_port == "frontPort") {
+                            $(this).parent().parent().children('td[name="FP_FiberID"]').children('input').val(" ");
+                            $(this).parent().parent().children('td[name="FP_FiberName"]').children('input').val(" ");
+                        }
+                        else if (selected_port == "backPort") {
+                            $(this).parent().parent().children('td[name="BP_FiberID"]').children('input').val(" ");
+                            $(this).parent().parent().children('td[name="BP_FiberName"]').children('input').val(" ");
+                        }
+                    }
+                });
+
+
+
+
+
+            }
+
         });
 
         $("#dbPort_assignTube").autocomplete({
@@ -2328,11 +2327,11 @@ $(document).ready(function() {
                 });
 
             }, minLength: 0, maxShowItems: 4, scroll: true,
-			position: {
-			    my: "left top",
-			    at: "left bottom",
-			    collision: "flipfit"
-			},
+            position: {
+                my: "left top",
+                at: "left bottom",
+                collision: "flipfit"
+            },
             select: function(event, ui) {
                 fibertube_arr = [];
                 $("#BP_assignTube").val(ui.item[0]);
@@ -2376,26 +2375,21 @@ $(document).ready(function() {
                     }
                 });
             }
-			
-			if(document.getElementById("dbPort_assignTube").value ==="") {
-				$("#DbMappingTable > tbody").find('input[name="record"]').each(function() {
-				                   if ($(this).is(":checked")) {
-				                       if (selected_port == "frontPort") {
-				                           $(this).parent().parent().children('td[name="FP_TubeID"]').children('input').val(" ");
-				                           $(this).parent().parent().children('td[name="FP_TubeName"]').children('input').val(" ");
-				                       }
-				                       else if (selected_port == "backPort") {
-				                           $(this).parent().parent().children('td[name="BP_TubeID"]').children('input').val(" ");
-				                           $(this).parent().parent().children('td[name="BP_TubeID"]').children('input').val(" ");
-				                       }
-				                   }
-				               });
-				
-				
-				
-				
-				
-			}
+
+            if (document.getElementById("dbPort_assignTube").value === "") {
+                $("#DbMappingTable > tbody").find('input[name="record"]').each(function() {
+                    if ($(this).is(":checked")) {
+                        if (selected_port == "frontPort") {
+                            $(this).parent().parent().children('td[name="FP_TubeID"]').children('input').val(" ");
+                            $(this).parent().parent().children('td[name="FP_TubeName"]').children('input').val(" ");
+                        }
+                        else if (selected_port == "backPort") {
+                            $(this).parent().parent().children('td[name="BP_TubeID"]').children('input').val(" ");
+                            $(this).parent().parent().children('td[name="BP_TubeID"]').children('input').val(" ");
+                        }
+                    }
+                });
+            }
         });
     }
 });

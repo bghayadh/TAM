@@ -1,149 +1,3 @@
-/*function sortTable(table, col, reverse) {
-    var tb = table.tBodies[0], // use `<tbody>` to ignore `<thead>` and `<tfoot>` rows
-        tr = Array.prototype.slice.call(tb.rows, 0), // put rows into array
-        i;
-    reverse = -((+reverse) || -1);
-    
-    tr = tr.sort(function (a, b) { // sort rows        
-        if(!isNaN(a.cells[col].textContent) && !isNaN(b.cells[col].textContent))
-        return reverse * ((+a.cells[col].textContent) - (+b.cells[col].textContent))
-       return reverse // `-1 *` if want opposite order
-            * (a.cells[col].textContent.trim() // using `.textContent.trim()` for test
-                .localeCompare(b.cells[col].textContent.trim())
-               );
-    });
-    for(i = 0; i < tr.length; ++i) tb.appendChild(tr[i]); // append each row in order
-}*/
-
-/*function makeSortable(table) {
-    var th = table.tHead, i;
-    th && (th = th.rows[0]) && (th = th.cells);
-    if (th) i = th.length;
-    else return; // if no `<thead>` then do nothing
-    while (--i >= 0) (function (i) {
-        var dir = 1;
-        th[i].addEventListener('click', function () {sortTable(table, i, (dir = 1 - dir))});
-    }(i));
-}*/
-
-/*function makeAllSortable(parent) {
-    parent = parent || document.body;
-    var t = parent.getElementsByTagName('table'), i = t.length;
-    while (--i >= 0) makeSortable(t[i]);
-}*/
-
-//TO BE DELETED 
-/*function TubeStrandAutoComplete(srcDestID,index,longitudeID,latitudeID,tableID,rowID){
-
-$("#"+srcDestID).autocomplete({
-    source: function(request, response) {
-    var search= $("#"+srcDestID).val();
-    $.ajax({
-        type: "GET",
-        contentType: "application/json; charset=utf-8",
-        url: getContext()+'/SearchForSource',
-        data: {
-            "search":search,
-        },
-        dataType: "json",
-        success: function (data) {
-        if (data != null) {
-            response(data.searchResult);                   					 
-        }
-        },
-        error: function(result) {
-            alert("Error");
-        }
-        });
-	
-    },select: function (event, ui) {
-        var sourceId=ui.item.label.split(":");					
-        sourceId=sourceId[0];
-    	
-        if(sourceId.split("_")[0]=="MH" || sourceId.split("_")[0]=="HH" ){
-            $("#"+longitudeID).val(window[""+sourceId][2]);
-            $("#"+latitudeID).val(window[""+sourceId][3]);
-
-        }
-        else{
-            $("#"+longitudeID).val(window[""+sourceId][1]);
-            $("#"+latitudeID).val(window[""+sourceId][2]);
-        }
-        var tubeDestLat = $(this).closest("tr").find("td:eq(10) input[type='text']").val();
-        var tubeDestLong = $(this).closest("tr").find("td:eq(9) input[type='text']").val();
-        var tubeSrcLat = $(this).closest("tr").find("td:eq(6) input[type='text']").val();
-        var tubeSrcLong = $(this).closest("tr").find("td:eq(5) input[type='text']").val();
-        var strandDestLat = $(this).closest("tr").find("td:eq(10) input[type='text']").val();
-        var strandDestLong = $(this).closest("tr").find("td:eq(9) input[type='text']").val();
-        var strandSrcLat = $(this).closest("tr").find("td:eq(7) input[type='text']").val();
-        var strandSrcLong = $(this).closest("tr").find("td:eq(6) input[type='text']").val();
-        var cableTubeID = $(this).closest("tr").find("td:eq(3) input[type='text']").val();
-        var searchTarget = $(this).parent().attr("name");					
-
-        if(searchTarget == "tubeSource"){
-            var auxTubeTotalDist = calculateDistanceAuxTube($("#"+latitudeID).val(),$("#"+longitudeID).val(),tubeDestLat,tubeDestLong,"tubesTable",cableTubeID,index);
-            var totalDistanceValue = (parseFloat(auxTubeTotalDist)+parseFloat($("#FiberLength").val())).toFixed(3);
-            $("#tube_length"+index).val(parseFloat(auxTubeTotalDist).toFixed(3));
-            $("#tube_total_length"+index).val(totalDistanceValue);
-        }			
-
-        else if (searchTarget == "tubeDestination"){
-            var auxTubeTotalDist = calculateDistanceAuxTube(tubeSrcLat,tubeSrcLong,$("#"+latitudeID).val(),$("#"+longitudeID).val(),"tubesTable",cableTubeID,index);
-            var totalDistanceValue = (parseFloat(auxTubeTotalDist)+parseFloat($("#FiberLength").val())).toFixed(3);
-            $("#tube_length"+index).val(parseFloat(auxTubeTotalDist).toFixed(3));
-            $("#tube_total_length"+index).val(totalDistanceValue);
-
-        }				
-        if(searchTarget == "strandSource"){
-            var auxStrandTotalDist = calculateDistanceAuxTube($("#"+latitudeID).val(),$("#"+longitudeID).val(),strandDestLat,strandDestLong,"strandsTable",cableTubeID,index);
-            $("#strand_length"+index).val(auxStrandTotalDist);
-
-        }					
-        else if (searchTarget == "strandDestination"){
-            var auxStrandTotalDist = calculateDistanceAuxTube(strandSrcLat,strandSrcLong,$("#"+latitudeID).val(),$("#"+longitudeID).val(),"strandsTable",cableTubeID,index);
-            $("#strand_length"+index).val(auxStrandTotalDist);
-
-        }
-        if(searchTarget == "TubeAuxiliary"){
-            var sourceLat = $("#tubeSource_Lat"+indexTubeForAuxs).val();
-            var sourceLong = $("#tubeSource_Long"+indexTubeForAuxs).val();
-            var destinationLat =	$("#tubeDestination_Lat"+indexTubeForAuxs).val();
-            var destinationLong = $("#tubeDestination_Long"+indexTubeForAuxs).val();
-
-            var auxTubeTotalDistance = calculateDistanceAuxTube(sourceLat,sourceLong,destinationLat,destinationLong,"TubeAuxTable",idTubeForAuxs,indexTubeForAuxs);
-        	
-            $("#saveTubeAux").click(function(){
-                var totalDistanceValue = (parseFloat(auxTubeTotalDistance)+parseFloat($("#FiberLength").val())).toFixed(3);
-                $("#tube_length"+indexTubeForAuxs).val(parseFloat(auxTubeTotalDistance).toFixed(3));
-                $("#tube_total_length"+indexTubeForAuxs).val(totalDistanceValue);
-            });
-            	
-        }					
-        else if (searchTarget == "StrandAuxiliary"){
-        	
-            var sourceLat = $("#strandSource_Lat"+indexStrandForAuxs).val();
-            var sourceLong = $("#strandSource_Long"+indexStrandForAuxs).val();
-            var destinationLat = $("#strandDestination_Lat"+indexStrandForAuxs).val();
-            var destinationLong = $("#strandDestination_Long"+indexStrandForAuxs).val();
-
-            var totalDistanceValue = calculateDistanceAuxTube(sourceLat,sourceLong,destinationLat,destinationLong,"StrandAuxTable",idStrandForAuxs,indexStrandForAuxs);
-        	
-            $("#saveStrandAux").click(function(){
-                $("#strand_length"+indexStrandForAuxs).val(totalDistanceValue);
-            });	
-
-        }
-        },
-        appendTo : $("#"+tableID+" > tbody").find("#"+rowID), 
-        minLength:0, maxShowItems: 40, scroll:true,			 
-    });
-$("#"+srcDestID).focus(function(){
-    if (this.value == ""){
-        $(this).autocomplete("search");
-    }						
-});
-}*/
-
 function ManHandHoleAutoCompleteJunction(ID, physicalLayer) {
 
     $("#" + ID).autocomplete({
@@ -1315,7 +1169,7 @@ function autoCompleteForMapping(ID, tableID, rowID, Location, LocationID, Locati
                 });
             }
             /*END FUNCTION*/
-}, 900), minLength: 0, maxShowItems: 40, scroll: true,
+        }, 900), minLength: 0, maxShowItems: 40, scroll: true,
         select: function(event, ui) {
 
             if (search == "Customer") {
@@ -1637,14 +1491,6 @@ function autoCompleteForMapping(ID, tableID, rowID, Location, LocationID, Locati
                     item[1] + "</span><br><span class='desc'>" +
                     item[0] + "</span></div>")
                 .appendTo(ul);
-            /*}
-            else {
-                 return $("<li class='each'>")
-                    .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-                       item[0] + "</span><br><span class='desc'>" +
-                        item[1] +', '+ item[2] + "</span></div>")
-                    .appendTo(ul);
-                }*/
         };
 
         $("#" + equipmentName + ID).focus(function() {
@@ -1712,14 +1558,6 @@ function autoCompleteForMapping(ID, tableID, rowID, Location, LocationID, Locati
                     item[0] + "</span><br><span class='desc'>" +
                     item[1] + "</span></div>")
                 .appendTo(ul);
-            /*}
-            else {
-                 return $("<li class='each'>")
-                    .append("<div class='acItem'><span class='name' style='font-weight:bold'>" +
-                       item[0] + "</span><br><span class='desc'>" +
-                        item[1] +', '+ item[2] + "</span></div>")
-                    .appendTo(ul);
-                }*/
         };
 
         $("#" + equipmentType + ID).focus(function() {
@@ -1731,16 +1569,6 @@ function autoCompleteForMapping(ID, tableID, rowID, Location, LocationID, Locati
     $("#" + strandID + ID).autocomplete({
         source: debounce(function(request, response, event, ui) {
             var sId = $("#" + strandID + ID).val();
-            /*var fId= $("#"+fiberID+ID).val();
-            var cId = $("#"+tubeID+ID).val();
-            if(cId != null ){
-                searchId = cId;	 
-            }else if(fId != null){
-                searchId = fId;
-            }else{
-                searchId = sId;
-            }*/
-            console.log("strand id");
             searchId = sId;
             $.ajax({
                 type: "GET",
@@ -1796,15 +1624,6 @@ function autoCompleteForMapping(ID, tableID, rowID, Location, LocationID, Locati
     $("#" + strandName + ID).autocomplete({
         source: debounce(function(request, response, event, ui) {
             var sName = $("#" + strandName + ID).val();
-            /*  var fId= $("#"+fiberID+ID).val();
-              var cId = $("#"+tubeID+ID).val();
-              if(cId != null ){
-                  searchId = cId;
-              }else if(fId != null){
-                  searchId = fId;
-              }else{
-                  searchId = sName;
-              }*/
             searchId = sName;
             $.ajax({
                 type: "GET",
@@ -1845,31 +1664,6 @@ function autoCompleteForMapping(ID, tableID, rowID, Location, LocationID, Locati
             if (strandID.includes("mJct") || strandID.includes("hJct") || strandID.includes("Jct")) {
                 $(this).parents("tr").find('select[name ="' + networkLevel + '"]').val(ui.item[10]);
             }
-            /*	var tubesAutocomplete=[];
-                var fibersAutocomplete=[];
-                $.ajax({
-       type: "GET",
-       contentType: "application/json; charset=utf-8",
-       url: getContext()+'/GetFiberTubeNames',
-       data: {
-                    cID : ui.item[2],
-                fID : ui.item[3],
-            },
-       dataType: "json",
-       success: function (data) {
-
-           if (data != null) {
-                  tubesAutocomplete=data.clist;
-                fibersAutocomplete=data.flist;
-                console.log(ID);
-                $("#"+fiberName+ID).val(fibersAutocomplete[0]);   
-                $("#"+tubeName+ID).val(tubesAutocomplete[0]);             
-           }
-       },
-       error: function(result) {
-           alert("Error");
-       }
-   }); */
             return false;
         }
     }).data("ui-autocomplete")._renderItem = function(ul, item) {
@@ -2097,31 +1891,6 @@ function autoCompleteForMapping(ID, tableID, rowID, Location, LocationID, Locati
             if (tubeID.includes("mJct") || tubeID.includes("hJct") || tubeID.includes("Jct")) {
                 $(this).parents("tr").find('select[name ="' + networkLevel + '"]').val(ui.item[6]);
             }
-            /*	var tubesAutocomplete=[];
-                var fibersAutocomplete=[];
-                $.ajax({
-                   type: "GET",
-                   contentType: "application/json; charset=utf-8",
-                   url: getContext()+'/GetFiberTubeNames',
-                   data: {
-                                cID : ui.item[1],
-                            fID : ui.item[2],
-                        },
-                   dataType: "json",
-                   success: function (data) {
-        
-                       if (data != null) {
-                              //tubesAutocomplete=data.clist;
-                            fibersAutocomplete=data.flist;
-                            console.log(ID);
-                            $("#"+fiberName+ID).val(fibersAutocomplete[0]);   
-                            //$("#"+tubeID+ID).val(tubesAutocomplete[0]);             
-                       }
-                   },
-                   error: function(result) {
-                      alert("Error");
-                   }
-               });*/
             return false;
         }
     }).data("ui-autocomplete")._renderItem = function(ul, item) {
