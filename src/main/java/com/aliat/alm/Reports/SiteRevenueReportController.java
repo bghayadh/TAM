@@ -102,15 +102,12 @@ public class SiteRevenueReportController {
 							+ ") t order by t.site_name,t.combination_tech asc, t.revenue_date desc";
 
 					grid = sessionRPT.createNativeQuery(gridQuery);
-
-					@SuppressWarnings("unchecked")
+					
 					List<SiteRevenueReport> revenueReportResults = (List<SiteRevenueReport>) ((SQLQuery) grid)
 							.addScalar("siteName").addScalar("areaId").addScalar("startDate").addScalar("endDate")
 							.addScalar("voiceRevenue").addScalar("smsRevenue").addScalar("dataRevneue")
 							.addScalar("vasRevenue").addScalar("combination_technology")
 							.setResultTransformer(Transformers.aliasToBean(SiteRevenueReport.class)).list();
-					// System.out.println("****The SiteRevenueReport is:
-					// "+mapper.writeValueAsString(revenueReportResults));
 
 					model.addAttribute("revenueReportList", mapper.writeValueAsString(revenueReportResults));
 
