@@ -80,7 +80,7 @@ body{
         <section class="row justify-content-center">
             <section ="col-12 col-sm-6 col-md-3">
                 
-                <form class="fo" action="loginAuth" method="post" >
+                <form class="fo" action="loginAuth" method="post">
                 <div class="form-group " style="margin-top:20px;">
                    <label for="exampleInputEmail1" class="col">${Message} </label>
                    </div>
