@@ -35,8 +35,6 @@ function getFiberPath(type, url, id, tr) {
 
                         }
                         $('.TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width
-                        treeCollapseFolder("#FiberPath_f_CurrentPhysicalLayer .folder", "fast", ".folder");
-
                         flag = 1;
                     }
                     $("#loading").remove();

@@ -933,7 +933,6 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
 					 
 					if(distributionBoardList!=null){
 						$("#distBoardCheckAllBoq").prop("checked",true);
-						treeCollapseFolder("#DistributionBoard_f_showDB .Parentfolder",null,".Parentfolder");
 								for(i=0;i<distributionBoardList.length;i++){
 									
 									$("#"+distributionBoardList[i][0]).children(':checkbox').prop( "checked", true );
@@ -13428,9 +13427,7 @@ function showPath(url,dataSel,tr){
               Create_FiberStrandClick_Event(data.DistributionStrandData[i][0]+"__showPath");      
 			      pathCheckFilter(TargetStrand,"showPath",data.DistributionStrandData[i][0]+"__showPath","14",strandArray,allStrands,directionHashmapStrand,routeDisplayStrand,"","","","");           	
 			}
-			}
-
-         treeCollapseFolder("#FiberPath_f_showPath .Parentfolder",".Parentfolder"); 
+			} 
 		 data=null;
 			},
 			error: function (result) {

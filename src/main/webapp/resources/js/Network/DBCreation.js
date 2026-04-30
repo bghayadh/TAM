@@ -352,9 +352,7 @@ function getDB(type, url, id, tr, showDBflag) {
                         if ($('.AllDistBoards ').is(':checked') || $('#distBoardCheckAllBoq').is(':checked')) {
                             DBLayerCheckAll();
                         }
-                        $('#DistributionBoard_f_CurrentPhysicalLayer .TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width	
-                        treeCollapseFolder("#DistributionBoard_f_CurrentPhysicalLayer .folder", "fast", ".folder");
-
+                        $('#DistributionBoard_f_CurrentPhysicalLayer .TreeSpan').css("display", "inline"); // The purpose of this command is to let the background color width in mouse hovering or mouse select to be same span text width
                         DBFlag = 1;
                     }
                     $("#loading").remove();
@@ -1504,7 +1502,6 @@ $("#saveController").click(function() {
                                 selectedControllerName = $(this).text();
                                 openContext(selectedControllerId, selectedControllerName, singleController, event);
                             });
-                            //treeCollapseFolder("#DistributionBoard_accessController__CurrentPhysicalLayer" ,".folder","fast",".folder");
                         }
                         createControllerMarkerClick(
                             data.controllerId,
@@ -1601,8 +1598,6 @@ $("#saveController").click(function() {
                                         selectedControllerName = $(this).text();
                                         openContext(selectedControllerId, selectedControllerName, singleController, event);
                                     });
-                                    // Correct order: selector, type, clss
-                                    treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
                                 }
                                 else if (networkLayer == "metro") {
 
@@ -1623,9 +1618,6 @@ $("#saveController").click(function() {
                                         selectedControllerName = $(this).text();
                                         openContext(selectedControllerId, selectedControllerName, singleController, event);
                                     });
-                                    // Correct order: selector, type, clss
-                                    treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
-
                                 }
                                 else if (networkLayer == "access") {
                                     str = "<ul><li id='" + data.controllerId + "' class='aController' style='display:none;width:100px;'>"
@@ -1645,13 +1637,7 @@ $("#saveController").click(function() {
                                         selectedControllerName = $(this).text();
                                         openContext(selectedControllerId, selectedControllerName, singleController, event);
                                     });
-
-                                    // Correct order: selector, type, clss
-                                    treeCollapseFolder("#" + data.controllerId + " .folder", "fast", ".folder");
-
                                 }
-
-
                                 createControllerMarkerClick(
                                     data.controllerId,
                                     data.controllerName,

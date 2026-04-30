@@ -41,7 +41,6 @@ function getSite(type,id){
     					$(this).parent('').children(".folder").find('> svg').addClass('fa-folder-open').removeClass('fa-folder');
     					}
     					siteFlag = 1;
-    					//treeCollapseFolder("#Site_f_CurrentPhysicalLayer .parentFolder","",".folder");
     					MouseHoveringSpans("#Site_f_CurrentPhysicalLayer .TreeSpan");		//>>>>>>>>>>>> Hover event in tree elements
     					    					
     					if(id != null & type === "addMaker"){							

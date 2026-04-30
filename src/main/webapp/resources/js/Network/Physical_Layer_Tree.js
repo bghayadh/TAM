@@ -4324,7 +4324,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                     pathCheckFilter(TargetDuct, "", data.ductList[i][0], "19", ductArray, allDucts, directionHashmapDuct, routeDisplayDuct, "", "", "", "");
                                 }
                             }
-                            treeCollapseFolder("#" + data.trenchId + " .folder", "fast", ".folder");
                         }
                         window["" + data.trenchId] = [];
                         window["mapPoints_" + data.trenchId] = [];
@@ -4590,8 +4589,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 //Append the saved duct to the Ducts folder created above
                                 str = "<ul><li id='" + data.ductId + "' class='Duct' style='display:none;width:100px;'><input type='checkbox' class='DUCT checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/duct.png' style='opacity:0.6' > " + ductName + " / " + data.ductId + " </span></li></ul>";
                                 $("#" + selectedTrenchContext + "_f").append(str);
-
-                                treeCollapseFolder("#" + selectedTrenchContext + " .folder", "fast", ".folder");
 
                                 pathCheckFilter(TargetDuct, "parentFolderCheck", selectedTrenchContext, "14", ductArray, allDucts, directionHashmapDuct, routeDisplayDuct, "", "", "", "");
 
@@ -10664,168 +10661,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
         menuName = menuSites;
         openContext("", "", menuSites, event);
-
-
     });
 
-
-    // save project name and append to projects node
-    /* $("#saveProject").click(function () {
-           if(document.getElementById("ProjectName").value!="" ){
-               var ProjectId="";			
-               ProjectName = document.getElementById("ProjectName").value;
-               if(actionProjectContext=="Update"){
-
-                    ProjectId = document.getElementById("ProjectId").value;
-                }
-               var projectType=document.getElementById("ProjectType").value;
-               
-               $.ajax({
-                   type: "GET",
-                   contentType: "application/json; charset=utf-8",
-                   async:false,
-                   url: getContext()+'/saveProject',
-                   data: {
-
-                       "ProjectId"   :ProjectId,
-                       "ProjectName" :ProjectName,
-                       "projectType" :projectType,
-                       "actionProjectContext":actionProjectContext
-                   },
-                   dataType: "json",
-                   success: function (data) {
-                       
-                       if(data!=null){ 
-                           if(actionProjectContext=="Insert"){
-                               var str="<ul><li id='"+data.ProjectId+"' class='PROJECT' style='width:100px;'><input type='checkbox' class='Project checkFilter' unchecked  class='filter'  name='Element'></input><span id='Project_spanFolder_"+data.ProjectId+"'  class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span id='Project_span_"+data.ProjectId+"' class='TreeSpan' style='color:black;width:395px;'>"+data.ProjectName+" </span></li></ul>";
-                               $("#initial_ul_Projects").append(str);
-                               
-                               var strPhysicalLayer="<ul style='margin-left:15px;'><li id='initial_ul_"+data.ProjectId+"' class='Initial_projects' style='display:none;'><input type='checkbox' class='allElements' unchecked name='filter'></input><span id='initial_Span_"+data.ProjectId+"' class='folder'><i class='fa fa-folder' style='color: #08526D;'></i></span><span class='TreeSpan' style='color:black;width:436px;'> Physical Layer </span></li></ul>";
-                               $("#"+data.ProjectId+"").append(strPhysicalLayer);
-                                 
-                               str="<ul><li id='Manhole_f_"+data.ProjectId+"' style='display:none;' class='Manhole_f_projects'><input type='checkbox' unchecked class='AllManholes checkFilter' ></input> <span id='Manhole_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Manhole_span' class='TreeSpan' style='color:black;width:395px' >Manhole </span></li></ul>";	   
-                               $("#initial_ul_"+data.ProjectId+"").append(str);
-
-                               str="<ul><li id='Handhole_f_"+data.ProjectId+"' style='display:none;' class='Handhole_f_projects'><input type='checkbox' unchecked class='AllHandholes checkFilter'></input> <span id='Handhole_spanFolder' class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Handhole_span' style='color:black;width:395px' class='TreeSpan' >Handhole </span></li></ul>";
-                               $("#initial_ul_"+data.ProjectId+"").append(str);
-
-                               str="<ul><li id='FiberPath_f_"+data.ProjectId+"' style='display:none;' class='FiberPath_f_projects'><input type='checkbox' class='AllFiberCables' class='filter checkFilter'></input> <span id='FiberPath_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='FiberPath_span' style='color:black;width:395px' class='TreeSpan'>Fiber Path <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPoints"+data.ProjectId+"' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPoints"+data.ProjectId+"' class='clearPoints'></span></li></ul>";
-                               $("#initial_ul_"+data.ProjectId+"").append(str);
-
-                               str="<ul><li id='DistributionBoard_f_"+data.ProjectId+"' style='display:none;' class='DistributionBoard_f_projects'><input type='checkbox' unchecked class='AllDistBoards checkFilter'></input> <span id='DistribBoard_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='DistribBoard_span' class='TreeSpan' style='color:black;width:395px'>Distribution Board </span></li></ul>";
-                               $("#initial_ul_"+data.ProjectId+"").append(str);
-                               
-                               str="<ul><li id='Trench_f_"+data.ProjectId+"' style='display:none;' class='Trench_f_projects'><input type='checkbox' class='AllTrenches'></input> <span id='Trench_spanFolder'  class='folder'><i class='fa fa-folder' style='color: #08526D'></i></span><span id='Trench_span' style='color:black;width:395px' class='TreeSpan'>Trench <img src='"+getContext()+"/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushTrenchPoints' class='pushPoints'> <img src='"+getContext()+"/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelTrenchPoints' class='clearPoints'></span></li></ul>";
-                               $("#initial_ul_"+data.ProjectId+"").append(str);			
-                           
-                           treeCollapseFolder("#" +data.ProjectId+ " .folder",null,".folder");
-                           
-                           
-                           $("#"+data.ProjectId+"> .TreeSpan").css("display", "inline");
-                           var childrenInitial = $("#initial_ul_Projects").find('> ul > li');
-                           var children = $("#"+data.ProjectId).find('li.PROJECT');
-                           if (!children.is(":visible")) {
-                               $("#"+data.ProjectId).children('.folder').find('> svg').removeClass('fa-folder').addClass('fa-folder-open');
-                               $("#initial_ul_Projects").children('.folder').find('> svg').removeClass('fa-folder').addClass('fa-folder-open');
-                           }
-                           children.show('fast');						
-                           childrenInitial.show('fast');
-                          
-                           // menus
-                           $("#"+data.ProjectId+"> .TreeSpan").contextmenu(function(){
-                               menuName=singleProject;							
-                               selectedProjectIdContext=$(this).attr('id');
-                               openContext(selectedProjectIdContext,"",singleProject,event);
-                           });
-                           
-                           $("#Manhole_f_"+data.ProjectId+" > .TreeSpan").contextmenu(function(){   
-                                IdNodeSelectedTemp = $(this).parent().attr('id').split("Manhole_f_")[1];
-                                menuName=menu;			
-                                openContext("","",menu,event);
-                                document.getElementById("projectIdManhole").style.display = "none";
-                                document.getElementById("projectNameManhole").style.display = "none";
-                            	
-                           });
-                           $("#Handhole_f_"+data.ProjectId+" > .TreeSpan").contextmenu(function(){
-                                IdNodeSelectedTemp = $(this).parent().attr('id').split("Handhole_f_")[1];																	 
-                                menuName=menuHandhole;			
-                                openContext("","",menuHandhole,event);
-                                document.getElementById("projectIdHandhole").style.display = "none";
-                                  document.getElementById("projectNameHandhole").style.display = "none";
-                                 });
-
-                            $("#FiberPath_f_"+data.ProjectId+" > .TreeSpan").contextmenu(function(){
-                                IdNodeSelectedTemp=$(this).parent().attr('id').split("FiberPath_f_")[1];
-                                menuName=menuFiberPath;		
-                                openContext("","",menuFiberPath,event);
-                                 });
-                            
-                             $("#DistributionBoard_f_"+data.ProjectId+" > .TreeSpan").contextmenu(function(){
-                                IdNodeSelectedTemp=$(this).parent().attr('id').split("DistributionBoard_f_")[1];
-                                      menuName=menuDistribBoard;			
-                                      openContext("","",menuDistribBoard,event);
-                                  document.getElementById("projectIdDB").style.display = "none";
-                                  document.getElementById("projectNameDB").style.display = "none";
-                                 });
-
-                            $("#Trench_f_"+data.ProjectId+" > .TreeSpan").contextmenu(function(){
-                                IdNodeSelectedTemp=$(this).parent().attr('id').split("Trench_f_")[1];
-                                      menuName=menuTrenches;
-                                      openContext("","",menuTrenches,event);
-                             });
-                             
-                           tree_prop_selection("#" +data.ProjectId+ " .TreeSpan");
-                           window[""+data.ProjectId]="";
-                           window[""+data.ProjectId]=[data.ProjectId,data.ProjectName];
-                           if(typeof infowindow!=='undefined'){
-                               infowindow.close();
-                           }
-                           
-                           // scroll to the created PROJECT
-                           $("#network_tree").animate({ scrollTop: document.getElementById(""+data.ProjectId).offsetTop+document.getElementById("initial_ul_Projects").offsetTop }, "slow");
-                                 
-                           }
-                           else{
-                              document.getElementById("Project_span_" + data.ProjectId).innerHTML = data.ProjectName;
-                     
-                           }
-
-                           // remove the selection of previous item if exist and add it to the new one
-                           if(IdSelectedTemp!=""){
-                               $("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-                               $("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-                           }
-                           $("#"+data.ProjectId+" > .TreeSpan").addClass("selected-span");
-                           $("#"+data.ProjectId+" > .TreeSpan").css("background-color", "#97b9cc");
-                           IdSelectedTemp=data.ProjectId;
-                       
-                           //////////// Update boq data and display it //////////////						
-                	
-                           $("#"+data.ProjectId+" > .TreeSpan").on("mouseover",function(e) {
-                               $(this).addClass('backgroundTree');
-                           }).on("mouseout",function(e) {
-                               $(this).removeClass('backgroundTree');
-                   
-                           });
-
-                           $("#projectModal").modal('hide');
-                           
-                           $("#projectModal").find("input,textarea,select")
-                                   .val('').end().find("input[type=checkbox], input[type=radio]")
-                                   .prop("checked", "")
-                                   .end();
-                       }
-
-                   },
-                   error: function (result) {
-                       alert("Error");
-                   }
-               }); 	
-           }
-           else{
-               alert(" Missing fields !!!");
-           }
-       });*/
 
     $("#saveProject").click(function() {
         if (document.getElementById("ProjectName").value != "") {
@@ -10912,8 +10749,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                             str = "<ul><li id ='DistributionBoard_access__" + data.ProjectId + "' style='display:none;' class='accessDBFolder'> <input type='checkbox' class='AccessDB checkFilter' id ='AccessDB__" + data.ProjectId + "' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Access </span></li></ul></li></ul>";
                             $("#DistributionBoard_f_" + data.ProjectId + "").append(str);
-
-                            treeCollapseFolder("#" + data.ProjectId + " .folder", null, ".folder");
 
 
                             $("#" + data.ProjectId + "> .TreeSpan").css("display", "inline");
@@ -11411,7 +11246,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                                         str = "<ul><li id='" + data.JunctionID + "' class='JUNCTION_M' style='display:none;width:100px;'><input type='checkbox' class='JctManholes checkFilter' class='filter'></input> <span  class='TreeSpan' style='color:black;width:195px'><img src='" + getContext() + "/resources/NetworkImages/junction.png'> " + junctionName + "  </span></li></ul>";
                                         $("#" + manholeId + "_f").append(str);
-                                        treeCollapseFolder("#" + manholeId + " .folder", "fast", ".folder");
 
                                         $("#" + manholeId + "> span>img").attr('src', getContext() + "/resources/NetworkImages/manholeRed.png");
 
@@ -11700,8 +11534,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                             openContext(selectedHandIdContext, "", singleHandholeJunction, event);
                         });
                         CreateJunctionClickEvent(data.JunctionID, "Handhole");
-
-                        treeCollapseFolder("#" + handholeID + " .folder", "fast", ".folder");
                     }
                     $("#handholeJunctionModal").modal('hide');
                     data = null;
@@ -12130,14 +11962,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 junctionCheckFilter("Manhole");
                             }//end else junction to append 		
 
-                            //$("#left").unbind('resize');
                             EnableOrigination = false;
-
-                            //$("#left").bind('resize', function(e) {	
-                            //	$('.tree li > .TreeSpan').width($(this).width());
-                            //});
-
-                            treeCollapseFolder("#" + data.ManholeId + " .folder", "fast", ".folder");
 
                         } // end update manhole
                         $("#" + data.ManholeId + " > .TreeSpan").css("display", "inline");
@@ -12331,19 +12156,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 }
                                 junctionCheckFilter("Handhole");
                             }//end else junction to append 
-
-
-                            //unbindTreeCheckboxEvents();
-
-                            //$("#left").unbind('resize');
                             EnableOrigination = false;
-
-                            //$("#left").bind('resize', function(e) {	
-                            //	$('.tree li > .TreeSpan').width($(this).width());														
-                            //});
-                            console.log("selector is " + "#" + data.handholeId + " .folder", "fast", ".folder");
-                            treeCollapseFolder("#" + data.handholeId + " .folder", "fast", ".folder");
-
                         }// end update 
 
 
@@ -16036,12 +15849,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         $("#" + data.FiberPathId + " > .TreeSpan ").addClass("selected-span");
                         $("#" + data.FiberPathId + " > .TreeSpan").css("background-color", "#97b9cc");
 
-
                         // show the cable in the tree 
                         pathMapListener(data.FiberPathId, "FiberPath_f_");
                         $("#" + data.FiberPathId).children(':checkbox').prop("checked", true);
 
-                        //unbindTreeCheckboxEvents();  // unbind the click on each checkbox related to fibercable
                         ModalReset("fiberPathModal");
 
                         if (actionFiberContext == "Update") {
@@ -16050,11 +15861,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 e.stopPropagation();
                             });
                         }
-
                     }
 
                     $('.TreeSpan').css("display", "inline");
-                    treeCollapseFolder("#" + IdSelectedTemp + " .folder", "fast", ".folder");
                     data = null
                     dict = []
                     dictTubes = []
@@ -16230,9 +16039,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 str = "<ul><li id='" + data.StrandID + "' class='STRAND' style='display:none;'><input type='checkbox' class='FiberStrand checkFilter' checked class='filter'></input> <span class='TreeSpan' style='color:black;'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:" + document.getElementById("strandColor").value + "'>null</span> <img style='margin-bottom:-3px; margin-left:-25px' src='" + getContext() + "/resources/NetworkImages/strand.png'> " + strandName + " / " + data.StrandID + " </span></li></ul>";
                             }
                             $("#" + tubeId + "_f").append(str);
-
-                            //treeFolder(); //event to open and close the folders
-                            treeCollapseFolder("#" + tubeId + " .folder", "fast", ".folder");
 
                             pathCheckFilter(TargetStrand, "parentFolderCheck", tubeId, "14", strandArray, allStrands, directionHashmapStrand, routeDisplayStrand, "", "", "", "");
 
@@ -16585,9 +16391,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                     str = "<ul><li id='" + data.tubeID + "' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' checked name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:" + document.getElementById("tubeColor").value + "'>null</span> <img src='" + getContext() + "/resources/NetworkImages/core.png' style='color: #08526D; margin-bottom:-3px; margin-left:-25px'> " + data.TubeName + " / " + data.tubeID + " <img src='" + getContext() + "/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands" + data.tubeID + "' class='pushPoints'> <img src='" + getContext() + "/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands" + data.tubeID + "' class='clearPoints'>  </span></li></ul>";
                                 }
                                 $("#" + selectedFiberContext + "_f").append(str);
-
-                                //treeFolder(); 
-                                treeCollapseFolder("#" + selectedFiberContext + " .folder", "fast", ".folder");
 
                                 pathCheckFilter(TargetTube, "parentFolderCheck", selectedFiberContext, "14", tubeArray, allTubes, directionHashmapTube, routeDisplayTube, "STRAND", strandArray, directionHashmapStrand, allStrands);
 
@@ -19899,6 +19702,8 @@ function tree_prop_general(ManholeId) {
     //$('.tree li:has(ul)').addClass('parent_li').find(' > .tree-span').attr('title', 'Collapse this branch'); 
 }
 
+
+/*
 function treeCollapseFolder(selector, type, clss) {
 
     if (selector == null) {
@@ -19966,6 +19771,68 @@ function treeCollapseFolder(selector, type, clss) {
 
     });
 }
+
+*/
+
+
+function treeCollapseFolder(selector, type, clss) {
+    if (selector == null) {
+        selector = " .folder";
+    }
+    $(document)
+        .off('click.treeCollapse', selector)
+        .on('click.treeCollapse', selector, function(e) {
+
+            var id = $(this).parent().attr('id');
+
+            if (id == "FiberPath_f_CurrentPhysicalLayer" && flag == 0 && $(this).parent().find(' > ul > li').is(":hidden")) {
+                getFiberPath();
+            } else if (id == "NodeActive_f_CurrentPhysicalLayer" && nodeFlag == 0 && $(this).parent().find(' > ul > li').is(":hidden")) {
+                getNode();
+            }
+
+            else if (id == "DistributionBoard_f_CurrentPhysicalLayer" && DBFlag == 0 && $(this).parent().find(' > ul > li').is(":hidden")) {
+                getDB("", "");
+            }
+            //zeina
+
+            else if (id == "Junction_f_CurrentPhysicalLayer" && junctionFlag == 0) {
+                getJunction();
+            } else if (id == "Site_f_CurrentPhysicalLayer" && siteFlag == 0) {
+                getSite("collaps", null);
+            } else if (id.startsWith('PROJECT_') && projectflag[id] == 0) {
+                getProject(id);
+            }
+            var children = $(this).parent().find(' > ul > li');
+
+            if (children.length > 0) {
+                // Has children: toggle their visibility
+
+                if (children.is(":visible")) {
+                    children.hide(type);
+                    $(this).parent().children(clss).find('> svg')
+                        .addClass('fa-folder')
+                        .removeClass('fa-folder-open');
+                } else {
+                    children.show(type);
+                    $(this).parent().children(clss).find('> svg')
+                        .addClass('fa-folder-open')
+                        .removeClass('fa-folder');
+                }
+            } else {
+                // No children: just toggle the folder icon
+                var icon = $(this).parent().children(clss).find('> svg');
+                if (icon.hasClass('fa-folder-open')) {
+                    icon.removeClass('fa-folder-open').addClass('fa-folder');
+                } else {
+                    icon.removeClass('fa-folder').addClass('fa-folder-open');
+                }
+            }
+            e.stopPropagation();
+        });
+}
+
+
 
 function tree_Prop(selector) {
     $(selector).bind('click', function(e) {
@@ -20067,10 +19934,10 @@ function MouseHoveringSpans() {
 
     $(document)
         .off('mouseover.treeHover mouseout.treeHover')
-        .on('mouseover.treeHover', '#network_tree .TreeSpan', function () {
+        .on('mouseover.treeHover', '#network_tree .TreeSpan, #Bottomdiv .TreeSpan', function () {
             $(this).addClass('backgroundTree');
         })
-        .on('mouseout.treeHover', '#network_tree .TreeSpan', function () {
+        .on('mouseout.treeHover', '#network_tree .TreeSpan, #Bottomdiv .TreeSpan', function () {
             $(this).removeClass('backgroundTree');
         });
 }
@@ -20117,11 +19984,11 @@ function tree_prop_selection() {
 */
 
 function tree_prop_selection() {
-    $("#network_tree")
+    $(document)
         .off('click.treeSelection')
-        .on('click.treeSelection', '.TreeSpan', function () {
+        .on('click.treeSelection', '#network_tree .TreeSpan, #Bottomdiv .TreeSpan', function () {
 
-            $("#network_tree .TreeSpan.selected-span")
+            $("#network_tree .TreeSpan.selected-span,  #Bottomdiv .TreeSpan.selected-span")
                 .removeClass("selected-span")
                 .css("background", "");
 
