@@ -19988,13 +19988,14 @@ function tree_prop_selection() {
         .off('click.treeSelection')
         .on('click.treeSelection', '#network_tree .TreeSpan, #Bottomdiv .TreeSpan', function () {
 
-            $("#network_tree .TreeSpan.selected-span,  #Bottomdiv .TreeSpan.selected-span")
-                .removeClass("selected-span")
-                .css("background", "");
-
-            $(this)
-                .addClass("selected-span")
-                .css("background-color", "#97b9cc");
+			if (IdSelectedTemp != "") {
+				$("#" + IdSelectedTemp + " > .TreeSpan").removeClass("selected-span");
+				$("#" + IdSelectedTemp + " > .TreeSpan").css("background", "");
+			}
+			
+			$(this).css("background-color", "#97b9cc");
+			$(this).addClass("selected-span");
+			IdSelectedTemp = $(this).parent().attr('id');			
         });
 }
 
