@@ -19964,24 +19964,6 @@ function tree_prop_selection(selector) {
 }
 
 */
-/*
-function tree_prop_selection() {
-    $(document)
-        .off('click.treeSelection')
-        .on('click.treeSelection', '.TreeSpan', function () {
-
-            $(".TreeSpan.selected-span")
-                .removeClass("selected-span")
-                .css("background", "");
-
-            $(this)
-                .addClass("selected-span")
-                .css("background-color", "#97b9cc");
-				console.log("CLICKED:", this);
-				console.log("CLASS:", $(this).attr("class"));
-        });
-}
-*/
 
 function tree_prop_selection() {
     $(document)
