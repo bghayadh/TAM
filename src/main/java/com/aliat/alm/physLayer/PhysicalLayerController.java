@@ -5443,6 +5443,7 @@ public class PhysicalLayerController {
 								+ distBoardSel + "' and PROJECT_ID='" + request.getParameter("projectID") + "'")
 						.getResultList();
 				rtn.put("DBData", DBData);
+/*				
 				List<Object[]> countConnections = session.createNativeQuery(
 						"select NUM_ROWS,NUM_COLUMNS,(SELECT COUNT(B.FP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.FP_STATUS IN ('Active', 'InActive') AND B.DB_ID='"
 								+ distBoardSel
@@ -5450,6 +5451,18 @@ public class PhysicalLayerController {
 								+ distBoardSel + "') AS back from DISTRIBUTION_BOARD b where b.DB_ID='" + distBoardSel
 								+ "'")
 						.getResultList();
+*/						
+				
+				
+				List<Object[]> countConnections = session.createNativeQuery(
+						"select NUM_ROWS,NUM_COLUMNS,(SELECT COUNT(B.FP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.FP_STATUS = 'Connected'  AND B.DB_ID='"
+								+ distBoardSel
+								+ "') AS front,(SELECT COUNT(B.BP_STATUS) FROM DISTRIBUTION_BOARD_MAPPING B WHERE B.BP_STATUS = 'Connected' AND B.DB_ID='"
+								+ distBoardSel + "') AS back from DISTRIBUTION_BOARD b where b.DB_ID='" + distBoardSel
+								+ "'")
+						.getResultList();
+				
+								
 				System.out.println("countConnections " + map.writeValueAsString(countConnections));
 				rtn.put("countConnections", countConnections);
 
@@ -5459,6 +5472,7 @@ public class PhysicalLayerController {
 						.uniqueResult();
 				rtn.put("DbMappingCount", DbMappingCount);
 
+/*				
 				Object countDbActiveFP = session.createNativeQuery(
 						"SELECT count(*) FROM DISTRIBUTION_BOARD_MAPPING WHERE FP_STATUS='Active' AND DB_ID='"
 								+ distBoardSel + "' ")
@@ -5482,6 +5496,7 @@ public class PhysicalLayerController {
 								+ distBoardSel + "' ")
 						.uniqueResult();
 				rtn.put("countDbInactiveBP", countDbInactiveBP);
+*/				
 
 				session.clear();
 				tx.commit();

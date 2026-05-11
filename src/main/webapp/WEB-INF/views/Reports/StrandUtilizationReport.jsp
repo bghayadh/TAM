@@ -20,8 +20,6 @@
         <script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet" />
-        <script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
         <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
         <link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
@@ -110,7 +108,7 @@ padding: 10px 0px;
 }
 
 .legendContainer{
-height: 800px;
+height: 718px;
 position: relative;
 }
 

@@ -8578,12 +8578,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 + "<tr>" + "<td><b>Total DB Mapping: </b>" + data.DbMappingCount + "</td></tr>"
                                 + "<tr>" + "<td><b>Num of Rows: </b>" + data.countConnections[0][0] + "</td></tr>"
                                 + "<tr>" + "<td><b>Num of Columnns: </b>" + data.countConnections[0][1] + "</td></tr>"
-                                + "<tr>" + "<td><b>Num of Front Connected: </b>" + data.countConnections[0][2] + "</td></tr>"
-                                + "<tr>" + "<td><b>Num of Back Connected: </b>" + data.countConnections[0][3] + "</td></tr>"
-                                + "<tr>" + "<td><b>Total Connected Front Ports: </b>" + data.countDbActiveFP + "</td></tr>"
-                                + "<tr>" + "<td><b>Total Not Connected Front Ports: </b>" + data.countDbInactiveFP + "</td></tr>"
-                                + "<tr>" + "<td><b>Total Connected Back Ports: </b>" + data.countDbActiveBP + "</td></tr>"
-                                + "<tr>" + "<td><b>Total Not Connected Back Ports: </b>" + data.countDbInactiveBP + "</td></tr>"
+                                + "<tr>" + "<td><b>Num of Front Connected Ports: </b>" + data.countConnections[0][2] + "</td></tr>"
+                                + "<tr>" + "<td><b>Num of Back Connected Ports: </b>" + data.countConnections[0][3] + "</td></tr>"
+								+ "<tr>" + "<td><b>Num of Not Connected Front Ports: </b>" + (data.countConnections[0][0] * data.countConnections[0][1] - data.countConnections[0][2])  + "</td></tr>"
+								+ "<tr>" + "<td><b>Num of Not Connected Back Ports: </b>" + (data.countConnections[0][0] * data.countConnections[0][1] - data.countConnections[0][3])  + "</td></tr>";
 
                             $("#boq_table").append(tr);
 
