@@ -752,6 +752,107 @@ function create_DB_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Ty
 
 function DBCheckFilter(Id, clusterName) {
 
+    $("#" + Id).children('input')
+        .off('change')
+        .on('change', function() {
+
+            const isChecked = $(this).is(':checked');
+
+            const $dbNode = $("#" + Id);
+
+            // --------------------------------------------------
+            // 1. Dynamic scope (Current OR Project)
+            // --------------------------------------------------
+            const $scope = $dbNode.closest(
+                ".DistributionBoard_f_CurrentPhysicalLayer, " +
+                ".DistributionBoard_f_projects"
+            );
+
+            // --------------------------------------------------
+            // 2. Hierarchy detection
+            // --------------------------------------------------
+            const $controller = $(this).closest("li.bController");
+            const $controllerFolder = $(this).closest("li.backboneControllerDBFolder, li.metroControllerDBFolder, li.accessControllerDBFolder");
+            const $layerFolder = $(this).closest("li.backboneDBFolder, li.metroDBFolder, li.accessDBFolder");
+
+            // --------------------------------------------------
+            // MARKER HANDLING
+            // --------------------------------------------------
+            if (isChecked) {
+                markersDistBoard[Id].setMap(map);
+                clusterName.addMarker(markersDistBoard[Id]);
+            } else {
+                markersDistBoard[Id].setMap(null);
+                clusterName.removeMarker(markersDistBoard[Id]);
+            }
+
+            // --------------------------------------------------
+            // 3. CONTROLLER LEVEL SYNC
+            // --------------------------------------------------
+            if ($controller.length) {
+
+                const total = $controller.find(".DistBoard").length;
+                const checked = $controller.find(".DistBoard:checked").length;
+
+                $controller.children("input").prop(
+                    "checked",
+                    total > 0 && total === checked
+                );
+            }
+
+            // --------------------------------------------------
+            // 4. CONTROLLER FOLDER SYNC  ⭐ NEW IMPORTANT PART
+            // --------------------------------------------------
+            if ($controllerFolder.length) {
+
+                const totalControllers =
+                    $controllerFolder.find(".ControllerPannel").length;
+
+                const checkedControllers =
+                    $controllerFolder.find(".ControllerPannel:checked").length;
+
+                $controllerFolder.children("input").prop(
+                    "checked",
+                    totalControllers > 0 &&
+                    totalControllers === checkedControllers
+                );
+            }
+
+            // --------------------------------------------------
+            // 5. LAYER LEVEL SYNC
+            // --------------------------------------------------
+            if ($layerFolder.length) {
+
+                const totalDBs = $layerFolder.find(".DistBoard").length;
+                const checkedDBs = $layerFolder.find(".DistBoard:checked").length;
+
+                $layerFolder.children("input").prop(
+                    "checked",
+                    totalDBs > 0 && totalDBs === checkedDBs
+                );
+            }
+
+            // --------------------------------------------------
+            // 6. GLOBAL SYNC (SAFE FOR BOTH STRUCTURES)
+            // --------------------------------------------------
+            const totalDBs = $scope.find(".DistBoard").length;
+            const checkedDBs = $scope.find(".DistBoard:checked").length;
+
+            $("#distBoardCheckAllBoq").prop("checked", checkedDBs > 0);
+
+            $scope.find("> .AllDistBoards").prop(
+                "checked",
+                totalDBs > 0 && totalDBs === checkedDBs
+            );
+        });
+}
+
+
+
+
+/*
+function DBCheckFilter(Id, clusterName) {
+
     $("#" + Id).children('input').bind("change", function() {
         var folderID = $(this).parents().eq(4).attr('id');
         let $parent = $(this).parents().eq(2);
@@ -770,6 +871,10 @@ function DBCheckFilter(Id, clusterName) {
             markersDistBoard[Id].setMap(null);
             clusterName.removeMarker(markersDistBoard[Id]);
         }
+		
+
+		
+		
         if ($(this).parents().eq(2).find('.DistributionBoard :checked').length == $(this).parents().eq(2).find('.DistributionBoard').length) {
             if (parentId && !parentId.toLowerCase().includes("controller")) {
                 $parent.children('input[type=checkbox]').prop('checked', true);
@@ -794,8 +899,11 @@ function DBCheckFilter(Id, clusterName) {
         else {
             $("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked", false);
         }
+				
     });
 }
+
+*/
 
 //transfer id for the controller transfered from different layer 
 
@@ -809,54 +917,6 @@ function getContainerSelector(networkLayer) {
     }
 }
 
-function controllerLayerCheckAll(layer) {
-
-    let selector = "#DistributionBoard_" + layer + "Controller__CurrentPhysicalLayer"; // Added #
-
-    // Check main checkbox for this layer
-
-    // Loop over its <li> elements inside <ul>
-    $(selector).find('ul > li').each(function() {
-        let controllerId = $(this).attr('id');
-        if (!controllerId) return;
-        if (controllerId.includes("Controller")) {
-            // Check the checkbox inside this li
-            $(this).children(':checkbox').prop("checked", true);
-
-            // Show the marker if it’s hidden
-            if (markersController[controllerId] && markersController[controllerId].getMap() == null) {
-                markersController[controllerId].setMap(map);
-
-                markerClusterController.addMarker(markersController[controllerId]);
-            }
-        }
-    });
-}
-
-
-function controllerLayerUnCheckAll(layer) {
-
-    let selector = "#DistributionBoard_" + layer + "Controller__CurrentPhysicalLayer";
-    $(selector).prop("checked", false);
-
-    // Loop over all <li> inside the UL(s) of this layer
-    $(selector).find('ul > li').each(function() {
-        let controllerId = $(this).attr('id');
-
-
-        if (!controllerId) return;
-
-        // Uncheck the li’s own checkbox
-        if (controllerId.includes("Controller")) {
-            $(this).children(':checkbox').prop("checked", false);
-            // Remove marker from map if it’s visible
-            if (markersController[controllerId] && markersController[controllerId].getMap() != null) {
-                markersController[controllerId].setMap(null);
-                markerClusterController.removeMarker(markersController[controllerId]);
-            }
-        }
-    });
-}
 
 function createController(controllerList, DBList) {
     if (typeof markersController === "undefined") {
@@ -1054,6 +1114,356 @@ function createControllerMarkerClick(Id, name, long, lat, markers, markerCluster
 
 function AllControllerCheckFilter(containerId, cluster) {
 
+    $("#" + containerId)
+        .children('input[type=checkbox]')
+        .off("change")
+        .on("change", function () {
+
+            const isChecked = $(this).is(':checked');
+            const $container = $("#" + containerId);
+
+            // =========================
+            // CONTROLLERS
+            // =========================
+            $container.find(".ControllerPannel").prop("checked", isChecked);
+
+            // =========================
+            // CONTROLLER MARKERS ONLY
+            // =========================
+            $container.find(".bController, .mController, .accessController").each(function () {
+
+                const id = $(this).attr("id");
+                const marker = markersController[id];
+
+                if (!marker) return;
+
+                marker.setMap(isChecked ? map : null);
+
+                if (!cluster) return;
+
+                isChecked
+                    ? cluster.addMarker(marker)
+                    : cluster.removeMarker(marker);
+            });
+
+            // =========================
+            // TRIGGER FULL SYNC
+            // =========================
+            syncDBHierarchyFromItem($container);
+        });
+}
+
+
+function controllerLayerCheckAll(layer) {
+
+    const selector =
+        "#DistributionBoard_" + layer + "Controller__CurrentPhysicalLayer, " +
+        "#DistributionBoard_" + layer + "Controller__PROJECT";
+
+    const $scope = $(selector);
+
+    // =========================
+    // CHECK ALL CONTROLLERS
+    // =========================
+    $scope.find(".ControllerPannel").prop("checked", true);
+
+    // =========================
+    // CONTROLLER MARKERS
+    // =========================
+    $scope.find(".bController, .mController, .accessController").each(function () {
+
+        const id = $(this).attr("id");
+        const marker = markersController[id];
+
+        if (!marker) return;
+
+        marker.setMap(map);
+        markerClusterController.addMarker(marker);
+    });
+
+    // =========================
+    // SYNC STATE ONLY
+    // =========================
+    syncDBHierarchyFromItem($scope);
+}
+
+function controllerLayerUnCheckAll(layer) {
+
+    const selector =
+        "#DistributionBoard_" + layer + "Controller__CurrentPhysicalLayer, " +
+        "#DistributionBoard_" + layer + "Controller__PROJECT";
+
+    const $scope = $(selector);
+
+    // =========================
+    // UNCHECK ALL CONTROLLERS
+    // =========================
+    $scope.find(".ControllerPannel").prop("checked", false);
+
+    // =========================
+    // REMOVE CONTROLLER MARKERS
+    // =========================
+    $scope.find(".bController, .mController, .accessController").each(function () {
+
+        const id = $(this).attr("id");
+        const marker = markersController[id];
+
+        if (!marker) return;
+
+        marker.setMap(null);
+        markerClusterController.removeMarker(marker);
+    });
+
+    // =========================
+    // SYNC STATE ONLY
+    // =========================
+    syncDBHierarchyFromItem($scope);
+}
+
+$(document).on('change', '.metroControllerDB', function() {
+    if ($(this).is(':checked')) {
+
+        controllerLayerCheckAll("metro");
+    } else {
+        controllerLayerUnCheckAll("metro");
+    }
+});
+
+$(document).on('change', '.accessControllerDB', function() {
+    if ($(this).is(':checked')) {
+
+        controllerLayerCheckAll("access");
+    } else {
+        controllerLayerUnCheckAll("access");
+    }
+});
+
+function controllerCheckFilter(controllerId, cluster) {
+
+    $("#" + controllerId)
+        .children('input[type=checkbox]')
+        .off('change')
+        .on('change', function () {
+
+            const isChecked = $(this).is(':checked');
+            const $controller = $("#" + controllerId);
+
+            const marker = markersController[controllerId];
+
+            // MARKER ONLY
+            if (marker) {
+                marker.setMap(isChecked ? map : null);
+
+                if (cluster) {
+                    isChecked
+                        ? cluster.addMarker(marker)
+                        : cluster.removeMarker(marker);
+                }
+            }
+
+            // ONLY LOCAL PROPAGATION (NO ROOT SYNC)
+            $controller.find(".ControllerPannel").prop("checked", isChecked);
+
+            // FIX: ONLY NEAREST LAYER, NOT ROOT
+            const $layer = $controller.closest(
+                ".backboneDBFolder, .metroDBFolder, .accessDBFolder"
+            );
+
+            syncDBHierarchyFromItem($layer);
+        });
+}
+
+function syncDBHierarchyFromItem($item) {
+
+    const $layer = $item.closest(
+        ".backboneDBFolder, .metroDBFolder, .accessDBFolder"
+    );
+
+    if (!$layer.length) return;
+
+    // =========================
+    // CONTROLLER FOLDERS
+    // =========================
+    $layer.find(
+        ".backboneControllerDBFolder," +
+        ".metroControllerDBFolder," +
+        ".accessControllerDBFolder"
+    ).each(function () {
+
+        const $folder = $(this);
+
+        const total = $folder.find(".ControllerPannel").length;
+        const checked = $folder.find(".ControllerPannel:checked").length;
+
+        // IMPORTANT: DO NOT BREAK EMPTY FOLDERS
+        if (total === 0) return;
+
+        $folder.children("input[type=checkbox]").prop(
+            "checked",
+            total === checked
+        );
+    });
+
+    // =========================
+    // LAYER CHECK
+    // =========================
+    const totalDB = $layer.find(".DistBoard").length;
+    const checkedDB = $layer.find(".DistBoard:checked").length;
+
+    const totalC = $layer.find(".ControllerPannel").length;
+    const checkedC = $layer.find(".ControllerPannel:checked").length;
+
+    const allChecked =
+        (totalDB === 0 || totalDB === checkedDB) &&
+        (totalC === 0 || totalC === checkedC);
+
+    $layer.children("input[type=checkbox]").prop("checked", allChecked);
+
+    // =========================
+    // GLOBAL BOQ (SAFE)
+    // =========================
+    const $root = $(".DistributionBoard_f_CurrentPhysicalLayer");
+
+    $("#distBoardCheckAllBoq").prop(
+        "checked",
+        $root.find(".DistBoard:checked, .ControllerPannel:checked").length > 0
+    );
+}
+
+/*
+function controllerLayerCheckAll(layer) {
+
+    let selector = "#DistributionBoard_" + layer + "Controller__CurrentPhysicalLayer"; // Added #
+
+    // Check main checkbox for this layer
+
+    // Loop over its <li> elements inside <ul>
+    $(selector).find('ul > li').each(function() {
+        let controllerId = $(this).attr('id');
+        if (!controllerId) return;
+        if (controllerId.includes("Controller")) {
+            // Check the checkbox inside this li
+            $(this).children(':checkbox').prop("checked", true);
+
+            // Show the marker if it’s hidden
+            if (markersController[controllerId] && markersController[controllerId].getMap() == null) {
+                markersController[controllerId].setMap(map);
+
+                markerClusterController.addMarker(markersController[controllerId]);
+            }
+        }
+    });
+}
+
+
+function controllerLayerUnCheckAll(layer) {
+
+    let selector = "#DistributionBoard_" + layer + "Controller__CurrentPhysicalLayer";
+    $(selector).prop("checked", false);
+
+    // Loop over all <li> inside the UL(s) of this layer
+    $(selector).find('ul > li').each(function() {
+        let controllerId = $(this).attr('id');
+
+
+        if (!controllerId) return;
+
+        // Uncheck the li’s own checkbox
+        if (controllerId.includes("Controller")) {
+            $(this).children(':checkbox').prop("checked", false);
+            // Remove marker from map if it’s visible
+            if (markersController[controllerId] && markersController[controllerId].getMap() != null) {
+                markersController[controllerId].setMap(null);
+                markerClusterController.removeMarker(markersController[controllerId]);
+            }
+        }
+    });
+}
+
+*/
+
+
+/*
+
+function AllControllerCheckFilter(containerId, cluster) {
+
+    $("#" + containerId)
+        .find('input')
+        .first()
+        .off("change")
+        .on("change", function () {
+
+            const isChecked = $(this).is(':checked');
+
+            const $container = $("#" + containerId);
+
+            // --------------------------------------------------
+            // 1. Detect correct scope dynamically
+            // --------------------------------------------------
+            const $scope = $container.closest(
+                ".DistributionBoard_f_CurrentPhysicalLayer, " +
+                ".DistributionBoard_f_projects"
+            );
+
+            const $controllerFolder = $container.closest(
+                "li.backboneControllerDBFolder, " +
+                "li.metroControllerDBFolder, " +
+                "li.accessControllerDBFolder"
+            );
+
+            const layer =
+                $container.closest("li.backboneControllerDBFolder").length ? "backbone" :
+                $container.closest("li.metroControllerDBFolder").length ? "metro" :
+                "access";
+
+            // --------------------------------------------------
+            // 2. Clear cluster safely
+            // --------------------------------------------------
+            if (cluster) cluster.clearMarkers();
+            else markerClusterController.clearMarkers();
+
+            // --------------------------------------------------
+            // 3. Apply action
+            // --------------------------------------------------
+            if (isChecked) {
+                controllerLayerCheckAll(layer);
+            } else {
+                controllerLayerUnCheckAll(layer);
+            }
+
+            // --------------------------------------------------
+            // 4. UPDATE CONTROLLER FOLDER (IMPORTANT FIX ⭐)
+            // --------------------------------------------------
+            if ($controllerFolder.length) {
+
+                const total = $controllerFolder.find(".ControllerPannel").length;
+                const checked = $controllerFolder.find(".ControllerPannel:checked").length;
+
+                $controllerFolder.children("input").prop(
+                    "checked",
+                    total > 0 && total === checked
+                );
+            }
+
+            // --------------------------------------------------
+            // 5. GLOBAL DB SYNC (SAFE)
+            // --------------------------------------------------
+            const totalDBs = $scope.find(".DistBoard").length;
+            const checkedDBs = $scope.find(".DistBoard:checked").length;
+
+            $("#distBoardCheckAllBoq").prop("checked", checkedDBs > 0);
+
+            $scope.find("> .AllDistBoards").prop(
+                "checked",
+                totalDBs > 0 && totalDBs === checkedDBs
+            );
+        });
+}
+
+*/
+/*
+function AllControllerCheckFilter(containerId, cluster) {
+
     // Bind change only to the main checkbox (assuming it's the first input in the container)
     $("#" + containerId).find('input').first().bind("change", function() {
 
@@ -1088,26 +1498,11 @@ function AllControllerCheckFilter(containerId, cluster) {
     });
 }
 
-$(document).on('change', '.metroControllerDB', function() {
-    if ($(this).is(':checked')) {
-
-        controllerLayerCheckAll("metro");
-    } else {
-        controllerLayerUnCheckAll("metro");
-    }
-});
-
-$(document).on('change', '.accessControllerDB', function() {
-    if ($(this).is(':checked')) {
-
-        controllerLayerCheckAll("access");
-    } else {
-        controllerLayerUnCheckAll("access");
-    }
-});
+*/
 
 
 
+/*
 function controllerCheckFilter(controllerId, cluster) {
 
     // Bind change event on checkbox inside the controller element
@@ -1154,6 +1549,7 @@ function controllerCheckFilter(controllerId, cluster) {
         $("#DistributionBoard_f_CurrentPhysicalLayer > .AllDistBoards").prop("checked", checkedDbs === totalDbs);
     });
 }
+*/
 
 function appendControllerToTree(data) {
     let str = "";

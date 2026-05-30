@@ -323,9 +323,11 @@ function dbAutoCompleteForMapping() {
     fields.forEach(f => {
         $("#DbMappingTable").on("focus", `td[name='${f.name}'] input`, function() {
             let $input = $(this);
-            if (!$input.data("ui-autocomplete")) {
-                f.func($input);
+            if ($input.data("ac-initialized")) {
+                return;
             }
+            f.func($input);
+            $input.data("ac-initialized", true);
         });
     });
 }
@@ -589,7 +591,6 @@ function dbAutoCompleteTubeName(input) {
             });
 
         }, 900),
-
         minLength: 0,
         maxShowItems: 4,
         scroll: true,
@@ -2078,7 +2079,7 @@ $(document).ready(function() {
     });
 
     $("#sortByIndex").click(function() {
-        dbmappingdata = [];
+        dbPortMapData = [];
 
         $("#DbMappingTable > tbody").find('input[name="record"]').each(function(i) {
             var index = $(this).find('input[name="Index"]').val();
@@ -2147,68 +2148,22 @@ $(document).ready(function() {
             var backModule = $(this).parent().parent().children('td[name="backModule"]').children('input').val();
             var backPortNum = $(this).parent().parent().children('td[name="backPortNum"]').children('input').val();
 
-            dbmappingdata.push([Number(rowColIndex),
-            Number(rowNum),
-            Number(colNum),
-                portId,
-                fP_Status,
-                fP_LocationType,
-                fP_LocationID,
-                fP_LocationM,
-                fP_Location,
-                fP_EquipmentType,
-                fP_Equipment,
-                fP_EquipmentID,
-                fP_EquipmentName,
-                fP_Address,
-                bP_Status,
-                bP_StrandID,
-                bP_StrandName,
-                bP_TubeID,
-                bP_TubeName,
-                bP_FiberID,
-                bP_FiberName,
-                fP_StrandID,
-                fP_StrandName,
-                fP_TubeID,
-                fP_TubeName,
-                fP_FiberID,
-                fP_FiberName,
-                bP_LocationType,
-                bP_LocationID,
-                bP_LocationM,
-                bP_Location,
-                bP_EquipmentType,
-                bP_Equipment,
-                bP_EquipmentID,
-                bP_EquipmentName,
-                bP_Address,
-                fP_StrandNb,
-                fP_TubeNb,
-                bP_StrandNb,
-                bP_TubeNb,
-                fP_StrandColor,
-                fP_TubeColor,
-                bP_StrandColor,
-                bP_TubeColor,
-                fP_JunctionID,
-                fP_JunctionName,
-                bP_JunctionID,
-                bP_JunctionName,
-                nearModule, nearPortNum, nearPatchType,
-                farKitSerialNum, farModule, farPortNum,
-                backModule, backPortNum, backKitSerialNum
-            ]);
+            dbPortMapData.push([Number(rowColIndex), Number(rowNum), Number(colNum), portId, fP_Status, fP_LocationType, fP_LocationID,
+                fP_LocationM, fP_Location, fP_EquipmentType, fP_Equipment, fP_EquipmentID, fP_EquipmentName, fP_Address, bP_Status, bP_StrandID,
+                bP_StrandName, bP_TubeID, bP_TubeName, bP_FiberID, bP_FiberName, fP_StrandID, fP_StrandName, fP_TubeID, fP_TubeName, fP_FiberID,
+                fP_FiberName, bP_LocationType, bP_LocationID, bP_LocationM, bP_Location, bP_EquipmentType, bP_Equipment, bP_EquipmentID,
+                bP_EquipmentName, bP_Address, fP_StrandNb, fP_TubeNb, bP_StrandNb, bP_TubeNb, fP_StrandColor, fP_TubeColor, bP_StrandColor,
+                bP_TubeColor, fP_JunctionID, fP_JunctionName, bP_JunctionID, bP_JunctionName, nearModule, nearPortNum, nearPatchType,
+                farKitSerialNum, farModule, farPortNum, backModule, backPortNum, backKitSerialNum]);
         });
 
         var totalmodules = Number($("#DistributionBoardNumModules"));
         var rowsPerModule = Number($("#DistributionBoardRowPerModule"));
 
         var panelInfo = [rowsPerModule, totalmodules];
-        //dbmappingdata.sort(sortFunction);
-        dbmappingdata = dbmappingdata.sort((a, b) => a[0] - b[0]);
+        dbPortMapData = dbPortMapData.sort((a, b) => a[0] - b[0]);
         $("#DbMappingTable > tbody").empty();
-        DBMappingData(dbmappingdata, panelInfo);
+        DBMappingData(dbPortMapData, panelInfo);
     });
 
     if (writeDB === '1') {
@@ -2293,13 +2248,7 @@ $(document).ready(function() {
                         }
                     }
                 });
-
-
-
-
-
             }
-
         });
 
         $("#dbPort_assignTube").autocomplete({

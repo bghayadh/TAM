@@ -550,6 +550,4 @@ function getSelectedRowsJctMapping() {
 
         });
     }
-
 }
-

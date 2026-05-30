@@ -1,77 +1,69 @@
-var projectflag= {};
-function getProject(projectId){
-	 	
-	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
-    if(projectflag[projectId] == 0){
-    	$.ajax({
-    		type: "GET",
-    		contentType: "application/json; charset=utf-8",
-    		url: getContext()+'/getProject',
-    		data: {	
-    			 "selectedProjectIdContext":projectId			
-    		},
-    		dataType: "json",
-    		success: function (data) {
-    			if (data != null) {
-    				//if (data.searchResult != "Failed") {
-						
-    					  var physicalLayerList =  JSON.parse(data.physicalLayerList); // No need to parse again
-		            	  var physicalLayerData =  JSON.parse(data.physicalLayerData);
-		                 // console.log("physicalLayerListaaa "+physicalLayerList)
-		                  
-		                  
-		                  ListManhole = physicalLayerList["Manhole"]
-                		  ListManholeJunction  = physicalLayerList["Junction_Manhole"]
-        				  ListHandhole = physicalLayerList["Handhole"]
-						  ListHandholeJunction = physicalLayerList["Junction_Handhole"]
-						  JunctionList = physicalLayerList["JunctionList"]
-						  distribBoardList = physicalLayerList["Distribution_Board"]  
-						  trenchList = physicalLayerList["Trench"]
-						  trenchAuxiliary_Data = physicalLayerData["trench_Auxiliary"]  
-						  ductList = physicalLayerList["duct"]
-						  ductAuxiliary_Data = physicalLayerData["ductAuxiliary"] 
-						  
-						  fiberList = physicalLayerList["fiber"]
-						  fiberTubes   = physicalLayerData["fiber_Tubes"]
-						  fiberStrands = physicalLayerData["fiber_Strands"]
-						  fiberAuxiliary_Data = physicalLayerData["fiber_Auxiliary"]
-						  tubesAuxiliaries  = physicalLayerData["tubes_Auxiliaries"]
-						  strandsAuxiliaries = physicalLayerData["strands_Auxiliaries"]
-    					appendProjectElement(ListManhole,ListManholeJunction,ListHandhole,ListHandholeJunction,JunctionList,fiberList,fiberAuxiliary_Data,fiberTubes,tubesAuxiliaries,fiberStrands,strandsAuxiliaries,distribBoardList,trenchList,trenchAuxiliary_Data,ductList,ductAuxiliary_Data,projectId);
-		                  
-		               // in order to set all markers related to this project in case we click the checkbox of project
-		                  if ($('#'+projectId+' .projectallElements:checked').length > 0) {
-								mainPathCheckFilter($("#"+"FiberPath_f_"+projectId).children('input'));
-								mainPathCheckFilter($("#"+"Trench_f_"+projectId).children('input'));
-								
-								
-								  checkAllCheckboxes(projectId); 									
-							
-							}
-		                  
-		                  //allProjectElementsCheckFilter();
-		                //these checkboxes related for cuurentphysicallayer and not project ex: fiberCheckAllBoq is checked when all fiber cable checked in currrent physical layer 
-		      			$("#fiberCheckAllBoq").prop("checked",false);
-		      			$("#tubeCheckAllBoq").prop("checked",false);
-		      			$("#strandCheckAllBoq").prop("checked",false);
-		      			$("#trenchCheckAllBoq").prop("checked",false);
-		      			$("#ductCheckAllBoq").prop("checked",false);
-							
-    				    projectflag[projectId] = 1;	
-    				
-    				$("#loading").remove();	
-    			}
-    		},
-    		error: function(result) {
-    			alert("Error");
-    		}
-    		});
-    }
-	else {
-		$("#loading").remove();	
-	}
-	
+var projectflag = {};
+function getProject(projectId) {
 
+    $('body').append('<div id="loading"><img id="loading-image" src="' + getContext() + '/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
+    if (projectflag[projectId] == 0) {
+        $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: getContext() + '/getProject',
+            data: {
+                "selectedProjectIdContext": projectId
+            },
+            dataType: "json",
+            success: function(data) {
+                if (data != null) {
+
+                    var physicalLayerList = JSON.parse(data.physicalLayerList); // No need to parse again
+                    var physicalLayerData = JSON.parse(data.physicalLayerData);
+
+                    ListManhole = physicalLayerList["Manhole"]
+                    ListManholeJunction = physicalLayerList["Junction_Manhole"]
+                    ListHandhole = physicalLayerList["Handhole"]
+                    ListHandholeJunction = physicalLayerList["Junction_Handhole"]
+                    JunctionList = physicalLayerList["JunctionList"]
+                    distribBoardList = physicalLayerList["Distribution_Board"]
+                    trenchList = physicalLayerList["Trench"]
+                    trenchAuxiliary_Data = physicalLayerData["trench_Auxiliary"]
+                    ductList = physicalLayerList["duct"]
+                    ductAuxiliary_Data = physicalLayerData["ductAuxiliary"]
+
+                    fiberList = physicalLayerList["fiber"]
+                    fiberTubes = physicalLayerData["fiber_Tubes"]
+                    fiberStrands = physicalLayerData["fiber_Strands"]
+                    fiberAuxiliary_Data = physicalLayerData["fiber_Auxiliary"]
+                    tubesAuxiliaries = physicalLayerData["tubes_Auxiliaries"]
+                    strandsAuxiliaries = physicalLayerData["strands_Auxiliaries"]
+                    appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, ListHandholeJunction, JunctionList, fiberList, fiberAuxiliary_Data, fiberTubes, tubesAuxiliaries, fiberStrands, strandsAuxiliaries, distribBoardList, trenchList, trenchAuxiliary_Data, ductList, ductAuxiliary_Data, projectId);
+
+                    // in order to set all markers related to this project in case we click the checkbox of project
+                    if ($('#' + projectId + ' .projectallElements:checked').length > 0) {
+                        mainPathCheckFilter($("#" + "FiberPath_f_" + projectId).children('input'));
+                        mainPathCheckFilter($("#" + "Trench_f_" + projectId).children('input'));
+
+                        checkAllCheckboxes(projectId);
+                    }
+
+                    //these checkboxes related for cuurentphysicallayer and not project ex: fiberCheckAllBoq is checked when all fiber cable checked in currrent physical layer 
+                    $("#fiberCheckAllBoq").prop("checked", false);
+                    $("#tubeCheckAllBoq").prop("checked", false);
+                    $("#strandCheckAllBoq").prop("checked", false);
+                    $("#trenchCheckAllBoq").prop("checked", false);
+                    $("#ductCheckAllBoq").prop("checked", false);
+
+                    projectflag[projectId] = 1;
+
+                    $("#loading").remove();
+                }
+            },
+            error: function(result) {
+                alert("Error");
+            }
+        });
+    }
+    else {
+        $("#loading").remove();
+    }
 }
 
 
@@ -87,17 +79,14 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
             //Junction exists
             if (ListManhole[i][5] > 0) {
                 str = "<ul><li id='" + ListManhole[i][0] + "' class='MANHOLE' style='display:none;width:100px;'><input type='checkbox' class='Manhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='" + getContext() + "/resources/NetworkImages/manholeRed.png'>  " + ListManhole[i][1] + " </span><ul><li id='" + ListManhole[i][0] + "_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='ManholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
-                //$("#Manhole_f_CurrentPhysicalLayer").append(str);  	
                 $("#Manhole_f_" + ListManhole[i][4] + "").append(str);
 
                 create_Marker_Click(ListManhole[i][0], ListManhole[i][1], ListManhole[i][2], ListManhole[i][3], markersManhole, markerClusterManhole, "Junction", "");
                 ManholeCheckFilter(ListManhole[i][0]);
                 markersManhole[ListManhole[i][0]].setMap(null);
-
             }
             else {
                 str = "<ul><li id='" + ListManhole[i][0] + "' class='MANHOLE' style='display:none;width:100px;'><input type='checkbox' class='Manhole' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px'><img src='" + getContext() + "/resources/NetworkImages/manholeRed.png'> " + ListManhole[i][1] + "</span></li></ul>";
-                //$("#Manhole_f_CurrentPhysicalLayer").append(str);  	
                 $("#Manhole_f_" + ListManhole[i][4] + "").append(str);
 
                 create_Marker_Click(ListManhole[i][0], ListManhole[i][1], ListManhole[i][2], ListManhole[i][3], markersManhole, markerClusterManhole, "No_Junction", "");
@@ -111,10 +100,7 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 menuName = singleManhole;
                 openContext(selectedManIdContext, "", singleManhole, event);
             });
-
         }
-        //AllManholeCheckFilter();
-
     }
 
 
@@ -143,7 +129,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
     }
     junctionCheckFilter("Manhole");
 
-
     if (ListHandhole != null) {
         for (i = 0;i < ListHandhole.length;i++) {
             window["" + ListHandhole[i][0]] = [];
@@ -152,7 +137,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
 
             if (ListHandhole[i][5] > 0) {
                 str = "<ul><li id='" + ListHandhole[i][0] + "' class='HANDHOLE' style='display:none;width:100px;'><input type='checkbox' class='Handhole checkFilter' class='filter' name='Element' ></input> <span class='folder' > <i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:355px' class='TreeSpan'><img style='color: #08526D;' src='" + getContext() + "/resources/NetworkImages/handholeYellow.png'>  " + ListHandhole[i][1] + " </span><ul><li id='" + ListHandhole[i][0] + "_f' style='display:none;' class='junctionFolder'> <input type='checkbox' class='HandholeJct checkFilter' unchecked name='filter'></input> <span  class='folder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;width:315px' class='TreeSpan'>Junctions </span></li></ul></li></ul>";
-                //$("#Handhole_f_CurrentPhysicalLayer").append(str);
                 $("#Handhole_f_" + ListHandhole[i][4] + "").append(str);
 
                 create_Marker_Click(ListHandhole[i][0], ListHandhole[i][1], ListHandhole[i][2], ListHandhole[i][3], markersHandhole, markerClusterHandhole, "Junction", "");
@@ -162,7 +146,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
             }
             else {
                 str = "<ul><li id='" + ListHandhole[i][0] + "' class='HANDHOLE' style='display:none;width:100px;'><input type='checkbox' class='Handhole' class='filter checkFilter' name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px'><img src='" + getContext() + "/resources/NetworkImages/handholeYellow.png'> " + ListHandhole[i][1] + "</span></li></ul>";
-                //$("#Handhole_f_CurrentPhysicalLayer").append(str); 
                 $("#Handhole_f_" + ListHandhole[i][4] + "").append(str);
 
                 create_Marker_Click(ListHandhole[i][0], ListHandhole[i][1], ListHandhole[i][2], ListHandhole[i][3], markersHandhole, markerClusterHandhole, "No_Junction", "");
@@ -197,7 +180,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
     junctionCheckFilter("Handhole");
 
 
-
     if (JunctionList != null) {
         for (i = 0;i < JunctionList.length;i++) {
             window["" + JunctionList[i][0]] = [];
@@ -223,8 +205,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 selectedManIdContext = "";
                 selectedJct = selectedJuncIdContext;
                 openContext(selectedJuncIdContext, "", singleJunctionMenu, event);
-
-
             });
         }
 
@@ -232,9 +212,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
     if (junctionFlag == 0) {
         AllJunctionCheckFilter();
     }
-
-
-
 
 
     if (fiberList != null) {
@@ -310,7 +287,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
             }
 
             window["mapPointsNames_" + fiberList[i][4]].push(dst);
-
 
             // fiber boundaries and cable points
             window["" + fiberList[i][4]] = fiberList[i];
@@ -402,7 +378,7 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
 
                 str = "<ul><li id='" + tubeId + "' class='TUBE' style='display:none;width:100px;'><input type='checkbox' class='FiberTube checkFilter' name='filter'></input> <span class='TreeSpan' style='color:black;width:274px'> <span style='font-size:12px; font-weight:bold; transform: translateY(-4px); color:" + tubeColor + "'> " + tubeNumber + "</span> <img style='color: #08526D; margin-bottom:-3px; margin-left:-25px' src='" + getContext() + "/resources/NetworkImages/core.png'> " + tubeName + " / " + tubeId + " <img src='" + getContext() + "/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsStrands" + tubeId + "' class='pushPoints'> <img src='" + getContext() + "/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsStrands" + tubeId + "' class='clearPoints'> </span></li></ul>";
             }
-            //console.log("the tube id is " +fiberTubes[i][12]);
+
             $("#" + fiberTubes[i][12] + "_f").append(str);
 
             pathCheckFilter(TargetTube, "parentFolderCheck", fiberTubes[i][12], "14", tubeArray, allTubes, directionHashmapTube, routeDisplayTube, "STRAND", strandArray, directionHashmapStrand, allStrands);
@@ -470,7 +446,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 selectedStrandPath = $(this).parent().attr('id');
                 openContext(selectedStrandPath, "", menuStrandPath, event)
             });
-
         }
     }
 
@@ -511,11 +486,9 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 "geoDistance": geoDistance
             });
 
-
             myLatLng = new google.maps.LatLng(lat, lng);
             window["mapPointsNames_" + tubeId].splice(window["mapPointsNames_" + tubeId].length - 1, 0, tubeAuxPoint);// insert at before last index which is the destination
             window["mapPoints_" + tubeId].splice(window["mapPoints_" + tubeId].length - 1, 0, myLatLng);// insert at before last index which is the destination
-
         }
     }
 
@@ -636,11 +609,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
         }
     }
 
-
-
-
-
-
     if (distribBoardList != null) {
         for (i = 0;i < distribBoardList.length;i++) {
             allDB.push(distribBoardList[i][0]);
@@ -649,35 +617,26 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
 
             if (distribBoardList[i][8] == "backbone") {
                 str = "<ul><li id='" + distribBoardList[i][0] + "'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/backboneDB.png'> " + distribBoardList[i][3] + "/" + distribBoardList[i][0] + " </span></li></ul>";
-                //$("#DistributionBoard_backbone__CurrentPhysicalLayer").append(str);
                 $("#DistributionBoard_backbone__" + distribBoardList[i][6]).append(str);
 
                 create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterBackboneDistBoard, "", boardCity);
-                //markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+distribBoardList[i][0]]);
                 markerClusterBackboneDistBoard.removeMarker(distribBoardList[i][0]);
                 clusterName = markerClusterBackboneDistBoard;
 
-                /*
-                HandholeCheckFilter(ListHandhole[i][0]);
-                    markersHandhole[ListHandhole[i][0]].setMap(null);*/
             }
             else if (distribBoardList[i][8] == "metro") {
                 str = "<ul><li id='" + distribBoardList[i][0] + "'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/metroDb.png'> " + distribBoardList[i][3] + "/" + distribBoardList[i][0] + " </span></li></ul>";
-                //$("#DistributionBoard_metro__CurrentPhysicalLayer").append(str);
                 $("#DistributionBoard_metro__" + distribBoardList[i][6]).append(str);
 
                 create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterMetroDistBoard, "", boardCity);
-                //markerClusterMetroDistBoard.addMarker(markersDistBoard[""+distribBoardList[i][0]]);
                 markerClusterMetroDistBoard.removeMarker(distribBoardList[i][0]);
                 clusterName = markerClusterMetroDistBoard;
             }
             else if (distribBoardList[i][8] == "access") {
                 str = "<ul><li id='" + distribBoardList[i][0] + "'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/accessDb.png'> " + distribBoardList[i][3] + "/" + distribBoardList[i][0] + " </span></li></ul>";
-                //$("#DistributionBoard_access__CurrentPhysicalLayer").append(str);
                 $("#DistributionBoard_access__" + distribBoardList[i][6]).append(str);
 
                 create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterAccessDistBoard, "", boardCity);
-                //markerClusterAccessDistBoard.addMarker(markersDistBoard[""+distribBoardList[i][0]]);
                 markerClusterAccessDistBoard.removeMarker(distribBoardList[i][0]);
                 clusterName = markerClusterAccessDistBoard;
             }
@@ -690,18 +649,14 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 selectedDistBoardContext = $(this).parents().attr('id');
                 selectedDistBoardName = $(this).text();
                 openContext(selectedDistBoardContext, selectedDistBoardName, singleDistBoard, event);
-
             });
-
         }
 
         AllDistributionBoardCheckFilter("DistributionBoard_backbone__" + ProjectId, markerClusterBackboneDistBoard);
         AllDistributionBoardCheckFilter("DistributionBoard_metro__" + ProjectId, markerClusterMetroDistBoard);
         AllDistributionBoardCheckFilter("DistributionBoard_access__" + ProjectId, markerClusterAccessDistBoard);
         AllDistributionBoardCheckFilter("DistributionBoard_f_" + ProjectId, "")
-        //console.log("ProjectId "+ProjectId)
     }
-
 
     if (trenchList != null) {
         for (i = 0;i < trenchList.length;i++) {
@@ -710,7 +665,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
             window["" + trenchId] = [];
             window["" + trenchId] = trenchList[i];
             str = "<ul><li id='" + trenchId + "'  class='Trench' style='display:none;width:100px;'><input type='checkbox' class='TRENCH checkFilter' unchecked name='filter'></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/trench.png' style='opacity:0.6'> " + trenchList[i][1] + " / " + trenchId + " <img src='" + getContext() + "/resources/NetworkImages/check.png' hidden style='margin-left:60px' id='pushPointsTrench" + trenchId + "' class='pushPoints'> <img src='" + getContext() + "/resources/NetworkImages/remove.png' hidden style='margin-left:10px' id='cancelPointsTrench" + trenchId + "' class='clearPoints'> </span></li></ul>";
-            //$("#Trench_f_CurrentPhysicalLayer").append(str);
             $("#Trench_f_" + trenchList[i][17] + "").append(str);
 
             window["" + trenchId] = [];
@@ -779,10 +733,7 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
 
             pathCheckFilter("initial_ul", "parentFolderCheck", "Trench_f_" + trenchList[i][17], "", "", "", "", "", "", "", "", "");
         }
-
     }
-
-
 
     if (trenchAuxiliary_Data != null) {
         for (i = 0;i < trenchAuxiliary_Data.length;i++) {
@@ -919,11 +870,6 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
     }
 
 
-
-
-
-
-
     $(".HANDHOLE > .TreeSpan").contextmenu(function() {
 
         selectedHandIdContext = $(this).parent().attr('id');
@@ -932,13 +878,8 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
         openContext(selectedHandIdContext, "", singleHandhole, event);
     });
 
-
-
-
-
     $('.TreeSpan').css("display", "inline");
     MouseHoveringSpans(null);
-
 
 
     ListManhole = [];
@@ -960,300 +901,284 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
 }
 
 function checkAllCheckboxes(projectID) {
-	//check all element checkboxes related to that project 
-    $("#"+projectID).find("input[type='checkbox']").prop('checked', true);
-    
+    //check all element checkboxes related to that project 
+    $("#" + projectID).find("input[type='checkbox']").prop('checked', true);
+
     //set handhole marker
-    $("#"+projectID).find(".Handhole:checked" ).each(function(){
+    $("#" + projectID).find(".Handhole:checked").each(function() {
 
-		id=$(this).parent().attr('id');
-		if(markersHandhole[id].getMap()==null){
-			markersHandhole[id].setMap(map);			
-			markerClusterHandhole.addMarker(markersHandhole[id]);
-		}				
+        id = $(this).parent().attr('id');
+        if (markersHandhole[id].getMap() == null) {
+            markersHandhole[id].setMap(map);
+            markerClusterHandhole.addMarker(markersHandhole[id]);
+        }
     });
-    
+
     //set manhole marker
-    $("#"+projectID).find(".Manhole:checked" ).each(function(){
-		id=$(this).parent().attr('id');
-		if(markersManhole[id].getMap()==null){
-			markersManhole[id].setMap(map);			
-			markerClusterManhole.addMarker(markersManhole[id]);
-		}		
-	});
+    $("#" + projectID).find(".Manhole:checked").each(function() {
+        id = $(this).parent().attr('id');
+        if (markersManhole[id].getMap() == null) {
+            markersManhole[id].setMap(map);
+            markerClusterManhole.addMarker(markersManhole[id]);
+        }
+    });
     //set junction marker
-    $("#"+projectID).find(".Junction:checked" ).each(function(){
-		id=$(this).parent().attr('id');
-		if(markersJunction[id].getMap()==null){
-			markersJunction[id].setMap(map);			
-			markerClusterJunction.addMarker(markersJunction[id]);
-		}		
-	});	
+    $("#" + projectID).find(".Junction:checked").each(function() {
+        id = $(this).parent().attr('id');
+        if (markersJunction[id].getMap() == null) {
+            markersJunction[id].setMap(map);
+            markerClusterJunction.addMarker(markersJunction[id]);
+        }
+    });
     //set backbone distboards marker
-    $("#DistributionBoard_backbone__"+projectID).find(".DistBoard:checked" ).each(function(){
-		id=$(this).parent().attr('id');
-		if(markersDistBoard[id].getMap()==null){
-			markersDistBoard[id].setMap(map);			
-			markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
-		}		
-	});	
+    $("#DistributionBoard_backbone__" + projectID).find(".DistBoard:checked").each(function() {
+        id = $(this).parent().attr('id');
+        if (markersDistBoard[id].getMap() == null) {
+            markersDistBoard[id].setMap(map);
+            markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+        }
+    });
     //set metro distboards marker
-    $("#DistributionBoard_metro__"+projectID).find(".DistBoard:checked" ).each(function(){
-		id=$(this).parent().attr('id');
-		if(markersDistBoard[id].getMap()==null){
-			markersDistBoard[id].setMap(map);			
-			markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
-		}		
-	});	
+    $("#DistributionBoard_metro__" + projectID).find(".DistBoard:checked").each(function() {
+        id = $(this).parent().attr('id');
+        if (markersDistBoard[id].getMap() == null) {
+            markersDistBoard[id].setMap(map);
+            markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+        }
+    });
     //set metro access marker
-    $("#DistributionBoard_access__"+projectID).find(".DistBoard:checked" ).each(function(){
-		id=$(this).parent().attr('id');
-		if(markersDistBoard[id].getMap()==null){
-			markersDistBoard[id].setMap(map);			
-			markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
-		}		
-	});	
-    
+    $("#DistributionBoard_access__" + projectID).find(".DistBoard:checked").each(function() {
+        id = $(this).parent().attr('id');
+        if (markersDistBoard[id].getMap() == null) {
+            markersDistBoard[id].setMap(map);
+            markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+        }
+    });
+
 }
 
-function allProjectElementsCheckFilter(){
-	$(".projectallElements").bind("change",function() {
-		var start=Date.now();
-		
-			
-		if ($(this).is(':checked')){
-			
-			$(this).parent().find('ul > li').each(function(){				
-				
-					$(this).children('input:checkbox').prop('checked', true);
-					
-						if($(this).hasClass('FIBER')){						
-							singleFiberCheckFilter($(this).children('input:checkbox'))				
-					}
-						else if($(this).hasClass('TUBE')){
-							singleTubeCheckFilter($(this).children('input:checkbox'));
-						}
-						else if($(this).hasClass('STRAND')){
-							singleStrandCheckFilter($(this).children('input:checkbox'));
-						}
-																				
-					if($(this).children('input:checkbox').hasClass('Manhole')){
-						id=$(this).attr('id');
-						if(markersManhole[id].getMap()==null){
-							markerClusterManhole.removeMarker(markersManhole[id]);
-							markersManhole[id].setMap(map);			
-							markerClusterManhole.addMarker(markersManhole[id]);						
-							//$("#manholeCheckAllBoq").prop("checked",true);
-						}
-					}					
-					if($(this).children('input:checkbox').hasClass('Handhole')){
-						id=$(this).attr('id');
-						if(markersHandhole[id].getMap()==null){
-							markerClusterHandhole.removeMarker(markersHandhole[id]);
-							markersHandhole[id].setMap(map);			
-							markerClusterHandhole.addMarker(markersHandhole[id]);
-							//$("#handholeCheckAllBoq").prop("checked",true);
-						}
-					}
-					if($(this).children('input:checkbox').hasClass('Junction')){
-						id=$(this).attr('id');
-						if(markersJunction[id].getMap()==null){
-							markerClusterJunction.removeMarker(markersJunction[id]);
-							markersJunction[id].setMap(map);			
-							markerClusterJunction.addMarker(markersJunction[id]);
-							//$("#junctionCheckAllBoq").prop("checked",true);
-						}								
-					}
-					if($(this).children('input:checkbox').hasClass('DistBoard')){
-						id=$(this).attr('id');
-						if(markersDistBoard[id].getMap()==null){
-							markersDistBoard[id].setMap(map);
-							if(window[""+id][8]=="backbone") {
-								markerClusterBackboneDistBoard.removeMarker(markersDistBoard[id]);
-								markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
-							}
-							else if(window[""+id][8]=="metro") {
-								markerClusterMetroDistBoard.removeMarker(markersDistBoard[id]);
-								markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
-							}
-							else if(window[""+id][8]=="access") {
-								markerClusterAccessDistBoard.removeMarker(markersDistBoard[id]);
-								markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
-							}			
-							//$("#distBoardCheckAllBoq").prop("checked",true);
-						}
-					}
-					if($(this).children('input:checkbox').hasClass('Nodes')){
-						id=$(this).attr('id');
-						if(markersNodeActive[id].getMap()==null){
-							markersNodeActive[id].setMap(map);	
-							if(window[""+id][8]=="MSAN") {
-								markerClusterMSANNodes.addMarker(markersNodeActive[id]);
-							}
-							else if(window[""+id][8]=="DWDM") {
-								markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
-							}
-							else if(window[""+id][8]=="SDH") {
-								markerClusterSDHNodes.addMarker(markersNodeActive[id]);
-							}
-							else if(window[""+id][8]=="GPON") {
-								markerClusterGPONNodes.addMarker(markersNodeActive[id]);
-							}	
-							else if(window[""+id][8]=="SWITCH") {
-								markerClusterEntSwitchNodes.addMarker(markersNodeActive[id]);
-							}	
-							//$("#nodesActiveCheckAllBoq").prop("checked",true);
-						}
-					}
-					if($(this).hasClass('Trench')){
-						singleTrenchCheckFilter($(this).children('input:checkbox'));
-					}
-					if($(this).hasClass('Duct')){
-						singleDuctCheckFilter($(this).children('input:checkbox'));
-					}
-				//} // End of else in case node is not loaded
-		});
-			/*these checkboxes related for cuurentphysicallayer and not project ex: 
-			 * fiberCheckAllBoq is checked when all fiber cable checked in currrent physical layer */
-			$("#fiberCheckAllBoq").prop("checked",false);
-			$("#tubeCheckAllBoq").prop("checked",false);
-			$("#strandCheckAllBoq").prop("checked",false);
-			$("#trenchCheckAllBoq").prop("checked",false);
-			$("#ductCheckAllBoq").prop("checked",false);
-	}
-		else{ // In case Current Physical Layer ('.allElements') is unchecked.
-				
-			$(this).parent().find('ul > li').each(function(){				
-				$(this).children('input:checkbox').prop('checked', false);
-				if($(this).hasClass('FIBER')){
-					singleFiberUnCheckFilter($(this).children('input:checkbox'));
-				}
-				else if($(this).hasClass('TUBE')){
-					singleTubeUnCheckFilter($(this).children('input:checkbox'));
-				}
-				else if($(this).hasClass('STRAND')){
-					singleStrandUnCheckFilter($(this).children('input:checkbox'));
-				}
-				else if($(this).hasClass('Trench')){
-					singleTrenchUnCheckFilter($(this).children('input:checkbox'));
-				}	
-				else if($(this).hasClass('Duct')){
-					singleDuctUnCheckFilter($(this).children('input:checkbox'));
-				}	
-				
-				//////////////////777
-				if($(this).children('input:checkbox').hasClass('Manhole')){
-					id=$(this).attr('id');
-					markersManhole[id].setMap(null);			
-					markerClusterManhole.removeMarker(markersManhole[id]);						
-					//$("#manholeCheckAllBoq").prop("checked",true);
-					
-				}					
-				if($(this).children('input:checkbox').hasClass('Handhole')){
-					id=$(this).attr('id');
-					markersHandhole[id].setMap(null);			
-					markerClusterHandhole.removeMarker(markersHandhole[id]);
-					//$("#handholeCheckAllBoq").prop("checked",true);
-					
-				}
-				if($(this).children('input:checkbox').hasClass('Junction')){
-					id=$(this).attr('id');
-					markersJunction[id].setMap(null);			
-					markerClusterJunction.removeMarker(markersJunction[id]);
-					//$("#junctionCheckAllBoq").prop("checked",true);
-													
-				}
-				if($(this).children('input:checkbox').hasClass('DistBoard')){
-					id=$(this).attr('id');
-					markersDistBoard[id].setMap(null);
-					if(window[""+id][8]=="backbone") {
-						markerClusterBackboneDistBoard.removeMarker(markersDistBoard[id]);
-					}
-					else if(window[""+id][8]=="metro") {
-						markerClusterMetroDistBoard.removeMarker(markersDistBoard[id]);
-					}
-					else if(window[""+id][8]=="access") {
-						markerClusterAccessDistBoard.removeMarker(markersDistBoard[id]);
-					}			
-					//$("#distBoardCheckAllBoq").prop("checked",true);
-					
-				}
-				if($(this).children('input:checkbox').hasClass('Nodes')){
-					id=$(this).attr('id');
-					markersNodeActive[id].setMap(null);	
-					if(window[""+id][8]=="MSAN") {
-						markerClusterMSANNodes.removeMarker(markersNodeActive[id]);
-					}
-					else if(window[""+id][8]=="DWDM") {
-						markerClusterDWDMNodes.removeMarker(markersNodeActive[id]);
-					}
-					else if(window[""+id][8]=="SDH") {
-						markerClusterSDHNodes.removeMarker(markersNodeActive[id]);
-					}
-					else if(window[""+id][8]=="GPON") {
-						markerClusterGPONNodes.removeMarker(markersNodeActive[id]);
-					}	
-					else if(window[""+id][8]=="SWITCH") {
-						markerClusterEntSwitchNodes.removeMarker(markersNodeActive[id]);
-					}	
-					//$("#nodesActiveCheckAllBoq").prop("checked",true);
-					
-				}
-				//////////////////////
-				
-				
-				
-			});			
-			
-			for(var t=0;t<siteCltSrcMarkers.length;t++) {
-				siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
-			}
-			for (var u =0;u<allCablesShowPoint.length;u++) {
-				window['fiberCheckPoints_'+allCablesShowPoint[u]] = "unchecked";
-			}
-			for (var z =0;z<allTubesShowPoint.length;z++) {
-				window['tubeCheckPoints_'+allTubesShowPoint[z]] = "unchecked";
-			}
-			for (var a =0;a<allStrandsShowPoint.length;a++) {
-				window['strandCheckPoints_'+allStrandsShowPoint[a]] = "unchecked";
-			}
-			for (var l =0;l<allTrenchsShowPoint.length;l++) {
-				window['trenchCheckPoints_'+allTrenchsShowPoint[l]] = "unchecked";
-			}
-			for (var w =0;w<allDuctsShowPoint.length;w++) {
-				window['ductCheckPoints_'+allDuctsShowPoint[w]] = "unchecked";
-			}
-			for (var x =0;x<allCablesShowRealPoint.length;x++) {
-				window['fiberCheckRealPoints_'+allCablesShowRealPoint[x]] = "unchecked";
-			}
-			for (var o =0;o<allTubesShowRealPoint.length;o++) {
-				window['tubeCheckRealPoints_'+allTubesShowRealPoint[o]] = "unchecked";
-			}
-			for (var b =0;b<allStrandsShowRealPoint.length;b++) {
-				window['strandCheckRealPoints_'+allStrandsShowRealPoint[b]] = "unchecked";
-			}
-			for (var m =0;m<allTrenchsShowRealPoint.length;m++) {
-				window['trenchCheckRealPoints_'+allTrenchsShowRealPoint[m]] = "unchecked";
-			}
-			for (var q =0;q<allDuctsShowRealPoint.length;q++) {
-				window['ductCheckRealPoints_'+allDuctsShowRealPoint[q]] = "unchecked";
-			}
-			for (var y =0;y<allCablesShowSeq.length;y++) {
-				window['fiberCheckSequence_'+allCablesShowSeq[y]] = "unchecked";
-			}
-			for (var v =0;v<allTubesShowSeq.length;v++) {
-				window['tubeCheckSequence_'+allTubesShowSeq[v]] = "unchecked";
-			}
-			for (var c =0;c<allStrandsShowSeq.length;c++) {
-				window['strandCheckSequence_'+allStrandsShowSeq[c]] = "unchecked";
-			}
-			for (var b =0;b<allDuctsShowSeq.length;b++) {
-				window['ductCheckSequence_'+allDuctsShowSeq[b]] = "unchecked";
-			}
-			for (var a =0;a<allTrenchsShowSeq.length;a++) {
-				window['trenchCheckSequence_'+allTrenchsShowSeq[a]] = "unchecked";
-			}			
-		}
-	});
-}
+function allProjectElementsCheckFilter() {
+    $(".projectallElements").bind("change", function() {
+        var start = Date.now();
 
+
+        if ($(this).is(':checked')) {
+
+            $(this).parent().find('ul > li').each(function() {
+
+                $(this).children('input:checkbox').prop('checked', true);
+
+                if ($(this).hasClass('FIBER')) {
+                    singleFiberCheckFilter($(this).children('input:checkbox'))
+                }
+                else if ($(this).hasClass('TUBE')) {
+                    singleTubeCheckFilter($(this).children('input:checkbox'));
+                }
+                else if ($(this).hasClass('STRAND')) {
+                    singleStrandCheckFilter($(this).children('input:checkbox'));
+                }
+
+                if ($(this).children('input:checkbox').hasClass('Manhole')) {
+                    id = $(this).attr('id');
+                    if (markersManhole[id].getMap() == null) {
+                        markerClusterManhole.removeMarker(markersManhole[id]);
+                        markersManhole[id].setMap(map);
+                        markerClusterManhole.addMarker(markersManhole[id]);
+                    }
+                }
+                if ($(this).children('input:checkbox').hasClass('Handhole')) {
+                    id = $(this).attr('id');
+                    if (markersHandhole[id].getMap() == null) {
+                        markerClusterHandhole.removeMarker(markersHandhole[id]);
+                        markersHandhole[id].setMap(map);
+                        markerClusterHandhole.addMarker(markersHandhole[id]);
+                    }
+                }
+                if ($(this).children('input:checkbox').hasClass('Junction')) {
+                    id = $(this).attr('id');
+                    if (markersJunction[id].getMap() == null) {
+                        markerClusterJunction.removeMarker(markersJunction[id]);
+                        markersJunction[id].setMap(map);
+                        markerClusterJunction.addMarker(markersJunction[id]);
+                    }
+                }
+                if ($(this).children('input:checkbox').hasClass('DistBoard')) {
+                    id = $(this).attr('id');
+                    if (markersDistBoard[id].getMap() == null) {
+                        markersDistBoard[id].setMap(map);
+                        if (window["" + id][8] == "backbone") {
+                            markerClusterBackboneDistBoard.removeMarker(markersDistBoard[id]);
+                            markerClusterBackboneDistBoard.addMarker(markersDistBoard[id]);
+                        }
+                        else if (window["" + id][8] == "metro") {
+                            markerClusterMetroDistBoard.removeMarker(markersDistBoard[id]);
+                            markerClusterMetroDistBoard.addMarker(markersDistBoard[id]);
+                        }
+                        else if (window["" + id][8] == "access") {
+                            markerClusterAccessDistBoard.removeMarker(markersDistBoard[id]);
+                            markerClusterAccessDistBoard.addMarker(markersDistBoard[id]);
+                        }
+                    }
+                }
+                if ($(this).children('input:checkbox').hasClass('Nodes')) {
+                    id = $(this).attr('id');
+                    if (markersNodeActive[id].getMap() == null) {
+                        markersNodeActive[id].setMap(map);
+                        if (window["" + id][8] == "MSAN") {
+                            markerClusterMSANNodes.addMarker(markersNodeActive[id]);
+                        }
+                        else if (window["" + id][8] == "DWDM") {
+                            markerClusterDWDMNodes.addMarker(markersNodeActive[id]);
+                        }
+                        else if (window["" + id][8] == "SDH") {
+                            markerClusterSDHNodes.addMarker(markersNodeActive[id]);
+                        }
+                        else if (window["" + id][8] == "GPON") {
+                            markerClusterGPONNodes.addMarker(markersNodeActive[id]);
+                        }
+                        else if (window["" + id][8] == "SWITCH") {
+                            markerClusterEntSwitchNodes.addMarker(markersNodeActive[id]);
+                        }
+                    }
+                }
+                if ($(this).hasClass('Trench')) {
+                    singleTrenchCheckFilter($(this).children('input:checkbox'));
+                }
+                if ($(this).hasClass('Duct')) {
+                    singleDuctCheckFilter($(this).children('input:checkbox'));
+                }
+                //} // End of else in case node is not loaded
+            });
+            /*these checkboxes related for cuurentphysicallayer and not project ex: 
+             * fiberCheckAllBoq is checked when all fiber cable checked in currrent physical layer */
+            $("#fiberCheckAllBoq").prop("checked", false);
+            $("#tubeCheckAllBoq").prop("checked", false);
+            $("#strandCheckAllBoq").prop("checked", false);
+            $("#trenchCheckAllBoq").prop("checked", false);
+            $("#ductCheckAllBoq").prop("checked", false);
+        }
+        else { // In case Current Physical Layer ('.allElements') is unchecked.
+
+            $(this).parent().find('ul > li').each(function() {
+                $(this).children('input:checkbox').prop('checked', false);
+                if ($(this).hasClass('FIBER')) {
+                    singleFiberUnCheckFilter($(this).children('input:checkbox'));
+                }
+                else if ($(this).hasClass('TUBE')) {
+                    singleTubeUnCheckFilter($(this).children('input:checkbox'));
+                }
+                else if ($(this).hasClass('STRAND')) {
+                    singleStrandUnCheckFilter($(this).children('input:checkbox'));
+                }
+                else if ($(this).hasClass('Trench')) {
+                    singleTrenchUnCheckFilter($(this).children('input:checkbox'));
+                }
+                else if ($(this).hasClass('Duct')) {
+                    singleDuctUnCheckFilter($(this).children('input:checkbox'));
+                }
+
+                if ($(this).children('input:checkbox').hasClass('Manhole')) {
+                    id = $(this).attr('id');
+                    markersManhole[id].setMap(null);
+                    markerClusterManhole.removeMarker(markersManhole[id]);
+
+                }
+                if ($(this).children('input:checkbox').hasClass('Handhole')) {
+                    id = $(this).attr('id');
+                    markersHandhole[id].setMap(null);
+                    markerClusterHandhole.removeMarker(markersHandhole[id]);
+
+                }
+                if ($(this).children('input:checkbox').hasClass('Junction')) {
+                    id = $(this).attr('id');
+                    markersJunction[id].setMap(null);
+                    markerClusterJunction.removeMarker(markersJunction[id]);
+
+                }
+                if ($(this).children('input:checkbox').hasClass('DistBoard')) {
+                    id = $(this).attr('id');
+                    markersDistBoard[id].setMap(null);
+                    if (window["" + id][8] == "backbone") {
+                        markerClusterBackboneDistBoard.removeMarker(markersDistBoard[id]);
+                    }
+                    else if (window["" + id][8] == "metro") {
+                        markerClusterMetroDistBoard.removeMarker(markersDistBoard[id]);
+                    }
+                    else if (window["" + id][8] == "access") {
+                        markerClusterAccessDistBoard.removeMarker(markersDistBoard[id]);
+                    }
+
+                }
+                if ($(this).children('input:checkbox').hasClass('Nodes')) {
+                    id = $(this).attr('id');
+                    markersNodeActive[id].setMap(null);
+                    if (window["" + id][8] == "MSAN") {
+                        markerClusterMSANNodes.removeMarker(markersNodeActive[id]);
+                    }
+                    else if (window["" + id][8] == "DWDM") {
+                        markerClusterDWDMNodes.removeMarker(markersNodeActive[id]);
+                    }
+                    else if (window["" + id][8] == "SDH") {
+                        markerClusterSDHNodes.removeMarker(markersNodeActive[id]);
+                    }
+                    else if (window["" + id][8] == "GPON") {
+                        markerClusterGPONNodes.removeMarker(markersNodeActive[id]);
+                    }
+                    else if (window["" + id][8] == "SWITCH") {
+                        markerClusterEntSwitchNodes.removeMarker(markersNodeActive[id]);
+                    }
+
+                }
+            });
+
+            for (var t = 0;t < siteCltSrcMarkers.length;t++) {
+                siteCltSrcMarkers[siteCltSrcMarkers[t].ID].setMap(null);
+            }
+            for (var u = 0;u < allCablesShowPoint.length;u++) {
+                window['fiberCheckPoints_' + allCablesShowPoint[u]] = "unchecked";
+            }
+            for (var z = 0;z < allTubesShowPoint.length;z++) {
+                window['tubeCheckPoints_' + allTubesShowPoint[z]] = "unchecked";
+            }
+            for (var a = 0;a < allStrandsShowPoint.length;a++) {
+                window['strandCheckPoints_' + allStrandsShowPoint[a]] = "unchecked";
+            }
+            for (var l = 0;l < allTrenchsShowPoint.length;l++) {
+                window['trenchCheckPoints_' + allTrenchsShowPoint[l]] = "unchecked";
+            }
+            for (var w = 0;w < allDuctsShowPoint.length;w++) {
+                window['ductCheckPoints_' + allDuctsShowPoint[w]] = "unchecked";
+            }
+            for (var x = 0;x < allCablesShowRealPoint.length;x++) {
+                window['fiberCheckRealPoints_' + allCablesShowRealPoint[x]] = "unchecked";
+            }
+            for (var o = 0;o < allTubesShowRealPoint.length;o++) {
+                window['tubeCheckRealPoints_' + allTubesShowRealPoint[o]] = "unchecked";
+            }
+            for (var b = 0;b < allStrandsShowRealPoint.length;b++) {
+                window['strandCheckRealPoints_' + allStrandsShowRealPoint[b]] = "unchecked";
+            }
+            for (var m = 0;m < allTrenchsShowRealPoint.length;m++) {
+                window['trenchCheckRealPoints_' + allTrenchsShowRealPoint[m]] = "unchecked";
+            }
+            for (var q = 0;q < allDuctsShowRealPoint.length;q++) {
+                window['ductCheckRealPoints_' + allDuctsShowRealPoint[q]] = "unchecked";
+            }
+            for (var y = 0;y < allCablesShowSeq.length;y++) {
+                window['fiberCheckSequence_' + allCablesShowSeq[y]] = "unchecked";
+            }
+            for (var v = 0;v < allTubesShowSeq.length;v++) {
+                window['tubeCheckSequence_' + allTubesShowSeq[v]] = "unchecked";
+            }
+            for (var c = 0;c < allStrandsShowSeq.length;c++) {
+                window['strandCheckSequence_' + allStrandsShowSeq[c]] = "unchecked";
+            }
+            for (var b = 0;b < allDuctsShowSeq.length;b++) {
+                window['ductCheckSequence_' + allDuctsShowSeq[b]] = "unchecked";
+            }
+            for (var a = 0;a < allTrenchsShowSeq.length;a++) {
+                window['trenchCheckSequence_' + allTrenchsShowSeq[a]] = "unchecked";
+            }
+        }
+    });
+}

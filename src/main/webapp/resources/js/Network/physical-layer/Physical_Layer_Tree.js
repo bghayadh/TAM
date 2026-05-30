@@ -4140,7 +4140,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
         ]
     });
-
+	
+// to be deleted	
+/*
     $("#saveTrench").on('click', function() {
 
         trenchLength = $("#trenchLength").val();
@@ -4470,7 +4472,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             clearCreateFromMap(markerArrayAux);
         }
     });
-
+*/
     $("#saveDuct").on('click', function() {
         ductsLength = $("#ductsLength").val();
         checkLongLatInRows("auxiliary_ductTable", "auxiliary_LongitudeDuct", "auxiliary_LatitudeDuct");
@@ -8901,11 +8903,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                             }
                         }
                     }
-                });
-
+                });			
 
                 checkActionFiber = "UPDATE";
-
+/*
                 index = $("#auxiliaryTable >tbody tr").length;
 
 
@@ -8913,12 +8914,16 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     indexLoad = $(this).parents("tr").index();
 
                     $("#aux_Lat" + indexLoad).focusout(function() {
+						console.log("Focus out, this console from PhysicalLayerTree file");
                         calculateDistanceSourceDestination($("#SourceLat").val(), $("#SourceLng").val(), $("#DestinationLat").val(), $("#DestinationLng").val(), "auxiliaryTable");
                     });
                     $("#aux_Long" + indexLoad).focusout(function() {
+						console.log("Focus out, this console from PhysicalLayerTree file");
                         calculateDistanceSourceDestination($("#SourceLat").val(), $("#SourceLng").val(), $("#DestinationLat").val(), $("#DestinationLng").val(), "auxiliaryTable");
                     });
                 });
+				
+*/
 
             }
         },
@@ -12220,9 +12225,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     });
 
+// to be deleted
 
-
-
+/*
     $("#saveDistBoard").click(function() {
 
 
@@ -12666,6 +12671,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
     }); // End of saveDistBoard
 
+*/	
+
     /////////////*********************	SAVE FIBER CABLE  ***********************///////////////
 
 
@@ -12729,6 +12736,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
     });
 
+/*	
     $("#fiber_aux_tab").click(function() {
 
         var fiberAuxFlag = document.querySelector("#fiberAuxFlag").value;
@@ -12769,7 +12777,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         $(this).data('val', $(this).val());
                     });
                     //Hide the marker in case of site,null,aux point if the aux name is changed 
-                    $("td[name='auxiliary_Name']").on('change', 'input', function() {
+                    $("td[name='auxiliary_Name']").off("change").on('change', 'input', function() {
                         var prevVal = $(this).data('val');
                         var currentVal = $(this).val();
                         if (prevVal != currentVal) {
@@ -12794,7 +12802,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     checkedPoints = [];
 
                     // Hide/Show the marker on check/uncheck the checkbox
-                    $("#auxiliaryTable input[name='record']").on('change', function(e) {
+                    $("#auxiliaryTable input[name='record']").off("change").on('change', function(e) {
 
                         //if only one checkbox is checked , hide all points 
                         if ($(".rowAboveBelow:checked").length != 0 && (window['fiberCheckPoints_' + selectedFiberContext] == "checked" || window['fiberCheckRealPoints_' + selectedFiberContext] == "checked")) {
@@ -12819,16 +12827,33 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                         // Show the point and add label to it
                         if ($(this).is(":checked")) {
+							
+							const row = $(this).closest("tr");
 
-                            checkedPoints.push({ lat: $(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(), lng: $(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val() });
+							const lat = parseFloat(row.find('td[name="auxiliary_Latitude"] input').val());
+							const lng = parseFloat(row.find('td[name="auxiliary_Longitude"] input').val());
+						
+//							checkedPoints.push({
+//							    lat: parseFloat($(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val()),
+//							    lng: parseFloat($(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val())
+//							});
+							
 
-                            if ($(".rowAboveBelow:checked").length == 1) {
+                            //checkedPoints.push({ lat: $(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(), lng: $(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val() });
+							checkedPoints.push({ lat, lng });
+
+                            if ($(".rowAboveBelow:checked").length == 1) {								
                                 map.setZoom(15);
-                                panTo($(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(), $(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val());
+								panTo(lat, lng);								
+                                //panTo($(this).parent().parent().children('td[name="auxiliary_Latitude"]').children('input').val(), $(this).parent().parent().children('td[name="auxiliary_Longitude"]').children('input').val());
                             }
                             else {
 
-                                checkedPoints.sort((a, b) => (a.lat - b.lat) && (a.lng - b.lng))
+                                //checkedPoints.sort((a, b) => (a.lat - b.lat) && (a.lng - b.lng))
+								checkedPoints.sort((a, b) => {
+								    if (a.lat !== b.lat) return a.lat - b.lat;
+								    return a.lng - b.lng;
+								});
 
                                 window["checkedPoints_" + selectedFiberContext] = new google.maps.LatLngBounds();
                                 var myLatLng = new google.maps.LatLng(checkedPoints[0].lat, checkedPoints[0].lng);
@@ -12985,7 +13010,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
 
     })
-
+*/
 
 
     $("#aux-tab-tube").click(function() {
@@ -13454,7 +13479,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
 
     });
-    $("#auxiliary_trench-tab").click(function() {
+
+/*		
+    $("#trench_aux_tab").click(function() {
         var trenchAuxFlag = document.querySelector("#trenchAuxFlag").value;
 
         //Uncheck all autocomplete checkboxes when opening the popup
@@ -13678,8 +13705,11 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
 
     });
+	
+	*/
 
-    $("#auxiliary_duct-tab").click(function() {
+/*	
+    $("#duct_aux_tab").click(function() {
         var ductAuxFlag = document.querySelector("#ductAuxFlag").value;
 
         //Uncheck all autocomplete checkboxes when opening the popup
@@ -13894,6 +13924,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
 
     });
+	
+*/
 
     //-------------------------------------------------------------------------------------------------//	  
     $("#upload").click(function() {
@@ -14384,7 +14416,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     });
 
+// to be deleted	
+/*	
     function calculateGeoDistance(fiberId, sourceLng, sourceLat, destinationLng, destinationLat, tableID, tdName, totGeoDistance) {
+		console.log("welcome to calculateGeoDistance method");
         var allAuxData = [];
 
         if (tableID == "auxiliaryTable") {
@@ -14409,12 +14444,19 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
         else if (tableID == "auxiliary_trenchTable") {
             var sourceLng = document.getElementById("" + sourceLng).value;
+			console.log("sourceLng is ", sourceLng);
             var sourceLat = document.getElementById("" + sourceLat).value;
+			console.log("sourceLat is ", sourceLat);
             var destinationLng = document.getElementById("" + destinationLng).value;
+			console.log("destinationLng is ", destinationLng);
             var destinationLat = document.getElementById("" + destinationLat).value;
+			console.log("destinationLat is ", destinationLat);
 
             getSelectedTrenchAux(sourceLat, sourceLng);
             allAuxData = dict;
+			console.log("allAuxData is ", allAuxData);
+			console.log("allAuxData length is ", allAuxData.length);
+			console.log("allAuxData is ", allAuxData);
         }
         else if (tableID == "auxiliary_ductTable") {
             var sourceLng = document.getElementById("" + sourceLng).value;
@@ -14480,14 +14522,19 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     latitudeDst = allAuxData[h].aux_Latitude;
                     longitudeDst = allAuxData[h].aux_Longitude;
                 }
+				
+				console.log("latitudeSrc is " , latitudeSrc + " longitudeSrc is " ,longitudeSrc + " latitudeDst is " , latitudeDst + " longitudeDst is " , longitudeDst);
 
                 var distance = (google.maps.geometry.spherical.computeDistanceBetween(new google.maps.LatLng(latitudeSrc, longitudeSrc), new google.maps.LatLng(latitudeDst, longitudeDst)) / 1000).toFixed(3);
+				
+				console.log("distance is " , distance);
 
                 $("#" + tableID + " >tbody").find("tr").eq(h).find('td[name="' + tdName + '"]').children('input').val(distance);
                 //$("#"+auxGeogDistance+h).val(parseFloat(distance).toFixed(3));
 
                 totalGeoDistance += parseFloat(distance)
             }
+			console.log("totGeoDistance is " , totGeoDistance);
             $("#" + totGeoDistance).val(parseFloat(totalGeoDistance).toFixed(3));
 
         }
@@ -14502,7 +14549,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
         }
     }
-
+	
+*/
+/*
     $("#calculateGeoDistanceTube").click(function() {
         calculateGeoDistance("", "sourcelong", "sourcelat", "destinationlong", "destinationlat", "auxiliaryTableTubes", "auxGeoDistanceTube", "totalGeoDistanceTube");
     });
@@ -14526,7 +14575,11 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         calculateGeoDistance("FiberPathId", "SourceLng", "SourceLat", "DestinationLng", "DestinationLat", "auxiliaryTable", "auxGeoDistance", "totalGeoDistance");
         geoFlag = 0;
     });
+*/
 
+
+// to be deleted
+/*
     function calculateDrivingDistance(sourceLng, sourceLat, destinationLng, destinationLat, type, lstAuxToDst, totalDist, drivingForm) {
 
         if (type == "FiberTube") {
@@ -14686,6 +14739,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             }
         }
     }
+	
     $("#calculateDrivingDistanceTube").click(function() {
         calculateDrivingDistance("sourcelong", "sourcelat", "destinationlong", "destinationlat", "tube", "tubeDistanceLstAuxToDestDrivg", "tubeTotalDistanceDrivg");
     });
@@ -14705,12 +14759,11 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         calculateDrivingDistance("SourceDuctLng", "SourceDuctLat", "DestinationDuctLng", "DestinationDuctLat", "duct", "ductDistanceLstAuxToDestDrivg", "ductTotalDistanceDrivg");
     });
     $("#calculatedrivingdistance").click(function() {
-
-
         calculateDrivingDistance("SourceLng", "SourceLat", "DestinationLng", "DestinationLat", "fiber", "distanceLstAuxToDestDrivg", "totalDistanceDrivg", "FiberDrivDist");
-
     });
 
+*/	
+	
     $("#editManHand").click(function(data) {
         var token = $('input[name="csrfToken"]').attr('value');
         $.ajax({
@@ -14841,7 +14894,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     }
 
-
+/*
     $('#sortingDistance').click(function() {
         sortingByLineOfSite("SourceLng", "SourceLat", "DestinationLng", "DestinationLat", "auxiliaryTable", "aux_Lat", "aux_Long", "", "FiberLength")
     });
@@ -15231,6 +15284,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     }
 
+*/	
+	
+// To be deleted	
+/*
     $("#saveFiberPath").click(function() {
 
         if (geoFlag == 1) {
@@ -15886,7 +15943,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         // });
 
     });
-
+*/
 
 
     //save fiber strand
@@ -17728,6 +17785,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
         $(this).toggleClass('allChecked');
     });
+	
+/*	
     $('body').on('click', '#selectAllDuct_Aux', function() {
 
         if ($(this).hasClass('allChecked')) {
@@ -17786,7 +17845,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
 
     });
-
+*/
+	
+/*	
     $('body').on('click', '#selectAllTrench_Aux', function() {
         if ($(this).hasClass('allChecked')) {
             $('input[type="checkbox"]', '#auxiliary_trenchTable').prop('checked', false);
@@ -17845,6 +17906,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         $(this).toggleClass('allChecked');
 
     });
+	
+	*/
 
     $('body').on('click', '#selectAll_DbMapRows', function() {
         if ($(this).hasClass('allChecked')) {
@@ -18421,7 +18484,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         $(this).toggleClass('allChecked');
     });
 
+/*	
     $('body').on('click', '#selectAll_Aux', function() {
+		console.log("Hello, this selectAllAux for fiber cable");
         if ($(this).hasClass('allChecked')) {
             $('input[type="checkbox"]', '#auxiliaryTable').prop('checked', false);
             showHideAllPoints(selectedFiberContext, "fiberCheckSequence", "Hide");
@@ -18477,7 +18542,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         $(this).toggleClass('allChecked');
 
     });
-
+*/
 
     $('body').on('click', '#selectAll_Tubes', function() {
         if ($(this).hasClass('allChecked')) {
@@ -22650,6 +22715,8 @@ function creationFromTree(modalId, tableId, auxPtAutocomplete, srcDestAutoComple
 
 }
 
+// To be deleted
+/*
 function appendingToAuxFromMap(modalId, AuxFlag, auxPtAutocomplete, srcDestAutoComplete, selectedID, pushPoints, cancelPoints, selectedTemp) {
 
     clearCreateFromMap(markerArrayAux);
@@ -22758,6 +22825,7 @@ function appendingToAuxFromMap(modalId, AuxFlag, auxPtAutocomplete, srcDestAutoC
     })
 }
 
+*/
 function appendingToAuxFromTree(modalId, auxFlag, auxPtAutocomplete, srcDestAutoComplete, selectedID) {
 
     $("#" + modalId).find('input:file').val('');

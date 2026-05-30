@@ -25,27 +25,46 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Network_Index.css">
 <script src="${pageContext.request.contextPath}/resources/js/Network/NetworkMapStylesLayers.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/maps.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/Physical_Layer_Tree.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/Physical_Layer_Map.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/Physical_Layer_Common.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/FiberSearch.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/FiberPathCreation.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/NodeCreation.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/JunctionCreation.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/SiteCreation.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/ProjectCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/tam-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/tam-triggerListenersEvent.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Tree.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Map.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Common.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distanceAndCity.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/FiberAutoComplete.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/fiber-path/fiber-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/fiber-path/saveFiberPath.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/fiber-path/getAuxPoints.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/fiber-path/fiberAuxTab.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/fiber-path/fiberPathCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/fiber-path/auxAppendBoq.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/fiber-path/fiberDuct.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/trench-path/trunch-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/trench-path/saveTrenchPath.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/trench-path/getAuxPoints.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/trench-path/trenchAuxTab.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/trench-path/trenchGeneration.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/duct-path/duct-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/duct-path/ductAuxTab.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/NodeCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/JunctionCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/SiteCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/ProjectCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jszip.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/BordersFindNearest.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/mapOperation.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/findNearest.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/findNearestMulty.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/BordersFindNearest.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/mapOperation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/findNearest.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/findNearestMulty.js"></script>
 
-<script src="${pageContext.request.contextPath}/resources/js/Network/DB_PortMapping.js"></script>
+
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distribution-board/db-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distribution-board/dbSave.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distribution-board/dbPortMapping.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/konva.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/panel.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distribution-board/panel.js"></script>
 
 
 <style>
@@ -93,6 +112,63 @@
 #DbModule th {
     vertical-align: middle !important;
     text-align: center; /* optional: centers horizontally */
+}
+
+#generateTrenchModal{
+    z-index:1065;
+}
+
+#generateTrenchModal + .modal-backdrop{
+    z-index:1060;
+}
+
+.fiberDuctTableWrapper {
+
+    width: 100%;
+    max-height: 250px;
+
+    overflow-x: auto;
+    overflow-y: auto;
+
+    border: 1px solid #dee2e6;
+
+    position: relative;
+}
+
+#fiberDuctTable {
+    width: max-content;
+    min-width: 100%;
+    table-layout: auto; /* IMPORTANT FIX */
+    white-space: nowrap;
+    margin-bottom: 0;
+}
+
+#fiberDuctTable th,
+#fiberDuctTable td {
+
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.fiberDuctSequence {
+    text-align: center;
+}
+
+#fiberDuctTable input {
+
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.fiberDuct-buttons {
+
+    margin-left: 12px;
+    margin-top: 10px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 </style>
 </head>
@@ -2875,7 +2951,7 @@
 									</div>
 									<form>
 										<div class="table-responsive-sm" id="auxiliaryDivStrand">
-											<table id="auxiliaryTableStrands" class="table table-striped table-bordered table-sm" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
+											<table id="auxiliaryTableStrands" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
 													<tr>
 														<th>
@@ -3340,7 +3416,7 @@
 									</div>
 									<form>
 										<div class="table-responsive-sm" id="auxiliaryDivTube">
-											<table id="auxiliaryTableTubes" class="table table-striped table-bordered table-sm" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
+											<table id="auxiliaryTableTubes" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
 													<tr>
 														<th>
@@ -3786,6 +3862,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 							<li class="nav-item"><a class="nav-link " id="source_dest-tab" style="color: gold;" data-toggle="tab" href="#source_dest" role="tab" aria-controls="source_dest" aria-selected="false">Source_Destination</a></li>
 							<li class="nav-item"><a class="nav-link " id="conduit-tab" style="color: gold;" data-toggle="tab" href="#conduit" role="tab" aria-controls="conduit" aria-selected="false">Conduit</a></li>
 							<li class="nav-item"><a class="nav-link " id="fiber_aux_tab" style="color: gold;" data-toggle="tab" href="#auxiliary" role="tab" aria-controls="auxiliary" aria-selected="false">Auxiliary Points</a></li>
+							<li class="nav-item"><a class="nav-link " id="fiber_duct_tab" style="color: gold;" data-toggle="tab" href="#fiberDuct" role="tab" aria-controls="fiberDuct" aria-selected="false">Ducts</a></li>							
 							<li class="nav-item"><a class="nav-link " id="tubes-tab" style="color: gold;" data-toggle="tab" href="#tubes" role="tab" aria-controls="tubes" aria-selected="false">Tubes</a></li>
 							<li class="nav-item"><a class="nav-link " id="strands-tab" style="color: gold;" data-toggle="tab" href="#strands" role="tab" aria-controls="strands" aria-selected="false">Strands</a></li>
 							<li class="nav-item"><a class="nav-link " id="relatedcable-tab" style="color: gold;" data-toggle="tab" href="#related_cable" role="tab" aria-controls="related_cable" aria-selected="false">Related Cable</a></li>
@@ -4454,9 +4531,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									</div>
 									<form>
 										<div class="table-responsive-sm" id="auxiliaryDiv">
-											<table id="auxiliaryTable"
-												class="table table-striped table-bordered table-sm"
-												style="display: block; height: 250px; overflow: auto; max-width:800px; margin-right:20px">
+											<table id="auxiliaryTable" class="table table-striped table-bordered table-sm auxiliary-table-path"
+												style="display: block; height: 250px; overflow: auto; max-width:1050px; margin-right:20px">
 												<thead style="background: #E9ECEF;">
 													<tr class="fixed-headerr">
 														<th>
@@ -4522,6 +4598,103 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 								</div>
 							</div>
 						</div>
+						
+						
+						
+<!-- Fiber Ducts -->
+						
+<div class="tab-pane" id="fiberDuct" role="tabpanel" aria-labelledby="fiber_duct_tab">
+    <p></p>
+
+    <!-- SCROLL WRAPPER (IMPORTANT FIX) -->
+    <div class="table-responsive-sm fiberDuctTableWrapper" id="fiberDuctDiv">
+
+        <table id="fiberDuctTable" class="table table-striped table-bordered table-sm fiberDuct-table-path">
+
+            <thead style="background: #E9ECEF;">
+                <tr class="fixed-headerr">
+
+                    <th style="min-width:80px;">
+                        <button type="button" id="selectAll_fiberDuct" class="main">
+                            <span class="sub"></span>Select
+                        </button>
+                    </th>
+
+                    <th style="min-width:80px;" class="headcol">Sequence</th>
+
+                    <th style="min-width:250px;">Duct ID</th>
+                    <th style="min-width:250px;">Duct Name</th>
+
+                    <th style="min-width:80px;">From Sequence</th>
+
+                    <th style="min-width:250px;">From Aux ID</th>
+                    <th style="min-width:250px;">From Aux Name</th>
+
+                    <th style="min-width:120px;">From Longitude</th>
+                    <th style="min-width:120px;">From Latitude</th>
+
+                    <th style="min-width:80px;">To Sequence</th>
+
+                    <th style="min-width:250px;">To Aux ID</th>
+                    <th style="min-width:250px;">To Aux Name</th>
+
+                    <th style="min-width:120px;">To Longitude</th>
+                    <th style="min-width:120px;">To Latitude</th>
+
+                    <th style="min-width:120px;">Distance</th>
+                    <th style="min-width:120px;">Geo Distance</th>
+
+                </tr>
+            </thead>
+
+            <tbody></tbody>
+
+        </table>
+
+    </div>
+
+    <!-- BUTTONS -->
+    <div class="fiberDuct-buttons btns-below-table">
+
+        <button type="button" id="addFiberDuctBelow" class="hide-button addBtn">
+            Insert Row Below
+        </button>
+
+        <button type="button" id="addFiberDuctAbove" class="hide-button addBtnAbove">
+            Insert Row Above
+        </button>
+
+        <button type="button" id="deleteFiberDuct" class="hide-button deleteBtn">
+            Delete Row
+        </button>
+
+        <button type="button" id="calculateFiberDuctGeoDistance" class="hide-button geoDistBtn">
+            Calculate Geo Distance
+        </button>
+
+    </div>
+
+    <br>
+
+    <b>Total Distance:</b>
+    <input type="text"
+        id="totalDistanceFiberDuct"
+        name="totalDistanceFiberDuct"
+        class="totalDistance"
+        style="border:none; outline:none; font-size:16px; color:#DC143C;"
+        readonly>
+
+    <br>
+
+    <b>Total Geo Distance:</b>
+    <input type="text"
+        id="totalGeoDistanceFiberDuct"
+        class="totalGeoDistance"
+        style="border:none; outline:none; font-size:16px; color:#DC143C;"
+        readonly>
+
+    <br><br>
+</div>						
 						
 							<div class="tab-pane" id="related_cable" role="tabpanel" aria-labelledby="relatedcable-tab" style="min-height: 400px">
 								<p></p>
@@ -4869,7 +5042,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 											</div></div></div>	
 								<form>
 									<div class="table-responsive-sm" id="auxiliaryTubeDiv">
-										<table id="TubeAuxTable" class="table table-striped table-bordered table-sm " style="display: block; height: 200px; overflow-y: auto;">
+										<table id="TubeAuxTable" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 200px; overflow-y: auto;">
 											<thead style="background: #E9ECEF;">
 												<tr>
 													<th> <button type="button" id="selectAll_TubesAux" class="main"> <span class="sub"></span>Select</button> </th>
@@ -4966,7 +5139,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 							<div class="input-group-prepend"><div id="loaderDivFiberStrand" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div></div></div></div>	
 								<form>
 									<div class="table-responsive-sm" id="auxiliaryStrandDiv">
-										<table id="StrandAuxTable" class="table table-striped table-bordered table-sm " style="display: block; height: 200px; overflow-y: auto;">
+										<table id="StrandAuxTable" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 200px; overflow-y: auto;">
 											<thead style="background: #E9ECEF;">
 												<tr><th><button type="button" id="selectAll_StrandsAux" class="main"><span class="sub"></span>Select</button></th>
 													<th style="min-width: 80px">Sequence</th>
@@ -5070,9 +5243,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										</div></div></div></div>
 							<div class="row"></div></div></div>
 					<div class="modal-footer"></div></div></div></div></div>
-<div class="container">
+					
+<!--   <div class="container"> -->
+
 		<div id="trenchModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
-			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="max-width:80%;">
 				<div class="modal-content">
 					<div class="modal-header"
 						style="background-color: #2678CC ; height: 55px;">
@@ -5091,7 +5266,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
 							<li class="nav-item"><a class="nav-link active" id="trench-tab" style="color: gold;" data-toggle="tab" href="#trench" role="tab" aria-controls="trench" aria-selected="true">Trench</a></li>
 							<li class="nav-item"><a class="nav-link " id="source_dest_trench-tab" style="color: gold;" data-toggle="tab" href="#source_dest_trench" role="tab" aria-controls="source_dest_trench" aria-selected="false">Source_Destination</a></li>
-							<li class="nav-item"><a class="nav-link " id="auxiliary_trench-tab" style="color: gold;" data-toggle="tab" href="#auxiliary_trench" role="tab" aria-controls="auxiliary_trench" aria-selected="false">Auxiliary Points</a></li>
+							<li class="nav-item"><a class="nav-link " id="trench_aux_tab" style="color: gold;" data-toggle="tab" href="#auxiliary_trench" role="tab" aria-controls="auxiliary_trench" aria-selected="false">Auxiliary Points</a></li>
 						</ul>
 						<div class="tab-content" style="min-height: 300px">
 							<div class="tab-pane active" id="trench" role="tabpanel"
@@ -5343,7 +5518,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 													<span style="width: 140px; font-size: 12px;" class="input-group-text"><b>Destination City</b></span> 
 														<input type="text" id="dstCityTrench" class="form-control text-input" readonly />
 												</div></div></div></div></div></div>
-							<div class="tab-pane " id="auxiliary_trench" role="tabpanel" aria-labelledby="auxiliary_trench-tab">
+							<div class="tab-pane " id="auxiliary_trench" role="tabpanel" aria-labelledby="trench_aux_tab">
 								<p></p>
 								<div class="container-fluid">
 								<div class="row">
@@ -5388,11 +5563,70 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												</div>
 											</div>
 										</div>
-									</div>									
+									</div>
+									
+<!-- 																		
 							<div class="col-sm-1">
 								<div class="form-group">
 									<div class="input-group-prepend"><div id="loaderDivTrench" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
-									</div></div></div>	
+									</div></div></div>
+ -->									
+									
+<div class="row align-items-center flex-nowrap">
+    <!-- IMPORT CONTROLS GROUP -->
+    <div class="col-sm-11">
+        <div class="row align-items-center">
+
+            <!-- FILE -->
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <input type="file" id="importAuxfileTrench" accept=".xlsx" class="btn btn-light" style="font-size:13px;">
+                </div>
+            </div>
+
+            <!-- CHECKBOX -->
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                              style="font-size:12px; padding:5px 10px; white-space:nowrap;">
+                            <b>Append</b>
+                            <input type="checkbox" class="appendAux" id="AuxPt_AppendTo_Trench" style="margin-left:10px;">
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMPORT BUTTON -->
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <button id="uploadTrench" class="btn btn-primary uploadAux" style="margin-top:0;">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADER -->
+    <div class="col-sm-1">
+        <div class="form-group mb-0 text-center">
+            <div id="loaderDivTrench" class="loaderDiv" style="display:none;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="35px"></div>
+        </div>
+    </div>
+</div>
+<div class="row" style="margin-top:8px;">
+    <div class="col-sm-12">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <button id="generateTrenchFromPath" class="btn btn-primary generateFromPath" style="width:100%; font-weight:500;">Generate From Path </button></div>
+        </div>
+    </div>
+</div>
+
+									
+									
+									
+<!-- 									
+										
 						<div class="row">
 						<div class="col-sm-5">
 							<div class="form-group">
@@ -5415,10 +5649,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 												<div class="input-group-prepend"><div id="loaderDivTrench" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
 											</div>	
 										</div>
-									</div>												
+									</div>
+ -->									
+									
 									<form>
 										<div class="table-responsive-sm" id="auxiliary_trenchDiv">
-											<table id="auxiliary_trenchTable" class="table table-striped table-bordered table-sm" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
+											<table id="auxiliary_trenchTable" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
 													<tr>
 														<th>
@@ -5461,17 +5697,69 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 									</form></div>
 								</div>
 							</div>
-						</div>
+						<div class="modal-footer"></div>
 					</div>
 				</div>
-				<div class="modal-footer"></div>
 			</div>
 		</div>
-	</div>
+<!-- 		</div>  -->
+		
+
+
+
+<div id="generateTrenchModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:550px;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#2678CC; height:55px;">
+                <h5 id="generateTrenchHeader" class="modal-title"
+                    style="font-weight:bold; color:#E9ECEF; position:relative; bottom:12px;">
+                    Generate Auxiliary Points
+                </h5>
+
+                <button type="button" class="close" data-dismiss="modal"
+                        style="color:white; opacity:1;">
+                    <i class='fa fa-times'></i>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label>Cable ID</label>
+                    <input id="trenchGenCableId" class="form-control autocompleteCableId" autocomplete="off"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Cable Name</label>
+                    <input id="trenchGenCableName" class="form-control autocompleteCableName"/>
+                </div>
+                
+                <div class="form-group mb-0">
+                    <label style="font-weight:500;">
+                        <input type="checkbox" id="appendToTrenchAuxPoints"/>
+                        Append to existing points
+                    </label>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" id="confirmGenerateTrench" class="btn btn-primary">
+                    Generate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+		
+		
+		
+		
+		
 	<!-- /////////////////////// -->
-	<div class="container">
+	<!--   <div class="container"> -->	
 		<div id="ductModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
-			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="max-width:80%;">					
+			
 				<div class="modal-content" style="width: 860px">
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
 						<h5 id="ductHeader" class="modal-title" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;">Duct</h5>
@@ -5484,7 +5772,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 						<ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #00757C;">
 							<li class="nav-item"><a class="nav-link active" id="duct-tab" style="color: gold;" data-toggle="tab" href="#duct" role="tab" aria-controls="duct" aria-selected="true">Duct</a></li>
 							<li class="nav-item"><a class="nav-link " id="source_dest_duct-tab" style="color: gold;" data-toggle="tab" href="#source_dest_duct" role="tab" aria-controls="source_dest_duct" aria-selected="false">Source_Destination</a></li>
-							<li class="nav-item"><a class="nav-link " id="auxiliary_duct-tab" style="color: gold;" data-toggle="tab" href="#auxiliary_duct" role="tab" aria-controls="auxiliary_duct" aria-selected="false">Auxiliary Points</a></li>
+							<li class="nav-item"><a class="nav-link " id="duct_aux_tab" style="color: gold;" data-toggle="tab" href="#auxiliary_duct" role="tab" aria-controls="auxiliary_duct" aria-selected="false">Auxiliary Points</a></li>
 						</ul>
 						<div class="tab-content" style="min-height: 300px">
 							<div class="tab-pane active" id="duct" role="tabpanel"
@@ -5783,7 +6071,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 								</div>
 							</div>
 							<div class="tab-pane " id="auxiliary_duct" role="tabpanel"
-								aria-labelledby="auxiliary_duct-tab">
+								aria-labelledby="duct_aux_tab">
 								<p></p>
 								<div class="container-fluid">
 								<div class="row">
@@ -5828,6 +6116,71 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 													<span style="min-width: 150px; font-size: 12px;position: relative; margin-left:-10px" class="input-group-text"><b>By Auxiliary Point </b>
 														 <input type='checkbox' id="AuxPt_AutocompleteDuct" value='0' class="auxPtDuctAutocomplete" style='position: relative; margin-left: 15px'></span>
 												</div></div></div></div>
+												
+												
+												
+<div class="row align-items-center flex-nowrap">
+
+    <!-- IMPORT CONTROLS GROUP -->
+    <div class="col-sm-11">
+
+        <div class="row align-items-center">
+
+            <!-- FILE -->
+            <div class="col-auto">
+                <div class="form-group mb-0">                
+					<input type="file" id="importAuxfileDuct" accept=".xlsx" class="btn btn-light file" style="font-size:13px">
+                </div>
+            </div>
+
+            <!-- CHECKBOX -->
+            <div class="col-auto">
+                <div class="form-group mb-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"
+                              style="font-size:12px; padding:5px 10px; white-space:nowrap;">
+                            <b>Append</b>
+							<input type='checkbox' id="AuxPt_AppendTo_Duct" class="appendAux" value='0' style='position: relative; margin-left: 10px'>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IMPORT BUTTON -->
+            <div class="col-auto">
+                <div class="form-group mb-0">
+					<button id="uploadDuct" class="btn btn-primary uploadAux" style=" margin-top:0px;">Import</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LOADER -->
+    <div class="col-sm-1">
+        <div class="form-group mb-0 text-center">
+			<div id="loaderDivDuct" class= "loaderDiv" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
+		</div>
+    </div>
+
+</div>
+<div class="row" style="margin-top:8px;">
+    <div class="col-sm-12">
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <button id="generateDuctFromPath" class="btn btn-primary generateFromPath" style="width:100%; font-weight:500;">Generate From Path</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Aux Buttons -->
+												
+												
+<!-- 												
 								<div class="col-sm-1">
 								<div class="form-group">
 									<div class="input-group-prepend"><div id="loaderDivDuct" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
@@ -5851,10 +6204,12 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 						<div class="col-sm-1">
 								<div class="form-group">
 									<div class="input-group-prepend"><div id="loaderDivDuct" style="display: none; margin-top:11px;"><img src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" width="40px" /></div>
-											</div></div></div>																
+											</div></div></div>
+-->											
+											
 									<form>
 										<div class="table-responsive-sm" id="auxiliary_ductDiv">
-											<table id="auxiliary_ductTable" class="table table-striped table-bordered table-sm" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
+											<table id="auxiliary_ductTable" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
 													<tr>
 														<th>
@@ -5887,8 +6242,67 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<br><b>Total Driving Distance:</b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" type="text" id="ductTotalDistanceDrivg" name="ductTotalDistanceDrivg" readonly>
 										<br><b>Total Geo Distance: </b><input style="border: none;outline:none;font-size:16px;color:#DC143C;" id="totalGeoDistanceDuct" readonly></input><br><br>					
 										</div>	
-									</form></div></div></div></div></div></div>
-				<div class="modal-footer"></div></div></div></div>
+									</form></div></div></div>
+								<div class="modal-footer"></div>									
+							</div>
+						</div>
+					</div>
+				</div>
+				
+<div id="generateDuctModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:550px;">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#2678CC; height:55px;">
+                <h5 id="generateDuctHeader" class="modal-title" style="font-weight:bold; color:#E9ECEF; position:relative; bottom:12px;">
+                    Generate Auxiliary Points
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" style="color:white; opacity:1;"><i class='fa fa-times'></i></button>
+            </div>
+
+            <div class="modal-body">           
+				<div class="form-group">
+				    <div style="display:flex; align-items:center; gap:25px; flex-wrap:wrap;">
+				
+				        <label style="font-weight:500; margin-bottom:0;">
+				            <input type="checkbox" id="generateFromTrench"/>
+				            Generate From Trench
+				        </label>
+				
+				        <label style="font-weight:500; margin-bottom:0;">
+				            <input type="checkbox" id="includeSourceDestination"/>
+				            Including Source and Destination
+				        </label>
+				
+				    </div>
+				</div>            
+                <div class="form-group">
+                    <label>Cable ID</label>
+                    <input id="ductGenCableId" class="form-control autocompleteCableId" autocomplete="off"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Cable Name</label>
+                    <input id="ductGenCableName" class="form-control autocompleteCableName"/>
+                </div>
+                
+                <div class="form-group mb-0">
+                    <label style="font-weight:500;">
+                        <input type="checkbox" id="appendToDuctAuxPoints"/>
+                        Append to existing points
+                    </label>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" id="confirmGenerateDuct" class="btn btn-primary">
+                    Generate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+				
+				
 <div class="container">
 	<div id="trenchOriginationModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
@@ -8389,413 +8803,6 @@ let dict = []; // global like your reference code
 systemLong = ${systemLong};
 systemLat = ${systemLat};
 
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function loadFiberList() {
-	$('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
-	  
-    $.ajax({
-        url: "${pageContext.request.contextPath}/getFiberScript",
-        type: "GET",
-        success: async function(response) {
-            fiberList = response.fiberList || [];
-            auxDat = response.auxDat || [];
-
-            console.log("FiberList loaded:", fiberList);
-            console.log("Raw Aux Data loaded:", auxDat);
-
-            // ---- Group auxiliary data by fiber cable ----
-            let auxMap = {};
-            auxDat.forEach(row => {
-                let fiberId = row[0];
-                let lng = parseFloat(row[1]);
-                let lat = parseFloat(row[2]);
-                let seq = parseInt(row[3]);
-
-                if (!auxMap[fiberId]) auxMap[fiberId] = [];
-                auxMap[fiberId].push({
-                    aux_Longitude: lng,
-                    aux_Latitude: lat,
-                    aux_seqSorting: seq
-                });
-            });
-
-            auxGrouped = Object.keys(auxMap).map(fiberId => ({
-                fiberId,
-                auxPoints: auxMap[fiberId]
-            }));
-
-            // ---- Loop all fibers with delay ----
-            for (let i = 0; i < fiberList.length; i++) {
-                const fiber = fiberList[i];
-                const fiberId = fiber[0];
-                const sourceLng = parseFloat(fiber[1]);
-                const sourceLat = parseFloat(fiber[2]);
-                const destinationLng = parseFloat(fiber[3]);
-                const destinationLat = parseFloat(fiber[4]);
-
-                getSelectedFiberAux(fiberId);
-                const auxPoints = dict.length ? dict : [];
-
-                calculateGeoDistance(
-                    fiberId,
-                    auxPoints,
-                    sourceLng,
-                    sourceLat,
-                    destinationLng,
-                    destinationLat
-                );
-
-                console.log(`Fiber ${fiberId} processed.`);
-                await delay(20);
-            }
-
-            console.log("All fibers processed. GeoDistances:", geoDistances);
-
-            // ---- Send geoDistances to server ----
-            $.ajax({
-                url: "${pageContext.request.contextPath}/updateGeoDistances",
-                type: "POST",
-                data: { geoDistances: JSON.stringify(geoDistances) },
-                success: function(response) {
-                    console.log("Server Response:", response);
-                	$("#loading").remove();		
-    				
-                },
-                error: function(err) {
-                    console.error("Error sending geoDistances:", err);
-                }
-            });
-        },
-        error: function(err) {
-            console.error("Error loading fiber list:", err);
-        }
-    });
-}
-
-// fill global dict
-function getSelectedFiberAux(fiberId) {
-    dict = [];
-    const auxEntry = auxGrouped.find(a => a.fiberId == fiberId);
-    if (auxEntry) {
-        auxEntry.auxPoints.forEach(aux => {
-            dict.push({
-                aux_Name: "Aux_Point " + aux.aux_seqSorting,
-                aux_Longitude: aux.aux_Longitude,
-                aux_Latitude: aux.aux_Latitude,
-                aux_seqSorting: aux.aux_seqSorting
-            });
-        });
-    }
-}
-
-function calculateGeoDistance(fiberId, aux, sourceLng, sourceLat, destinationLng, destinationLat) {
-    const allAuxData = aux || [];
-    let totalGeoDistance = 0.0;
-
-    // Ensure floats
-    sourceLat = parseFloat(sourceLat);
-    sourceLng = parseFloat(sourceLng);
-    destinationLat = parseFloat(destinationLat);
-    destinationLng = parseFloat(destinationLng);
-
-  
-    if (allAuxData.length > 0) {
-        for (let h = 0; h < allAuxData.length + 1; h++) {
-            let latitudeSrc = (h === 0) ? sourceLat : parseFloat(allAuxData[h - 1].aux_Latitude);
-            let longitudeSrc = (h === 0) ? sourceLng : parseFloat(allAuxData[h - 1].aux_Longitude);
-            let latitudeDst = (h === allAuxData.length) ? destinationLat : parseFloat(allAuxData[h].aux_Latitude);
-            let longitudeDst = (h === allAuxData.length) ? destinationLng : parseFloat(allAuxData[h].aux_Longitude);
-
-          
-            if (!isNaN(latitudeSrc) && !isNaN(longitudeSrc) && !isNaN(latitudeDst) && !isNaN(longitudeDst)) {
-                const segmentDistance = google.maps.geometry.spherical
-                    .computeDistanceBetween(
-                        new google.maps.LatLng(latitudeSrc, longitudeSrc),
-                        new google.maps.LatLng(latitudeDst, longitudeDst)
-                    ) / 1000;
-
-                      totalGeoDistance += segmentDistance;
-            } else {
-                console.warn(`â ï¸ Skipped invalid coords for fiber ${fiberId} at segment ${h}`);
-            }
-        }
-    } else {
-        // No aux points, direct link
-        if (!isNaN(sourceLat) && !isNaN(sourceLng) && !isNaN(destinationLat) && !isNaN(destinationLng)) {
-            totalGeoDistance = google.maps.geometry.spherical
-                .computeDistanceBetween(
-                    new google.maps.LatLng(sourceLat, sourceLng),
-                    new google.maps.LatLng(destinationLat, destinationLng)
-                ) / 1000;
-         
-        } else {
-            console.warn(`Invalid main coordinates for fiber ${fiberId}`);
-        }
-    }
-
-    geoDistances.push({
-        fiberId: fiberId,
-        distance: parseFloat(totalGeoDistance.toFixed(3))
-    });
-
-    
-}
-
- function updateLineOfSites() {
-
-
-	 $('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
-	  
-	    $.ajax({
-	        url: "${pageContext.request.contextPath}/updateLineOfSites",
-	        type: "GET",
-	        success: async function(response) {
-
-	   	     if(response){
-
-	   	        console.log(response);
-
-
-
-	   	     $("#loading").remove();		
-		   	     }
-	           
-	        },
-	        error: function(err) {
-	            console.error("Error loading fiber list:", err);
-	        }
-	    });
-	 }
-
-async function updateCities(item) {
-	  $('body').append('<div id="loading"><img id="loading-image" src="'+getContext()+'/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>');
-	  
-	  if (item === "fiber") {
-	    try {
-	      // Fetch fiber list
-	      const response = await $.ajax({
-	        url: `${pageContext.request.contextPath}/getFiberInfoCity`,
-	        type: "GET"
-	      });
-
-	      // Check if response contains fiber list
-	      if (response && response.fiberList) {
-	        const fiberList = response.fiberList;
-	        const geocoder = new google.maps.Geocoder();
-	        const fiberCityList = [];
-
-	        // Loop through each fiber and fetch city data
-	        for (let i = 0; i < fiberList.length; i++) {
-	          const fiber = fiberList[i];
-	          const fiberId = fiber[0];
-	          const srcLng = parseFloat(fiber[1]);
-	          const srcLat = parseFloat(fiber[2]);
-	          const destLng = parseFloat(fiber[3]);
-	          const destLat = parseFloat(fiber[4]);
-
-	          // Geocode for source and destination cities (await)
-	          const srcCity = await getCityFromCoords(srcLat, srcLng, geocoder);
-	          const destCity = await getCityFromCoords(destLat, destLng, geocoder);
-
-	          // Add fiber city data to list
-	          fiberCityList.push({
-	            fiberId: fiberId,
-	            srcCity: srcCity,
-	            destCity: destCity
-	          });
-
-	       console.log(fiberId +" --> srcCity: " + srcCity +" and distCity: " + destCity);
-	           // Add delay between requests to prevent throttling
-	          
-	        }
-
-	        console.log("All fibers processed. City list:", fiberCityList);
-
-	         $.ajax({
-	          url: `${pageContext.request.contextPath}/saveFiberCities`, // POST to server
-	          type: "POST",
-	          data: { fiberCityList: JSON.stringify(fiberCityList) },
-	          success: function(response) {
-	            console.log("Server Response:", response);
-	            $("#loading").remove();  // Remove loading screen after processing
-	          },
-	          error: function(err) {
-	            console.error("Error sending fiber city data:", err);
-	          }
-	        });
-
-	      } else {
-	        console.warn("No fiber data found.");
-	        $("#loading").remove();  // Remove loading screen if no data
-	      }
-	    } catch (err) {
-	      console.error("Error loading fiber list:", err);
-	      $("#loading").remove();  // Remove loading screen on error
-	    }
-	  }
-
-	  else if (item === "manhole"){
-		  try {
-		      // Fetch fiber list
-		      const response = await $.ajax({
-		        url: `${pageContext.request.contextPath}/getManholeInfoCity`,
-		        type: "GET"
-		      });
-
-		      // Check if response contains fiber list
-		      if (response && response.manholeList) {
-		        const manholeList = response.manholeList;
-		        const geocoder = new google.maps.Geocoder();
-		        const manholeCityList = [];
-
-		        // Loop through each fiber and fetch city data
-		        for (let i = 0; i < manholeList.length; i++) {
-		          const manhole = manholeList[i];
-		          const manholeId = manhole[0];
-		          const lng = parseFloat(manhole[1]);
-		          const lat = parseFloat(manhole[2]);
-		          
-		          // Geocode for source and destination cities (await)
-		          const city = await getCityFromCoords(lat, lng, geocoder);
-		       
-		          // Add fiber city data to list
-		          manholeCityList.push({
-		        	  manholeId: manholeId,
-		        	  city: city
-		           
-		          });
-
-		       console.log(manholeId +" --> City: " + city);
-		           // Add delay between requests to prevent throttling
-		          
-		        }
-
-		        console.log("All manholes processed. City list:", manholeCityList);
-
-		         $.ajax({
-		          url: `${pageContext.request.contextPath}/saveManholeCities`, // POST to server
-		          type: "POST",
-		          data: { manholeCityList: JSON.stringify(manholeCityList) },
-		          success: function(response) {
-		            console.log("Server Response:", response);
-		            $("#loading").remove();  // Remove loading screen after processing
-		          },
-		          error: function(err) {
-		            console.error("Error sending fiber city data:", err);
-		          }
-		        });
-
-		      } else {
-		         $("#loading").remove();  // Remove loading screen if no data
-		      }
-		    } catch (err) {
-		      console.error("Error loading  list:", err);
-		      $("#loading").remove();  // Remove loading screen on error
-		    }
-
-		  }
-
-	  else if (item === "handhole"){
-		  try {
-		      // Fetch fiber list
-		
-		      const response = await $.ajax({
-		        url: `${pageContext.request.contextPath}/getHandholeInfoCity`,
-		        type: "GET"
-		      });
-
-		      // Check if response contains fiber list
-		      if (response && response.handholeList) {
-			   
-		        const handholeList = response.handholeList;
-		        const geocoder = new google.maps.Geocoder();
-		        const handholeCityList = [];
-
-		        // Loop through each fiber and fetch city data
-		        for (let i = 0; i < handholeList.length; i++) {
-		          const handhole = handholeList[i];
-		          const handholeId = handhole[0];
-		          const lng = parseFloat(handhole[1]);
-		          const lat = parseFloat(handhole[2]);
-		          
-		          // Geocode for source and destination cities (await)
-		          const city = await getCityFromCoords(lat, lng, geocoder);
-		       
-		          // Add fiber city data to list
-		          handholeCityList.push({
-		        	  handholeId: handholeId,
-		        	  city: city
-		           
-		          });
-
-		       console.log(handholeId +" --> City: " + city);
-		           // Add delay between requests to prevent throttling
-		          
-		        }
-
-		        console.log("All handholes processed. City list:", handholeCityList);
-
-		         $.ajax({
-		          url: `${pageContext.request.contextPath}/saveHandholeCities`, // POST to server
-		          type: "POST",
-		          data: { handholeCityList: JSON.stringify(handholeCityList) },
-		          success: function(response) {
-		            console.log("Server Response:", response);
-		            $("#loading").remove();  // Remove loading screen after processing
-		          },
-		          error: function(err) {
-		            console.error("Error sending fiber city data:", err);
-		          }
-		        });
-
-		      } else {
-		         $("#loading").remove();  // Remove loading screen if no data
-		      }
-		    } catch (err) {
-		      console.error("Error loading  list:", err);
-		      $("#loading").remove();  // Remove loading screen on error
-		    }
-
-		  }
-	}
-
-	// Function to get city name from geocode results
-	function getCityFromCoords(lat, lng, geocoder) {
-	  return new Promise((resolve) => {
-	    const latlng = new google.maps.LatLng(lat, lng);
-
-	    geocoder.geocode({ latLng: latlng }, function(results, status) {
-	      if (status === google.maps.GeocoderStatus.OK && results[0]) {
-	        let city = "";
-
-	        // Look for "locality" type in address components
-	        for (let i = 0; i < results[0].address_components.length; i++) {
-	          const comp = results[0].address_components[i];
-	          if (comp.types.includes("locality")) {
-	            city = comp.long_name;
-	            break;
-	          }
-	        }
-
-	        // Fallback to first part of formatted address if locality not found
-	        if (!city) {
-	          city = results[0].formatted_address.split(",")[0];
-	        }
-
-	        resolve(city);
-	      } else {
-	        console.warn("Geocoder failed for", lat, lng, "â", status);
-	        resolve("");  // Resolve with empty string if geocoding fails
-	      }
-	    });
-	  });
-	}
-
-
-
 
 // Parse them into JavaScript objects
 var circleDraw = '${circleDraw}';
@@ -9065,13 +9072,16 @@ function initMap() {
 			openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}',`${ptList}`,'${ptData}','${getRelatedPoints}' , '${borderCircleLatitudes}' , '${borderCircleLongitudes}', circleDraw, squareDraw,locationNum, '${rowMultyIndex}');
 		}else if(checkedOption == "connected"){
 			openSearchConnected(checkedOption,'${siteId}','${selectConnectedSearch}','${connectedSearchLong}','${connectedSearchLat}','${connectedViewOnMap}',${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['fiber'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],'${distribBoardListSize}','${getRelatedPoints}', '${fpPath}','${bpPath}', ${physicalLayerList}['Node']);
-		}		  
-			  
+		}
+		
+// to be deleted		
+/*			  
 		$(document).ready(function () { 
 			$(function(){			 
 			 $(document).trigger("triggerListenersEvent");
 			});
 		});
+*/		
 
 } /// End of init Map
 
@@ -9126,7 +9136,7 @@ function hidePassword() {
 }
 
 </script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/DBCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distribution-board/dbCreation.js"></script>
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
 <script type="text/javascript"

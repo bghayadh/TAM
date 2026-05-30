@@ -435,7 +435,5 @@ function Site_Boq(SiteId){
 			error: function(result) {
 				alert("Error");
 									}			
-		});	
-	       
+		});		       
 }
-

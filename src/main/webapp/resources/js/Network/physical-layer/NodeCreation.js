@@ -53,7 +53,6 @@ function createNode(nodeList) {
         allNodes.push(nodeList[i][0]);
         window["" + nodeList[i][0]] = [];
         window["" + nodeList[i][0]] = nodeList[i];
-        console.log(" //////////nodeList " + nodeList[i]);
 
         if (nodeList[i][8] == 'MSAN') {
             str = "<ul><li id='" + nodeList[i][0] + "'  class='NodeActive' style='display:none;width:100px;'><input type='checkbox' class='Nodes checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' style='width:16px; height:16px;' src='" + getContext() + "/resources/NetworkImages/MSANNodeIcon.png'> " + nodeList[i][1] + "/" + nodeList[i][7] + " </span></li></ul>";

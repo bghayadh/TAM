@@ -34,6 +34,7 @@ public class ItemParameters {
 	List<Map<String, String>> dictParameterTubeSurv = new ArrayList<Map<String, String>>();
 	List<Map<String, String>> dictParameterStrandSurv = new ArrayList<Map<String, String>>();
 	List<Map<String, String>> dictParameterProcess = new ArrayList<Map<String, String>>();
+	List<Map<String, String>> dictParameterFiberDuct = new ArrayList<Map<String, String>>();
 
 	public List<Map<String, String>> getDictParameterStrands() {
 		return dictParameterStrands;
@@ -278,6 +279,13 @@ public class ItemParameters {
 	public void setDictParameterProcess(List<Map<String, String>> dictParameterProcess) {
 		this.dictParameterProcess = dictParameterProcess;
 	}
-	
+
+	public List<Map<String, String>> getDictParameterFiberDuct() {
+		return dictParameterFiberDuct;
+	}
+
+	public void setDictParameterFiberDuct(List<Map<String, String>> dictParameterFiberDuct) {
+		this.dictParameterFiberDuct = dictParameterFiberDuct;
+	}		
 
 }

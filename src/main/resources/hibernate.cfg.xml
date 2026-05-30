@@ -129,6 +129,7 @@
 <mapping class="com.aliat.alm.models.DistributionBoard"/>
 <mapping class="com.aliat.alm.models.DistributionBoardMapping"/>
 <mapping class="com.aliat.alm.models.FiberCable"/>
+<mapping class="com.aliat.alm.models.FiberDuct"/>
 <mapping class="com.aliat.alm.models.FiberAuxPoints"/>
 <mapping class="com.aliat.alm.models.FiberTubes"/>
 <mapping class="com.aliat.alm.models.TubeAuxPoints"/>

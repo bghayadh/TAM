@@ -1698,3 +1698,26 @@ function updateMarker(locationNum) {
         console.error('Invalid latitude or longitude:', lat, lng);
     }
 }
+
+function setCoorMulty() {
+    // Retrieve longitude and latitude from localStorage
+	console.log("Welcome to set coordinate from mutli");
+    var long = localStorage.getItem("getCoorPointLong");
+    var lat = localStorage.getItem("getCoorPointLat");
+    if (long && lat) {
+        // Select the row with the class 'ativeRecord' in the table with ID 'Multy_auxiliary'
+        var activeRow = $('#Multy_auxiliary tr.ativeRecord');
+
+        // Check if an active row was found
+        if (activeRow.length > 0) {
+            // Find the input fields for longitude and latitude within the active row
+            activeRow.find('input[name^="siteLng_Multy"]').val(long);
+            activeRow.find('input[name^="siteLat_Multy"]').val(lat);
+            var locationNum = activeRow.find("input[name='location_number']").val();
+            updateMarker(locationNum);
+
+        } else {
+            console.log("No active row found.");
+        }
+    }
+}

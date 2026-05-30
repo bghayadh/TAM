@@ -475,7 +475,33 @@ function filterMap_CableLabels(className,RelativeArray,RelativeCheckboxId){
 	});
 }
 
+function haversine_distance(lat1, lng1, lat2, lng2) {
+	
+	//console.log("Calculating LoS distance");
 
+    var R = 6371; // Earth radius in kilometers
+
+    lat1 = lat1 * (Math.PI / 180);
+    lat2 = lat2 * (Math.PI / 180);
+
+    var difflat = lat2 - lat1;
+    var difflon = (lng2 - lng1) * (Math.PI / 180);
+
+    var d = 2 * R * Math.asin(
+        Math.sqrt(
+            Math.sin(difflat / 2) * Math.sin(difflat / 2) +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.sin(difflon / 2) * Math.sin(difflon / 2)
+        )
+    );
+	
+	console.log("The distance is ", parseFloat(d.toFixed(3)))
+
+    return parseFloat(d.toFixed(3));
+}
+
+
+/*
 //calculate distance of path
 function haversine_distance(lat1,lng1,lat2,lng2) {
 	var R = 3958.8; // Radius of the Earth in miles
@@ -488,6 +514,7 @@ function haversine_distance(lat1,lng1,lat2,lng2) {
 	//return Math.round(1000*d)/1000;
 	return parseFloat(d.toFixed(8));
 }
+*/
 
 function closePointsHaversineDistance(lat1, lng1, lat2, lng2) {
    // Radius of the Earth in meters
@@ -583,6 +610,8 @@ function FilterOptions(x){
 	}
 }
 
+// to be deleted
+/*
 $(document).ready(function () {
 	
 	document.getElementById("Defaultbutton").click();
@@ -665,3 +694,4 @@ $(document).ready(function () {
 
 	$( "#sortable" ).disableSelection();
 });
+*/

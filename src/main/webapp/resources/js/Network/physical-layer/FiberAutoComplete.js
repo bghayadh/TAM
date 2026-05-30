@@ -14,7 +14,6 @@ function ManHandHoleAutoCompleteJunction(ID, physicalLayer) {
                     "physLayerSearch": search,
                     "physicalLayer": physicalLayerType,
                     "ProjectId": projectId
-
                 },
                 dataType: "json",
                 success: function(data) {
@@ -106,22 +105,17 @@ function SourceDestinationAutoComplete(checkboxClass, Type, srcID, srcLong, srcL
         $('#' + srcID).autocomplete("destroy");
     }
     $("#" + srcID).autocomplete({
-        source: function(request, response) {
+        source: debounce(function(request, response) {
             var search = $("#" + srcID).val();
-            var checkedCheckboxAutocomplete = " ";
-            //Get the id of checked checkbox
-            $('input:checkbox[class="' + checkboxClass + '"]:checked').each(function() {
-                var checkedCheckbox = $(this).attr("id");
-                checkedCheckboxAutocomplete = checkedCheckbox.split("_");
-                checkedCheckboxAutocomplete = checkedCheckboxAutocomplete[0];
-            });
+            let checkedCheckboxAutocomplete = " ";
 
-            //On change , get the id of changed checked checkbox
-            $("." + checkboxClass).change(function() {
-                var checkedCheckbox = this.id;
-                checkedCheckboxAutocomplete = checkedCheckbox.split("_");
-                checkedCheckboxAutocomplete = checkedCheckboxAutocomplete[0];
-            });
+            const checkedCheckbox =
+                $("." + checkboxClass + ":checked").attr("id");
+
+            if (checkedCheckbox) {
+                checkedCheckboxAutocomplete =
+                    checkedCheckbox.split("_")[0];
+            }
 
             if (checkedCheckboxAutocomplete == "manhole") {
                 url = 'getManholeData';
@@ -176,7 +170,12 @@ function SourceDestinationAutoComplete(checkboxClass, Type, srcID, srcLong, srcL
                     }
                 });
             }
-        }, minLength: 0, maxShowItems: 40, scroll: true,
+        }, 900), minLength: 0, maxShowItems: 4, scroll: true,
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
         select: function(event, ui) {
 
             if (ui.item[0].split("_")[0] == "MH") {
@@ -263,22 +262,18 @@ function AuxPointAutoComplete(checkboxClass, auxPtID, auxPtLong, auxPtLat, srcLa
     var url = "emptyUrl";
     var dataTarget = "";
     $("#" + auxPtID).autocomplete({
-        source: function(request, response) {
+        source: debounce(function(request, response) {
             var search = $("#" + auxPtID).val();
-            var checkedCheckboxAutocomplete = "AuxPt";
+            let checkedCheckboxAutocomplete = "AuxPt";
 
-            $('input:checkbox[class="' + checkboxClass + '"]:checked').each(function() {
-                var checkedCheckbox = $(this).attr("id");
-                checkedCheckboxAutocomplete = checkedCheckbox.split("_");
-                checkedCheckboxAutocomplete = checkedCheckboxAutocomplete[0];
-            });
+            const checkedCheckbox =
+                $("." + checkboxClass + ":checked").attr("id");
 
-            $("." + checkboxClass).change(function() {
-                //get the id of checked checkbox
-                var checkedCheckbox = this.id;
-                checkedCheckboxAutocomplete = checkedCheckbox.split("_");
-                checkedCheckboxAutocomplete = checkedCheckboxAutocomplete[0];
-            });
+            if (checkedCheckbox) {
+                checkedCheckboxAutocomplete =
+                    checkedCheckbox.split("_")[0];
+            }
+
             if (checkedCheckboxAutocomplete == "Manhole") {
                 url = 'getManholeData';
                 dataTarget = {
@@ -335,7 +330,12 @@ function AuxPointAutoComplete(checkboxClass, auxPtID, auxPtLong, auxPtLat, srcLa
                     }
                 });
             }
-        }, minLength: 0, maxShowItems: 40, scroll: true,
+        }, 900), minLength: 0, maxShowItems: 4, scroll: true,
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
 
         select: function(event, ui) {
             if (ui.item[0].split("_")[0] == "MH" || ui.item[0].split("_")[0] == "HH") {
@@ -2672,124 +2672,7 @@ function autoCompleteforRelatedCable() {
             $(this).autocomplete("search");
         }
     });
-
-    /*
-    $("#lastmileJunctionID").autocomplete({
-       source: function(request, response,event, ui) {
-             var searchId =$("#lastmileJunctionID").val(); 
-            
-           
-            $.ajax({
-                type: "GET",
-                contentType: "application/json; charset=utf-8",
-                
-                url: getContext()+'/SearchJunction',
-                data: {
-                    "searchId" : searchId,
-                 },
-                dataType: "json",
-                success: function (data) {
-                    if (data != null) {
-                        response(data.clist);
-                    }
-                },
-                error: function(result) {
-                    alert("Error");
-                }
-            });
-          
-       }, minLength:0, maxShowItems: 4, scroll:true,
-        select: function(event, ui) {
-            $("#lastmileJunctionID").val(ui.item[0]);
-            $("#lastmileJunctionName").val(ui.item[1]);
-        	
-            	
-            return false;
-                    }
-                }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-                return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-                        .append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-                       item[0] + '</span><br><span class="desc">' +
-                       item[1] +'</span></div>').appendTo(ul);
-            };
-    $("#lastmileJunctionID").focus(function(){
-    if (this.value == ""){
-        $(this).autocomplete("search");
-      }
-    });
-    
-    
-    $("#lastmileJunctionName").autocomplete({
-       source: function(request, response,event, ui) {
-             var searchId =$("#lastmileJunctionName").val(); 
-            
-           
-            $.ajax({
-                type: "GET",
-                contentType: "application/json; charset=utf-8",
-                
-                url: getContext()+'/SearchJunction',
-                data: {
-                    "searchId" : searchId,
-                 },
-                dataType: "json",
-                success: function (data) {
-                    if (data != null) {
-                        response(data.clist);
-                    }
-                },
-                error: function(result) {
-                    alert("Error");
-                }
-            });
-          
-       }, minLength:0, maxShowItems: 4, scroll:true,
-        select: function(event, ui) {
-            $("#lastmileJunctionID").val(ui.item[0]);
-            $("#lastmileJunctionName").val(ui.item[1]);
-        	
-            	
-            return false;
-                    }
-                }).data( "ui-autocomplete" )._renderItem= function(ul, item) {
-                return $('<li class="each"></li>').data( "ui-autocomplete-item", item )
-                        .append('<div class="acItem"><span class="name" style="font-weight:bold">' +
-                       item[1] + '</span><br><span class="desc">' +
-                       item[0] +'</span></div>').appendTo(ul);
-            };
-    $("#lastmileJunctionName").focus(function(){
-    if (this.value == ""){
-        $(this).autocomplete("search");
-      }
-    });  */
-
 }
-
-
-function setCoorMulty() {
-    // Retrieve longitude and latitude from localStorage
-    var long = localStorage.getItem("getCoorPointLong");
-    var lat = localStorage.getItem("getCoorPointLat");
-    if (long && lat) {
-        // Select the row with the class 'ativeRecord' in the table with ID 'Multy_auxiliary'
-        var activeRow = $('#Multy_auxiliary tr.ativeRecord');
-
-        // Check if an active row was found
-        if (activeRow.length > 0) {
-            // Find the input fields for longitude and latitude within the active row
-            activeRow.find('input[name^="siteLng_Multy"]').val(long);
-            activeRow.find('input[name^="siteLat_Multy"]').val(lat);
-            var locationNum = activeRow.find("input[name='location_number']").val();
-            updateMarker(locationNum);
-
-        } else {
-            console.log("No active row found.");
-        }
-    }
-}
-
-
-
 
 function autocompleteforAccessJunctions(ID) {
 
@@ -2878,6 +2761,145 @@ function autocompleteforAccessJunctions(ID) {
     };
     $("#LastMileJunctionName" + ID).focus(function() {
         if (this.value == "") {
+            $(this).autocomplete("search");
+        }
+    });
+}
+
+function fiberAuxAutoComplete(element, type) {
+	
+	console.log("Welcome to fiberAuxAutoComplete");	
+
+    element.autocomplete({
+        source: debounce(function(request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: getContext() + "/fiberAuxAutoComplete",
+                data: {
+                    ID: selectedFiberContext,
+                    aux: request.term,
+                    type: type
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data && data.fiberAuxDetails) {
+                        response(data.fiberAuxDetails);
+                    }
+                },
+                error: function() {
+                    response([]);
+                }
+            });
+        }, 500), minLength: 0, maxShowItems: 40, scroll: true,
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
+        select: function(event, ui) {
+            let row = element.closest("tr");
+            // FROM fields
+            if (
+                element.hasClass("fromAuxId") ||
+                element.hasClass("fromAuxName") ||
+				element.hasClass("fromSequence")
+            ) {
+                row.find(".fromAuxId").val(ui.item[0]);
+                row.find(".fromAuxName").val(ui.item[1]);
+                row.find(".fromSequence").val(ui.item[2]);
+                row.find(".fromLongitude").val(ui.item[3]);
+                row.find(".fromLatitude").val(ui.item[4]);
+            }
+            // TO fields
+            else if (
+                element.hasClass("toAuxId") ||
+                element.hasClass("toAuxName") ||
+				element.hasClass("toSequence")
+            ) {
+                row.find(".toAuxId").val(ui.item[0]);
+                row.find(".toAuxName").val(ui.item[1]);
+                row.find(".toSequence").val(ui.item[2]);
+                row.find(".toLongitude").val(ui.item[3]);
+                row.find(".toLatitude").val(ui.item[4]);
+            }
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        return $("<li class='each'></li>")
+            .data("ui-autocomplete-item", item)
+            .append(
+                '<div class="acItem">' +
+                '<span class="name" style="font-weight:bold">' +
+                item[0] +
+                '</span><br>' +
+                '<span class="desc">' +
+                item[1] +
+                ', </span>' +
+                '<span class="desc">' +
+                item[2] +
+                '</span>' +
+                '</div>'
+            )
+            .appendTo(ul);
+    };
+    element.focus(function() {
+        if (this.value === "") {
+            $(this).autocomplete("search");
+        }
+    });
+}
+
+function fiberDuctAutoComplete(element, type) {
+
+    element.autocomplete({
+        source: debounce(function(request, response) {
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: getContext() + "/fiberDuctAutoComplete",
+                data: {
+                    duct: request.term,
+                    type: type
+                },
+                dataType: "json",
+                success: function(data) {
+                    if (data && data.ducts) {
+                        response(data.ducts);
+                    }
+                },
+
+                error: function() {
+                    response([]);
+                }
+            });
+        }, 500), minLength: 0, maxShowItems: 40, scroll: true,
+        position: {
+            my: "left top",
+            at: "left bottom",
+            collision: "flipfit"
+        },
+        select: function(event, ui) {
+			let row = element.closest("tr");			
+			row.find(".ductId").val(ui.item[0]);
+			row.find(".ductName").val(ui.item[1]);		
+            return false;
+        }
+    }).autocomplete("instance")._renderItem = function(ul, item) {
+        return $("<li class='each'></li>")
+            .data("ui-autocomplete-item", item)
+            .append(
+                '<div class="acItem">' +
+                '<span class="name" style="font-weight:bold">' +
+                item[0] +
+                '</span><br>' +
+                '<span class="desc">' +
+                item[1] +
+                '</span></div>')
+            .appendTo(ul);
+    };
+    element.focus(function() {
+        if (this.value === "") {
             $(this).autocomplete("search");
         }
     });
