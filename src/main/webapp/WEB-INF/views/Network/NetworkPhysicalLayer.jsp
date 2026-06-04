@@ -25,8 +25,8 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Network_Index.css">
 <script src="${pageContext.request.contextPath}/resources/js/Network/NetworkMapStylesLayers.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/maps.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/tam-init.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/tam-triggerListenersEvent.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/physicLayer-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/physicLayer-triggerListenersEvent.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Tree.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Map.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Common.js"></script>
