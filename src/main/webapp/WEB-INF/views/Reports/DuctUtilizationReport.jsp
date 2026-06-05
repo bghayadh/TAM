@@ -68,6 +68,9 @@
         <script src="${pageContext.request.contextPath}/resources/js/Reports/duct-utilization/duct-utilization-map.js"></script>
         <script src="${pageContext.request.contextPath}/resources/js/Reports/duct-utilization/duct-utilization-show-on-map.js"></script>
         
+        <!-- To Draw Borders on map for start/end coordinates -->        
+        <script src="${pageContext.request.contextPath}/resources/js/Network/Network/BordersFindNearest.js"></script>
+        
 </head>
 <style>
 
