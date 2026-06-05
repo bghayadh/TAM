@@ -39,7 +39,6 @@ class gridAppendRows {
                 else if (j == this.ArrayKeys.length - 1) {
                     itemRow += "<td><button type='button' class='showElement-Location' id='showElement" + i + "'  onClick='showElement(\"" + rows[i][this.ArrayKeys[j]] + "\",\"" + i + "\")' >Show Element</button></td>"
                 }
-
                 else {
                     itemRow += "<td>" + rows[i][this.ArrayKeys[j]] + "</td>";
                 }
@@ -47,12 +46,8 @@ class gridAppendRows {
             itemRow += "</tr>";
         }
         $(this.tableBody).append(itemRow);
-        // to update the fields if possible;
 
-        //if(this.totalNoOfRows > this.noOfRows){
         this.updatePagination(newEnd, newStart);
-        //}
-
 
         var tableID = this.tableId;
 
