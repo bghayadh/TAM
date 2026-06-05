@@ -13,7 +13,7 @@ function onGenerateClick() {
 
 function validateGenerateInputs() {
 
-    if ($("#fiberCable").val() === "") {
+    if ($("#ductPath").val() === "") {
 
         alert("Please enter a cable!");
         return false;
@@ -40,7 +40,7 @@ function callGenerateReport() {
 
     showLoader();
 
-    cableID = $("#fiberCable").val().split(":")[0];
+    cableID = $("#ductPath").val().split(":")[0];
 
     $.ajax({
         type: "GET",
@@ -114,7 +114,7 @@ function handleGenerateSuccess(data) {
         if (allCables.includes(cableID) == false) {
             allCables.push(cableID);
         }
-        buildPath(cableID, fiberCableArray, $("#fiberCable").val().split(":")[1], window["mapPoints_" + cableID], data.fiberList[0][10], 0.7, 4.5, 'blue', 13);
+        buildPath(cableID, fiberCableArray, $("#ductPath").val().split(":")[1], window["mapPoints_" + cableID], data.fiberList[0][10], 0.7, 4.5, 'blue', 13);
         fiberCableArray[cableID].setMap(map);
         $('.showHideCableCheckbox').prop('checked', true);
         $(".showHideCableCheckbox").attr('disabled', false);

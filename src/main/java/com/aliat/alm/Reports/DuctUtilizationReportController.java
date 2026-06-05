@@ -74,20 +74,24 @@ public class DuctUtilizationReportController {
 		}
 		return "Reports/DuctUtilizationReport";
 	}
-/*
+
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getDuctAutComplete", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> getDuctAutComplete(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
+		
+		System.out.println("Welcome to getDuctAutoComplete");
 
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
 		}
 
-		String duct = request.getParameter("duct");
+		String duct = request.getParameter("requestValue");
+		System.out.println("duct is " +duct);
 		Session session = null;
 		try {
 			session = AlmDbSession.getInstance().getSession();
@@ -96,6 +100,8 @@ public class DuctUtilizationReportController {
 				String sql = "SELECT duct_id, duct_name " + "FROM ducts " + "WHERE UPPER(duct_id) LIKE UPPER(:duct) "
 						+ "OR UPPER(duct_name) LIKE UPPER(:duct) " + "ORDER BY duct_name " + "FETCH FIRST 40 ROWS ONLY";
 				
+				System.out.println("sql is " +sql);
+				
 				List<Object[]> ductDetails = session.createNativeQuery(sql).setParameter("duct", "%" + duct + "%")
 						.getResultList();
 
@@ -103,18 +109,18 @@ public class DuctUtilizationReportController {
 			}
 
 		} catch (Exception e) {
-			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error in fiberDuctAutoComplete", e);
+			Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error in getDuctAutComplete", e);
 			rtn.put("ducts", new ArrayList<>());
 
 		} finally {
-
 			if (session != null && session.isOpen()) {
 				session.close();
 			}
 		}
 		return rtn;
 	}
-
+	
+	/*
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	@RequestMapping(value = "/GenerateStrandUtilizationReport", method = RequestMethod.GET)
 	@ResponseBody

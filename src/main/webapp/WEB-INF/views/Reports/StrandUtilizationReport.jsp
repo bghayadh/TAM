@@ -75,6 +75,15 @@
 </head>
 <style>
 
+.gap-2 {
+    gap: 10px;
+}
+
+#fiberCable {
+    width: 100%;
+}
+
+
 .fixed-header{
 	opacity: 1;
 	filter: alpha(opacity=100);
@@ -266,50 +275,42 @@ max-width: 100%;
 	
 	<div Style=" left: 0; bottom: 0;" id="StrandUtilizationReportDiv">
 	<div class="container-fluid">     
-	     <div class="row"><p></p></div>
-			<div class="row second" >	
-			<div class="col-md-2" style="display: flex; ">
-				<div class="form-group "style="margin-left: 15px; ">
+		<div class="row"><p></p></div>
+		<div class="row second" >	
+			<div class="col-lg-2 col-md-4 col-sm-12" style="display: flex; ">
+				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text" style="color: green">Strand Utilization Report</span>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3">
-					<div class="form-group">
-						<div class="input-group-prepend">
-							<span class="input-group-text">Fiber Cable</span>
-							<input type="text" id="fiberCable" class="form-control text-input" style="width:300px;" />
-						</div>
+			<div class="col-lg-5 col-md-8 col-sm-12">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Fiber Cable</span>
+						<input type="text" id="fiberCable" class="form-control text-input" style="width:100%;" />
 					</div>
-		</div>		
-		<div class="col-md-3"></div>
-		<div class="col-md-2">
-			<button type="button"  id ="showOnMap" class="btn mapButtons"  style="margin-left:50px;" onclick="showOnMap()" >Show on Map</button>
-		</div>
-					
-			<div class="col-md-2" id="col3" style="text-align:right;">
-		 		<div class="btn-group pull-right"  style="padding: 0px !important;">
-		 			
-		 			<div class="glyph" style="padding-top:0px;">
-			 			 <div class="dropdown"  Style="margin-right:10px; height:30px;">
-	                        <button class="btn btn-secondary dropdown-toggle" type="button" id="notifactionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu	</button>
-	
+				</div>
+			</div>		
+			<div class="col-lg-5 col-md-12 col-sm-12" id="col3" style="text-align:right;">
+		 		<div class="btn-group pull-right gap-2"  style="padding: 0px !important;">
+		 			<button type="button" id ="showOnMap" class="btn mapButtons"  onclick="showOnMap()" >Show on Map</button>		 			
+			 		<div class="dropdown"  style="height:30px;">
+	                	<button class="btn btn-secondary dropdown-toggle" type="button" id="notifactionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu	</button>	
 	                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton" Style="width:10px;">
-    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="edit" href="#">Edit</a> </li>
-    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="print" href="#">Print</a> </li>
-    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="gridExport" href="#" >Export</a></li>
-    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="pdf" href="#">PDF</span></a> </li>
-    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="setup" href="#">Setup Auto Email</a> </li>
-    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="addCol" href="#">Add Column</a> </li>
+	    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="edit" href="#">Edit</a> </li>
+	    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="print" href="#">Print</a> </li>
+	    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="gridExport" href="#" >Export</a></li>
+	    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="pdf" href="#">PDF</span></a> </li>
+	    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="setup" href="#">Setup Auto Email</a> </li>
+	    	                   <li class="dropdown-submenu"><a class="dropdown-item" id="addCol" href="#">Add Column</a> </li>
     	                  </div>
-			           </div>  
-		        </div>
-		       
-		 			<div class="glyph" Style="white-space: nowrap;overflow: hidden;">
-		                  <button type="button" id="generate" class="btn btn-primary BtnActive" > Generate Report </button> 			
-					</div>
-			</div></div></div>
+			        </div>
+					<button type="button" id="generate" class="btn btn-primary BtnActive" > Generate Report </button>
+				</div>
+			</div>
+			
+			</div>
 
 	     <div class="row">
 	     	<div class="col-md-9"></div>
@@ -320,7 +321,7 @@ max-width: 100%;
 			</div>
 	     </div>
 
-<div class="container-fluid" >     
+     
 	<br>			
 <div class="wrapper" style="margin-top:-10px;">
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -607,33 +608,32 @@ max-width: 100%;
 
 		
 	<div style="display: Block;" id="totalStrandsNums">
-		<div class="row second" style="padding-left: 15px;">								
-			<div class="col-md-4">
+		<div class="row" style="padding-left: 15px;">								
+			<div class="col-lg-4 col-md-6">
 				<div class="form-group">
 					<div class="input-group-prepend">
 						<span class="input-group-text">Total Number of Strands</span>
-						<input readonly type="text" id="totalStrands" class="form-control text-input" style="width:120px;"/>
+						<input readonly type="text" id="totalStrands" class="form-control text-input" style="width:100%"/>
 					</div>
 				</div>
-		</div>
-		<div class="col-md-4">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">Total Used Strands</span>
-					<input readonly type="text" id="totalUsedStrands" class="form-control text-input" style="width:120px;" />
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Total Used Strands</span>
+						<input readonly type="text" id="totalUsedStrands" class="form-control text-input" style="width:100%" />
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4 col-md-6">
+				<div class="form-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">Total Not Used Strands</span>
+						<input readonly type="text" id="totalNotUsedStrands" class="form-control text-input" style="width:100%" />
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
-			<div class="form-group">
-				<div class="input-group-prepend">
-					<span class="input-group-text">Total Not Used Strands</span>
-					<input readonly type="text" id="totalNotUsedStrands" class="form-control text-input" style="width:120px;" />
-				</div>
-			</div>
-		</div>
-				
-	</div>
 		</div>
       </div>
     </div>
@@ -767,8 +767,7 @@ max-width: 100%;
     </div>
  </div>
       </div>
-      </div>  
-    </div>
+      </div>
   </div>
 </div>
 </body>

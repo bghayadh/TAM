@@ -25,7 +25,7 @@ function showOnMap() {
 
     if (generateFlag == "1") {
         var dropdownSelectedValue = document.getElementById('mapDropdown').value;
-        cableID = $("#fiberCable").val().split(":")[0];
+        cableID = $("#ductPath").val().split(":")[0];
 
         if (jctElementsFlag == "notOpened") {// to get the junctionn details in case of element type in grid is junction
             jctElementsFlag = "Opened";
