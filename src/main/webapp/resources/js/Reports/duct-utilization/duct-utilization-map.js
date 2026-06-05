@@ -104,7 +104,7 @@ function createCluster(iconFile) {
     cluster.setOptions({
         minimumClusterSize: 2,
         styles: [{
-            url: getContext() + '/resources/clusterIcons/${iconFile}',
+            url: `${getContext()}/resources/clusterIcons/${iconFile}`,
             height: 60,
             width: 60,
             anchorText: [-3, -3]
