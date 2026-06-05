@@ -75,9 +75,7 @@ class gridAppendRows {
     }
 
     updatePagination(end, start) {
-
         if (this.totalNoRows <= this.noOfRows || end >= this.totalNoRows) {
-
             this.paginationLabel.innerHTML = "Viewing <span>" + start + "-" + this.totalNoRows + "</span> of <span>" + this.totalNoRows + "</span>";
             this.prevButton.disabled = true;
             this.nextButton.disabled = true;
