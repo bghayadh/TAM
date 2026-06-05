@@ -140,17 +140,13 @@ class Pagination {
             this.start = 1;
             this.end = this.TotalRows;
             if (this.noOfRows != 0 && this.TotalRows != 0) {
-                // this.showRows(this.dataArray, this.start, this.end);
-
                 //Call the function that append the rows from gridAppendRows class
                 this.gridAppendRows.showRows(this.dataArray, this.start, this.end);
-
             }
         } else {
             this.start = 1;
             this.end = this.noOfRows;
             if (this.noOfRows != 0 && this.TotalRows != 0) {
-
                 //Call the function that append the rows from gridAppendRows class
                 this.gridAppendRows.showRows(this.dataArray, this.start, this.end);
             }
