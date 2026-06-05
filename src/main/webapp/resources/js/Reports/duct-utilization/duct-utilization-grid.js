@@ -18,7 +18,7 @@ function buildGridTableMarkup() {
             <thead>
                 <tr class="header fixed-header">
                     <th>
-                        Strand #
+                        Duct Section Drawing
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -28,7 +28,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Tube #
+                        Cable Qty
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -38,7 +38,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Location Type
+                        From Sequence
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -48,7 +48,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Location ID
+                        From Auxiliary ID
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -58,7 +58,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Location Name
+                        From Auxiliary Name
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -68,7 +68,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Location Longitude
+                        From Longitude
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -78,7 +78,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Location Latitude
+                        From Latitude
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -88,7 +88,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Element Type
+                        To Sequence
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -98,7 +98,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Element ID
+                        To Auxiliary ID
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -108,13 +108,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        <div class="tooltip-container">
-                            F/B or A/B
-                            <span class="tooltip-text">
-                                Front/Back or Side A/Side B
-                            </span>
-                        </div>
-
+						To Auxiliary Name
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -124,7 +118,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Related Path
+                        To Longitude
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -134,67 +128,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
-                        Port Index
-                        <li class="filter-dropdown dropdown">
-                            <button class="almgrid-filter" data-toggle="dropdown">
-                                <i class="fa fa-list almgrid-filter-i"></i>
-                            </button>
-                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
-                        </li>
-                    </th>
-
-                    <th>
-                        Port Row
-                        <li class="filter-dropdown dropdown">
-                            <button class="almgrid-filter" data-toggle="dropdown">
-                                <i class="fa fa-list almgrid-filter-i"></i>
-                            </button>
-                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
-                        </li>
-                    </th>
-
-                    <th>
-                        Port Column
-                        <li class="filter-dropdown dropdown">
-                            <button class="almgrid-filter" data-toggle="dropdown">
-                                <i class="fa fa-list almgrid-filter-i"></i>
-                            </button>
-                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
-                        </li>
-                    </th>
-
-                    <th>
-                        Status
-                        <li class="filter-dropdown dropdown">
-                            <button class="almgrid-filter" data-toggle="dropdown">
-                                <i class="fa fa-list almgrid-filter-i"></i>
-                            </button>
-                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
-                        </li>
-                    </th>
-
-                    <th>
-                        Equipment Type
-                        <li class="filter-dropdown dropdown">
-                            <button class="almgrid-filter" data-toggle="dropdown">
-                                <i class="fa fa-list almgrid-filter-i"></i>
-                            </button>
-                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
-                        </li>
-                    </th>
-
-                    <th>
-                        Equipment ID
-                        <li class="filter-dropdown dropdown">
-                            <button class="almgrid-filter" data-toggle="dropdown">
-                                <i class="fa fa-list almgrid-filter-i"></i>
-                            </button>
-                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
-                        </li>
-                    </th>
-
-                    <th>
-                        Equipment Name
+                        To Latitude
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter" data-toggle="dropdown">
                                 <i class="fa fa-list almgrid-filter-i"></i>
@@ -226,10 +160,10 @@ function buildGridTableMarkup() {
                             <ul class="dropdown-menu filter-dropdown-ul"></ul>
                         </li>
                     </th>
-
                 </tr>
 
                 <tr>
+                    <th></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -241,29 +175,9 @@ function buildGridTableMarkup() {
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
-
-                    <th>
-                        <input type="text"
-                               disabled
-                               class="almgrid-search"
-                               style="display:none">
-                    </th>
-
-                    <th>
-                        <input type="text"
-                               disabled
-                               class="almgrid-search"
-                               style="display:none">
-                    </th>
+                    <th><input type="text" disabled class="almgrid-search" style="display:none"></th>
+                    <th><input type="text" disabled class="almgrid-search" style="display:none"></th>
                 </tr>
-
             </thead>
             <tbody></tbody>
         </table>
@@ -282,7 +196,6 @@ function initializeGrid(reportData) {
 function drawTableGrid(tableId, dataArray) {
 
     // MOVE huge drawTableGrid callback body here
-
 
     var tableBody = document.querySelector("#" + tableId + " tbody");
     var columnLinkNb = this.columnLinkNb;

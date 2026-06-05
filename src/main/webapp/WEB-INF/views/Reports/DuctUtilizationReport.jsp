@@ -376,15 +376,8 @@ max-width: 100%;
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header fixed-header">											
-												<th>Strand #
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>
-												<th>Tube #
+												<th>Duct Section Drawing</th>
+												<th>Cables Qty
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -392,7 +385,7 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
-												<th>Location Type
+												<th>From Sequence
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -401,7 +394,7 @@ max-width: 100%;
 													</li>
 												</th>
 												
-												<th>Location ID
+												<th>From Auxiliary ID
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -410,7 +403,7 @@ max-width: 100%;
 													</li>
 												</th>
 												
-												<th>Location Name
+												<th>From Auxiliary Name
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -419,7 +412,7 @@ max-width: 100%;
 													</li>
 												</th>
 												
-												<th>Location Longitude
+												<th>From Longitude
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -428,7 +421,7 @@ max-width: 100%;
 													</li>
 												</th>
 												
-												<th>Location Latitude
+												<th>From Latitude
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -437,7 +430,7 @@ max-width: 100%;
 													</li>
 												</th>
 												
-												<th>Element Type
+												<th>To Sequence
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -445,7 +438,7 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
-													<th>Element ID
+												<th>To Auxiliary ID
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -453,10 +446,7 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
-												 <th>
-							                        <div class="tooltip-container">F/B or A/B
-							                            <span class="tooltip-text">Front/Back or Side A/Side B</span>
-							                        </div>
+												 <th>To Auxiliary Name
 							                        <li class="filter-dropdown dropdown">
 							                            <button class="almgrid-filter" data-toggle="dropdown"> 
 							                                <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -464,7 +454,7 @@ max-width: 100%;
 							                            <ul class="dropdown-menu filter-dropdown-ul"></ul>
 							                        </li>
                     							</th>
-                    							<th>Related Path
+                    							<th>To Longitude
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -472,15 +462,7 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
-													<th>Port Index
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>		
-												<th>Port Row
+												<th>To Latitude
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
 														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -488,66 +470,24 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>		
-												<th>Port Column
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>	
-												<th>Status
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown"> 
-														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														</button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>	
-												<th>Equipment Type
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>	
-												<th>Equipment ID
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>													
-												<th>Equipment Name
-													<li class="filter-dropdown dropdown">
-														<button class="almgrid-filter" data-toggle="dropdown">
-														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
-														 </button>
-														<ul class="dropdown-menu filter-dropdown-ul"></ul>
-													</li>
-												</th>	
-												
 												<th>
-												<li class="filter-dropdown dropdown">
+													<li class="filter-dropdown dropdown">
 														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
 														</button>
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
-													<th>
-												<li class="filter-dropdown dropdown">
+												<th>
+													<li class="filter-dropdown dropdown">
 														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
 														</button>
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
-												</th>		
-																					
+												</th>
 											<tr>
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -555,19 +495,12 @@ max-width: 100%;
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
-												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>											
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" disabled class="almgrid-search" style="display:none"></th>
 												<th><input type="text" disabled class="almgrid-search" style="display:none"></th>
-																							
 											</tr>
 										</thead>
 										<tbody></tbody>

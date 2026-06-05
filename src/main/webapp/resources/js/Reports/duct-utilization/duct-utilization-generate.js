@@ -99,16 +99,14 @@ function handleGenerateSuccess(data) {
 
 
         var totalStrands = parseFloat(data.fiberList[0][11]) * parseFloat(data.fiberList[0][12]);
-        $('#totalStrands').val(totalStrands);
+        $('#totalCables').val(totalStrands);
 
         var totalUsedStr = parseFloat(data.frontTotalUsedStrands) + parseFloat(data.backTotalUsedStrands) + parseFloat(data.jctTotalUsedStrands);
-        $('#totalUsedStrands').val(totalUsedStr);
+        $('#totalStrands').val(totalUsedStr);
 
 
         var totalNotUsedStrands = parseFloat(totalStrands) - parseFloat(totalUsedStr);
-        $('#totalNotUsedStrands').val(totalNotUsedStrands);
-
-
+        $('#geoDistance').val(totalNotUsedStrands);
 
 
         if (allCables.includes(cableID) == false) {

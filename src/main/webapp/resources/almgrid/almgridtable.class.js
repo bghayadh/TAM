@@ -1,8 +1,5 @@
 //This class is used for Reports grid
 class AlmgridTable {
-    //optimized by yaraa
-
-    // Constructor
     constructor(options) {
 
         this.tableId = options.tableId;
@@ -13,17 +10,17 @@ class AlmgridTable {
         this.initFlag = 0;
         this.drawTableGrid = options.drawTableGrid;
         this.availableArrayLength = 0
-        this.arrayLength = 0 
+        this.arrayLength = 0
         this.pagination;
         this.view = options.view;
         this.init();
         this.ArrayKeys;
 
- 		// Create the exceeded data alert div element
+        // Create the exceeded data alert div element
         this.messageDiv = document.createElement('div');
         this.messageDiv.classList.add('message');
         this.messageDiv.style.display = 'none'; // Hide the alert by default
-		this.messageDiv.style.position = 'fixed';
+        this.messageDiv.style.position = 'fixed';
         this.messageDiv.style.top = '50%';
         this.messageDiv.style.left = '50%';
         this.messageDiv.style.transform = 'translate(-50%, -50%) translateY(-20px)';
@@ -32,9 +29,9 @@ class AlmgridTable {
         this.messageDiv.style.borderRadius = '8px';
         this.messageDiv.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
         this.messageDiv.style.zIndex = '200';
-		this.messageDiv.style.width = '320px';
-        this.messageDiv.style.height = '200px'; 
-        
+        this.messageDiv.style.width = '320px';
+        this.messageDiv.style.height = '200px';
+
         this.messageDiv.innerHTML = `
             <div class="popup-header" style="background-color:#2678CC;height: 55px; border-top-left-radius: 8px; border-top-right-radius: 8px; display: flex; align-items: center; justify-content: center; position: relative; top: -20px; left: -20px; right: -20px; margin-right: -40px;">
                 <h5 style="color: white; margin: 0;">Exceeded Data</h5>
@@ -47,8 +44,8 @@ class AlmgridTable {
         this.messageContent = this.messageDiv.querySelector('.message-content');
 
         document.body.appendChild(this.messageDiv);
-		
-		// Event listener for the close button
+
+        // Event listener for the close button
         this.closeButton.addEventListener('click', () => {
             this.hideMessage();
         });
@@ -59,23 +56,23 @@ class AlmgridTable {
         this.initializeFunction();
         this.addEvents();
         this.drawTableGrid(this.tableId, this.dataArray);
-		var count = 1;
-    	// Define a window to each column
-    	$("#" + this.tableId).find(".filter-dropdown-ul").each(function () {
-			window["submit_" +count] = "unchecked"; // used to check if the submit is clicked
-			window["uncheckedCheckboxes_" +count]=[]; // used to store the unchecked checkboxes when first time checking select all
-			window["uncheckboxArray_" +count]=[]; // used to store the unchecked checkboxes on clicking on submit in popup
-			window["checkboxArray_" +count]=[];// used to store the checked checkboxes on clicking on submit in popup
-        	count++;
-    	});
+        var count = 1;
+        // Define a window to each column
+        $("#" + this.tableId).find(".filter-dropdown-ul").each(function() {
+            window["submit_" + count] = "unchecked"; // used to check if the submit is clicked
+            window["uncheckedCheckboxes_" + count] = []; // used to store the unchecked checkboxes when first time checking select all
+            window["uncheckboxArray_" + count] = []; // used to store the unchecked checkboxes on clicking on submit in popup
+            window["checkboxArray_" + count] = [];// used to store the checked checkboxes on clicking on submit in popup
+            count++;
+        });
     }
     initializeFunction() {
         drawDropDownCustomFilter(this.tableId);
     }
 
-  // Function to show the exceeding data alert
-  showMessage(message) {
-    	this.messageContent.innerHTML = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+    // Function to show the exceeding data alert
+    showMessage(message) {
+        this.messageContent.innerHTML = message.replace(/(?:\r\n|\r|\n)/g, '<br>');
         this.messageDiv.style.display = 'block';
     }
 
@@ -84,7 +81,7 @@ class AlmgridTable {
         this.messageDiv.style.display = 'none';
     }
 
-    drawCustomFilters(filteredUncheckedArray,submitButtonFlag,columnNumber, currentForm, uniqueArray, uniqueFilteredArray,checkboxArray,uncheckboxArray,startIndex,endIndex,finalCount,nextPageNum) {
+    drawCustomFilters(filteredUncheckedArray, submitButtonFlag, columnNumber, currentForm, uniqueArray, uniqueFilteredArray, checkboxArray, uncheckboxArray, startIndex, endIndex, finalCount, nextPageNum) {
 
         var tableId = this.tableId;
         var FilteredArrayLength = uniqueFilteredArray.length
@@ -93,46 +90,46 @@ class AlmgridTable {
         var arrayLength = uniqueArray.length;
         this.arrayLength = arrayLength
 
-        if(FilteredArrayLength > 0 ){
+        if (FilteredArrayLength > 0) {
             $("#" + tableId).find("#" + currentForm + " .selectall-filter-checkbox").addClass("prev-true")
         }
-        
-        $("#" +currentForm).find(".nextPrevPage").val(nextPageNum);	
-    	$('#'+currentForm).find('.nextData').prop('disabled', false);
-   	 	$('#'+currentForm).find('.previousData').prop('disabled', true);
-   	 
-   	 	//Set total number of pages
-        if(FilteredArrayLength == uniqueArray ){
-        	var maxNoOfPages = uniqueArray/30000;
+
+        $("#" + currentForm).find(".nextPrevPage").val(nextPageNum);
+        $('#' + currentForm).find('.nextData').prop('disabled', false);
+        $('#' + currentForm).find('.previousData').prop('disabled', true);
+
+        //Set total number of pages
+        if (FilteredArrayLength == uniqueArray) {
+            var maxNoOfPages = uniqueArray / 30000;
         }
         else {
-        	var maxNoOfPages = FilteredArrayLength/30000;
+            var maxNoOfPages = FilteredArrayLength / 30000;
         }
-        if(String(maxNoOfPages).includes(".")==true) {
-	  		maxNoOfPages=String(maxNoOfPages).split(".")[0];
-	  		maxNoOfPages = parseInt(maxNoOfPages)+1;
+        if (String(maxNoOfPages).includes(".") == true) {
+            maxNoOfPages = String(maxNoOfPages).split(".")[0];
+            maxNoOfPages = parseInt(maxNoOfPages) + 1;
         }
-       $("#" +currentForm).find(".totalNoPages").val(maxNoOfPages);
-	
-       if(maxNoOfPages == nextPageNum) {
-    	   $('#'+currentForm).find('.nextData').prop('disabled', true);
-    	   $('#'+currentForm).find('.previousData').prop('disabled', true);
-   		}
-   	
-   		if ($("#" + currentForm).find('.showall-filter-checkbox').prop('checked') == true) {
-   			$("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
-   			$("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
-   			$("#" + currentForm).find('.showavailable-filter-checkbox').prop('checked', true);
-   	    }
-   		if(submitButtonFlag =="checked") {
-			uncheckboxArray[columnNumber]=window["uncheckboxArray_" +columnNumber];
-			checkboxArray[columnNumber]=window["checkboxArray_" +columnNumber];
-			window["uncheckedCheckboxes_" + columnNumber]=[];
-			window["uncheckedCheckboxes_" + columnNumber]=window["uncheckboxArray_" +columnNumber];
-		}
+        $("#" + currentForm).find(".totalNoPages").val(maxNoOfPages);
+
+        if (maxNoOfPages == nextPageNum) {
+            $('#' + currentForm).find('.nextData').prop('disabled', true);
+            $('#' + currentForm).find('.previousData').prop('disabled', true);
+        }
+
+        if ($("#" + currentForm).find('.showall-filter-checkbox').prop('checked') == true) {
+            $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
+            $("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
+            $("#" + currentForm).find('.showavailable-filter-checkbox').prop('checked', true);
+        }
+        if (submitButtonFlag == "checked") {
+            uncheckboxArray[columnNumber] = window["uncheckboxArray_" + columnNumber];
+            checkboxArray[columnNumber] = window["checkboxArray_" + columnNumber];
+            window["uncheckedCheckboxes_" + columnNumber] = [];
+            window["uncheckedCheckboxes_" + columnNumber] = window["uncheckboxArray_" + columnNumber];
+        }
         var rows = [];
         var existedValues = [];
-        
+
         var search = document.getElementById(tableId + 'Search' + columnNumber);
         let existinfilteredArray = false;
         let checked = false;
@@ -142,62 +139,62 @@ class AlmgridTable {
         let showSelectedStatus = document.querySelector("#" + currentForm + " .showselected-filter-checkbox");
         let showAllStatus = document.querySelector("#" + currentForm + " .showall-filter-checkbox");
 
-        if(submitButtonFlag =="unchecked") {
+        if (submitButtonFlag == "unchecked") {
             $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
         }
 
-	    else if(submitButtonFlag =="checked" && window["uncheckedCheckboxes_" + columnNumber].length >0) {
+        else if (submitButtonFlag == "checked" && window["uncheckedCheckboxes_" + columnNumber].length > 0) {
             $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
         }
-        
-        
-        
-        for (var i = 0; i < arrayLength; i++) {
+
+
+
+        for (var i = 0;i < arrayLength;i++) {
 
             //console.log(uniqueArray[i])
             existinfilteredArray = uniqueFilteredArray.includes(uniqueArray[i]);
-            
-           if(submitButtonFlag =="unchecked") {
-				if(uncheckboxArray[columnNumber].length >0) {
-	            	if(checkboxArray[columnNumber].includes(uniqueArray[i]) == false){	
-	            		checkboxArray[columnNumber].push(uniqueArray[i]);
-	            		
-						var indx = uncheckboxArray[columnNumber].indexOf(uniqueArray[i]);
-						if (indx > -1) {
-							uncheckboxArray[columnNumber].splice(indx, 1);
-						}	
-					}
-	                checked = true;
-	            }
-            }
- 			else if(submitButtonFlag =="checked" && filteredUncheckedArray.length >0) {
 
-            	if(window["uncheckedCheckboxes_" + columnNumber].includes(uniqueArray[i]) == true){	
-					
-            		var indx = checkboxArray[columnNumber].indexOf(uniqueArray[i]);
-					if (indx > -1) {
-						checkboxArray[columnNumber].splice(indx, 1);
-					}
-            		uncheckboxArray[columnNumber].push(uniqueArray[i]);
-            		
-					var indx = filteredUncheckedArray.indexOf(uniqueArray[i]);
-					if (indx > -1) {
-						filteredUncheckedArray.splice(indx, 1);
-					}	
-				}
+            if (submitButtonFlag == "unchecked") {
+                if (uncheckboxArray[columnNumber].length > 0) {
+                    if (checkboxArray[columnNumber].includes(uniqueArray[i]) == false) {
+                        checkboxArray[columnNumber].push(uniqueArray[i]);
+
+                        var indx = uncheckboxArray[columnNumber].indexOf(uniqueArray[i]);
+                        if (indx > -1) {
+                            uncheckboxArray[columnNumber].splice(indx, 1);
+                        }
+                    }
+                    checked = true;
+                }
+            }
+            else if (submitButtonFlag == "checked" && filteredUncheckedArray.length > 0) {
+
+                if (window["uncheckedCheckboxes_" + columnNumber].includes(uniqueArray[i]) == true) {
+
+                    var indx = checkboxArray[columnNumber].indexOf(uniqueArray[i]);
+                    if (indx > -1) {
+                        checkboxArray[columnNumber].splice(indx, 1);
+                    }
+                    uncheckboxArray[columnNumber].push(uniqueArray[i]);
+
+                    var indx = filteredUncheckedArray.indexOf(uniqueArray[i]);
+                    if (indx > -1) {
+                        filteredUncheckedArray.splice(indx, 1);
+                    }
+                }
                 checked = false;
-            }         
+            }
             // in the first time clicked, the condition will be that the value exist in available array and also in the checkbox array
             // the second time after filter, the value will exist in available array but will check if exist in checkbox array or not
 
 
-            if((uniqueFilteredArray.includes(uniqueArray[i]) && checkboxArray[columnNumber].includes(uniqueArray[i])) 
-            || (!uniqueFilteredArray.includes(uniqueArray[i]) && checkboxArray[columnNumber].includes(uniqueArray[i]))){
+            if ((uniqueFilteredArray.includes(uniqueArray[i]) && checkboxArray[columnNumber].includes(uniqueArray[i]))
+                || (!uniqueFilteredArray.includes(uniqueArray[i]) && checkboxArray[columnNumber].includes(uniqueArray[i]))) {
                 checked = true
             }
 
-            if((uniqueFilteredArray.includes(uniqueArray[i]) && !checkboxArray[columnNumber].includes(uniqueArray[i])) 
-            || (!uniqueFilteredArray.includes(uniqueArray[i]) && !checkboxArray[columnNumber].includes(uniqueArray[i])) ){
+            if ((uniqueFilteredArray.includes(uniqueArray[i]) && !checkboxArray[columnNumber].includes(uniqueArray[i]))
+                || (!uniqueFilteredArray.includes(uniqueArray[i]) && !checkboxArray[columnNumber].includes(uniqueArray[i]))) {
                 checked = false
             }
             /*if(existinfilteredArray === true || (existinfilteredArray === false &&  FilteredArrayLength ===0)){
@@ -208,7 +205,7 @@ class AlmgridTable {
 
             let label_classname = ""
             let disabledCheckbox = ""
-            if(existinfilteredArray === false &&  FilteredArrayLength !==0){
+            if (existinfilteredArray === false && FilteredArrayLength !== 0) {
                 label_classname = "not-available-value"
                 disabledCheckbox = "disabled"
             }
@@ -218,25 +215,25 @@ class AlmgridTable {
                 values: [uniqueArray[i]],
                 markup: "<div class='row custom-filter-row'><div class='col-md-12'>" +
                     "<div class='form-check'>" +
-                    "<input type='checkbox' data-element-index='" + i + "' class='form-check-input custom-filter-checkbox' checked value='" + uniqueArray[i] + "' "+disabledCheckbox+">" +
-                    "<label class='form-check-label custom-filter-label "+label_classname+"'  >" + uniqueArray[i] + "</label>" +
+                    "<input type='checkbox' data-element-index='" + i + "' class='form-check-input custom-filter-checkbox' checked value='" + uniqueArray[i] + "' " + disabledCheckbox + ">" +
+                    "<label class='form-check-label custom-filter-label " + label_classname + "'  >" + uniqueArray[i] + "</label>" +
                     "</div></div></div>",
                 markupunchecked: "<div class='row custom-filter-row'><div class='col-md-12'>" +
                     "<div class='form-check'>" +
-                    "<input type='checkbox' data-element-index='" + i + "' class='form-check-input custom-filter-checkbox' value='" + uniqueArray[i] + "' "+disabledCheckbox+">" +
-                    "<label class='form-check-label custom-filter-label "+label_classname+"'>" + uniqueArray[i] + "</label>" +
+                    "<input type='checkbox' data-element-index='" + i + "' class='form-check-input custom-filter-checkbox' value='" + uniqueArray[i] + "' " + disabledCheckbox + ">" +
+                    "<label class='form-check-label custom-filter-label " + label_classname + "'>" + uniqueArray[i] + "</label>" +
                     "</div></div></div>",
                 indexval: uniqueArray[i],
                 checked: checked,
                 active: true,
                 disabledCheckbox: disabledCheckbox,
-                existinfilteredArray : existinfilteredArray,
-                id:i
+                existinfilteredArray: existinfilteredArray,
+                id: i
             });
-            if(existinfilteredArray == true) {
-          	   existedValues.push(rows[i])
-             }
-			currentAppendedRows=rows;
+            if (existinfilteredArray == true) {
+                existedValues.push(rows[i])
+            }
+            currentAppendedRows = rows;
         }
 
         /*console.log(rows.length)
@@ -244,12 +241,12 @@ class AlmgridTable {
             return arr.existinfilteredArray === true;
         })
         */
-        var searchResults=[];
-        var filterRows = function (rows,appendType,currentForm) {
+        var searchResults = [];
+        var filterRows = function(rows, appendType, currentForm) {
             var results = [];
-            searchResults=[];
-            if(FilteredArrayLength > 0 && showavailable.checked){
-                for (var i = 0, ii = existedValues.length; i < ii; i++) {
+            searchResults = [];
+            if (FilteredArrayLength > 0 && showavailable.checked) {
+                for (var i = 0, ii = existedValues.length;i < ii;i++) {
                     if (existedValues[i].active) {
                         if (existedValues[i].checked) {
                             results.push(existedValues[i].markup);
@@ -267,9 +264,9 @@ class AlmgridTable {
                     }
                 }
             }
-            else { 
-                
-                for (var i = 0, ii = rows.length; i < ii; i++) {
+            else {
+
+                for (var i = 0, ii = rows.length;i < ii;i++) {
                     if (rows[i].active) {
                         if (rows[i].checked) {
                             results.push(rows[i].markup);
@@ -287,269 +284,269 @@ class AlmgridTable {
                     }
                 }
             }
-            if(appendType =="firstAppend") {
-           	 	var filteredResults=[];
-                filteredResults =filterfirstAppendRows(results,currentForm);
+            if (appendType == "firstAppend") {
+                var filteredResults = [];
+                filteredResults = filterfirstAppendRows(results, currentForm);
                 return filteredResults;
-           }
-           else if(appendType =="samePageAppend") {
-           	   var filteredResults=[];
-               filteredResults =filterSamePageAppendRows(results,currentForm);
-               return filteredResults;
-           }
-           else {
-                return results;
-           }
-        }
-
-      var filterfirstAppendRows = function (results,currentForm) {
-           var firstFilteredResults = [];            
-           if(currentForm !="") {
-         	   
-         	if(results.length==0) {
-         		 $("#" +currentForm).find(".nextPrevPage").val("0");	
-                 $('#'+currentForm).find('.nextData').prop('disabled', true);
-                 $('#'+currentForm).find('.previousData').prop('disabled', true);
             }
-         	else {
- 	        	$("#" +currentForm).find(".nextPrevPage").val("1");	
- 	           	$('#'+currentForm).find('.nextData').prop('disabled', false);
- 	          	$('#'+currentForm).find('.previousData').prop('disabled', true);
-         	}
-             var maxNoOfPages = results.length/30000;
-             if(String(maxNoOfPages).includes(".")==true) {
-     	  		maxNoOfPages=String(maxNoOfPages).split(".")[0];
-     	  		maxNoOfPages = parseInt(maxNoOfPages)+1;
-            }
-             $("#" +currentForm).find(".totalNoPages").val(maxNoOfPages);
-             if(maxNoOfPages== $("#" +currentForm).find(".nextPrevPage").val()) {
-         	 	$('#'+currentForm).find('.nextData').prop('disabled', true);
-         	 	$('#'+currentForm).find('.previousData').prop('disabled', true);
-         	}
-         }
-           
-           if(results.length > 30000) {
-         	  var arryLngth= 30000;
-           }
-           else {
-         	  var arryLngth= results.length;
-           }
-           
-            for(var x= 0; x<arryLngth;x++)
-          	   firstFilteredResults.push(results[x]); 
-            
-            return firstFilteredResults;
-
-         }
-      
-      var fltrSamePgApndRowsForShowAvailable = function (results,currentForm,FilteredCheckedArrResults,searchVal) {
-         	var firstFilteredResults = [];            
-     		endIndex=parseInt(finalCount);
-     		startIndex =parseInt(finalCount)-30000;
-     	
-     	for(var x= startIndex; x<endIndex;x++) { 
-     		if(FilteredArrayLength > 0 && showavailable.checked && searchVal ==""){
-     			if (parseInt(x) < parseInt(existedValues.length) ) {
-     				if(FilteredCheckedArrResults.includes(existedValues[x]["indexval"])==true ) { 
-     					var cur =  parseInt(existedValues[x]["id"]);
-     					firstFilteredResults.push(rows[cur].markup);
-     				}
-     			}
-             }
-             else if(FilteredArrayLength > 0 && showavailable.checked && searchVal !=""){
-        		 if (parseInt(x) < parseInt(searchResults.length) ) {
-        			 if(FilteredCheckedArrResults.includes(searchResults[x]["indexval"])==true ) { 
-        				 var cur =  parseInt(searchResults[x]["id"]);
-	           			 firstFilteredResults.push(rows[cur].markup);
-        			 }
-        		 }
+            else if (appendType == "samePageAppend") {
+                var filteredResults = [];
+                filteredResults = filterSamePageAppendRows(results, currentForm);
+                return filteredResults;
             }
             else {
-            	if(searchVal =="") {
-             		if (parseInt(x) < parseInt(rows.length) ) {
-             			if(FilteredCheckedArrResults.includes(rows[x]["indexval"])==true) {
-                 			firstFilteredResults.push(rows[x].markup);
-             			}
-             		}
-             	}
-             	else {
-             		 if (parseInt(x) < parseInt(searchResults.length) ) {
-                          if(FilteredCheckedArrResults.includes(searchResults[x]["indexval"])==true ) { 
-      	           			 var cur =  parseInt(searchResults[x]["id"]);
-      	           			 firstFilteredResults.push(rows[cur].markup);
-                          }
-                 	}
-             	}     		
-           }
-     	}
-         return firstFilteredResults;
-      }        
- 
-      var filterSamePageAppendRows = function (results,currentForm) {
-         	var firstFilteredResults = [];           
-     		endIndex=parseInt(finalCount);
-     		startIndex =parseInt(finalCount)-30000;
-     		
-     		if( endIndex < results.length ) {
-     			var arryLngth= endIndex;
-     		}
-     		else {
-     			var arryLngth= results.length;
-     		}
-     		
-         for(var x= startIndex; x<arryLngth;x++)
-       	   firstFilteredResults.push(results[x]); 
-         
-         return firstFilteredResults;
+                return results;
+            }
+        }
 
-      }      
+        var filterfirstAppendRows = function(results, currentForm) {
+            var firstFilteredResults = [];
+            if (currentForm != "") {
 
-      var filterRowsNext = function (nextResult,nextPageNum,maxNoOfPages) {
-         	
-          if(nextPageNum =='1') {
-          	startIndex ="0";
-          	endIndex="30000";
-          	finalCount ="30000";
-          }
-          else {
-          	startIndex =parseInt(finalCount);
-          	endIndex=parseInt(finalCount)+30000;
-          	finalCount =parseInt(finalCount)+30000;
-          }
-          var nextFilteredResults = [];            
-          var searchVal = $('#'+tableId + 'Search' + columnNumber).val();
-          
-          for(var x= startIndex; x<endIndex;x++) {
-      		
-          	if (showSelectedStatus.checked && showavailable.checked && searchVal =="") {
-          		if (parseInt(x) < parseInt(existedValues.length) ) {
-          		 if(uncheckboxArray[columnNumber].includes(existedValues[x]["indexval"])==false ) { 
-           			var cur =  parseInt(existedValues[x]["id"]);
-           			nextFilteredResults.push(rows[cur].markup);
-           		}    
-         		 }
-          	}
-          	 else if(showSelectedStatus.checked && showavailable.checked && searchVal !=""){
-          		 if (parseInt(x) < parseInt(searchResults.length) ) {
-          			 if(uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"])==false ) { 
-   	           		var cur =  parseInt(searchResults[x]["id"]);
-   	           		nextFilteredResults.push(rows[cur].markup);
-                     }
-          		 }
-           }
-         else {
-          	if(showSelectedStatus.checked ) {
-          		if (parseInt(x) < parseInt(searchResults.length) ) {
-          			if(searchResults[x]["checked"]==true) {
-          				 var cur =  parseInt(searchResults[x]["id"]);
-                			 nextFilteredResults.push(rows[cur].markup);
-          			}
-          		}
-          	}
-          	else if(showavailable.checked || showAllStatus.checked ) {
-          		if (parseInt(x) < parseInt(searchResults.length) ) {
-          			var cur =  parseInt(searchResults[x]["id"]);
-                	if(searchResults[x]["checked"] == true ){
-                    	nextFilteredResults.push(rows[cur].markup);
-                	}
-                	else {
-                		nextFilteredResults.push(rows[cur].markupunchecked);
-                	}
+                if (results.length == 0) {
+                    $("#" + currentForm).find(".nextPrevPage").val("0");
+                    $('#' + currentForm).find('.nextData').prop('disabled', true);
+                    $('#' + currentForm).find('.previousData').prop('disabled', true);
+                }
+                else {
+                    $("#" + currentForm).find(".nextPrevPage").val("1");
+                    $('#' + currentForm).find('.nextData').prop('disabled', false);
+                    $('#' + currentForm).find('.previousData').prop('disabled', true);
+                }
+                var maxNoOfPages = results.length / 30000;
+                if (String(maxNoOfPages).includes(".") == true) {
+                    maxNoOfPages = String(maxNoOfPages).split(".")[0];
+                    maxNoOfPages = parseInt(maxNoOfPages) + 1;
+                }
+                $("#" + currentForm).find(".totalNoPages").val(maxNoOfPages);
+                if (maxNoOfPages == $("#" + currentForm).find(".nextPrevPage").val()) {
+                    $('#' + currentForm).find('.nextData').prop('disabled', true);
+                    $('#' + currentForm).find('.previousData').prop('disabled', true);
+                }
+            }
 
-          		}
-          	}
-          	else {
-          		if (parseInt(x) < parseInt(searchResults.length) ) {
-          			if(uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"])==false ) { 
-               			var cur =  parseInt(searchResults[x]["id"]);
-               			nextFilteredResults.push(rows[cur].markup);
-                   }
-          		}
-          }          		 
-          	
-         }
-          }
-          return nextFilteredResults;
-   }	
-      var filterRowsPrevious = function (prevResult,prevPageNo,maxNoOfPages) {
+            if (results.length > 30000) {
+                var arryLngth = 30000;
+            }
+            else {
+                var arryLngth = results.length;
+            }
 
-          if(prevPageNo =='1') {
-          	startIndex ="0";
-          	endIndex="30000";
-          	finalCount ="30000";
-          }
-          else {
-          	startIndex =parseInt(startIndex)-30000;
-          	endIndex=parseInt(finalCount)-30000;
-          	finalCount =parseInt(finalCount)-30000;
-          }
-           
-          var prevFilteredResults = [];
-          var searchVal = $('#'+tableId + 'Search' + columnNumber).val();
+            for (var x = 0;x < arryLngth;x++)
+                firstFilteredResults.push(results[x]);
 
-       for(var x= startIndex; x<endIndex;x++) {    
-          if (showSelectedStatus.checked && showavailable.checked && searchVal =="") {
-        		 if (parseInt(x) < parseInt(existedValues.length) ) {
-      		 if(uncheckboxArray[columnNumber].includes(existedValues[x]["indexval"])==false ) { 
-       			var cur =  parseInt(existedValues[x]["id"]);
-       			prevFilteredResults.push(rows[cur].markup);
-       		}
-        		 }
-      	}
-     	 else if(showSelectedStatus.checked && showavailable.checked && searchVal !=""){
-        	
-     		 if (parseInt(x) < parseInt(searchResults.length) ) {
-     			 if(uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"])==false ) { 
-       			 var cur =  parseInt(searchResults[x]["id"]);
-       			 prevFilteredResults.push(rows[cur].markup);
-             }
-     		 }
-       }
-      	else {
-      		if(showSelectedStatus.checked ) {
-          		if (parseInt(x) < parseInt(searchResults.length) ) {
-          			if(searchResults[x]["checked"]==true) {
-          				 var cur =  parseInt(searchResults[x]["id"]);
-          				 prevFilteredResults.push(rows[cur].markup);
-          			}
-          		}
-          	}
-      		else if(showavailable.checked || showAllStatus.checked ) {
-          		if (parseInt(x) < parseInt(searchResults.length) ) {
-          			var cur =  parseInt(searchResults[x]["id"]);
-                		if(searchResults[x]["checked"] == true ){
-                			prevFilteredResults.push(rows[cur].markup);
-                		}
-                		else {
-                			prevFilteredResults.push(rows[cur].markupunchecked);
-                		}
+            return firstFilteredResults;
 
-          		}
-          	}
-      		else {
-          		if (parseInt(x) < parseInt(searchResults.length) ) {
-          			if(uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"])==false ) { 
-               		var cur =  parseInt(searchResults[x]["id"]);
-               		prevFilteredResults.push(rows[cur].markup);
-                     
-          			}
-          		}
-          	}
-      	}
-       }
-          return prevFilteredResults;      
-      }	      
-      
+        }
+
+        var fltrSamePgApndRowsForShowAvailable = function(results, currentForm, FilteredCheckedArrResults, searchVal) {
+            var firstFilteredResults = [];
+            endIndex = parseInt(finalCount);
+            startIndex = parseInt(finalCount) - 30000;
+
+            for (var x = startIndex;x < endIndex;x++) {
+                if (FilteredArrayLength > 0 && showavailable.checked && searchVal == "") {
+                    if (parseInt(x) < parseInt(existedValues.length)) {
+                        if (FilteredCheckedArrResults.includes(existedValues[x]["indexval"]) == true) {
+                            var cur = parseInt(existedValues[x]["id"]);
+                            firstFilteredResults.push(rows[cur].markup);
+                        }
+                    }
+                }
+                else if (FilteredArrayLength > 0 && showavailable.checked && searchVal != "") {
+                    if (parseInt(x) < parseInt(searchResults.length)) {
+                        if (FilteredCheckedArrResults.includes(searchResults[x]["indexval"]) == true) {
+                            var cur = parseInt(searchResults[x]["id"]);
+                            firstFilteredResults.push(rows[cur].markup);
+                        }
+                    }
+                }
+                else {
+                    if (searchVal == "") {
+                        if (parseInt(x) < parseInt(rows.length)) {
+                            if (FilteredCheckedArrResults.includes(rows[x]["indexval"]) == true) {
+                                firstFilteredResults.push(rows[x].markup);
+                            }
+                        }
+                    }
+                    else {
+                        if (parseInt(x) < parseInt(searchResults.length)) {
+                            if (FilteredCheckedArrResults.includes(searchResults[x]["indexval"]) == true) {
+                                var cur = parseInt(searchResults[x]["id"]);
+                                firstFilteredResults.push(rows[cur].markup);
+                            }
+                        }
+                    }
+                }
+            }
+            return firstFilteredResults;
+        }
+
+        var filterSamePageAppendRows = function(results, currentForm) {
+            var firstFilteredResults = [];
+            endIndex = parseInt(finalCount);
+            startIndex = parseInt(finalCount) - 30000;
+
+            if (endIndex < results.length) {
+                var arryLngth = endIndex;
+            }
+            else {
+                var arryLngth = results.length;
+            }
+
+            for (var x = startIndex;x < arryLngth;x++)
+                firstFilteredResults.push(results[x]);
+
+            return firstFilteredResults;
+
+        }
+
+        var filterRowsNext = function(nextResult, nextPageNum, maxNoOfPages) {
+
+            if (nextPageNum == '1') {
+                startIndex = "0";
+                endIndex = "30000";
+                finalCount = "30000";
+            }
+            else {
+                startIndex = parseInt(finalCount);
+                endIndex = parseInt(finalCount) + 30000;
+                finalCount = parseInt(finalCount) + 30000;
+            }
+            var nextFilteredResults = [];
+            var searchVal = $('#' + tableId + 'Search' + columnNumber).val();
+
+            for (var x = startIndex;x < endIndex;x++) {
+
+                if (showSelectedStatus.checked && showavailable.checked && searchVal == "") {
+                    if (parseInt(x) < parseInt(existedValues.length)) {
+                        if (uncheckboxArray[columnNumber].includes(existedValues[x]["indexval"]) == false) {
+                            var cur = parseInt(existedValues[x]["id"]);
+                            nextFilteredResults.push(rows[cur].markup);
+                        }
+                    }
+                }
+                else if (showSelectedStatus.checked && showavailable.checked && searchVal != "") {
+                    if (parseInt(x) < parseInt(searchResults.length)) {
+                        if (uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"]) == false) {
+                            var cur = parseInt(searchResults[x]["id"]);
+                            nextFilteredResults.push(rows[cur].markup);
+                        }
+                    }
+                }
+                else {
+                    if (showSelectedStatus.checked) {
+                        if (parseInt(x) < parseInt(searchResults.length)) {
+                            if (searchResults[x]["checked"] == true) {
+                                var cur = parseInt(searchResults[x]["id"]);
+                                nextFilteredResults.push(rows[cur].markup);
+                            }
+                        }
+                    }
+                    else if (showavailable.checked || showAllStatus.checked) {
+                        if (parseInt(x) < parseInt(searchResults.length)) {
+                            var cur = parseInt(searchResults[x]["id"]);
+                            if (searchResults[x]["checked"] == true) {
+                                nextFilteredResults.push(rows[cur].markup);
+                            }
+                            else {
+                                nextFilteredResults.push(rows[cur].markupunchecked);
+                            }
+
+                        }
+                    }
+                    else {
+                        if (parseInt(x) < parseInt(searchResults.length)) {
+                            if (uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"]) == false) {
+                                var cur = parseInt(searchResults[x]["id"]);
+                                nextFilteredResults.push(rows[cur].markup);
+                            }
+                        }
+                    }
+
+                }
+            }
+            return nextFilteredResults;
+        }
+        var filterRowsPrevious = function(prevResult, prevPageNo, maxNoOfPages) {
+
+            if (prevPageNo == '1') {
+                startIndex = "0";
+                endIndex = "30000";
+                finalCount = "30000";
+            }
+            else {
+                startIndex = parseInt(startIndex) - 30000;
+                endIndex = parseInt(finalCount) - 30000;
+                finalCount = parseInt(finalCount) - 30000;
+            }
+
+            var prevFilteredResults = [];
+            var searchVal = $('#' + tableId + 'Search' + columnNumber).val();
+
+            for (var x = startIndex;x < endIndex;x++) {
+                if (showSelectedStatus.checked && showavailable.checked && searchVal == "") {
+                    if (parseInt(x) < parseInt(existedValues.length)) {
+                        if (uncheckboxArray[columnNumber].includes(existedValues[x]["indexval"]) == false) {
+                            var cur = parseInt(existedValues[x]["id"]);
+                            prevFilteredResults.push(rows[cur].markup);
+                        }
+                    }
+                }
+                else if (showSelectedStatus.checked && showavailable.checked && searchVal != "") {
+
+                    if (parseInt(x) < parseInt(searchResults.length)) {
+                        if (uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"]) == false) {
+                            var cur = parseInt(searchResults[x]["id"]);
+                            prevFilteredResults.push(rows[cur].markup);
+                        }
+                    }
+                }
+                else {
+                    if (showSelectedStatus.checked) {
+                        if (parseInt(x) < parseInt(searchResults.length)) {
+                            if (searchResults[x]["checked"] == true) {
+                                var cur = parseInt(searchResults[x]["id"]);
+                                prevFilteredResults.push(rows[cur].markup);
+                            }
+                        }
+                    }
+                    else if (showavailable.checked || showAllStatus.checked) {
+                        if (parseInt(x) < parseInt(searchResults.length)) {
+                            var cur = parseInt(searchResults[x]["id"]);
+                            if (searchResults[x]["checked"] == true) {
+                                prevFilteredResults.push(rows[cur].markup);
+                            }
+                            else {
+                                prevFilteredResults.push(rows[cur].markupunchecked);
+                            }
+
+                        }
+                    }
+                    else {
+                        if (parseInt(x) < parseInt(searchResults.length)) {
+                            if (uncheckboxArray[columnNumber].includes(searchResults[x]["indexval"]) == false) {
+                                var cur = parseInt(searchResults[x]["id"]);
+                                prevFilteredResults.push(rows[cur].markup);
+
+                            }
+                        }
+                    }
+                }
+            }
+            return prevFilteredResults;
+        }
+
         //////// --- sohaib --- ////////
 
         //Function Filter only for Selected data			
-        var filterRowsForShowSelected = function (rows,currentForm) {
+        var filterRowsForShowSelected = function(rows, currentForm) {
             var results = [];
-            var FilteredCheckedArrResults=[];
-            var searchVal = $('#'+tableId + 'Search' + columnNumber).val();
-         
-            if(FilteredArrayLength > 0 && showavailable.checked && searchVal ==""){
-                $.each(existedValues, function (i, value) {
+            var FilteredCheckedArrResults = [];
+            var searchVal = $('#' + tableId + 'Search' + columnNumber).val();
+
+            if (FilteredArrayLength > 0 && showavailable.checked && searchVal == "") {
+                $.each(existedValues, function(i, value) {
                     if (existedValues[i].active) {
                         if (existedValues[i].checked) {
                             results.push(existedValues[i].markup);
@@ -559,8 +556,8 @@ class AlmgridTable {
                     }
                 });
             }
-            else if(FilteredArrayLength > 0 && showavailable.checked && searchVal !=""){
-           	 	$.each(searchResults, function (i, value) {
+            else if (FilteredArrayLength > 0 && showavailable.checked && searchVal != "") {
+                $.each(searchResults, function(i, value) {
                     if (searchResults[i].active) {
                         if (searchResults[i].checked) {
                             results.push(searchResults[i].markup);
@@ -568,10 +565,10 @@ class AlmgridTable {
                         }
                     }
                 });
-           }
-            else{
-            	if(searchVal =="") {
-                    $.each(rows, function (i, value) {
+            }
+            else {
+                if (searchVal == "") {
+                    $.each(rows, function(i, value) {
                         if (rows[i].active) {
                             if (rows[i].checked) {
                                 results.push(rows[i].markup);
@@ -579,28 +576,28 @@ class AlmgridTable {
                             }
                         }
                     });
-            	}
-            	else {
-                  	 $.each(searchResults, function (i, value) {
-                           if (searchResults[i].active) {
-                               if (searchResults[i].checked) {
-                                   results.push(searchResults[i].markup);
-                                   FilteredCheckedArrResults.push(searchResults[i]["indexval"]);
-                               }
-                           }
-                       });
-               	}             
+                }
+                else {
+                    $.each(searchResults, function(i, value) {
+                        if (searchResults[i].active) {
+                            if (searchResults[i].checked) {
+                                results.push(searchResults[i].markup);
+                                FilteredCheckedArrResults.push(searchResults[i]["indexval"]);
+                            }
+                        }
+                    });
+                }
             }
-            var filteredResults=[];
-            filteredResults =fltrSamePgApndRowsForShowAvailable(results,currentForm,FilteredCheckedArrResults,searchVal);
+            var filteredResults = [];
+            filteredResults = fltrSamePgApndRowsForShowAvailable(results, currentForm, FilteredCheckedArrResults, searchVal);
             return filteredResults;
         }
         //////// -------------- ////////
 
-        let filterRowsForShowAvailable = function (rows,currentForm) {
+        let filterRowsForShowAvailable = function(rows, currentForm) {
             var results = [];
-            for (var i = 0, ii = rows.length; i < ii; i++) {
-                if (rows[i].existinfilteredArray || (existinfilteredArray === false &&  FilteredArrayLength ===0)) {
+            for (var i = 0, ii = rows.length;i < ii;i++) {
+                if (rows[i].existinfilteredArray || (existinfilteredArray === false && FilteredArrayLength === 0)) {
                     /*if (rows[i].checked) {
                         results.push(rows[i].markup);
                     }*/
@@ -618,138 +615,138 @@ class AlmgridTable {
                             //     .get(0).outerHTML
                             // );
                         }
-    
+
                     }
                 }
             }
-            var filteredResults=[];
-            filteredResults =filterfirstAppendRows(results,currentForm);
+            var filteredResults = [];
+            filteredResults = filterfirstAppendRows(results, currentForm);
             return filteredResults;
-            
+
         }
 
-         clusterize = new Clusterize({
-            rows: filterRows(rows,"firstAppend",""),
+        clusterize = new Clusterize({
+            rows: filterRows(rows, "firstAppend", ""),
             no_data_text: '',
             scrollId: tableId + 'scrollArea' + columnNumber,
             contentId: tableId + 'contentArea' + columnNumber
         });
 
-        var onSearch = function () {
-            for (var i = 0, ii = rows.length; i < ii; i++) {
+        var onSearch = function() {
+            for (var i = 0, ii = rows.length;i < ii;i++) {
                 var suitable = false;
-                for (var j = 0, jj = rows[i].values.length; j < jj; j++) {
+                for (var j = 0, jj = rows[i].values.length;j < jj;j++) {
                     if (rows[i].values[j].toString().toUpperCase().indexOf(search.value.toUpperCase()) + 1)
                         suitable = true;
                 }
                 rows[i].active = suitable;
 
             }
-             var currentForm = $(this).parents("form").attr("id");
-		     nextPageNum="1";
-			 finalCount ="30000";
-		     clusterize.update(filterRows(rows,"firstAppend",currentForm));
+            var currentForm = $(this).parents("form").attr("id");
+            nextPageNum = "1";
+            finalCount = "30000";
+            clusterize.update(filterRows(rows, "firstAppend", currentForm));
         }
         search.oninput = onSearch;
 
 
-        var onChangeSelect = function () {
+        var onChangeSelect = function() {
             if (selectAll.checked) {
-                if(FilteredArrayLength > 0 && showavailable.checked){
-					
-					//Store the unchecked checkboxes first time clicking on select all only (to use this array in case we close the popup without a submit )
-					if (window["submit_" + columnNumber] == "checked") {
-					if (window["uncheckedCheckboxes_" + columnNumber].length === 0) {
-			            existedValues.forEach(function(value) {
-			                if (!value.checked) {
-			                    window["uncheckedCheckboxes_" + columnNumber].push(value["indexval"]);
-			                }
-			            });
-			         }
-					}
- 				  	$.each(existedValues, function (i, value) {
-	                	existedValues[i]["checked"] = true;
+                if (FilteredArrayLength > 0 && showavailable.checked) {
 
-					  if (window["uncheckedCheckboxes_" + columnNumber].includes(existedValues[i]["indexval"])== false) {
+                    //Store the unchecked checkboxes first time clicking on select all only (to use this array in case we close the popup without a submit )
+                    if (window["submit_" + columnNumber] == "checked") {
+                        if (window["uncheckedCheckboxes_" + columnNumber].length === 0) {
+                            existedValues.forEach(function(value) {
+                                if (!value.checked) {
+                                    window["uncheckedCheckboxes_" + columnNumber].push(value["indexval"]);
+                                }
+                            });
+                        }
+                    }
+                    $.each(existedValues, function(i, value) {
+                        existedValues[i]["checked"] = true;
 
-                        if(!checkboxArray[columnNumber].includes(existedValues[i]["indexval"]))
-                            checkboxArray[columnNumber].push(existedValues[i]["indexval"]);
+                        if (window["uncheckedCheckboxes_" + columnNumber].includes(existedValues[i]["indexval"]) == false) {
 
-                        uncheckboxArray[columnNumber] = $.grep(uncheckboxArray[columnNumber], function (e) {
-                            return e != existedValues[i]["indexval"];
-    
-                        });
-				      }
-					});
+                            if (!checkboxArray[columnNumber].includes(existedValues[i]["indexval"]))
+                                checkboxArray[columnNumber].push(existedValues[i]["indexval"]);
 
-                    checkboxArray[columnNumber] = Array.from(new Set(checkboxArray[columnNumber]));
-                    var currentForm = $(this).parents("form").attr("id");
-                    clusterize.update(filterRows(existedValues,"samePageAppend",currentForm));
-                }
-                else{
-                    
-                    $.each(rows, function (i, value) {
+                            uncheckboxArray[columnNumber] = $.grep(uncheckboxArray[columnNumber], function(e) {
+                                return e != existedValues[i]["indexval"];
 
-                        //console.log(rows[i]["disabledCheckbox"],rows[i]["indexval"],rows[i]["checked"])
-                        if(rows[i]["disabledCheckbox"] !== "disabled"){
-                            rows[i]["checked"] = true;
-                            //console.log("xzcx")
-                            if(!checkboxArray[columnNumber].includes(rows[i]["indexval"]))
-                            checkboxArray[columnNumber].push(rows[i]["indexval"]);
-
-                            uncheckboxArray[columnNumber] = $.grep(uncheckboxArray[columnNumber], function (e) {
-                                return e != rows[i]["indexval"];
-        
                             });
                         }
                     });
 
                     checkboxArray[columnNumber] = Array.from(new Set(checkboxArray[columnNumber]));
                     var currentForm = $(this).parents("form").attr("id");
-                    clusterize.update(filterRows(rows,"samePageAppend",currentForm));
+                    clusterize.update(filterRows(existedValues, "samePageAppend", currentForm));
+                }
+                else {
+
+                    $.each(rows, function(i, value) {
+
+                        //console.log(rows[i]["disabledCheckbox"],rows[i]["indexval"],rows[i]["checked"])
+                        if (rows[i]["disabledCheckbox"] !== "disabled") {
+                            rows[i]["checked"] = true;
+                            //console.log("xzcx")
+                            if (!checkboxArray[columnNumber].includes(rows[i]["indexval"]))
+                                checkboxArray[columnNumber].push(rows[i]["indexval"]);
+
+                            uncheckboxArray[columnNumber] = $.grep(uncheckboxArray[columnNumber], function(e) {
+                                return e != rows[i]["indexval"];
+
+                            });
+                        }
+                    });
+
+                    checkboxArray[columnNumber] = Array.from(new Set(checkboxArray[columnNumber]));
+                    var currentForm = $(this).parents("form").attr("id");
+                    clusterize.update(filterRows(rows, "samePageAppend", currentForm));
                 }
             }
 
             else {
-                if(FilteredArrayLength > 0 && showavailable.checked){
-                   $.each(existedValues, function (i, value) {
+                if (FilteredArrayLength > 0 && showavailable.checked) {
+                    $.each(existedValues, function(i, value) {
                         existedValues[i]["checked"] = false;
 
-                     if (window["uncheckedCheckboxes_" + columnNumber].includes(existedValues[i]["indexval"])== true) {
-                        if(!uncheckboxArray[columnNumber].includes(existedValues[i]["indexval"]))
-                            uncheckboxArray[columnNumber].push(existedValues[i]["indexval"]);
+                        if (window["uncheckedCheckboxes_" + columnNumber].includes(existedValues[i]["indexval"]) == true) {
+                            if (!uncheckboxArray[columnNumber].includes(existedValues[i]["indexval"]))
+                                uncheckboxArray[columnNumber].push(existedValues[i]["indexval"]);
 
-                        checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function (e) {
-                            return e != existedValues[i]["indexval"];
-                        });
-					  }
+                            checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function(e) {
+                                return e != existedValues[i]["indexval"];
+                            });
+                        }
 
                     });
                     uncheckboxArray[columnNumber] = Array.from(new Set(uncheckboxArray[columnNumber]));
                     var currentForm = $(this).parents("form").attr("id");
-                    clusterize.update(filterRows(existedValues,"samePageAppend",currentForm));
+                    clusterize.update(filterRows(existedValues, "samePageAppend", currentForm));
                 }
-                else{
+                else {
                     //console.log(`length of array is : ${rows.length}`)
-                    $.each(rows, function (i, value) {
+                    $.each(rows, function(i, value) {
 
                         //console.log(rows[i]["disabledCheckbox"],rows[i]["indexval"],rows[i]["checked"])
-                        if(rows[i]["disabledCheckbox"] !== "disabled"){
+                        if (rows[i]["disabledCheckbox"] !== "disabled") {
                             rows[i]["checked"] = false;
-                            if(!uncheckboxArray[columnNumber].includes(rows[i]["indexval"]))
-                            uncheckboxArray[columnNumber].push(rows[i]["indexval"]);
+                            if (!uncheckboxArray[columnNumber].includes(rows[i]["indexval"]))
+                                uncheckboxArray[columnNumber].push(rows[i]["indexval"]);
 
-                            checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function (e) {
+                            checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function(e) {
                                 return e != rows[i]["indexval"];
                             });
                         }
                         //console.log(rows[i]["disabledCheckbox"],rows[i]["indexval"],rows[i]["checked"])
-                        
+
                     });
                     uncheckboxArray[columnNumber] = Array.from(new Set(uncheckboxArray[columnNumber]));
                     var currentForm = $(this).parents("form").attr("id");
-                    clusterize.update(filterRows(rows,"samePageAppend",currentForm)); 
-                }                
+                    clusterize.update(filterRows(rows, "samePageAppend", currentForm));
+                }
             }
 
         }
@@ -758,139 +755,139 @@ class AlmgridTable {
         //////// ------ Sohaib ------ ////////
 
         // event to clusterize filter data according to show all					
-        $("#" + tableId).on("change", ".showall-filter-checkbox", function () {
-                var currentForm = $(this).parents("form").attr("id");
-                clusterize.update(filterRows(rows,"firstAppend",currentForm));
+        $("#" + tableId).on("change", ".showall-filter-checkbox", function() {
+            var currentForm = $(this).parents("form").attr("id");
+            clusterize.update(filterRows(rows, "firstAppend", currentForm));
         });
-        
-        $("#" + tableId).on("click", ".nextData", function () {
-        	
-        	var currentForm = $(this).parents("form").attr("id");
-        	var maxNoOfPages = $("#" +currentForm).find(".totalNoPages").val();        	
-        	var nextPgNo = parseInt(nextPageNum)+1;         	
-        	nextPageNum=nextPgNo;
-        	
-        	$('#'+currentForm).find('.previousData').prop('disabled', false);
-        	
-	       	 if(maxNoOfPages == nextPgNo ) {
-		    	 $('#'+currentForm).find('.nextData').prop('disabled', true);
-		    	 $("#" +currentForm).find(".nextPrevPage").val(nextPgNo);
-	
-			 }
-			 else {		
-				 if(nextPgNo < maxNoOfPages ) {
-					 $('#'+currentForm).find('.nextData').prop('disabled', false);
-					 $("#" +currentForm).find(".nextPrevPage").val(nextPgNo);
-	        	 }
-				 else {
-					 $('#'+currentForm).find('.nextData').prop('disabled', true);
-	        	 }
-			 }
-         
-	       	 var nextResult = filterRows(rows,"","");
-	       	 
-             clusterize.update(filterRowsNext(nextResult,nextPgNo,maxNoOfPages));
+
+        $("#" + tableId).on("click", ".nextData", function() {
+
+            var currentForm = $(this).parents("form").attr("id");
+            var maxNoOfPages = $("#" + currentForm).find(".totalNoPages").val();
+            var nextPgNo = parseInt(nextPageNum) + 1;
+            nextPageNum = nextPgNo;
+
+            $('#' + currentForm).find('.previousData').prop('disabled', false);
+
+            if (maxNoOfPages == nextPgNo) {
+                $('#' + currentForm).find('.nextData').prop('disabled', true);
+                $("#" + currentForm).find(".nextPrevPage").val(nextPgNo);
+
+            }
+            else {
+                if (nextPgNo < maxNoOfPages) {
+                    $('#' + currentForm).find('.nextData').prop('disabled', false);
+                    $("#" + currentForm).find(".nextPrevPage").val(nextPgNo);
+                }
+                else {
+                    $('#' + currentForm).find('.nextData').prop('disabled', true);
+                }
+            }
+
+            var nextResult = filterRows(rows, "", "");
+
+            clusterize.update(filterRowsNext(nextResult, nextPgNo, maxNoOfPages));
 
         });
-        
-        $("#" + tableId).on("click", ".previousData", function () {
-        	
-        	var currentForm = $(this).parents("form").attr("id");
-        	var maxNoOfPages = $("#" +currentForm).find(".totalNoPages").val();
-        	var prevPageNo = parseInt(nextPageNum)-1; 
-        	nextPageNum=prevPageNo;        	
-        	if (prevPageNo < maxNoOfPages)
-        		$('#'+currentForm).find('.nextData').prop('disabled', false);
 
-        	if(maxNoOfPages == prevPageNo || prevPageNo =="1" ) {
-        		$('#'+currentForm).find('.previousData').prop('disabled', true);
-        		$("#" +currentForm).find(".nextPrevPage").val(prevPageNo);
-        	}
-        	else {
-        	       if(prevPageNo < maxNoOfPages ) {
-        	    	   $('#'+currentForm).find('.previousData').prop('disabled', false);
-        	    	   $("#" +currentForm).find(".nextPrevPage").val(prevPageNo);
-        	       }
-        	       else {
-        	    	   $('#'+currentForm).find('.previousData').prop('disabled', true);
-        	       }
-        	}
-	       	 var prevResult = filterRows(rows,"","");
-            clusterize.update(filterRowsPrevious(prevResult,prevPageNo,maxNoOfPages)); 
+        $("#" + tableId).on("click", ".previousData", function() {
+
+            var currentForm = $(this).parents("form").attr("id");
+            var maxNoOfPages = $("#" + currentForm).find(".totalNoPages").val();
+            var prevPageNo = parseInt(nextPageNum) - 1;
+            nextPageNum = prevPageNo;
+            if (prevPageNo < maxNoOfPages)
+                $('#' + currentForm).find('.nextData').prop('disabled', false);
+
+            if (maxNoOfPages == prevPageNo || prevPageNo == "1") {
+                $('#' + currentForm).find('.previousData').prop('disabled', true);
+                $("#" + currentForm).find(".nextPrevPage").val(prevPageNo);
+            }
+            else {
+                if (prevPageNo < maxNoOfPages) {
+                    $('#' + currentForm).find('.previousData').prop('disabled', false);
+                    $("#" + currentForm).find(".nextPrevPage").val(prevPageNo);
+                }
+                else {
+                    $('#' + currentForm).find('.previousData').prop('disabled', true);
+                }
+            }
+            var prevResult = filterRows(rows, "", "");
+            clusterize.update(filterRowsPrevious(prevResult, prevPageNo, maxNoOfPages));
         });
-        
-        
 
-        $("#" + tableId + " .filter-dropdown-ul").on("change", ".showavailable-filter-checkbox", function () {
+
+
+        $("#" + tableId + " .filter-dropdown-ul").on("change", ".showavailable-filter-checkbox", function() {
 
             var currentForm = $(this).parents("form").attr("id");
 
-            let checkedArray = existedValues.filter(function(arr){
+            let checkedArray = existedValues.filter(function(arr) {
                 return arr.checked === true;
             })
 
-            let uniquecheckedArray = rows.filter(function(arr){
+            let uniquecheckedArray = rows.filter(function(arr) {
                 return arr.checked === true;
             })
 
-         nextPageNum="1";
-       	 finalCount ="30000";
-                
+            nextPageNum = "1";
+            finalCount = "30000";
+
 
             // if condition to select one checkbox at a time according to event			
             if (this.checked) {
-                if((existedValues.length > 0  && checkedArray.length === FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length === arrayLength)){
+                if ((existedValues.length > 0 && checkedArray.length === FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length === arrayLength)) {
                     $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
                 }
-                   
-                if((existedValues.length > 0  && checkedArray.length !== FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length !== arrayLength) ){
+
+                if ((existedValues.length > 0 && checkedArray.length !== FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length !== arrayLength)) {
                     $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
                 }
                 //$("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
                 $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
                 $("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
                 $("#" + currentForm).find('.showavailable-filter-checkbox').prop('checked', true);
-                clusterize.update(filterRowsForShowAvailable(rows,currentForm));
+                clusterize.update(filterRowsForShowAvailable(rows, currentForm));
             } else {
-                if(uniquecheckedArray.length === arrayLength)
+                if (uniquecheckedArray.length === arrayLength)
                     $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
                 else
                     $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
                 $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', true);
                 $("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
                 $("#" + currentForm).find('.showavailable-filter-checkbox').prop('checked', false);
-                clusterize.update(filterRows(rows,"firstAppend",currentForm));
+                clusterize.update(filterRows(rows, "firstAppend", currentForm));
             }
 
         });
 
         // Event For show selected check box						
-        $("#" + tableId + " .filter-dropdown-ul").on("change", ".showselected-filter-checkbox", function () {
+        $("#" + tableId + " .filter-dropdown-ul").on("change", ".showselected-filter-checkbox", function() {
             var currentForm = $(this).parents("form").attr("id");
 
-            let checkedArray = existedValues.filter(function(arr){
+            let checkedArray = existedValues.filter(function(arr) {
                 return arr.checked === true;
             })
 
-            let uniquecheckedArray = rows.filter(function(arr){
+            let uniquecheckedArray = rows.filter(function(arr) {
                 return arr.checked === true;
             })
 
             // if condition to select one checkbox at a time according to event			
             if (this.checked) {
                 //$("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
-                if(showavailable.checked){
-                
-                    if((existedValues.length > 0  && checkedArray.length === FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length === arrayLength)){
+                if (showavailable.checked) {
+
+                    if ((existedValues.length > 0 && checkedArray.length === FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length === arrayLength)) {
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
                     }
-                    
-                    if((existedValues.length > 0  && checkedArray.length !== FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length !== arrayLength) ){
+
+                    if ((existedValues.length > 0 && checkedArray.length !== FilteredArrayLength) || (existedValues.length === 0 && uniquecheckedArray.length !== arrayLength)) {
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
                     }
                 }
-                else{
-                    if(uniquecheckedArray.length === arrayLength)
+                else {
+                    if (uniquecheckedArray.length === arrayLength)
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
                     else
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
@@ -898,45 +895,45 @@ class AlmgridTable {
 
                 $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
                 $("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', true);
-                
-                var arr=[];
-            	clusterize.update(arr);
-                clusterize.update(filterRowsForShowSelected(rows,currentForm));
+
+                var arr = [];
+                clusterize.update(arr);
+                clusterize.update(filterRowsForShowSelected(rows, currentForm));
             } else {
                 //$("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
-                if(!showavailable.checked){
+                if (!showavailable.checked) {
                     $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', true);
                     /*if(uniquecheckedArray.length === arrayLength)
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
                     else
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);*/
                 }
-                else   
+                else
                     $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
                 $("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
-                var arr=[];
+                var arr = [];
                 clusterize.update(arr);
-                clusterize.update(filterRows(rows,"samePageAppend",currentForm));
+                clusterize.update(filterRows(rows, "samePageAppend", currentForm));
             }
 
         });
         //////// ------------------ ////////						
 
 
-         // Event for show all 					
-         $("#" + tableId + " .filter-dropdown-ul").on("change", ".showall-filter-checkbox", function () {
+        // Event for show all 					
+        $("#" + tableId + " .filter-dropdown-ul").on("change", ".showall-filter-checkbox", function() {
 
             var currentForm = $(this).parents("form").attr("id");
 
-            let checkedArray = rows.filter(function(arr){
+            let checkedArray = rows.filter(function(arr) {
                 return arr.checked === true;
             })
 
-             nextPageNum="1";
-        	finalCount ="30000";
+            nextPageNum = "1";
+            finalCount = "30000";
 
             // if condition to select one checkbox at a time according to event	
-            if(checkedArray.length === rows.length)
+            if (checkedArray.length === rows.length)
                 $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
             else
                 $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
@@ -954,7 +951,7 @@ class AlmgridTable {
         });
 
 
-        $("#" + tableId).on("change", ".custom-filter-checkbox", function () {
+        $("#" + tableId).on("change", ".custom-filter-checkbox", function() {
 
             var currentValue = $(this).val();
             var index = parseInt($(this).attr('data-element-index'));
@@ -972,13 +969,13 @@ class AlmgridTable {
                 }
 
                 if (showSelectedStatus.checked) {
-                   	
-                    clusterize.update(filterRowsForShowSelected(rows,currentForm));
+
+                    clusterize.update(filterRowsForShowSelected(rows, currentForm));
 
                 } else {
-                     clusterize.update(filterRows(rows,"samePageAppend",currentForm));
+                    clusterize.update(filterRows(rows, "samePageAppend", currentForm));
                 }
-                
+
             }
         });
     }
@@ -991,10 +988,10 @@ class AlmgridTable {
         //var filteredArray = [];
         let almgrid = this;
         let map = new Map()
-        
 
-       // var start_scroll = 1;
-       // var end_scroll = 1000;
+
+        // var start_scroll = 1;
+        // var end_scroll = 1000;
 
         let availableArray = []
         if (almgrid.dataArray.length > 0) {
@@ -1004,14 +1001,14 @@ class AlmgridTable {
             var checkboxArray = [];
             var uncheckboxArray = [];
             let i
-            if(almgrid.selectCheckbox === true){
-                for (i = 0; i <  almgrid.ArrayKeys.length; i++) {
+            if (almgrid.selectCheckbox === true) {
+                for (i = 0;i < almgrid.ArrayKeys.length;i++) {
                     checkboxArray[i] = [];
                     uncheckboxArray[i] = [];
                 }
             }
-            else{
-                for (i = 1; i <=  almgrid.ArrayKeys.length; i++) {
+            else {
+                for (i = 1;i <= almgrid.ArrayKeys.length;i++) {
                     checkboxArray[i] = [];
                     uncheckboxArray[i] = [];
                 }
@@ -1025,191 +1022,191 @@ class AlmgridTable {
                     document.getElementById("loaderDiv").style.display = "block";
 
                     setTimeout(function() {
-                    
-                    var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
-                    var columnNumberPressed = clickedIndex[1];
 
-                    console.log(".nav-pills li.active")
-                    let indexVarColPressed
-                    if(almgrid.selectCheckbox === true){
-                        indexVarColPressed = columnNumberPressed
-                    }else{
-                        indexVarColPressed = columnNumberPressed - 1
-                    }
+                        var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                        var columnNumberPressed = clickedIndex[1];
 
-                    availableArray = almgrid.dataArray;
-
-                    availableArray = headerFilter(availableArray)
-                    
-                    availableArray = dropdownFilter(availableArray,columnNumberPressed,"showavailable")
-
-                    availableArray = globalSearchFilter(availableArray)
-
-                  
-
-                    var newArray = [];
-                    var availablenewArray = []
-
-
-                    $.each(almgrid.dataArray, function (i, value) {
-                        newArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
-
-                        let checkValue = obj => obj[almgrid.ArrayKeys[indexVarColPressed]] === almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
-
-                        //if(availableArray.some(checkValue) && !availablenewArray.includes(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]])){
-                        if(availableArray.some(checkValue)){
-                            availablenewArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
-                        
+                        console.log(".nav-pills li.active")
+                        let indexVarColPressed
+                        if (almgrid.selectCheckbox === true) {
+                            indexVarColPressed = columnNumberPressed
+                        } else {
+                            indexVarColPressed = columnNumberPressed - 1
                         }
-                    });
-                    let uniqueArray = Array.from(new Set(newArray));
-                    let uniqueAvailableArray =  Array.from(new Set(availablenewArray))
-                    
 
-                     let startIndex="0";
-                     let endIndex="30000";
-                     let finalCount = "30000";
-                     let nextPageNum="1";                 
+                        availableArray = almgrid.dataArray;
 
-                    almgrid.drawCustomFilters(window["uncheckedCheckboxes_" + columnNumberPressed],window["submit_" + columnNumberPressed],columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
-                    document.getElementById("loaderDiv").style.display = "none";
-                })
+                        availableArray = headerFilter(availableArray)
+
+                        availableArray = dropdownFilter(availableArray, columnNumberPressed, "showavailable")
+
+                        availableArray = globalSearchFilter(availableArray)
+
+
+
+                        var newArray = [];
+                        var availablenewArray = []
+
+
+                        $.each(almgrid.dataArray, function(i, value) {
+                            newArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
+
+                            let checkValue = obj => obj[almgrid.ArrayKeys[indexVarColPressed]] === almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
+
+                            //if(availableArray.some(checkValue) && !availablenewArray.includes(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]])){
+                            if (availableArray.some(checkValue)) {
+                                availablenewArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
+
+                            }
+                        });
+                        let uniqueArray = Array.from(new Set(newArray));
+                        let uniqueAvailableArray = Array.from(new Set(availablenewArray))
+
+
+                        let startIndex = "0";
+                        let endIndex = "30000";
+                        let finalCount = "30000";
+                        let nextPageNum = "1";
+
+                        almgrid.drawCustomFilters(window["uncheckedCheckboxes_" + columnNumberPressed], window["submit_" + columnNumberPressed], columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray, checkboxArray, uncheckboxArray, "0", "30000", "30000", "1");
+                        document.getElementById("loaderDiv").style.display = "none";
+                    })
                 }, 0); // Simulating 0 second delay
 
             })
 
-            
+
 
             // Draw Custom Filter one time only
             document.querySelectorAll(".almgrid-filter").forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
-                    
+
                     var clickedForm = $(item).next().find("form").attr("id");
-					var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                    var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
                     var columnNumberPressed = clickedIndex[1];
 
                     let indexVarColPressed;
-                    if(almgrid.selectCheckbox === true){
+                    if (almgrid.selectCheckbox === true) {
                         indexVarColPressed = columnNumberPressed;
-                    }else{
+                    } else {
                         indexVarColPressed = columnNumberPressed - 1;
                     }
-           			 this.hideMessage();
+                    this.hideMessage();
 
-					
-					if(checkboxArray[columnNumberPressed].length === 0){
-                    	// Create a temporary set to store unique values
-                      	var uniqueValues = new Set();
 
-                      	// Iterate over almgrid.dataArray using a for loop instead of $.each
-                      	for (var i = 0; i < almgrid.dataArray.length; i++) {
-                      	    // Get the value at the desired column index
-                      	    var value = almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
+                    if (checkboxArray[columnNumberPressed].length === 0) {
+                        // Create a temporary set to store unique values
+                        var uniqueValues = new Set();
 
-                      	    // Add the value to the uniqueValues set
-                      	    uniqueValues.add(value);
-                      	}
-                      	// Convert the uniqueValues set back to an array
-                         checkboxArray[columnNumberPressed] = Array.from(uniqueValues);                              
-                    }
+                        // Iterate over almgrid.dataArray using a for loop instead of $.each
+                        for (var i = 0;i < almgrid.dataArray.length;i++) {
+                            // Get the value at the desired column index
+                            var value = almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
 
-					//Clear the popup when loading new data
-                    if(clusterize !=undefined) {
-                        var temp=[];
-                       	clusterize.update(temp);
-                   		$("#" +clickedForm).find(".totalNoPages").val("0");
-                   		$("#" +clickedForm).find(".nextPrevPage").val("0");
-
-                    }
-					                    
-                   if(checkboxArray[columnNumberPressed].length > 35000 ) {
-						
-						document.getElementById("loaderDiv").style.display = "none";						
-						this.showMessage('The fetched data is exceeding the number of allowed data to show.<br><br>Please set a filter to reduce it.');
-
-					}
-					else {	
-						document.getElementById("loaderDiv").style.display = "block";
- 
-                    setTimeout(function() {
-                    
-                    
-                    availableArray = almgrid.dataArray;
-                    availableArray = headerFilter(availableArray)
-                    availableArray = dropdownFilter(availableArray,columnNumberPressed,"showavailable")
-                    availableArray = globalSearchFilter(availableArray)
-
-		            var newArray = [];
-                    var availablenewArray = []
-
-                    // need to select all the checkbox for the available options when pressed the first time
-                    //console.log(`length is : ${checkboxArray[columnNumberPressed].length}`)
-                    //if(!$(item).hasClass('clicked')){
-                   /* if(checkboxArray[columnNumberPressed].length === 0){
-                        //console.log("before the first loop")
-                        $.each(almgrid.dataArray, function (i, value) {
-                            checkboxArray[columnNumberPressed].push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
-                            checkboxArray[columnNumberPressed] = Array.from(new Set(checkboxArray[columnNumberPressed]));
-
-                            /*uncheckboxArray[columnNumberPressed] = $.grep(uncheckboxArray[columnNumberPressed], function (e) {
-                            return e != dataArray[i][ArrayKeys[columnNumberPressed]];
-                            });*/
-                       /* });
-                        //console.log("after the first loop")
-                    }
-                    */
-                    
-                    
-                   // console.log("before the second loop")
-                   /* $.each(almgrid.dataArray, function (i, value) {
-                        newArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
-
-                        let checkValue = obj => obj[almgrid.ArrayKeys[indexVarColPressed]] === almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
-
-                        if(availableArray.some(checkValue)){
-                            availablenewArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
-                        
+                            // Add the value to the uniqueValues set
+                            uniqueValues.add(value);
                         }
-                    });
-                    */
-                    // Create a Set to store unique values
-                    var uniqueValues = new Set();
-
-                    // Create an object to store available values
-                    var availableValues = {};
-
-                    // Store the target key outside the loop
-                    var targetKey = almgrid.ArrayKeys[indexVarColPressed];
-
-                    // Iterate over almgrid.dataArray using a for loop instead of $.each
-                    for (var i = 0; i < almgrid.dataArray.length; i++) {
-                        // Get the value at the desired column index
-                        var value = almgrid.dataArray[i][targetKey];
-
-                        uniqueValues.add(value);
-
-                        // Check if the value is available and not yet in the availableValues object
-                        if (availableArray.some(obj => obj[targetKey] === value) && !availableValues[value]) {
-                            availableValues[value] = true;
-                            availablenewArray.push(value);
-                        }
+                        // Convert the uniqueValues set back to an array
+                        checkboxArray[columnNumberPressed] = Array.from(uniqueValues);
                     }
 
-                    // Convert the uniqueValues Set back to an array
-                    newArray = Array.from(uniqueValues);
-                    
-                    //console.log("after the second loop")
-                    let uniqueArray = Array.from(new Set(newArray));
-                    let uniqueAvailableArray =  Array.from(new Set(availablenewArray))
-                   
-                    
+                    //Clear the popup when loading new data
+                    if (clusterize != undefined) {
+                        var temp = [];
+                        clusterize.update(temp);
+                        $("#" + clickedForm).find(".totalNoPages").val("0");
+                        $("#" + clickedForm).find(".nextPrevPage").val("0");
+
+                    }
+
+                    if (checkboxArray[columnNumberPressed].length > 35000) {
+
+                        document.getElementById("loaderDiv").style.display = "none";
+                        this.showMessage('The fetched data is exceeding the number of allowed data to show.<br><br>Please set a filter to reduce it.');
+
+                    }
+                    else {
+                        document.getElementById("loaderDiv").style.display = "block";
+
+                        setTimeout(function() {
 
 
-                    almgrid.drawCustomFilters(window["uncheckedCheckboxes_" + columnNumberPressed],window["submit_" + columnNumberPressed],columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray,checkboxArray,uncheckboxArray,"0","30000","30000","1");
-                    document.getElementById("loaderDiv").style.display = "none";
-                })
-				}
+                            availableArray = almgrid.dataArray;
+                            availableArray = headerFilter(availableArray)
+                            availableArray = dropdownFilter(availableArray, columnNumberPressed, "showavailable")
+                            availableArray = globalSearchFilter(availableArray)
+
+                            var newArray = [];
+                            var availablenewArray = []
+
+                            // need to select all the checkbox for the available options when pressed the first time
+                            //console.log(`length is : ${checkboxArray[columnNumberPressed].length}`)
+                            //if(!$(item).hasClass('clicked')){
+                            /* if(checkboxArray[columnNumberPressed].length === 0){
+                                 //console.log("before the first loop")
+                                 $.each(almgrid.dataArray, function (i, value) {
+                                     checkboxArray[columnNumberPressed].push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
+                                     checkboxArray[columnNumberPressed] = Array.from(new Set(checkboxArray[columnNumberPressed]));
+         
+                                     /*uncheckboxArray[columnNumberPressed] = $.grep(uncheckboxArray[columnNumberPressed], function (e) {
+                                     return e != dataArray[i][ArrayKeys[columnNumberPressed]];
+                                     });*/
+                            /* });
+                             //console.log("after the first loop")
+                         }
+                         */
+
+
+                            // console.log("before the second loop")
+                            /* $.each(almgrid.dataArray, function (i, value) {
+                                 newArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
+         
+                                 let checkValue = obj => obj[almgrid.ArrayKeys[indexVarColPressed]] === almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]];
+         
+                                 if(availableArray.some(checkValue)){
+                                     availablenewArray.push(almgrid.dataArray[i][almgrid.ArrayKeys[indexVarColPressed]]);
+                                 
+                                 }
+                             });
+                             */
+                            // Create a Set to store unique values
+                            var uniqueValues = new Set();
+
+                            // Create an object to store available values
+                            var availableValues = {};
+
+                            // Store the target key outside the loop
+                            var targetKey = almgrid.ArrayKeys[indexVarColPressed];
+
+                            // Iterate over almgrid.dataArray using a for loop instead of $.each
+                            for (var i = 0;i < almgrid.dataArray.length;i++) {
+                                // Get the value at the desired column index
+                                var value = almgrid.dataArray[i][targetKey];
+
+                                uniqueValues.add(value);
+
+                                // Check if the value is available and not yet in the availableValues object
+                                if (availableArray.some(obj => obj[targetKey] === value) && !availableValues[value]) {
+                                    availableValues[value] = true;
+                                    availablenewArray.push(value);
+                                }
+                            }
+
+                            // Convert the uniqueValues Set back to an array
+                            newArray = Array.from(uniqueValues);
+
+                            //console.log("after the second loop")
+                            let uniqueArray = Array.from(new Set(newArray));
+                            let uniqueAvailableArray = Array.from(new Set(availablenewArray))
+
+
+
+
+                            almgrid.drawCustomFilters(window["uncheckedCheckboxes_" + columnNumberPressed], window["submit_" + columnNumberPressed], columnNumberPressed, clickedForm, uniqueArray, uniqueAvailableArray, checkboxArray, uncheckboxArray, "0", "30000", "30000", "1");
+                            document.getElementById("loaderDiv").style.display = "none";
+                        })
+                    }
                 }, 0); // Simulating 0 second delay
 
 
@@ -1223,7 +1220,7 @@ class AlmgridTable {
                 $("#" + almgrid.tableId + " .table-select-all").hide();
             }
 
-            function headerFilter(fArray){
+            function headerFilter(fArray) {
 
                 let flag = 0
                 let inpValue = ""
@@ -1232,14 +1229,14 @@ class AlmgridTable {
                 let columnNumber = 1
 
                 let indexVarColNumber
-                if(almgrid.selectCheckbox === true){
+                if (almgrid.selectCheckbox === true) {
                     indexVarColNumber = columnNumber
-                }else{
+                } else {
                     indexVarColNumber = columnNumber - 1
                 }
 
-                var inputFields = $("#" + almgrid.tableId + " .almgrid-search").filter(function () {
-        
+                var inputFields = $("#" + almgrid.tableId + " .almgrid-search").filter(function() {
+
                     return $(this).val() !== ""
                 })
                 if (map.size === 0 && inputFields.length === 0 || map.size !== 0 && inputFields.length === 0) {
@@ -1247,9 +1244,9 @@ class AlmgridTable {
                     checkedInp = 1
                 }
                 if (map.size === 0 && inputFields.length !== 0) {
-        
+
                     checkedFilter = 1 // this flag to confirm not pass in the next condition
-                    $("#" + almgrid.tableId  + " .almgrid-search").each(function (index) {
+                    $("#" + almgrid.tableId + " .almgrid-search").each(function(index) {
                         inpValue = $(this).val().toUpperCase();
                         var KeyName = almgrid.ArrayKeys[indexVarColNumber];
                         map.set(KeyName, inpValue)
@@ -1259,11 +1256,11 @@ class AlmgridTable {
                     checkedInp = 1
                 }
                 if (map.size !== 0 && inputFields.length !== 0 && checkedFilter === 0) {
-                    $("#" + almgrid.tableId + " .almgrid-search").each(function (index) {
-        
+                    $("#" + almgrid.tableId + " .almgrid-search").each(function(index) {
+
                         inpValue = $(this).val().toUpperCase();
                         var KeyName = almgrid.ArrayKeys[indexVarColNumber];
-        
+
                         if (map.get(KeyName) !== inpValue) {
                             if (map.get(KeyName).length < inpValue.length) {
                                 fArray = almgrid.filteredArray;
@@ -1278,26 +1275,26 @@ class AlmgridTable {
                                 return false
                             }
                             checkedInp = 1
-        
+
                         }
                         //const first = [...map][index];
                         //console.log(`index is : ${first}`)
                         map.set(KeyName, inpValue)
                         fArray = getFilteredArray(fArray, KeyName, inpValue);
                         indexVarColNumber++;
-        
+
                     });
                     if (flag === 1) {
                         fArray = almgrid.dataArray;
                         columnNumber = 1
-                        if(almgrid.selectCheckbox === true){
+                        if (almgrid.selectCheckbox === true) {
                             indexVarColNumber = columnNumber
-                        }else{
+                        } else {
                             indexVarColNumber = columnNumber - 1
                         }
                         let indexNb = 1
                         //console.log("Am here !!")
-                        $("#" + almgrid.tableId + " .almgrid-search").each(function (index) {
+                        $("#" + almgrid.tableId + " .almgrid-search").each(function(index) {
                             inpValue = $(this).val().toUpperCase();
                             var KeyName = almgrid.ArrayKeys[indexVarColNumber];
                             if (inpValue === "") {
@@ -1315,14 +1312,14 @@ class AlmgridTable {
                     }
                     if (checkedInp === 0) {
                         fArray = almgrid.dataArray;
-        
+
                         columnNumber = 1
-                        if(almgrid.selectCheckbox === true){
+                        if (almgrid.selectCheckbox === true) {
                             indexVarColNumber = columnNumber
-                        }else{
+                        } else {
                             indexVarColNumber = columnNumber - 1
                         }
-                        $("#" + almgrid.tableId + " .almgrid-search").each(function (index) {
+                        $("#" + almgrid.tableId + " .almgrid-search").each(function(index) {
                             inpValue = $(this).val().toUpperCase();
                             var KeyName = almgrid.ArrayKeys[indexVarColNumber];
                             map.set(KeyName, inpValue)
@@ -1330,25 +1327,25 @@ class AlmgridTable {
                             indexVarColNumber++;
                         });
                     }
-        
+
                 }
-        
+
                 return fArray
-        
+
             }
 
-            function dropdownFilter(fArray,columnNumberPressed,showavailable){
-                $("#" + almgrid.tableId + " .clicked").each(function (index) {
-                    
+            function dropdownFilter(fArray, columnNumberPressed, showavailable) {
+                $("#" + almgrid.tableId + " .clicked").each(function(index) {
+
                     var currentForm = $(this).closest("li.filter-dropdown").children("ul.filter-dropdown-ul").children("li").children(".filter-dropdown-form").attr("id");
                     var currentIndex = currentForm.split(almgrid.tableId + "_filterform");
                     var currentindex = currentIndex[1];
 
                     let KeyName
-                    if(almgrid.selectCheckbox === true){
+                    if (almgrid.selectCheckbox === true) {
                         KeyName = almgrid.ArrayKeys[currentindex];
-                    }else{
-                        KeyName = almgrid.ArrayKeys[currentindex-1];
+                    } else {
+                        KeyName = almgrid.ArrayKeys[currentindex - 1];
                     }
 
                     var advancedFilterOneCondition = $("#" + currentForm).find(".advanced-filter-one").val();
@@ -1358,24 +1355,24 @@ class AlmgridTable {
                     var advancedFilterTwoValue = $("#" + currentForm).find(".advanced-filter-two-value").val();
 
                     var fArrayPushed = [];
-                    if((showavailable && columnNumberPressed !== currentindex) || !showavailable){
+                    if ((showavailable && columnNumberPressed !== currentindex) || !showavailable) {
                         if (advancedFilterOneCondition == "none") {
-                                $.each(checkboxArray[currentindex], function (i, value) {
+                            $.each(checkboxArray[currentindex], function(i, value) {
 
-                                    var fArrayFiltered = $.grep(fArray, function (e) {
-                                        return e[KeyName] == checkboxArray[currentindex][i];
-                                    });
-                                    fArrayPushed = fArrayPushed.concat(fArrayFiltered);
+                                var fArrayFiltered = $.grep(fArray, function(e) {
+                                    return e[KeyName] == checkboxArray[currentindex][i];
                                 });
-                                fArray = fArrayPushed;
+                                fArrayPushed = fArrayPushed.concat(fArrayFiltered);
+                            });
+                            fArray = fArrayPushed;
                         }
-                        else{
-                            fArray= advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition,advancedFilterOneValue,
-                            advancedFilterRadio, advancedFilterTwoCondition, advancedFilterTwoValue);
+                        else {
+                            fArray = advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition, advancedFilterOneValue,
+                                advancedFilterRadio, advancedFilterTwoCondition, advancedFilterTwoValue);
 
-                            $.each(checkboxArray[currentindex], function (i, value) {
+                            $.each(checkboxArray[currentindex], function(i, value) {
 
-                                var fArrayFiltered = $.grep(fArray, function (e) {
+                                var fArrayFiltered = $.grep(fArray, function(e) {
                                     return e[KeyName] == checkboxArray[currentindex][i];
                                 });
                                 fArrayPushed = fArrayPushed.concat(fArrayFiltered);
@@ -1383,7 +1380,7 @@ class AlmgridTable {
                             fArray = fArrayPushed;
                         }
                     }
-                    if(showavailable && columnNumberPressed === currentindex && advancedFilterOneCondition !== "none"){
+                    if (showavailable && columnNumberPressed === currentindex && advancedFilterOneCondition !== "none") {
                         fArray = advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition, advancedFilterOneValue,
                             advancedFilterRadio, advancedFilterTwoCondition, advancedFilterTwoValue);
                     }
@@ -1392,21 +1389,21 @@ class AlmgridTable {
                 return fArray
             }
 
-            function globalSearchFilter(fArray){
+            function globalSearchFilter(fArray) {
                 let finalFilteredArray = [];
                 let j
-                
+
                 if ($(".almgrid-global-search").val() !== "") {
 
-                    for (var i = 0; i < fArray.length; i++) {
+                    for (var i = 0;i < fArray.length;i++) {
 
-                        if(almgrid.selectCheckbox === true){
+                        if (almgrid.selectCheckbox === true) {
                             j = 1
                         }
-                        else{
+                        else {
                             j = 0
                         }
-                        for (j; j < almgrid.ArrayKeys.length; j++) {
+                        for (j;j < almgrid.ArrayKeys.length;j++) {
 
                             if (String(fArray[i][almgrid.ArrayKeys[j]]).toUpperCase().indexOf($(".almgrid-global-search").val().toUpperCase()) > -1) {
                                 finalFilteredArray.push(fArray[i]);
@@ -1421,23 +1418,23 @@ class AlmgridTable {
                     }
                     fArray = finalFilteredArray
                 }
-                
+
                 return fArray
 
             }
-                    
 
 
-            $.fn.pressEnter = function (fn) {
 
-                
-                return this.each(function () {
+            $.fn.pressEnter = function(fn) {
+
+
+                return this.each(function() {
                     $(this).bind('enterPress', fn);
-                    $(this).keyup(function (e) {
+                    $(this).keyup(function(e) {
                         if (e.keyCode == 13) {
                             $(this).trigger("enterPress");
                             console.log("Press Enter!!");
-                console.log(this);
+                            console.log(this);
                         }
                     })
                 });
@@ -1448,23 +1445,23 @@ class AlmgridTable {
                 console.log("lili");
             }));*/
 
-            $(".almgrid-global-search").pressEnter(throttle(function () {
+            $(".almgrid-global-search").pressEnter(throttle(function() {
 
-               
-                    if (almgrid.filteredArray.length == 0)
-                        almgrid.filteredArray = almgrid.dataArray;
-                    else
-                        almgrid.filteredArray = almgrid.filteredArray;
 
-                    almgrid.filteredArray = headerFilter(almgrid.filteredArray)
+                if (almgrid.filteredArray.length == 0)
+                    almgrid.filteredArray = almgrid.dataArray;
+                else
+                    almgrid.filteredArray = almgrid.filteredArray;
 
-                    almgrid.filteredArray = dropdownFilter(almgrid.filteredArray)
+                almgrid.filteredArray = headerFilter(almgrid.filteredArray)
 
-                    almgrid.filteredArray = globalSearchFilter(almgrid.filteredArray)
+                almgrid.filteredArray = dropdownFilter(almgrid.filteredArray)
 
-                    
+                almgrid.filteredArray = globalSearchFilter(almgrid.filteredArray)
 
-                    almgrid.drawTableGrid(almgrid.tableId, almgrid.filteredArray);
+
+
+                almgrid.drawTableGrid(almgrid.tableId, almgrid.filteredArray);
 
             }));
 
@@ -1478,12 +1475,12 @@ class AlmgridTable {
                             almgrid.filteredArray = almgrid.filteredArray;
 
                         almgrid.filteredArray = headerFilter(almgrid.filteredArray)
-                    
+
                         almgrid.filteredArray = dropdownFilter(almgrid.filteredArray)
 
                         almgrid.filteredArray = globalSearchFilter(almgrid.filteredArray)
 
-                        
+
                         almgrid.drawTableGrid(almgrid.tableId, almgrid.filteredArray);
                         e.preventDefault();
                     }
@@ -1491,7 +1488,7 @@ class AlmgridTable {
                 })
             })
 
-            
+
 
             // Search Filter And Draw New Results in Grid View
             // header filter
@@ -1521,34 +1518,34 @@ class AlmgridTable {
 
 
             // Make all checkboxes checked on select all
-            $("#" + almgrid.tableId + " .filter-dropdown-ul").on("change", ".selectall-filter-checkbox", function () {
+            $("#" + almgrid.tableId + " .filter-dropdown-ul").on("change", ".selectall-filter-checkbox", function() {
                 var currentForm = $(this).parents("form").attr("id");
                 var currentIndex = currentForm.split(almgrid.tableId + "_filterform");
                 var columnNumber = currentIndex[1];
                 //var ArrayKeys = Object.keys(almgrid.dataArray[0]);
 
-               // checkboxArray[columnNumber] = [];
+                // checkboxArray[columnNumber] = [];
                 //uncheckboxArray[columnNumber] = [];
 
                 //////// --- sohaib --- ////////
                 // if condition to select one checkbox at a time according to event	
-                
+
                 let showavailable = document.querySelector("#" + currentForm + " .showavailable-filter-checkbox");
                 let FilteredArrayLength = almgrid.filteredArray.length
 
                 if (this.checked) {
-                    if(showavailable.checked && almgrid.FilteredArrayLength > 0)
+                    if (showavailable.checked && almgrid.FilteredArrayLength > 0)
                         $(this).addClass("prev-true");
                     else
                         $(this).removeClass("prev-true");
-                    
-                   // $("#" + currentForm).find('.custom-filter-checkbox').prop('checked', true);
-                   // $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
+
+                    // $("#" + currentForm).find('.custom-filter-checkbox').prop('checked', true);
+                    // $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
                     $("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
                 } else {
                     $(this).addClass("prev-true");
-                   // $("#" + currentForm).find('.custom-filter-checkbox').prop('checked', false);
-                   // $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
+                    // $("#" + currentForm).find('.custom-filter-checkbox').prop('checked', false);
+                    // $("#" + currentForm).find('.showall-filter-checkbox').prop('checked', false);
                     $("#" + currentForm).find('.showselected-filter-checkbox').prop('checked', false);
                 }
 
@@ -1556,136 +1553,136 @@ class AlmgridTable {
             });
             //////// --- sohaib --- ////////
 
-           
+
 
             //////// ------------- ////////
 
 
             // For unchecking Select All
 
-            $("#" + almgrid.tableId + " .filter-dropdown-ul").on("change", ".custom-filter-checkbox", function () {
+            $("#" + almgrid.tableId + " .filter-dropdown-ul").on("change", ".custom-filter-checkbox", function() {
                 var currentForm = $(this).parents("form").attr("id");
                 var currentIndex = currentForm.split(almgrid.tableId + "_filterform");
                 var columnNumber = currentIndex[1];
                 var checkedValue = $(this).val();
 
-                
 
-               // let showavailable = document.querySelector("#" + currentForm + " .showavailable-filter-checkbox");
 
-                if(!$(this).is(":checked")){
+                // let showavailable = document.querySelector("#" + currentForm + " .showavailable-filter-checkbox");
+
+                if (!$(this).is(":checked")) {
                     $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', false);
-					
-					if (window["submit_" + columnNumber] == "unchecked") {
-	                    uncheckboxArray[columnNumber].push(checkedValue);
-	                    uncheckboxArray[columnNumber] = Array.from(new Set(uncheckboxArray[columnNumber]));
-	
-	                    checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function (e) {
-	                        return e != checkedValue;
-	                    });
-					}
-				
+
+                    if (window["submit_" + columnNumber] == "unchecked") {
+                        uncheckboxArray[columnNumber].push(checkedValue);
+                        uncheckboxArray[columnNumber] = Array.from(new Set(uncheckboxArray[columnNumber]));
+
+                        checkboxArray[columnNumber] = $.grep(checkboxArray[columnNumber], function(e) {
+                            return e != checkedValue;
+                        });
+                    }
+
                 }
-                else{
-                  if (window["submit_" + columnNumber] == "unchecked") {
-                    checkboxArray[columnNumber].push(checkedValue);
-                    checkboxArray[columnNumber] = Array.from(new Set(checkboxArray[columnNumber]));
+                else {
+                    if (window["submit_" + columnNumber] == "unchecked") {
+                        checkboxArray[columnNumber].push(checkedValue);
+                        checkboxArray[columnNumber] = Array.from(new Set(checkboxArray[columnNumber]));
 
-                    uncheckboxArray[columnNumber] = $.grep(uncheckboxArray[columnNumber], function (e) {
-                        return e != checkedValue;
+                        uncheckboxArray[columnNumber] = $.grep(uncheckboxArray[columnNumber], function(e) {
+                            return e != checkedValue;
 
+                        });
+
+
+                        /* if(checkboxArray[columnNumber].length === almgrid.availableArrayLength || almgrid.arrayLength === checkboxArray[columnNumber].length){
+                             $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
+                         }*/
+                    }
+                    var uncheckedRows = currentAppendedRows.filter(function(row) {
+                        return row.checked === false; // Checking for the 'checked' key to be false
                     });
 
-					
-                   /* if(checkboxArray[columnNumber].length === almgrid.availableArrayLength || almgrid.arrayLength === checkboxArray[columnNumber].length){
+                    var numberOfUncheckedRows = (uncheckedRows.length) - 1;
+                    if (numberOfUncheckedRows == 0) {
                         $("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
-                    }*/
-				}
-					 var uncheckedRows = currentAppendedRows.filter(function(row) {
-				   		 return row.checked === false; // Checking for the 'checked' key to be false
-					});
-				
-				    var numberOfUncheckedRows = (uncheckedRows.length)-1;
-					if(numberOfUncheckedRows==0) {
-						$("#" + currentForm).find('.selectall-filter-checkbox').prop('checked', true);
-					}
-				
-					
-			}
-                
-               
+                    }
+
+
+                }
+
+
 
             });
 
 
 
             // Advanced Filtering and Draw Table
-            $("#" + almgrid.tableId + " .filter-dropdown-ul").on("click", ".advanced-filter-submit", function () {
+            $("#" + almgrid.tableId + " .filter-dropdown-ul").on("click", ".advanced-filter-submit", function() {
                 var gridButton = $(this).parents(".filter-dropdown-ul").prev(".almgrid-filter");
-                
+
 
                 var selectall_currentform = $(this).parents(".filter-dropdown-ul").find('.selectall-filter-checkbox');
                 var advancedFilter_currentform = $(this).parents(".filter-dropdown-ul").find('.advanced-filter-one').val()
-              
-                if(selectall_currentform.is(":checked") && advancedFilter_currentform == "none"){
+
+                if (selectall_currentform.is(":checked") && advancedFilter_currentform == "none") {
                     $(gridButton).removeClass("clicked");
                     $(gridButton).css("color", "#000");
-                    var clickedForm =  $(this).parents("form").attr("id");                    
-			 		var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                    var clickedForm = $(this).parents("form").attr("id");
+                    var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
                     var columnNumberPressed = clickedIndex[1];
-					window["submit_" + columnNumberPressed] = "unchecked";
-					window["uncheckedCheckboxes_" + columnNumberPressed]=[];
+                    window["submit_" + columnNumberPressed] = "unchecked";
+                    window["uncheckedCheckboxes_" + columnNumberPressed] = [];
                 }
-                else{
+                else {
                     $(gridButton).addClass("clicked");
                     $(gridButton).css("color", "#FFFF00");
-                    var clickedForm =  $(this).parents("form").attr("id");                   
-			 		var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
+                    var clickedForm = $(this).parents("form").attr("id");
+                    var clickedIndex = clickedForm.split(almgrid.tableId + "_filterform");
                     var columnNumberPressed = clickedIndex[1];
-					window["submit_" + columnNumberPressed] = "checked";
-					window["uncheckedCheckboxes_" + columnNumberPressed]=[];
-					
-					window["uncheckboxArray_" +columnNumberPressed]=[];
-					window["checkboxArray_" +columnNumberPressed]=[];
-					
-					for(var x= 0; x<currentAppendedRows.length;x++) { 
-             			if(currentAppendedRows[x]["checked"] == false) {
-       			 			window["uncheckboxArray_" +columnNumberPressed].push(currentAppendedRows[x]["indexval"]);
-                    		window["uncheckboxArray_" +columnNumberPressed]= Array.from(new Set(window["uncheckboxArray_" +columnNumberPressed]));
+                    window["submit_" + columnNumberPressed] = "checked";
+                    window["uncheckedCheckboxes_" + columnNumberPressed] = [];
 
-               			}
-						else {
-							window["checkboxArray_" +columnNumberPressed].push(currentAppendedRows[x]["indexval"]);
-                    		window["checkboxArray_" +columnNumberPressed]= Array.from(new Set(window["checkboxArray_" +columnNumberPressed]));						
-						}
-					}
-					window["uncheckedCheckboxes_" + columnNumberPressed]=[];
-					window["uncheckedCheckboxes_" + columnNumberPressed]=window["uncheckboxArray_" +columnNumberPressed];
+                    window["uncheckboxArray_" + columnNumberPressed] = [];
+                    window["checkboxArray_" + columnNumberPressed] = [];
 
-					uncheckboxArray[columnNumberPressed]=window["uncheckboxArray_" +columnNumberPressed];
-					checkboxArray[columnNumberPressed]=window["checkboxArray_" +columnNumberPressed];					
+                    for (var x = 0;x < currentAppendedRows.length;x++) {
+                        if (currentAppendedRows[x]["checked"] == false) {
+                            window["uncheckboxArray_" + columnNumberPressed].push(currentAppendedRows[x]["indexval"]);
+                            window["uncheckboxArray_" + columnNumberPressed] = Array.from(new Set(window["uncheckboxArray_" + columnNumberPressed]));
+
+                        }
+                        else {
+                            window["checkboxArray_" + columnNumberPressed].push(currentAppendedRows[x]["indexval"]);
+                            window["checkboxArray_" + columnNumberPressed] = Array.from(new Set(window["checkboxArray_" + columnNumberPressed]));
+                        }
+                    }
+                    window["uncheckedCheckboxes_" + columnNumberPressed] = [];
+                    window["uncheckedCheckboxes_" + columnNumberPressed] = window["uncheckboxArray_" + columnNumberPressed];
+
+                    uncheckboxArray[columnNumberPressed] = window["uncheckboxArray_" + columnNumberPressed];
+                    checkboxArray[columnNumberPressed] = window["checkboxArray_" + columnNumberPressed];
                 }
 
 
-                    if (almgrid.filteredArray.length == 0)
-                        almgrid.filteredArray = almgrid.dataArray;
-                    else
-                        almgrid.filteredArray = almgrid.filteredArray;
+                if (almgrid.filteredArray.length == 0)
+                    almgrid.filteredArray = almgrid.dataArray;
+                else
+                    almgrid.filteredArray = almgrid.filteredArray;
 
-                
-                    almgrid.filteredArray = headerFilter(almgrid.filteredArray)
 
-                    almgrid.filteredArray = dropdownFilter(almgrid.filteredArray)
+                almgrid.filteredArray = headerFilter(almgrid.filteredArray)
 
-                    almgrid.filteredArray = globalSearchFilter(almgrid.filteredArray)
+                almgrid.filteredArray = dropdownFilter(almgrid.filteredArray)
 
-                    almgrid.drawTableGrid(almgrid.tableId, almgrid.filteredArray);
+                almgrid.filteredArray = globalSearchFilter(almgrid.filteredArray)
+
+                almgrid.drawTableGrid(almgrid.tableId, almgrid.filteredArray);
             });
 
 
 
             // Conditions to show/hide elements in advanced filter
-            $(".filter-dropdown-ul").on("change", ".advanced-filter-one", function () {
+            $(".filter-dropdown-ul").on("change", ".advanced-filter-one", function() {
                 var currentForm = $(this).parents("form").attr("id");
                 var advancedFilterOneCondition = $(this).val();
                 if (advancedFilterOneCondition == "none") {
@@ -1706,7 +1703,7 @@ class AlmgridTable {
             });
 
             // Conditions to show/hide elements in advanced filter
-            $(".filter-dropdown-ul").on("change", ".advanced-filter-two", function () {
+            $(".filter-dropdown-ul").on("change", ".advanced-filter-two", function() {
                 var currentForm = $(this).parents("form").attr("id");
                 var advancedFilterTwoCondition = $(this).val();
                 if (advancedFilterTwoCondition == "none") {
@@ -1721,7 +1718,7 @@ class AlmgridTable {
             });
 
             // Function Regarding table select all checkbox
-            $("#" + almgrid.tableId).on("change", ".table-select-all-checkbox", function () {
+            $("#" + almgrid.tableId).on("change", ".table-select-all-checkbox", function() {
                 if (this.checked) {
                     $("#" + almgrid.tableId).find('.table-select-checkbox').prop('checked', true);
                 } else {
@@ -1730,7 +1727,7 @@ class AlmgridTable {
             });
 
             // Table Select Checkbox On Double Click TemporaryEdit
-            $("#" + almgrid.tableId).on("dblclick", ".filterRows", function () {
+            $("#" + almgrid.tableId).on("dblclick", ".filterRows", function() {
                 var checkbox = $(this).find('.table-select-checkbox');
 
                 if (checkbox.is(':checked')) {
@@ -1742,73 +1739,6 @@ class AlmgridTable {
             });
         }
     } // end of events
-
-  /*  drawTableGrid(tableId, dataArray) {
-        let almgrid = this;
-        var tableBody = document.querySelector("#" + tableId + " tbody");
-        var columnLinkNb = this.columnLinkNb;
-        var gridContainer = document.querySelector("#" + tableId).closest(".almgrid-container");
-        var gridContainerId = tableId + "_container";
-        $(gridContainer).attr('id', gridContainerId);
-
-        $(tableBody).empty();
-        if (dataArray.length > 0) {
-
-            //var ArrayKeys = Object.keys(dataArray[0]);
-
-            var itemRow = "";
-
-            for (var i = 0; i < dataArray.length; i++) {
-                itemRow += "<tr class='filterRows'>";
-                for (var j = 0; j < almgrid.ArrayKeys.length; j++) {
-                    if (j == 0) {
-                        if (this.selectCheckbox == true) {
-                            itemRow += "<td class='table-select-all'><input type='checkbox' class='table-select-checkbox' value='" + dataArray[i][almgrid.ArrayKeys[j]] + "'></td>";
-                        }
-                    } else {
-                        itemRow += "<td >" + dataArray[i][almgrid.ArrayKeys[j]] + "</td>";
-                    }
-
-                }
-                itemRow += "</tr>";
-            }
-
-
-            $(tableBody).append(itemRow);
-
-        }
-
-
-        // Method for pagination almgrid-pagecount-box
-        $("#" + gridContainerId).find(".almgrid-pagecount-box").attr("id", tableId + "_pagecount");
-        $("#" + gridContainerId).find(".pagination-div").attr("id", tableId + "_pagination");
-
-        // For global search textbox
-        $("#" + gridContainerId).find(".almgrid-global-search").attr("id", tableId + "_globalsearch");
-
-        var paginationId = tableId + "_pagination";
-
-
-        // Page Rows number
-        var nbRows = $("#" + gridContainerId).find(".almgrid-pagecount").val();
-        nbRows = parseInt(nbRows);
-
-        this.pagination = new Pagination({ id: paginationId, tableId: tableId, noOfRows: nbRows, columnLinkNb: columnLinkNb });
-
-        // var pagination = new Pagination({ id: paginationId, tableId: tableId, noOfRows: nbRows, columnLinkNb: columnLinkNb });
-
-        // Drawing for the first time
-        if (this.initFlag == 0) {
-            var tables = document.getElementsByClassName('almgrid-table');
-            for (var i = 0; i < tables.length; i++) {
-                resizableGrid(tables[i]);
-            }
-        }
-
-
-        this.initFlag++;
-    } */
-
 } // end of AlmGrid Class
 
 
@@ -1817,7 +1747,7 @@ function resizableGrid(table) {
         cols = row ? row.children : undefined;
     if (!cols) return;
 
-    for (var i = 0; i < cols.length; i++) {
+    for (var i = 0;i < cols.length;i++) {
         var div = createDiv(table.offsetHeight);
         cols[i].appendChild(div);
         cols[i].style.position = 'relative';
@@ -1844,7 +1774,7 @@ function createDiv(height) {
 
 function setListeners(div) {
     var pageX, curCol, nxtCol, curColWidth, nxtColWidth;
-    div.addEventListener('mousedown', function (e) {
+    div.addEventListener('mousedown', function(e) {
         curTable = e.target.closest("table");
         curTableWidth = curTable.offsetWidth
 
@@ -1856,19 +1786,17 @@ function setListeners(div) {
             nxtColWidth = nxtCol.offsetWidth
     });
 
-    document.addEventListener('mousemove', function (e) {
+    document.addEventListener('mousemove', function(e) {
         if (curCol) {
             var diffX = e.pageX - pageX;
 
             if (nxtCol)
-                // nxtCol.style.width = (nxtColWidth - (diffX)) + 'px';
-
                 curCol.style.width = (curColWidth + diffX) + 'px';
             curTable.style.width = (curTableWidth + diffX) + 'px';
         }
     });
 
-    document.addEventListener('mouseup', function (e) {
+    document.addEventListener('mouseup', function(e) {
         curCol = undefined;
         nxtCol = undefined;
         pageX = undefined;
@@ -1881,7 +1809,7 @@ function setListeners(div) {
 function drawDropDownCustomFilter(tableId) {
     var indexNb = 1;
     // Method to Draw Filter Button inside Table
-    $("#" + tableId).find(".filter-dropdown-ul").each(function () {
+    $("#" + tableId).find(".filter-dropdown-ul").each(function() {
         $(this).empty();
         var DropDownDiv = createFilterDropDown(tableId, indexNb);
         $(this).append(DropDownDiv);
@@ -1932,14 +1860,13 @@ function createFilterDropDown(tableId, indexNb) {
     dropDownDiv += "<div class='clusterize-no-data'>No Data</div>";
     dropDownDiv += "</div></div>";
     dropDownDiv += "</div><hr>";
-    
+
     dropDownDiv += "<div class='row' style='white-space: nowrap;' >";
     dropDownDiv += "<div class='col-md-3'><button type='button' class='previousData prevNextButtons pagination-button shadow-none prevNextbuttonHover ' >Prev</button></div>";
     dropDownDiv += "<div class='col-md-6'><input type='text' readonly  id='" + tableId + "_nextPrevPage" + indexNb + "' class='nextPrevPage page-number-select form-control '  style='width:48px;background-color: #fff;'/>"
-    		+ "<input type='text' class='totalNoPages page-number-select form-control' style='width:48px;background-color: #fff;' readonly /></div>";
+        + "<input type='text' class='totalNoPages page-number-select form-control' style='width:48px;background-color: #fff;' readonly /></div>";
     dropDownDiv += "<div class='col-md-3'><button type='button' class='nextData prevNextButtons pagination-button shadow-none prevNextbuttonHover ' style='margin-left:-20px;' >Next</button></div>";
     dropDownDiv += "</div>";
-    
 
     dropDownDiv += "<div class='row'>";
     dropDownDiv += "<div class='col-md-6'></div>";
@@ -1957,7 +1884,6 @@ function createFilterDropDown(tableId, indexNb) {
     dropDownDiv += "<option value='isempty'>Is Empty</option>";
     dropDownDiv += "<option value='isequalto'>Is Equal To</option>";
     dropDownDiv += "<option value='contains'>Contains</option>";
-    // dropDownDiv += "<option value='inbetween'>In Between</option>";
     dropDownDiv += "<option value='beginswith'>Begins With</option>";
     dropDownDiv += "<option value='endswith'>Ends With</option>";
     dropDownDiv += "<option value='greaterthan'>Greater Than</option>";
@@ -1990,7 +1916,6 @@ function createFilterDropDown(tableId, indexNb) {
     dropDownDiv += "<option value='isempty'>Is Empty</option>";
     dropDownDiv += "<option value='isequalto'>Is Equal To</option>";
     dropDownDiv += "<option value='contains'>Contains</option>";
-    // dropDownDiv += "<option value='inbetween'>In Between</option>";
     dropDownDiv += "<option value='beginswith'>Begins With</option>";
     dropDownDiv += "<option value='endswith'>Ends With</option>";
     dropDownDiv += "<option value='greaterthan'>Greater Than</option>";
@@ -2019,7 +1944,7 @@ function createFilterDropDown(tableId, indexNb) {
 
 // Function to filter global array
 function getFilteredArray(array, key, value) {
-    return array.filter(function (e) {
+    return array.filter(function(e) {
         // return e[key].toUpperCase() == value;
         return String(e[key]).toUpperCase().indexOf(value) > -1;
     });
@@ -2038,15 +1963,15 @@ function advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition, 
             break;
 
         case "isempty":
-            fArray1 = $.grep(fArray1, function (e) { return e[KeyName] == ''; });
+            fArray1 = $.grep(fArray1, function(e) { return e[KeyName] == ''; });
             break;
 
         case "isequalto":
-            fArray1 = $.grep(fArray1, function (e) { return e[KeyName] == advancedFilterOneValue; });
+            fArray1 = $.grep(fArray1, function(e) { return e[KeyName] == advancedFilterOneValue; });
             break;
 
         case "contains":
-            fArray1 = $.grep(fArray1, function (e) { return e[KeyName].toUpperCase().includes(advancedFilterOneValue.toUpperCase()); });
+            fArray1 = $.grep(fArray1, function(e) { return e[KeyName].toUpperCase().includes(advancedFilterOneValue.toUpperCase()); });
             break;
 
         case "inbetween":
@@ -2054,19 +1979,19 @@ function advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition, 
             break;
 
         case "beginswith":
-            fArray1 = $.grep(fArray1, function (e) { return e[KeyName].toUpperCase().startsWith(advancedFilterOneValue.toUpperCase()); });
+            fArray1 = $.grep(fArray1, function(e) { return e[KeyName].toUpperCase().startsWith(advancedFilterOneValue.toUpperCase()); });
             break;
 
         case "endswith":
-            fArray1 = $.grep(fArray1, function (e) { return e[KeyName].toUpperCase().endsWith(advancedFilterOneValue.toUpperCase()); });
+            fArray1 = $.grep(fArray1, function(e) { return e[KeyName].toUpperCase().endsWith(advancedFilterOneValue.toUpperCase()); });
             break;
 
         case "greaterthan":
-            fArray1 = $.grep(fArray1, function (e) { return parseInt(e[KeyName]) > parseInt(advancedFilterOneValue); });
+            fArray1 = $.grep(fArray1, function(e) { return parseInt(e[KeyName]) > parseInt(advancedFilterOneValue); });
             break;
 
         case "lessthan":
-            fArray1 = $.grep(fArray1, function (e) { return parseInt(e[KeyName]) < parseInt(advancedFilterOneValue); });
+            fArray1 = $.grep(fArray1, function(e) { return parseInt(e[KeyName]) < parseInt(advancedFilterOneValue); });
             break;
     }
 
@@ -2076,15 +2001,15 @@ function advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition, 
             break;
 
         case "isempty":
-            fArray2 = $.grep(fArray2, function (e) { return e[KeyName] == ''; });
+            fArray2 = $.grep(fArray2, function(e) { return e[KeyName] == ''; });
             break;
 
         case "isequalto":
-            fArray2 = $.grep(fArray2, function (e) { return e[KeyName] == advancedFilterTwoValue; });
+            fArray2 = $.grep(fArray2, function(e) { return e[KeyName] == advancedFilterTwoValue; });
             break;
 
         case "contains":
-            fArray2 = $.grep(fArray2, function (e) { return e[KeyName].toUpperCase().includes(advancedFilterTwoValue.toUpperCase()); });
+            fArray2 = $.grep(fArray2, function(e) { return e[KeyName].toUpperCase().includes(advancedFilterTwoValue.toUpperCase()); });
             break;
 
         case "inbetween":
@@ -2092,26 +2017,26 @@ function advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition, 
             break;
 
         case "beginswith":
-            fArray2 = $.grep(fArray2, function (e) { return e[KeyName].toUpperCase().startsWith(advancedFilterTwoValue.toUpperCase()); });
+            fArray2 = $.grep(fArray2, function(e) { return e[KeyName].toUpperCase().startsWith(advancedFilterTwoValue.toUpperCase()); });
             break;
 
         case "endswith":
-            fArray2 = $.grep(fArray2, function (e) { return e[KeyName].toUpperCase().endsWith(advancedFilterTwoValue.toUpperCase()); });
+            fArray2 = $.grep(fArray2, function(e) { return e[KeyName].toUpperCase().endsWith(advancedFilterTwoValue.toUpperCase()); });
             break;
 
         case "greaterthan":
-            fArray2 = $.grep(fArray2, function (e) { return parseInt(e[KeyName]) > parseInt(advancedFilterTwoValue); });
+            fArray2 = $.grep(fArray2, function(e) { return parseInt(e[KeyName]) > parseInt(advancedFilterTwoValue); });
             break;
 
         case "lessthan":
-            fArray2 = $.grep(fArray2, function (e) { return parseInt(e[KeyName]) < parseInt(advancedFilterTwoValue); });
+            fArray2 = $.grep(fArray2, function(e) { return parseInt(e[KeyName]) < parseInt(advancedFilterTwoValue); });
             break;
     }
 
 
     if (advancedFilterRadio == "and") {
 
-        fArrayfinal = fArray1.filter(function (n) { return fArray2.indexOf(n) !== -1; });
+        fArrayfinal = fArray1.filter(function(n) { return fArray2.indexOf(n) !== -1; });
 
     } else if (advancedFilterRadio == "or") {
         fArrayfinal = arrayUnique(fArray1.concat(fArray2));
@@ -2124,8 +2049,8 @@ function advancedFilteringFunction(fArray, KeyName, advancedFilterOneCondition, 
 
 function arrayUnique(array) {
     var a = array.concat();
-    for (var i = 0; i < a.length; ++i) {
-        for (var j = i + 1; j < a.length; ++j) {
+    for (var i = 0;i < a.length;++i) {
+        for (var j = i + 1;j < a.length;++j) {
             if (a[i] === a[j])
                 a.splice(j--, 1);
         }
@@ -2136,10 +2061,10 @@ function arrayUnique(array) {
 
 function throttle(f, delay) {
     var timer = null;
-    return function () {
+    return function() {
         var context = this, args = arguments;
         clearTimeout(timer);
-        timer = window.setTimeout(function () {
+        timer = window.setTimeout(function() {
             f.apply(context, args);
         },
             delay || 500);
