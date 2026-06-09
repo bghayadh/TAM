@@ -1,7 +1,6 @@
 function onGenerateClick() {
 
     generateFlag = "1";
-
     prepareGenerateProcess();
 
     if (!validateGenerateInputs()) {
@@ -12,9 +11,7 @@ function onGenerateClick() {
 }
 
 function validateGenerateInputs() {
-
     if ($("#ductPath").val() === "") {
-
         alert("Please enter a cable!");
         return false;
     }
@@ -39,8 +36,7 @@ function prepareGenerateProcess() {
 function callGenerateReport() {
 
     showLoader();
-
-    cableID = $("#ductPath").val().split(":")[0];
+    ductID = $("#ductPath").val().split(":")[0];
 
     $.ajax({
         type: "GET",
@@ -48,7 +44,7 @@ function callGenerateReport() {
         url: getContext() + "/GenerateStrandUtilizationReport",
         dataType: "json",
         data: {
-            cableID: cableID
+            ductID: ductID
         },
 
         success: function(data) {
@@ -65,11 +61,8 @@ function callGenerateReport() {
 }
 
 function handleGenerateSuccess(data) {
-
     // MOVE THE ENTIRE SUCCESS BLOCK HERE
-
     if (data != null) {
-
         ReportArrayGlobal = data.listStrandsUtilization;
         manHandList = data.manHandList;
         manHandoleList = data.manHandoleList;
@@ -93,10 +86,8 @@ function handleGenerateSuccess(data) {
         window["bounds_" + cableID].extend(new google.maps.LatLng(data.fiberList[0][1], data.fiberList[0][0]));
         window["bounds_" + cableID].extend(new google.maps.LatLng(data.fiberList[0][3], data.fiberList[0][2]));
 
-
         processFiberAuxPoints(cableID, data.fiberAuxData, "mapPointsNames_");
         window["mapPoints_" + cableID].push(new google.maps.LatLng(data.fiberList[0][3], data.fiberList[0][2]));
-
 
         var totalStrands = parseFloat(data.fiberList[0][11]) * parseFloat(data.fiberList[0][12]);
         $('#totalCables').val(totalStrands);
@@ -118,26 +109,6 @@ function handleGenerateSuccess(data) {
         $(".showHideCableCheckbox").attr('disabled', false);
 
         map.fitBounds(window["bounds_" + cableID]);
-
-
-        //if(data.fiberAuxDataRelatedPath.length >0) {
-        for (var c = 0;c < data.relatedPathCables.length;c++) {
-            var pathID = data.relatedPathCables[c][0];
-            if (allRelatedPathCables.includes(pathID) == false) {
-                allRelatedPathCables.push(pathID);
-            }
-            window["mapPoints_" + pathID] = [];
-            window["mapPoints_" + pathID].push(new google.maps.LatLng(data.relatedPathCables[c][2], data.relatedPathCables[c][1]));
-
-            for (var y = 0;y < data.fiberAuxDataRelatedPath.length;y++) {
-                if (data.fiberAuxDataRelatedPath[y][0] == pathID) {
-                    window["mapPoints_" + pathID].push(new google.maps.LatLng(data.fiberAuxDataRelatedPath[y][2], data.fiberAuxDataRelatedPath[y][1]));
-                }
-
-            }
-            window["mapPoints_" + pathID].push(new google.maps.LatLng(data.relatedPathCables[c][4], data.relatedPathCables[c][3]));
-            buildPath(pathID, relatedPathArray, data.relatedPathCables[c][11], window["mapPoints_" + pathID], data.relatedPathCables[c][12], 0.7, 4.5, 'blue', 13);
-        }
     }
     hideLoader();
 }
@@ -209,7 +180,6 @@ function processCableSrcDstArray(cableID, windowMapPointsNames, fiberList, windo
             }
         }
         window["" + windowMapPointsNames + cableID].push(dst);
-
         window["" + windowMapPoints + cableID].push(new google.maps.LatLng(fiberList[0][1], fiberList[0][0]));
 
     }

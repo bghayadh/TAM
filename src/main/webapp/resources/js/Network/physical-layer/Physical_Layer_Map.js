@@ -495,8 +495,6 @@ function haversine_distance(lat1, lng1, lat2, lng2) {
         )
     );
 	
-	console.log("The distance is ", parseFloat(d.toFixed(3)))
-
     return parseFloat(d.toFixed(3));
 }
 

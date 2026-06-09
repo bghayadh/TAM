@@ -3336,7 +3336,6 @@ else {
 				}
 				else {
 					var path=window["mapPoints_"+Id];
-					console.log(path);
 					if(Target.Trgt == "FiberPath_f_"){
 						console.log("entered if Target "+Target.Trgt);
 						buildPath(Id,path,pathArray,allPathArray,Target.Trgt,window['FiberColor_'+window[''+Id][22]],0.7,Target.strokeWeight,Target.color,Target.IdNb);	
@@ -6857,9 +6856,7 @@ function FindFiberData(selectedFiberContext) {
                 else {
                     setAllFieldsReadonly();
                 }
-            }
-
-            console.log(fieldMappings);
+            }            
 
             $("#tubesTable > tbody").empty();
             $("#strandsTable > tbody").empty();
@@ -6870,9 +6867,10 @@ function FindFiberData(selectedFiberContext) {
             allAuxDictStrand = [];
             numberOfTubes = 0;
             numberOfStrands = 0;
-
+/*
             fiberCableAuxData = [];
             fiberCableAuxData = data.fiberAuxData;
+*/			
 
             $("#FiberPathId").val(selectedFiberContext);
 

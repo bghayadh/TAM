@@ -140,9 +140,6 @@ $(document).on("focusout", ".auxiliary-table-path .aux-name", function() {
 
 function AuxAppendBOQ(auxArray, insertType, OrigiTermination, Target, indx) {
 
-    console.log("Welcome to appendBOQ");
-    console.log("auxArray is ", auxArray);
-
     // ---------------------------------------------------------------------
     // Store table context
     // ---------------------------------------------------------------------
@@ -170,36 +167,37 @@ function AuxAppendBOQ(auxArray, insertType, OrigiTermination, Target, indx) {
 
     function resolveAuxName(value, currentIndex) {
 
-        // Import
+		// MH / HH / DB
+		if (
+		    value[4] &&
+		    (
+		        value[4].split("_")[0] === "MH" ||
+		        value[4].split("_")[0] === "HH" ||
+		        value[4].split("_")[0] === "DB"
+		    )
+		) {
+		    return value[4] + ":" + value[5];
+		}
+		
+		// Warehouse
+		if (value[3] !== "null" && value[3] != null) {
+		    return value[3] + ":" + value[5] + ":" + value[4];
+		}
+		
+
+		// Auxiliary point
+		if (value[5] && value[5].includes("Auxiliary_Point")) {
+		    return value[10] + ":" + value[5];
+		}
+						
+		        // Import
         if (Target.Action === "Import") {
             return value[3] == null ? "null" : value[3];
         }
-
+				
         // Empty row
         if (value[3] === "") {
             return "";
-        }
-
-        // Warehouse
-        if (value[3] !== "null" && value[3] != null) {
-            return value[3] + ":" + value[5] + ":" + value[4];
-        }
-
-        // Auxiliary point
-        if (value[5] && value[5].includes("Auxiliary_Point")) {
-            return value[10] + ":" + value[5];
-        }
-
-        // MH / HH / DB
-        if (
-            value[4] &&
-            (
-                value[4].split("_")[0] === "MH" ||
-                value[4].split("_")[0] === "HH" ||
-                value[4].split("_")[0] === "DB"
-            )
-        ) {
-            return value[4] + ":" + value[5];
         }
 
         return value[5] || ("Auxiliary_Point " + (currentIndex + 1));
@@ -359,8 +357,6 @@ function AuxAppendBOQ(auxArray, insertType, OrigiTermination, Target, indx) {
     // ---------------------------------------------------------------------
 
     let html = "";
-
-    console.log("auxArray is ", auxArray);
 
     window._auxMapMarkerFlag = 0;
 
@@ -728,7 +724,6 @@ function appendingToAuxFromMap(modalId, AuxFlag, auxPtAutocomplete, srcDestAutoC
                 auxArray = data.auxPtSearch;
                 auxDict.push.apply(auxDict, auxArray);
 
-                console.log("auxDict is ", auxDict);
 
                 if (modalId == "fiberPathModal") {
                     AuxAppendBOQ(auxDict, "createFromMap", "", TargetFiber, index);
@@ -749,7 +744,7 @@ function appendingToAuxFromMap(modalId, AuxFlag, auxPtAutocomplete, srcDestAutoC
                 $("#loading").remove();
                 $("#" + modalId).modal('show');
 
-                //data = null
+                data = null;
                 auxArray = [];
             }, // end of success
             error: function(result) {

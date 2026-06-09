@@ -7095,6 +7095,10 @@ public class PhysicalLayerController {
 
 					Map<String, Object> nearestManhole = findNearestManhole(auxLng, auxLat, 30.0, auxList, maxLongitude,
 							minLongitude, maxLatitude, minLatitude); // Pass 30.0
+					
+					
+					System.out.println("nearestManhole is " +mapper.writeValueAsString(nearestManhole));
+					
 					// meters as
 					// the
 					// maximum
@@ -7109,14 +7113,17 @@ public class PhysicalLayerController {
 
 						if (!addedManholeNames.contains(manholeId)) {
 							resultManhole.put(auxId,
-									new ArrayList<>(Arrays.asList(manholeLng, manholeLat, "", combinedValue, "", "")));
+									new ArrayList<>(Arrays.asList(manholeLng, manholeLat, "", "", manholeId, manholeName)));
 							addedManholeNames.add(manholeId);
-							System.out.println("Nearest Manhole IS : " + combinedValue);
+							System.out.println("Nearest Manhole is: " + combinedValue);
+							System.out.println("Nearest Manhole ID is: " + manholeId);
+							System.out.println("Nearest Manhole Name is: " + manholeName);							
 							System.out.println("Distance: " + nearestManhole.get("Distance") + " meters");
 							System.out.println("--------------------------------------------------------------");
 						}
 					}
 					sortedMap.putAll(resultManhole);
+					System.out.println("After manhole searching, sortedMap is: " + mapper.writeValueAsString(sortedMap));
 				}
 
 				// Create a set to store unique handhole Id
@@ -7137,9 +7144,11 @@ public class PhysicalLayerController {
 
 						if (!addedHandholeNames.contains(handholeId)) {
 							resultMapHand.put(auxId, new ArrayList<>(
-									Arrays.asList(handholeLng, handholeLat, "", combinedValue, "", "")));
+									Arrays.asList(handholeLng, handholeLat, "", "", handholeId, handholeName)));
 							addedHandholeNames.add(handholeId);
 							System.out.println("Nearest HandHole IS : " + combinedValue);
+							System.out.println("Nearest HandHole ID: " + handholeId);
+							System.out.println("Nearest handhole Name : " + handholeName);
 							System.out.println("Distance: " + nearestHandhole.get("Distance") + " meters");
 							System.out.println("--------------------------------------------------------------");
 						}
@@ -7167,7 +7176,7 @@ public class PhysicalLayerController {
 
 	@SuppressWarnings("unchecked")
 	private Map<String, Object> findNearestManhole(double auxLng, double auxLat, double maxDistance,
-			List<Object[]> auxList, double maxLongitude, double minLongitude, double maxLatitude, double minLatitude) {
+			List<Object[]> auxList, double maxLongitude, double minLongitude, double maxLatitude, double minLatitude) throws JsonProcessingException {
 		Map<String, Object> nearestManhole = null;
 		double minDistance = maxDistance + 1;
 
@@ -7178,8 +7187,12 @@ public class PhysicalLayerController {
 				.setParameter("minLongitude", minLongitude).setParameter("maxLongitude", maxLongitude)
 				.setParameter("minLatitude", minLatitude).setParameter("maxLatitude", maxLatitude).getResultList();
 		// System.out.println("manholeList size "+manholeList.size());
+		
+		System.out.println("manholeList is: " +mapper.writeValueAsString(manholeList));
+		
 		for (Object[] manholeData : manholeList) {
 			String manholeId = (String) manholeData[0];
+			System.out.println("manholeId is" +manholeId);
 			String manholeName = (String) manholeData[1];
 			double manholeLng = Double.parseDouble(manholeData[2].toString());
 			double manholeLat = Double.parseDouble(manholeData[3].toString());
@@ -7188,6 +7201,10 @@ public class PhysicalLayerController {
 																							// calculateDistance
 																							// function
 
+			
+			System.out.println("at Manhole: " +manholeId + " The distance is " +distance);
+			
+			
 			// Check if manholeID exists in auxList
 			boolean manholeExistsInAuxList = auxList.stream()
 					.anyMatch(auxData -> auxData[4] != null && auxData[4].toString().equals(manholeId));

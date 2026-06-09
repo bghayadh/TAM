@@ -429,11 +429,19 @@ label, button {
 .fa-2x {
 	font-size: 1em !important;
 }
-
+/*
 .selected-span {
+	background-color: #97b9cc;
 	color:#ff0000 !important;
 	font-weight: bold;
 }
+*/
+.selected-span {
+	background-color: #97b9cc;
+	color:#ff0000 !important;
+	font-weight: bold;
+}
+
 
 .selected-span-blank {
 	color: #ff0000;

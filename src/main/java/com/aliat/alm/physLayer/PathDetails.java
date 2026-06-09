@@ -53,6 +53,8 @@ public class PathDetails {
 			return rtn;
 		} else {
 			String selectedFiberContext = request.getParameter("selectedFiberContext");
+			
+			System.out.println("selectedFiberContext is " +selectedFiberContext);
 			List<Object[]> fiberDetails, fiberTubes, fiberStrands, accessJunctions;
 			List<FiberDuct> fiberDucts = new ArrayList<FiberDuct>();
 			session = AlmDbSession.getInstance().getSession();
@@ -67,12 +69,14 @@ public class PathDetails {
 							.getResultList();
 
 					// USED IN SHOW POINTS FOR AUXILIARIES //
+/*					
 					List<Object[]> fiberAuxiliaryData = session.createNativeQuery(
 							"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.SEQ_SORTING, B.DRIVING_DISTANCE, B.GEO_DISTANCE, B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
 									+ selectedFiberContext + "' ORDER BY B.SEQ_SORTING ASC")
 							.getResultList();
+*/							
 					
-					fiberDucts = session.createQuery("from FiberDuct").list();
+					fiberDucts = session.createQuery("from FiberDuct where fiberPathId = :param").setParameter("param", selectedFiberContext).getResultList();
 
 					fiberTubes = session.createNativeQuery(
 							"SELECT TUBE_ID, FIBER_CABLE_ID, SOURCE_LONGITUDE,SOURCE_LATITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,TUBE_NAME,SOURCE_CITY, DESTINATION_CITY, TUBE_TYPE, TUBE_DEPLOYMENT, TUBE_NETWORK_LEVEL, TUBE_OWNER,TUBE_NUMBER,TUBE_COLOR,DRAWING_TYPE,TOTAL_GEO_DISTANCE,TOTAL_DRIVING_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE FROM FIBER_TUBES WHERE FIBER_CABLE_ID='"
@@ -93,7 +97,7 @@ public class PathDetails {
 					// mapper.writeValueAsString(fiberStrands));
 
 					rtn.put("fiberDetails", fiberDetails);
-					rtn.put("fiberAuxData", fiberAuxiliaryData);
+//					rtn.put("fiberAuxData", fiberAuxiliaryData);
 					rtn.put("fiberDucts", fiberDucts);
 					rtn.put("fiberTubes", fiberTubes);
 					rtn.put("fiberStrands", fiberStrands);

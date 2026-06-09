@@ -14786,7 +14786,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     var countAuxRowBoq = $("#auxiliaryTable  > tbody").children().length;
                     fiberAction = "Update";
                     TargetFiber.Action = fiberAction;
-                    AuxAppendBOQ(data, "", "", TargetFiber, index);
+					console.log("data is " , data);
+					const auxArray = Object.values(data);
+                    AuxAppendBOQ(auxArray, "", "", TargetFiber, index);
                     alert("The Manhole and Handhole Update Successfully ...!!");
                 }
             },
@@ -20026,7 +20028,7 @@ function tree_prop_selection(selector) {
     $("#network_tree i").css('margin-right', '5px');
 }
 
-*/
+
 
 function tree_prop_selection() {
     $(document)
@@ -20043,6 +20045,25 @@ function tree_prop_selection() {
 			IdSelectedTemp = $(this).parent().attr('id');			
         });
 }
+*/
+
+function tree_prop_selection() {
+	let $selectedSpan = null;
+    $(document)
+        .off('click.treeSelection')
+        .on('click.treeSelection', '#network_tree .TreeSpan, #Bottomdiv .TreeSpan', function () {
+
+            if ($selectedSpan) {
+                $selectedSpan.removeClass('selected-span');
+            }
+
+            $selectedSpan = $(this);
+            $selectedSpan.addClass('selected-span');
+
+            IdSelectedTemp = this.parentNode.id;
+        });
+}
+
 
 function tree_prop_generalPhysical() {
 

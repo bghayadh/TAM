@@ -631,6 +631,8 @@ function saveFiberPath() {
                         });
                     }
                 }
+				
+				$("#auxiliaryTable > tbody").empty();
 
                 $('.TreeSpan').css("display", "inline");
                 data = null
@@ -639,7 +641,6 @@ function saveFiberPath() {
                 dictStrands = []
                 allAuxDictTube = [];
                 allAuxDictStrand = [];
-
             },
             error: function(result) {
                 alert("Error");

@@ -46,9 +46,7 @@ class gridAppendRows {
             itemRow += "</tr>";
         }
         $(this.tableBody).append(itemRow);
-
         this.updatePagination(newEnd, newStart);
-
         var tableID = this.tableId;
 
         $("#" + tableID + " tr.changeTrColor").click(function() {

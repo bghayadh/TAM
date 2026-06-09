@@ -754,7 +754,7 @@ var mapFlag="0"; // used to check if the markers are set on map
 var infoWindow;
 var cableInfoWindow;
 var MapMenu;
-var filteredGridData=[]; // used in draw on map 
+var filteredGridData=[]; // used in draw on map
 var cableID = "";
 var srcDstCableList=[];
 var jctElementsIDArray=[];
@@ -765,6 +765,14 @@ var manHandList=[];
 var manHandoleList=[];
 var srcID=[];
 var dstID=[];
+
+
+var ductID = "";
+var duct={};
+var ductAuxPoints=[];
+var fiberCablesDetails;
+var ductSegment=[];
+
 
 function getContext() {
 	return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));

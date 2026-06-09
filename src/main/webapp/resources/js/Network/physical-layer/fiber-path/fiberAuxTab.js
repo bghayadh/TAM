@@ -513,6 +513,7 @@ function fiberAuxTab() {
                 $("#DestinationLng").val(),
                 "auxiliaryTable"
             );
+			data = null;
         },
 
         error: function() {

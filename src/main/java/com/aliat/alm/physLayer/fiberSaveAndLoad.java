@@ -24,6 +24,8 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -351,6 +353,8 @@ public class fiberSaveAndLoad {
 						} else {
 							auxArraySize = itemParameters.getDictParameter().size();
 						}
+						
+						System.out.println("auxArraySize is " +auxArraySize);
 
 						for (int i = 0; i < auxArraySize; i++) {
 							String aux_ID;
@@ -388,8 +392,14 @@ public class fiberSaveAndLoad {
 
 							fiberAuxPoints.setAuxID(aux_ID);
 							fiberAuxPoints.setFibercableID(fiberpathID);
+							System.out.println("i is: " +i + "aux long is: " +Double.parseDouble(itemParameters.getDictParameter().get(i).get("aux_Longitude")));
+							
 							fiberAuxPoints.setLong(
 									Double.parseDouble(itemParameters.getDictParameter().get(i).get("aux_Longitude")));
+							
+							
+							System.out.println("i is: " +i + "aux long is: " +Double.parseDouble(itemParameters.getDictParameter().get(i).get("aux_Latitude")));
+							
 							fiberAuxPoints.setLat(
 									Double.parseDouble(itemParameters.getDictParameter().get(i).get("aux_Latitude")));
 							fiberAuxPoints.setDistancefromsource(Double
@@ -1141,4 +1151,9 @@ public class fiberSaveAndLoad {
 		}
 		return rtn;
 	}
+	
+	@InitBinder
+	public void initBinder(WebDataBinder binder) {
+		binder.setAutoGrowCollectionLimit(1500);
+	}	
 }
