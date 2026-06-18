@@ -14,7 +14,8 @@ function initializeExportButton() {
 
 function initializeLegend() {
     document.getElementById('mapDropdown').addEventListener('change', function() {
-        handleMapDropdownChange(this.value);
+		setDuctViewMode(this.value);
+        //handleMapDropdownChange(this.value);
     });
 
     showHideSourceMarker();

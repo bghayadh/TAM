@@ -36,6 +36,16 @@ function buildGridTableMarkup() {
                             <ul class="dropdown-menu filter-dropdown-ul"></ul>
                         </li>
                     </th>
+					
+					<th>
+					    Cables Details
+					    <li class="filter-dropdown dropdown">
+					        <button class="almgrid-filter" data-toggle="dropdown">
+					            <i class="fa fa-list almgrid-filter-i"></i>
+					        </button>
+					        <ul class="dropdown-menu filter-dropdown-ul"></ul>
+					    </li>
+					</th>					
 
                     <th>
                         From Sequence
@@ -138,6 +148,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
+						Pan To
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter"
                                     data-toggle="dropdown"
@@ -150,6 +161,7 @@ function buildGridTableMarkup() {
                     </th>
 
                     <th>
+						Show From Aux
                         <li class="filter-dropdown dropdown">
                             <button class="almgrid-filter"
                                     data-toggle="dropdown"
@@ -163,7 +175,6 @@ function buildGridTableMarkup() {
                 </tr>
 
                 <tr>
-                    <th></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -175,6 +186,8 @@ function buildGridTableMarkup() {
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" class="almgrid-search" placeholder="Search"></th>
+                    <th><input type="text" class="almgrid-search" placeholder="Search"></th>
+					<th><input type="text" class="almgrid-search" placeholder="Search"></th>
                     <th><input type="text" disabled class="almgrid-search" style="display:none"></th>
                     <th><input type="text" disabled class="almgrid-search" style="display:none"></th>
                 </tr>
@@ -251,8 +264,8 @@ function drawTableGrid(tableId, dataArray) {
     mapFlag = "0";
     resetCounters();
     resetAllLegendCheckboxes();
-    window["mapPointsNamesBasedOnGrid_" + cableID] = [];
-    window["mapPointsBasedOnGrid_" + cableID] = [];
+    window["mapPointsNamesBasedOnGrid_" + ductID] = [];
+    window["mapPointsBasedOnGrid_" + ductID] = [];
 
     var center = new google.maps.LatLng(1, 38);
     map.setCenter(center);
@@ -260,8 +273,8 @@ function drawTableGrid(tableId, dataArray) {
 
 
     if (dataArray.length > 0) {
-        window["mapPointsNamesBasedOnGrid_" + cableID] = [];
-        window["mapPointsBasedOnGrid_" + cableID] = [];
+        window["mapPointsNamesBasedOnGrid_" + ductID] = [];
+        window["mapPointsBasedOnGrid_" + ductID] = [];
 
         var ArrayKeys = Object.keys(dataArray[0]);
         var columnVal;
@@ -271,7 +284,7 @@ function drawTableGrid(tableId, dataArray) {
         jctElementsIDArray = [];
         jctElementsFlag = "notOpened";
         data.push('\r');
-        data.push(["Strand #", "Tube #", "Location Type", "Location ID", "Location Name", "Location Longitude", "Location Latitude", "Element Type", "Element ID", "F/B or A/B", "Related Path", "Port Index", "Port Row", "Port Column", "Status", "Equipment Type", "Equipment ID", "Equipment Name"]);
+        data.push(["Duct Section Drawing", "Cable Qty", "Cables Details", "From Sequence", "From Auxiliary ID", "From Auxiliary Name", "From Longitude", "From Latitude", "To Sequence", "To Auxiliary ID", "To Longitude", "To Latitude", "Pan To", "Show Element"]);
 
         filteredGridData = dataArray; // used in draw on map 
 
@@ -279,15 +292,9 @@ function drawTableGrid(tableId, dataArray) {
             data.push('\r');
             for (var j = 0;j < ArrayKeys.length;j++) {
                 columnVal = ArrayKeys[j];
-                if (columnVal != "showLocation" && columnVal != "showElement") {
+                if (columnVal != "panTo" && columnVal != "showElement") {
                     data.push(dataArray[i][ArrayKeys[j]]);
                 }
-                if (columnVal == "elementID") {
-                    if (dataArray[i][ArrayKeys[j]].includes("JCT") == true && jctElementsIDArray.includes(dataArray[i][ArrayKeys[j]]) == false) {
-                        jctElementsIDArray.push(dataArray[i][ArrayKeys[j]]);
-                    }
-                }
-
             }
         }
 
@@ -324,367 +331,57 @@ function drawTableGrid(tableId, dataArray) {
     this.initFlag++;
 }
 
-function showElement(concatIDLongLat, rowIndex) {
+function panToAux(id) {
 
-    var ID = concatIDLongLat.split(":")[0].trim();
-    var longitude = concatIDLongLat.split(":")[1].trim();
-    var latitude = concatIDLongLat.split(":")[2].trim();
-    var Name = concatIDLongLat.split(":")[3].trim();
+    const aux = auxPointIndex[id];
+    if (!aux) return;
 
-    var latLng = new google.maps.LatLng(latitude, longitude);
-    map.setZoom(15);
+    const latLng = new google.maps.LatLng(aux.lat, aux.long);
+
     map.panTo(latLng);
-
-
-    if (mapFlag == "0") { // Show on map is not clicked before (markers are not set on map)
-
-        if (ID.includes("DB_")) {
-            $('.showHideAllDbCheckbox').prop('checked', true);
-            $(".showHideAllDbCheckbox").attr('disabled', false);
-            document.getElementById("dbCount").textContent = "";
-            if (!markersDB[ID]) {
-                distinctDB.push(ID); //  this array is used when checking all db from legend
-                createMarker(ID, longitude, latitude, Name, 'backboneDB.png', markersDB, markerClusterDB, "DB")
-
-            }
-            document.getElementById("dbCount").textContent = "(" + distinctDB.length + ")";
-        }
-        else if (ID.includes("JCT_")) {
-
-            document.getElementById("jctCount").textContent = "";
-            document.getElementById("manholesCountWithJct").textContent = "";
-
-            /*if(!markersJct[ID]){
-                distinctJct.push(ID); //  this array is used when checking all jct from legend
-                createMarker(ID,longitude,latitude,Name,'junctionOrange.png',markersJct,markerClusterJct)
-            }  */
-
-            $.ajax({
-                type: "GET",
-                contentType: "application/json; charset=utf-8",
-                url: getContext() + '/getSingleJctElementsDetails',
-                data: {
-                    "ID": ID
-                },
-                dataType: "json",
-                success: function(data) {
-                    singleJctArray = data.singleJctList;
-
-                    if (data.singleJctList.length > 0) {
-                        for (z = 0;z < singleJctArray.length;z++) {
-                            if (singleJctArray[z][2] != null && singleJctArray[z][2] != "null") {
-
-
-                                if (singleJctArray[z][2].startsWith("MH_") == true) {
-                                    var ID = singleJctArray[z][2];
-                                    var manholeName = singleJctArray[z][3];
-
-                                    if (manholeName.endsWith("_J")) {
-
-                                        if (distinctManholesWithJct.includes(ID) == false) {
-                                            distinctManholesWithJct.push(ID);
-                                            if (!markersManholesWithJct[ID]) {
-                                                createMarker(ID, singleJctArray[z][4], singleJctArray[z][5], manholeName, "manholeJct.png", markersManholesWithJct, markerClusterManholesWithJct, "manholeWithJct")
-                                            }
-                                            else {
-                                                markersManholesWithJct[ID].setMap(map);
-                                                markerClusterManholesWithJct.addMarker(markersManholesWithJct["" + ID]);
-                                            }
-                                        }
-                                    }
-
-                                }
-                                else if (singleJctArray[z][2].startsWith("HH_") == true) {
-                                    var ID = showPointsArray[x].split(":")[0];
-                                    var ID = singleJctArray[z][2];
-                                    var handholeName = singleJctArray[z][3];
-
-                                    if (handholeName.endsWith("_J")) {
-
-                                        if (distinctHandholesWithJct.includes(ID) == false) {
-                                            distinctHandholesWithJct.push(ID);
-                                            if (!markersHandholesWithJct[ID]) {
-                                                createMarker(ID, singleJctArray[z][4], singleJctArray[z][5], handholeName, "handholeYellowJct.png", markersHandholesWithJct, markerClusterHandholesWithJct, "handholeWithJct")
-                                            }
-                                            else {
-                                                markersHandholesWithJct[ID].setMap(map);
-                                                markerClusterHandholesWithJct.addMarker(markersHandholesWithJct["" + ID]);
-                                            }
-                                        }
-                                    }
-
-
-                                }
-
-
-                            }
-
-                            else {//case of junction that does not belongs to mh or hh
-
-                                if (distinctJct.includes(singleJctArray[z][0]) == false) {
-                                    ID = singleJctArray[z][0];
-                                    var longitude = singleJctArray[z][4];
-                                    var latitude = singleJctArray[z][5];
-                                    var Name = singleJctArray[z][1];
-                                    distinctJct.push(ID);
-                                    if (!markersJct[ID]) {
-                                        createMarker(ID, longitude, latitude, Name, 'junctionOrange.png', markersJct, markerClusterJct, "junction")
-                                    }
-                                    else {
-                                        markersJct[ID].setMap(map);
-                                        markerClusterJct.addMarker(markersJct["" + ID]);
-                                    }
-                                }
-
-
-                            }
-                        }
-                    }
-                    document.getElementById("jctCount").textContent = "(" + distinctJct.length + ")";
-                    document.getElementById("manholesCountWithJct").textContent = "(" + distinctManholesWithJct.length + ")";
-                    if (distinctManholesWithJct.length > 0) {
-                        $('.showHideAllManholesWithJctCheckbox').prop('checked', true);
-                        $(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
-                    }
-                    else {
-                        $('.showHideAllManholesWithJctCheckbox').prop('checked', false);
-                        $(".showHideAllManholesWithJctCheckbox").attr('disabled', true);
-                    }
-                    if (distinctHandholesWithJct.length > 0) {
-                        $('.showHideAllHandholesWithJctCheckbox').prop('checked', true);
-                        $(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
-                    }
-                    else {
-                        $('.showHideAllHandholesWithJctCheckbox').prop('checked', false);
-                        $(".showHideAllHandholesWithJctCheckbox").attr('disabled', true);
-                    }
-                    if (distinctJct.length > 0) {
-                        $('.showHideAllJctCheckbox').prop('checked', true);
-                        $(".showHideAllJctCheckbox").attr('disabled', false);
-                    }
-                    else {
-                        $('.showHideAllJctCheckbox').prop('checked', false);
-                        $(".showHideAllJctCheckbox").attr('disabled', true);
-                    }
-
-
-
-                },
-                error: function(result) {
-                    alert("Error");
-                }
-            });
-
-
-        }
-
-    }// end mapFlag condition
-    else {
-        if (ID.includes("DB_")) {
-            if (markersDB[ID]) {
-                if (markersDB[siteID].getMap() == null) {
-                    markersDB[siteID].setMap(map);
-                    markerClusterDB.addMarker(markersDB[siteID]);
-                }
-            }
-        }
-        else if (ID.includes("JCT_")) {
-
-            if (markersJct[ID]) {
-                if (markersJct[ID].getMap() == null) {
-                    markersJct[ID].setMap(map);
-                    markerClusterJct.addMarker(markersJct[ID]);
-                }
-            }
-            else if (markersManholesWithJct[ID]) {
-                if (markersManholesWithJct[ID].getMap() == null) {
-                    markersManholesWithJct[ID].setMap(map);
-                    markerClusterManholesWithJct.addMarker(markersManholesWithJct[ID]);
-                }
-            }
-            else if (markersHandholesWithJct[ID]) {
-                if (markersHandholesWithJct[ID].getMap() == null) {
-                    markersHandholesWithJct[ID].setMap(map);
-                    markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[ID]);
-                }
-            }
-        }
-    }
-
+    map.setZoom(15);
     //Scroll to the map div
     document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
-
 }
 
-function showLocation(ID, rowIndex) {
+function toggleAuxPointMarker(el, id, name, lat, lng) {
 
-    var longitude = filteredGridData[rowIndex]["longitude"];
-    var latitude = filteredGridData[rowIndex]["latitude"];
-    var Name = filteredGridData[rowIndex]["locationName"];
-    var locationType = filteredGridData[rowIndex]["locationType"];
-
-    var latLng = new google.maps.LatLng(latitude, longitude);
-    map.setZoom(16);
-    map.panTo(latLng);
+    console.log("Welcome totoggleAux, the id is ", id);
+    const checked = el.checked;
+    console.log("checked is ", checked);
+    const type = detectAuxType(id, name);
 
 
-    if (mapFlag == "0") { // Show on map is not clicked before (markers are not set on map)
+    const bucket = resolveMarkerBucket(type);
+    if (!bucket) return;
+    if (checked) {
+        if (!bucket.arr[id]) {
 
-        if (locationType == "Customer") {
-            $('.showHideAllCustCheckbox').prop('checked', true);
-            $(".showHideAllCustCheckbox").attr('disabled', false);
-            document.getElementById("custCount").textContent = "";
-            if (!markersCustomer[ID]) {
-                distinctCustomers.push(ID); //  this array is used when checking all cust from legend
-                createMarker(ID, longitude, latitude, Name, 'customerIcon.png', markersCustomer, markerClusterCustomers, "customer")
-            }
-            document.getElementById("custCount").textContent = "(" + distinctCustomers.length + ")";
-        }
-        else if (locationType == "Site") {
-            $('.showHideAllSitesCheckbox').prop('checked', true);
-            $(".showHideAllSitesCheckbox").attr('disabled', false);
-            document.getElementById("sitesCount").textContent = "";
-            if (!markersSites[ID]) {
-                distinctSites.push(ID); //  this array is used when checking all sites from legend
-                createMarker(ID, longitude, latitude, Name, 'redSiteIcon.png', markersSites, markerClusterSites, "site")
-            }
-            document.getElementById("sitesCount").textContent = "(" + distinctSites.length + ")";
-        }
-        else if (locationType == "Manhole") {
+            const pos = new google.maps.LatLng(lat, lng);
 
-            if (Name.endsWith("_J")) {
-                $('.showHideAllManholesWithJctCheckbox').prop('checked', true);
-                $(".showHideAllManholesWithJctCheckbox").attr('disabled', false);
-                document.getElementById("manholesCountWithJct").textContent = "";
+            console.log("checked is true, this after if the statement");
+            const marker = createMarker(
+                id,
+                lng,
+                lat,
+                name,
+                resolveIcon(bucket.icon, window.ductLayer.viewMode),
+                bucket.target
+            );
 
-                if (!markersManholesWithJct[ID]) {
-                    distinctManholesWithJct.push(ID); //  this array is used when checking all manholes from legend
-                    createMarker(ID, longitude, latitude, Name, "manholeJct.png", markersManholesWithJct, markerClusterManholesWithJct, "manholeWithJct")
-                }
+            //marker.segment = segment;
 
-            }
-            else {
-                $('.showHideAllManholesCheckbox').prop('checked', true);
-                $(".showHideAllManholesCheckbox").attr('disabled', false);
-                document.getElementById("manholesCount").textContent = "";
+            bucket.arr[id] = marker;
 
-                if (!markersManholes[ID]) {
-                    distinctManholes.push(ID); //  this array is used when checking all manholes from legend
-                    createMarker(ID, longitude, latitude, Name, "manholeRed.png", markersManholes, markerClusterManholes, "manhole")
-                }
+            attachMarkerBehavior(marker);
+            applyRenderingPolicy(marker, type);
 
-            }
-            document.getElementById("manholesCountWithJct").textContent = "(" + distinctManholesWithJct.length + ")";
-            document.getElementById("manholesCount").textContent = "(" + distinctManholes.length + ")";
-        }
-        else if (locationType == "Handhole") {
-
-            if (Name.endsWith("_J")) {
-                $('.showHideAllHandholesWithJctCheckbox').prop('checked', true);
-                $(".showHideAllHandholesWithJctCheckbox").attr('disabled', false);
-                document.getElementById("handholesCountWithJct").textContent = "";
-
-                if (!markersHandholesWithJct[ID]) {
-                    distinctHandholesWithJct.push(ID);
-                    createMarker(ID, longitude, latitude, Name, "handholeYellowJct.png", markersHandholesWithJct, markerClusterHandholesWithJct, "handholeWithJct")
-                }
-
-            }
-            else {
-                $('.showHideAllHandholesCheckbox').prop('checked', true);
-                $(".showHideAllHandholesCheckbox").attr('disabled', false);
-                document.getElementById("handholesCount").textContent = "";
-
-                if (!markersHandholes[ID]) {
-                    distinctHandholes.push(ID); //  this array is used when checking all handholes from legend
-                    createMarker(ID, longitude, latitude, Name, "handholeYellow.png", markersHandholes, markerClusterHandholes, "handhole")
-                }
-            }
-
-            document.getElementById("handholesCountWithJct").textContent = "(" + distinctHandholesWithJct.length + ")";
-            document.getElementById("handholesCount").textContent = "(" + distinctHandholes.length + ")";
-
-        }
-        else if (locationType == "DB") {
-            $('.showHideAllDbCheckbox').prop('checked', true);
-            $(".showHideAllDbCheckbox").attr('disabled', false);
-            document.getElementById("dbCount").textContent = "";
-            if (!markersDB[ID]) {
-                distinctDB.push(ID); //  this array is used when checking all db from legend
-                //createDbMarker(ID,longitude,latitude,Name);
-                createMarker(ID, longitude, latitude, Name, 'backboneDB.png', markersDB, markerClusterDB, "DB")
-
-            }
-            document.getElementById("dbCount").textContent = "(" + distinctDB.length + ")";
-        }
-
-    }// end mapFlag condition
-    else {
-
-        if (locationType == "Customer") {
-            if (markersCustomer[ID]) {
-                if (markersCustomer[ID].getMap() == null) {
-                    markersCustomer[ID].setMap(map);
-                    markerClusterCustomers.addMarker(markersCustomer[ID]);
-                }
-            }
-        }
-        else if (locationType == "Site") {
-            if (markersSites[ID]) {
-                if (markersSites[ID].getMap() == null) {
-                    markersSites[ID].setMap(map);
-                    markerClusterSites.addMarker(markersSites[ID]);
-                }
-            }
-        }
-        else if (locationType == "Manhole") {
-            if (Name.endsWith("_J")) {
-                if (markersManholesWithJct[ID]) {
-                    if (markersManholesWithJct[ID].getMap() == null) {
-                        markersManholesWithJct[ID].setMap(map);
-                        markerClusterManholesWithJct.addMarker(markersManholesWithJct[ID]);
-                    }
-                }
-            }
-            else {
-                if (markersManholes[ID]) {
-                    if (markersManholes[ID].getMap() == null) {
-                        markersManholes[ID].setMap(map);
-                        markerClusterManholes.addMarker(markersManholes[ID]);
-                    }
-                }
-            }
-
-        }
-        else if (locationType == "Handhole") {
-            if (Name.endsWith("_J")) {
-                if (markersHandholesWithJct[ID]) {
-                    if (markersHandholesWithJct[ID].getMap() == null) {
-                        markersHandholesWithJct[ID].setMap(map);
-                        markerClusterHandholesWithJct.addMarker(markersHandholesWithJct[ID]);
-                    }
-                }
-            }
-            else {
-                if (markersHandholes[ID]) {
-                    if (markersHandholes[ID].getMap() == null) {
-                        markersHandholes[ID].setMap(map);
-                        markerClusterHandholes.addMarker(markersHandholes[ID]);
-                    }
-                }
-            }
-        }
-        else if (locationType == "DB") {
-            if (markersDB[ID]) {
-                if (markersDB[ID].getMap() == null) {
-                    markersDB[ID].setMap(map);
-                    markerClusterDB.addMarker(markersDB[ID]);
-                }
-            }
+            map.panTo(pos);
+            map.setZoom(15);
         }
     }
-
-    //Scroll to the map div
-    document.getElementById("headingTwo").scrollIntoView({ behavior: "smooth" });
-
+    else {
+        console.log("marker existed and the check is ", checked + " and we need to remove the marker");
+        removeMarker(id, type);
+    }
 }

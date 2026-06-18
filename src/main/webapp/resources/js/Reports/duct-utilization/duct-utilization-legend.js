@@ -169,16 +169,16 @@ function showHideCable() {
 
     $('.showHideCableCheckbox').bind("change", function() {
         if ($(this).is(':checked')) {
-            if (fiberCableArray.length > 0) {
+            if (pathArray.length > 0) {
                 for (var v = 0;v < allCables.length;v++) {
-                    fiberCableArray[allCables[v]].setMap(map);
+                    pathArray[allCables[v]].setMap(map);
                 }
             }
         }
         else {
-            if (fiberCableArray.length > 0) {
+            if (pathArray.length > 0) {
                 for (var v = 0;v < allCables.length;v++) {
-                    fiberCableArray[allCables[v]].setMap(null);
+                    pathArray[allCables[v]].setMap(null);
                 }
             }
         }

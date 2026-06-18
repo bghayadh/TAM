@@ -27,8 +27,9 @@ window.initMap = function() {
     });
 
     initializeMapControls();
-    initializeClusterManagers();
+    initializeMarkers();
     initializeInfoWindows();
+	initOverlaySystem();
 
     $("#legendDiv").toggle();
 
@@ -81,19 +82,112 @@ function DefaultZoomControl(controlDiv, map) {
     });
 }
 
+function initializeMarkers() {
 
-function initializeClusterManagers() {
+    window.ductLayer = {
+        markersByType: {
+            DB: {},
+            junction: {},
+            manhole: {},
+            manholeWithJct: {},
+            handhole: {},
+            handholeWithJct: {},
+            customer: {},
+            site: {}
+        },
 
-    markerClusterDB = createCluster('blueCluster.png');
-    markerClusterJct = createCluster('orangeCluster.png');
-    markerClusterCustomers = createCluster('customerCluster.png');
-    markerClusterSites = createCluster('pinkCluster.png');
+        clustersByType: {
+            DB: null,
+            junction: null,
+            manhole: null,
+            handhole: null,
+            customer: null,
+            site: null
+        },
 
-    markerClusterManholes = createCluster('redCluster.png');
-    markerClusterManholesWithJct = createCluster('redCluster.png');
+        overlays: new Map(),
+        viewMode: "normalMode"
+    };
 
-    markerClusterHandholes = createCluster('yellowCluster.png');
-    markerClusterHandholesWithJct = createCluster('yellowCluster.png');
+    window.ductLayer.clustersByType.DB = createCluster('blueCluster.png');
+    window.ductLayer.clustersByType.junction = createCluster('orangeCluster.png');
+
+    window.ductLayer.clustersByType.manhole = createCluster('redCluster.png');
+    window.ductLayer.clustersByType.handhole = createCluster('yellowCluster.png');
+
+    window.ductLayer.clustersByType.customer = createCluster('customerCluster.png');
+    window.ductLayer.clustersByType.site = createCluster('pinkCluster.png');
+
+    console.log(window.ductLayer.clustersByType);
+
+
+    window.AUX_MARKER_BUCKETS = {
+        manhole: {
+            normal: {
+                arr: window.ductLayer.markersByType.manhole,
+                cluster: window.ductLayer.clustersByType.manhole,
+                icon: "manholeRed.png",
+                target: "manhole"
+            },
+            withJunction: {
+                arr: window.ductLayer.markersByType.manholeWithJct,
+                cluster: window.ductLayer.clustersByType.manhole,
+                icon: "manholeJct.png",
+                target: "manholeWithJct"
+            }
+        },
+
+        handhole: {
+            normal: {
+                arr: window.ductLayer.markersByType.handhole,
+                cluster: window.ductLayer.clustersByType.handhole,
+                icon: "handholeYellow.png",
+                target: "handhole"
+            },
+            withJunction: {
+                arr: window.ductLayer.markersByType.handholeWithJct,
+                cluster: window.ductLayer.clustersByType.handhole,
+                icon: "handholeYellowJct.png",
+                target: "handholeWithJct"
+            }
+        },
+
+        junction: {
+            normal: {
+                arr: window.ductLayer.markersByType.junction,
+                cluster: window.ductLayer.clustersByType.junction,
+                icon: "junctionOrange.png",
+                target: "junction"
+            }
+        },
+
+        DB: {
+            normal: {
+                arr: window.ductLayer.markersByType.DB,
+                cluster: window.ductLayer.clustersByType.DB,
+                icon: "backboneDB.png",
+                target: "DB"
+            }
+        },
+
+        site: {
+            normal: {
+                arr: window.ductLayer.markersByType.site,
+                cluster: window.ductLayer.clustersByType.site,
+                icon: "redSiteIcon.png",
+                target: "site"
+            }
+        },
+
+        customer: {
+            normal: {
+                arr: window.ductLayer.markersByType.customer,
+                cluster: window.ductLayer.clustersByType.customer,
+                icon: "customerIcon.png",
+                target: "customer"
+            }
+        },
+    };
 }
 
 function createCluster(iconFile) {
@@ -119,9 +213,10 @@ function createCluster(iconFile) {
     return cluster;
 }
 
+
 function initializeInfoWindows() {
     infoWindow = new google.maps.InfoWindow();
-    cableInfoWindow = new google.maps.InfoWindow();
+    ductInfoWindow = new google.maps.InfoWindow();
 }
 
 
@@ -132,77 +227,11 @@ function getLongLatMouseMove(map) {
     });
 }
 
-
-
-
-
-function closeInfoWindows() {
-
-    infoWindow.close();
-    cableInfoWindow.close();
-}
-
-function resetMapData() {
-
-    clearMapClusters();
-    clearMapArrays();
-    clearCablePaths();
-    resetCounters();
-    recenterMap();
-}
-
-function clearMapClusters() {
-
-    markerClusterDB.clearMarkers();
-    markerClusterJct.clearMarkers();
-    markerClusterCustomers.clearMarkers();
-
-    markerClusterHandholes.clearMarkers();
-    markerClusterHandholesWithJct.clearMarkers();
-
-    markerClusterManholes.clearMarkers();
-    markerClusterManholesWithJct.clearMarkers();
-
-    markerClusterSites.clearMarkers();
-}
-
-function clearMapArrays() {
-
-    markersDB = [];
-    markersJct = [];
-    markersCustomer = [];
-
-    markersHandholes = [];
-    markersHandholesWithJct = [];
-
-    markersManholes = [];
-    markersManholesWithJct = [];
-
-    markersSites = [];
-}
-
-function clearCablePaths() {
-
-    // MOVE EXISTING
-    // fiberCableArray clearing code
-
-    // MOVE EXISTING
-    // relatedPathArray clearing code
-}
-
-function recenterMap() {
-
-    var center = new google.maps.LatLng(1, 38);
-
-    map.setCenter(center);
-    map.setZoom(6);
-}
-
 function buildPath(
     Id,
-    fiberArray,
+    pathArray,
     Name,
-    path,
+    pathAux,
     strokeColor,
     strokeOpacity,
     strokeWeight,
@@ -210,7 +239,7 @@ function buildPath(
     IdNb
 ) {
 
-    if (!fiberArray[Id]) {
+    if (!pathArray[Id]) {
 
         var idInfo =
             "<b style='font-size:13px;'><u>ID: </u></b>" + Id;
@@ -227,7 +256,7 @@ function buildPath(
 
         flightPath = new google.maps.Polyline({
 
-            path: path,
+            path: pathAux,
             geodesic: false,
             strokeColor: strokeColor,
             ID: Id,
@@ -240,176 +269,256 @@ function buildPath(
             id: Id
         };
 
-        fiberArray[Id] = flightPath;
-        fiberArray.push(flightPath);
+        pathArray[Id] = flightPath;
+        pathArray.push(flightPath);
 
         google.maps.event.addListener(
             flightPath,
             'click',
             function(event) {
 
-                cableInfoWindow.close();
-                cableInfoWindow.setContent(this.data);
-                cableInfoWindow.setPosition(event.latLng);
-                cableInfoWindow.open(map);
+                ductInfoWindow.close();
+                ductInfoWindow.setContent(this.data);
+                ductInfoWindow.setPosition(event.latLng);
+                ductInfoWindow.open(map);
             }
         );
     }
 }
 
-function createMarker(ID, longitude, latitude, Name, iconImg, markersArray, markerClusterArray, target) {
+function detectAuxType(id, name) {
 
-    markerId = ID;
+    if (!id) {
+        return { baseType: "unknown", relation: "normal" };
+    }
+
+    // DB
+    if (id.startsWith("DB_")) {
+        return { baseType: "DB", relation: "normal" };
+    }
+
+    // Junction standalone
+    else if (id.startsWith("JCT_")) {
+        return { baseType: "junction", relation: "normal" };
+    }
+
+    // Manhole
+    else if (id.startsWith("MH_")) {
+
+        const hasJunction =
+            (name && name.endsWith("_J")) === true;
+
+        return {
+            baseType: "manhole",
+            relation: hasJunction ? "withJunction" : "normal"
+        };
+    }
+
+    // Handhole
+    else if (id.startsWith("HH_")) {
+
+        const hasJunction =
+            (name && name.endsWith("_J")) === true;
+
+        return {
+            baseType: "handhole",
+            relation: hasJunction ? "withJunction" : "normal"
+        };
+    }
+
+    // Customer
+    if (id.startsWith("CUST_")) {
+        return { baseType: "customer", relation: "normal" };
+    }
+
+    // SITE (WARE_)
+    const point = auxPointIndex?.[id];
+    if (point?.wareID?.startsWith("WARE_")) {
+        return { baseType: "site", relation: "normal" };
+    }
+
+    return { baseType: "unknown", relation: "normal" };
+}
 
 
+function resolveMarkerBucket(type) {
+
+    if (!window.AUX_MARKER_BUCKETS) {
+        console.warn("AUX_MARKER_BUCKETS not initialized yet");
+        return null;
+    }
+
+    const base = window.AUX_MARKER_BUCKETS[type.baseType];
+    if (!base) return null;
+
+    const relation = type.relation || "normal";
+    return base[relation] || null;
+}
+
+function resolveIcon(iconImg, mode) {
+
+    const baseUrl = getContext() + "/resources/NetworkImages/";
+
+    const config = {
+        "customerIcon.png": { size: 40 },
+        "redSiteIcon.png": { size: 35 },
+        "handholeGreen.png": { size: 10 }
+    };
+
+    const rule = config[iconImg] || { size: 20 };
+
+    return {
+        url: baseUrl + iconImg,
+        scaledSize: new google.maps.Size(rule.size, rule.size)
+    };
+}
+
+function createMarker(ID, longitude, latitude, Name, iconImg, target) {
 
     const pos = new google.maps.LatLng(latitude, longitude);
-    if (iconImg == "customerIcon.png") {
-        markerIcon = {
-            url: getContext() + "/resources/NetworkImages/" + iconImg,
-            scaledSize: new google.maps.Size(40, 40),
-        };
-    }
-    else if (iconImg == "redSiteIcon.png") {
-        markerIcon = {
-            url: getContext() + "/resources/NetworkImages/" + iconImg,
-            scaledSize: new google.maps.Size(35, 35),
-        };
-    }
-    else if (iconImg == "handholeGreen.png") {
-        markerIcon = {
-            url: getContext() + "/resources/NetworkImages/" + iconImg,
-            scaledSize: new google.maps.Size(10, 10),
-        };
+
+    //    const markerIcon = getIcon(iconImg);
+
+    const marker = new google.maps.Marker({
+        position: pos,
+        ID: ID,
+        icon: iconImg
+    });
+
+    return marker;
+}
+
+
+
+function removeMarker(id, type) {
+    console.log("welcome to remove marker, the id is ", id + " and the type is: ", type);
+    const bucket = resolveMarkerBucket(type);
+    if (!bucket) return;
+
+    const arr = bucket.arr;
+    //const cluster = resolveCluster(type);
+    const cluster = bucket.cluster;
+
+    const marker = arr[id];
+    if (!marker) {
+        console.log("no marker found to be removed");
+        return
+    };
+
+    marker.setMap(null);
+
+    if (cluster) {
+        cluster.removeMarker(marker);
     }
 
-    else {
-        markerIcon = {
-            url: getContext() + "/resources/NetworkImages/" + iconImg,
-            scaledSize: new google.maps.Size(20, 20),
-        };
+    delete arr[id];
+}
+
+
+function resolveCluster(type) {
+    console.log("type =", type);
+    console.log("baseType =", type?.baseType);
+    const base = type.baseType;
+
+    if (base === "DB") return window.ductLayer.clustersByType.DB;
+    else if (base === "junction") return window.ductLayer.clustersByType.junction;
+    else if (base === "manhole") return window.ductLayer.clustersByType.manhole;
+    else if (base === "handhole") return window.ductLayer.clustersByType.handhole;
+    else if (base === "customer") return window.ductLayer.clustersByType.customer;
+    else if (base === "site") return window.ductLayer.clustersByType.site;
+
+    return null;
+}
+
+function closeInfoWindows() {
+
+    infoWindow.close();
+    ductInfoWindow.close();
+}
+
+function resetMapData() {
+
+    clearAllClusters();
+    clearDuctVisualizationLayer();
+    clearPaths();
+    resetCounters();
+    recenterMap();
+}
+
+function clearPaths() {
+
+    Object.values(pathArray).forEach(path => {
+        if (path?.setMap) path.setMap(null);
+    });
+
+    Object.keys(pathArray).forEach(key => delete pathArray[key]);
+
+    if (Array.isArray(pathArray)) {
+        pathArray.length = 0;
     }
+}
 
-    var jctID = "";
-    var jctName = "";
+function recenterMap() {
 
-    if (target == "manholeWithJct") {
+    var center = new google.maps.LatLng(1, 38);
 
-        if (manHandoleList.includes(ID)) {
-            for (var i = 0;i < manHandList.length;i++) {
-                if (manHandList[i][0] === ID) {
-                    jctID = manHandList[i][2];
-                    jctName = manHandList[i][3];
-                    break; // Exit the loop once the target is found
-                }
-            }
-            var manIdInfo = "<b style='font-size:13px;'><u>Manhole ID: </u></b>" + ID;
-            var manNameInfo = "<b style='font-size:13px;'><u>Manhole Name: </u></b>" + Name;
-            var jctIdInfo = "<b style='font-size:13px;'><u>Junction ID: </u></b>" + jctID;
-            var jctNameInfo = "<b style='font-size:13px;'><u>Junction Name: </u></b>" + jctName;
-            var data = "<div></br>" + manIdInfo + "</br>" + manNameInfo + "</br>" + jctIdInfo + "</br>" + jctNameInfo + "</div>";
+    map.setCenter(center);
+    map.setZoom(6);
+}
+
+
+function clearAllClusters() {
+    const clusters = window.ductLayer?.clustersByType;
+    if (!clusters) return;
+
+    Object.keys(clusters).forEach(key => {
+        const cluster = clusters[key];
+
+        if (cluster) {
+            cluster.clearMarkers?.();
+            //cluster.setMap?.(null);
         }
-        else {
-            var manIdInfo = "<b style='font-size:13px;'><u>Manhole ID: </u></b>" + ID;
-            var manNameInfo = "<b style='font-size:13px;'><u>Manhole Name: </u></b>" + Name;
-            var data = "<div></br>" + manIdInfo + "</br>" + manNameInfo + "</div>";
-        }
 
-    }
-    else if (target == "manhole") {
+        //clusters[key] = null;
+    });
+}
 
-        var manIdInfo = "<b style='font-size:13px;'><u>Manhole ID: </u></b>" + ID;
-        var manNameInfo = "<b style='font-size:13px;'><u>Manhole Name: </u></b>" + Name;
-        var data = "<div></br>" + manIdInfo + "</br>" + manNameInfo + "</div>";
-    }
-    else if (target == "handholeWithJct") {
+function clearDuctVisualizationLayer() {
 
-        if (manHandoleList.includes(ID)) {
-            for (var i = 0;i < manHandList.length;i++) {
-                if (manHandList[i][0] === ID) {
-                    jctID = manHandList[i][2];
-                    jctName = manHandList[i][3];
-                    break; // Exit the loop once the target is found
-                }
-            }
-            var handholeIdInfo = "<b style='font-size:13px;'><u>Handhole ID: </u></b>" + ID;
-            var handholeNameInfo = "<b style='font-size:13px;'><u>Handhole Name: </u></b>" + Name;
-            var jctIdInfo = "<b style='font-size:13px;'><u>Junction ID: </u></b>" + jctID;
-            var jctNameInfo = "<b style='font-size:13px;'><u>Junction Name: </u></b>" + jctName;
-            var data = "<div></br>" + handholeIdInfo + "</br>" + handholeNameInfo + "</br>" + jctIdInfo + "</br>" + jctNameInfo + "</div>";
+    const layer = window.ductLayer;
+    if (!layer) return;
 
-        }
-        else {
-            var handholeIdInfo = "<b style='font-size:13px;'><u>Handhole ID: </u></b>" + ID;
-            var handholeNameInfo = "<b style='font-size:13px;'><u>Handhole Name: </u></b>" + Name;
-            var data = "<div></br>" + handholeIdInfo + "</br>" + handholeNameInfo + "</div>";
-        }
-    }
-    else if (target == "handhole") {
+    // 1. Clear markers
+    const byType = layer.markersByType || {};
 
-        var handholeIdInfo = "<b style='font-size:13px;'><u>Handhole ID: </u></b>" + ID;
-        var handholeNameInfo = "<b style='font-size:13px;'><u>Handhole Name: </u></b>" + Name;
-        var data = "<div></br>" + handholeIdInfo + "</br>" + handholeNameInfo + "</div>";
-    }
-    else if (target == "site") {
-
-        var idInfo = "<b style='font-size:13px;'><u>Site ID: </u></b>" + ID;
-        var nameInfo = "<b style='font-size:13px;'><u>Site Name: </u></b>" + Name;
-        var data = "<div></br>" + idInfo + "</br>" + nameInfo + "</div>";
-
-    }
-    else if (target == "customer") {
-
-        var idInfo = "<b style='font-size:13px;'><u>Customer ID: </u></b>" + ID;
-        var nameInfo = "<b style='font-size:13px;'><u>Customer Name: </u></b>" + Name;
-        var data = "<div></br>" + idInfo + "</br>" + nameInfo + "</div>";
-
-    }
-    else if (target == "junction") {
-
-        var idInfo = "<b style='font-size:13px;'><u>Junction ID: </u></b>" + ID;
-        var nameInfo = "<b style='font-size:13px;'><u>Junction Name: </u></b>" + Name;
-        var data = "<div></br>" + idInfo + "</br>" + nameInfo + "</div>";
-
-    }
-    else if (target == "DB") {
-
-        var idInfo = "<b style='font-size:13px;'><u>DB ID: </u></b>" + ID;
-        var nameInfo = "<b style='font-size:13px;'><u>DB Name: </u></b>" + Name;
-        var data = "<div></br>" + idInfo + "</br>" + nameInfo + "</div>";
-
-    }
-
-    if (!markersArray[markerId]) {
-        elementMarker = new google.maps.Marker({
-            position: pos,
-            ID: markerId,
-            icon: markerIcon,
-            data: data,
-        });
-        elementMarker.metadata = { id: markerId };
-        markersArray[markerId] = elementMarker;
-        markersArray.push(elementMarker);
-        markerClusterArray.addMarker(markersArray["" + markerId]);
-        markersArray[markerId].setMap(map);
-
-        google.maps.event.addListener(elementMarker, "click", function(e) {
-            infoWindow.close();
-            infoWindow.setContent(this.data);
-            infoWindow.open(map, this);
+    Object.values(byType).forEach(typeGroup => {
+        Object.values(typeGroup).forEach(marker => {
+            marker?.setMap?.(null);
         });
 
-    }
-    else {
-        if (markersArray[markerId].map != map) {
-            markersArray[markerId].setMap(map);
-            markerClusterArray.addMarker(markersArray["" + markerId]);
+        // IMPORTANT: mutate, don't replace reference
+        Object.keys(typeGroup).forEach(k => delete typeGroup[k]);
+    });
 
+    // 2. Clear overlays
+    if (layer.overlays instanceof Map) {
+        for (const overlay of layer.overlays.values()) {
+            overlay?.setMap?.(null);
         }
-        markersArray[markerId].setPosition(pos);
+        layer.overlays.clear();
     }
-    if (mapFlag == "1") {
-        infoWindow.close();
-        cableInfoWindow.close();
-    }
+
+    // 3. Close UI
+    infoWindow?.close?.();
+    ductInfoWindow?.close?.();
+}
+function initOverlaySystem() {
+
+    map.addListener("zoom_changed", () => {
+        window.ductLayer?.overlays?.forEach(o => o.draw?.());
+    });
+
+    map.addListener("drag", () => {
+        window.ductLayer?.overlays?.forEach(o => o.draw?.());
+    });
 }

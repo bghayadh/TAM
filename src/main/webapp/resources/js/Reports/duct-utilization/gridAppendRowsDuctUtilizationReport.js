@@ -31,16 +31,47 @@ class gridAppendRows {
         }
 
         for (let i = start;i <= end;i++) {
-            itemRow += "<tr class='filterRows changeTrColor'>";
+            itemRow += "<tr class='filterRows changeTrColor' style='text-align:center; vertical-align:middle;'>";
             for (var j = 0;j < this.ArrayKeys.length;j++) {
-                if (j == this.ArrayKeys.length - 2) {
-                    itemRow += "<td><button type='button' class='showElement-Location' id='showLocation" + i + "'  onClick='showLocation(\"" + rows[i][this.ArrayKeys[j]] + "\",\"" + i + "\")' >Show Location</button></td>"
+                const columnName = this.ArrayKeys[j];
+                if (columnName === "panTo") {
+
+                    itemRow += `
+					    <td style="text-align:center; vertical-align:middle;">
+					        <button type="button"
+					            onclick="panToAux('${rows[i].fromAuxId}')">
+					            Pan
+					        </button>
+					    </td>
+					`;
                 }
-                else if (j == this.ArrayKeys.length - 1) {
-                    itemRow += "<td><button type='button' class='showElement-Location' id='showElement" + i + "'  onClick='showElement(\"" + rows[i][this.ArrayKeys[j]] + "\",\"" + i + "\")' >Show Element</button></td>"
-                }
-                else {
-                    itemRow += "<td>" + rows[i][this.ArrayKeys[j]] + "</td>";
+				else if (columnName === "showElement") {
+				    itemRow += `
+				        <td style="text-align:center; vertical-align:middle;">
+				            <input
+				                type="checkbox"
+				                id="${rows[i].fromAuxId}"
+				                class="aux-point-checkbox"
+				                onchange="toggleAuxPointMarker(
+				                    this,
+				                    '${rows[i].fromAuxId}',
+				                    '${rows[i].fromAuxName}',
+				                    '${rows[i].fromLatitude}',
+				                    '${rows[i].fromLongitude}'
+				                )">
+				        </td>
+				    `;
+				} else {
+                    let value = rows[i][this.ArrayKeys[j]];
+/*
+                    // 🔥 handle object (cables case)
+                    if (value && typeof value === "object") {
+                        value = Object.entries(value)
+                            .map(([k, v]) => `${k} → ${v}`)
+                            .join(" , ");
+                    }
+*/					
+                    itemRow += "<td style='text-align:center; vertical-align:middle;'>" + value + "</td>";
                 }
             }
             itemRow += "</tr>";
