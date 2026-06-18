@@ -25,18 +25,18 @@ function ductAuxTabEvents() {
     |------------------------------------------------------------
     */
     $(document).on('click', '#selectAllDuct_Aux', function() {
-		console.log("Welcome to select All Duct Aux Points");
+        console.log("Welcome to select All Duct Aux Points");
 
         if ($(this).hasClass('allChecked')) {
-			console.log("it has the allChecked class, so we need to uncheck");
-
-            $('input[type="checkbox"]', '#auxiliary_ductTable').prop('checked', false);
-
-            showHideAllPoints(
-                selectedDuctContext,
-                "ductCheckSequence",
-                "Hide"
-            );
+            console.log("it has the allChecked class, so we need to uncheck");
+            $('#auxiliary_ductTable tbody input[name="record"]').prop('checked', false);
+            setTimeout(() => {
+                showHideAllPoints(
+                    selectedDuctContext,
+                    "ductCheckSequence",
+                    "Hide"
+                );
+            }, 0);
 
             window['ductCheckPoints_' + selectedDuctContext] = "unchecked";
             window['ductCheckRealPoints_' + selectedDuctContext] = "unchecked";
@@ -65,27 +65,25 @@ function ductAuxTabEvents() {
             $("#ductCheckIconRealPoints").hide();
         }
         else {
-			console.log("It does not have allChecked class, so we need to check");
+            console.log("It does not have allChecked class, so we need to check");
             checkLabel = "checked";
             allcheckedLabels = [];
 
-            if ($(".checkboxSpan:checked").length > 0) {
-                $(".checkboxSpan").each(function() {
-                    if ($(this).is(":checked")) {
-                        var id = $(this).attr('id');
-                        allcheckedLabels.push(id);
-                    }
-                });
-            }
+            allcheckedLabels = $(".checkboxSpan:checked")
+                .map(function() {
+                    return this.id;
+                })
+                .get();
 
-            $('input[type="checkbox"]', '#auxiliary_ductTable')
-                .prop('checked', true);
+            $('#auxiliary_ductTable tbody input[name="record"]').prop('checked', true);
 
-            showHideAllPoints(
-                selectedDuctContext,
-                "ductCheckSequence",
-                "Show"
-            );
+            setTimeout(() => {
+                showHideAllPoints(
+                    selectedDuctContext,
+                    "ductCheckSequence",
+                    "Show"
+                );
+            }, 0);
 
             window['ductCheckPoints_' + selectedDuctContext] = "checked";
             $("#ductCheckIconBox").show();
@@ -98,7 +96,148 @@ function ductAuxTabEvents() {
         syncAllDuctBoq();
     });
 
+    $("#delete_Duct_Aux").click(function() {
 
+        console.time("Duct Delete Aux");
+
+        const $table = $("#auxiliary_ductTable");
+        const $checked = $table.find("input[name='record']:checked");
+        const totalRows = $table.find("input[name='record']");
+
+        if ($checked.length === 0) {
+            alert("Select Row(s) to Delete");
+            return;
+        }
+
+        const deletingAll =
+            $checked.length === totalRows.length;
+
+        const rowsData = [];
+
+        $checked.each(function() {
+
+            const $row = $(this).closest("tr");
+
+            const auxName =
+                $row.find('td[name="auxiliaryDuct_Name"] input').val();
+
+            const seq =
+                $row.find('td[name="DuctSeq"] input').val();
+
+            rowsData.push({ row: $row, auxName, seq });
+            removeAuxiliaryMarker(auxName, seq, selectedDuctContext);
+        });
+
+        if (deletingAll) {
+            const tbody = $table.find("tbody")[0];
+            tbody.innerHTML = "";
+        } else {
+
+            rowsData.forEach(r => r.row.remove());
+        }
+
+        if (!deletingAll) {
+            $table.find("input[name='record']").each(function() {
+                const $row = $(this).closest("tr");
+                $row.find('input[name="DuctSeq"]')
+                    .val($row.index() + 1);
+            });
+        }
+
+        calculateDistanceSourceDestination(
+            $("#SourceDuctLat").val(),
+            $("#SourceDuctLng").val(),
+            $("#DestinationDuctLat").val(),
+            $("#DestinationDuctLng").val(),
+            "auxiliary_ductTable"
+        );
+    });
+
+    /*
+        $("#delete_Duct_Aux").click(function() {
+            console.time("Duct Delete Aux");
+            console.log("actionDuctContext is " +actionDuctContext);
+            slctDel = [];
+            $("#auxiliary_ductTable > tbody").find('input[name="record"]').each(function() {
+                if ($(this).is(":checked")) {
+                    slctDel.push($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val());
+                    if (actionDuctContext == "Update") {
+                        console.log("After if statement, the actionDuctContext is " +actionDuctContext);
+                        //Hide the deleted point from Map
+                        if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().includes("Auxiliary_Point") == true) {
+                            var AuxPtId = $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0];
+                            if (siteCltSrcMarkers[AuxPtId]) {
+                                siteCltSrcMarkers[AuxPtId].setMap(null);
+                            }
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val() == "null") {
+                            var AuxPtId = "null".concat("_" + $(this).parent().parent().children('td[name="DuctSeq"]').children('input').val() + "_" + selectedDuctContext);
+                            if (siteCltSrcMarkers[AuxPtId]) {
+                                siteCltSrcMarkers[AuxPtId].setMap(null);
+                            }
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0] == "WARE") {
+    
+                            if (siteCltSrcMarkers[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]) {
+                                siteCltSrcMarkers[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            }
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0] == "MH") {
+                            markersManhole[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            markerClusterManhole.removeMarker(markersManhole[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);
+                            $("#" + $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop("checked", false);
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0] == "HH") {
+                            markersHandhole[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            markerClusterHandhole.removeMarker(markersHandhole[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);
+                            $("#" + $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop("checked", false);
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split("_")[0] == "DB") {
+                            markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            Id = $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0];
+                            if (window["" + Id][8] == "backbone") {
+                                markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);
+                            }
+                            else if (window["" + Id][8] == "metro") {
+                                markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);
+    
+                            }
+                            else if (window["" + Id][8] == "access") {
+                                markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]]);
+                            }
+    
+                            $("#" + $(this).parent().parent().children('td[name="auxiliaryDuct_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop("checked", false);
+                        }
+                    }
+                    $(this).parents("tr").remove();
+    
+                }
+            });
+    
+            for (i = 0;i <= slctDel.length;++i) {
+                if (slctDel.length == 0) {
+                    alert(' Select Row(s) to Delete');
+                    return false;
+                }
+            }
+        	
+            console.time("Start Sorting Sequence");
+        	
+            $("#auxiliary_ductTable").find('input[name="record"]').each(function() {
+                var rowIndex = $(this).closest('tr');
+                var currentIndex = rowIndex.index();
+                $(this).parents("tr").find('input[name ="DuctSeq"]').val(currentIndex + 1);
+            });
+        	
+            console.timeEnd("End Sorting Sequence");
+        	
+            console.time("Calculating Distances");
+            calculateDistanceSourceDestination($("#SourceDuctLat").val(), $("#SourceDuctLng").val(), $("#DestinationDuctLat").val(), $("#DestinationDuctLng").val(), "auxiliary_ductTable");
+            console.timeEnd("End Calculating Distances");
+            console.timeEnd("End Duct Delete Aux");
+        });
+    
+    */
     /*
     |------------------------------------------------------------
     | AUX NAME CHANGE
