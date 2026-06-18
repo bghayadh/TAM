@@ -45,11 +45,14 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/trench-path/trenchAuxTab.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/trench-path/trenchGeneration.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/duct-path/duct-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/duct-path/saveDuctPath.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/duct-path/getAuxPoints.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/duct-path/ductAuxTab.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/NodeCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/JunctionCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/SiteCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/ProjectCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/show-points-and-seq.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
@@ -5656,7 +5659,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="table-responsive-sm" id="auxiliary_trenchDiv">
 											<table id="auxiliary_trenchTable" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
-													<tr>
+													<tr class="fixed-headerr">
 														<th>
 															<button type="button" id="selectAllTrench_Aux" class="main">
 																<span class="sub"></span>Select
@@ -6211,7 +6214,7 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="table-responsive-sm" id="auxiliary_ductDiv">
 											<table id="auxiliary_ductTable" class="table table-striped table-bordered table-sm auxiliary-table-path" style="display: block; height: 250px; width: fit-content; overflow-y: auto;">
 												<thead style="background: #E9ECEF;">
-													<tr>
+													<tr class="fixed-headerr">
 														<th>
 															<button type="button" id="selectAllDuct_Aux" class="main">
 																<span class="sub"></span>Select</button>

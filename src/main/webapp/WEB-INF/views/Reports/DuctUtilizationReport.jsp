@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -376,7 +375,14 @@ max-width: 100%;
 									<table id="gridTable" class="table table-striped table-bordered almgrid-table">
 										<thead>
 											<tr class="header fixed-header">											
-												<th>Duct Section Drawing</th>
+												<th>Duct Section Drawing
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>
 												<th>Cables Qty
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown"> 
@@ -384,7 +390,15 @@ max-width: 100%;
 														</button>
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
-												</th>	
+												</th>
+												<th>Cables Details
+													<li class="filter-dropdown dropdown">
+														<button class="almgrid-filter" data-toggle="dropdown"> 
+														<i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
+														</button>
+														<ul class="dropdown-menu filter-dropdown-ul"></ul>
+													</li>
+												</th>														
 												<th>From Sequence
 													<li class="filter-dropdown dropdown">
 														<button class="almgrid-filter" data-toggle="dropdown">
@@ -470,7 +484,7 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>		
-												<th>
+												<th>Pan To
 													<li class="filter-dropdown dropdown">
 														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -478,7 +492,7 @@ max-width: 100%;
 														<ul class="dropdown-menu filter-dropdown-ul"></ul>
 													</li>
 												</th>	
-												<th>
+												<th>Show From Aux
 													<li class="filter-dropdown dropdown">
 														<button disabled class="almgrid-filter" data-toggle="dropdown" style="display: none;">
 														 <i class="fa fa-list almgrid-filter-i" aria-hidden="true"></i>
@@ -487,7 +501,8 @@ max-width: 100%;
 													</li>
 												</th>
 											<tr>
-												<th></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
+												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
 												<th><input type="text" class="almgrid-search" placeholder="Search"></th>
@@ -598,8 +613,8 @@ max-width: 100%;
          <div class="legendHeader"  id="legendHeader">
  			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;margin-left:20px;">Legend</h6>
   			 <select class="mapDropdown" id="mapDropdown">
-        			<option value="gridBased">Based on grid</option>
-        			<option value="cableBased">Based on cable</option>
+        			<option value="normalMode">Normal Mode</option>
+        			<option value="clusterMode">Cluster Mode</option>
     		</select>
   		
   		</div>
@@ -729,7 +744,10 @@ var markersManholes =[];
 var markersManholesWithJct =[];
 var markersHandholes =[];
 var markersHandholesWithJct =[];
-var fiberCableArray=[];
+
+var fiberCableArray=[]; // Mostly to be deleted as we used pathArray as alternative for it because here is duct and not only fiber cable
+
+var pathArray=[];
 var relatedPathArray=[];
 var distinctDB =[]; // used in check/uncheck all db from legend
 var distinctJct =[]; // used in check/uncheck all jct from legend
@@ -738,8 +756,11 @@ var distinctSites =[]; // used in check/uncheck all sites from legend
 var distinctManholes =[]; 
 var distinctManholesWithJct =[]; 
 var distinctHandholesWithJct =[]; 
-var distinctHandholes =[]; 
+var distinctHandholes =[];
+
 var allCables=[];
+var allPaths=[];
+
 var allRelatedPathCables=[];
 var markerClusterDB ;
 var markerClusterJct ;
@@ -749,6 +770,8 @@ var markerClusterManholes ;
 var markerClusterManholesWithJct;
 var markerClusterHandholes ;
 var markerClusterHandholesWithJct;
+
+
 var showRelPathFlag="notOpened";
 var mapFlag="0"; // used to check if the markers are set on map
 var infoWindow;
@@ -769,10 +792,14 @@ var dstID=[];
 
 var ductID = "";
 var duct={};
+var auxPointIndex = {};
 var ductAuxPoints=[];
 var fiberCablesDetails;
 var ductSegment=[];
 
+
+window.ductLayer = null;
+window.AUX_MARKER_BUCKETS = null;
 
 function getContext() {
 	return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));
