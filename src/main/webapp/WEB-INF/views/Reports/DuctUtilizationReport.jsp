@@ -800,6 +800,7 @@ var ductSegment=[];
 
 window.ductLayer = null;
 window.AUX_MARKER_BUCKETS = null;
+window.reportSegmentByAuxId = {};
 
 function getContext() {
 	return window.location.pathname.substring(0, window.location.pathname.indexOf("/",2));

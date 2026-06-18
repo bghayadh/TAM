@@ -101,7 +101,11 @@ function handleGenerateSuccess(data) {
 		    }
 
 		    return newRow;
-		});				
+		});
+		
+		reportDataForGrid.forEach(segment => {
+		    window.reportSegmentByAuxId[segment.fromAuxId] = segment;
+		});
 		
 
         initializeGrid(reportDataForGrid);

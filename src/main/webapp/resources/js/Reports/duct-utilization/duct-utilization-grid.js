@@ -350,6 +350,9 @@ function toggleAuxPointMarker(el, id, name, lat, lng) {
     const checked = el.checked;
     console.log("checked is ", checked);
     const type = detectAuxType(id, name);
+	
+	const segment = window.reportSegmentByAuxId[id];
+	
 
 
     const bucket = resolveMarkerBucket(type);
@@ -369,9 +372,10 @@ function toggleAuxPointMarker(el, id, name, lat, lng) {
                 bucket.target
             );
 
-            //marker.segment = segment;
 
+			marker.segment = segment;
             bucket.arr[id] = marker;
+
 
             attachMarkerBehavior(marker);
             applyRenderingPolicy(marker, type);
