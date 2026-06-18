@@ -947,7 +947,7 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
 									stringDiv="<ul style='list-style-type:none;cursor: pointer;'><li id='"+distributionBoardList[i][0]+"_showDB' style='display:none;' class='DistributionBoard'><input type='checkbox' class='DistBoard checkFilter' checked name='Element' ></input> <span class='TreeSpan' style='color:black;width:355px;margin-left:10px;'><img class='image' src='"+getContext()+"/resources/NetworkImages/electrical-panel.png'> "+distributionBoardList[i][3]+" / "+distributionBoardList[i][0]+" </span></li></ul>";
 									$("#DistributionBoard_f_showDB").append(stringDiv);
 									
-										if(distributionBoardList[i][8]=="backbone"){
+									if(distributionBoardList[i][8]=="backbone"){
 										create_Marker_Click(distributionBoardList[i][0]+"_showDB",distributionBoardList[i][3],distributionBoardList[i][1],distributionBoardList[i][2],markersDistBoard,markerClusterBackboneDistBoard,"",distributionBoardList[i][7]);
 										markerClusterBackboneDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]]);
 										clusterName=markerClusterBackboneDistBoard;
@@ -961,8 +961,7 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
 										create_Marker_Click(distributionBoardList[i][0]+"_showDB",distributionBoardList[i][3],distributionBoardList[i][1],distributionBoardList[i][2],markersDistBoard,markerClusterAccessDistBoard,"",distributionBoardList[i][7]);
 										markerClusterAccessDistBoard.addMarker(markersDistBoard[""+distributionBoardList[i][0]]);
 										clusterName=markerClusterAccessDistBoard;
-									}
-					
+									}					
 									DistributionBoardCheckFilter(distributionBoardList[i][0]+"_showDB","DB",clusterName);
 								}
 								
@@ -1102,7 +1101,7 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
                        }
 
                        $("#" + IdSelected + " > .TreeSpan").addClass("selected-span");
-                       $("#" + IdSelected + " > .TreeSpan").css("background-color", "#97b9cc");
+//                       $("#" + IdSelected + " > .TreeSpan").css("background-color", "#97b9cc");
 
 					
 					
@@ -1217,7 +1216,7 @@ autoCompleteSearchHeader('autoCompleteConnectedSearch', 'selectConnectedSearch',
 					}
 				
 					$("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
-					$("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
+					//$("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
 						
 					
 /*					
@@ -8607,7 +8606,7 @@ function showHideAllSequence(pathID,action) {
 			 }//end loop 		 	 
 	 }
 }
-
+/*
 function showHideAllPoints(pathID,checkSeqWindowID,action) {	
 showHidePointsArray=[];
 if(window["mapPointsNames_"+pathID] != undefined) {
@@ -8969,6 +8968,8 @@ if(window["mapPointsNames_"+pathID] != undefined) {
 	showHidePointsArray=[];
 }
 }
+
+*/
 function FindFiberTube(selectedTube){
 	$('#TubeModal').find('input:text').val('');
 	$('#TubeModal').find('input:file').val('');	 
@@ -13329,6 +13330,9 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 	}
 */
 
+// tp be deleted
+
+/*
   function getSelectedDuctAux(sourceLat,sourceLng){
 		dict=[];
 		$("#auxiliary_ductTable > tbody").find('input[name="record"]').each(function(){
@@ -13378,7 +13382,7 @@ function getSelectedFiberCableRows(sourceLat,sourceLng,fiberId){
 			}
 		}
 	}
-  
+*/  
 
 
 function selectALLDb_Mapping () {

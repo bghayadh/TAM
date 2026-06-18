@@ -46,25 +46,34 @@ function calculateDistanceInit() {
     });
 
     $('#sortingDistance').click(function() {
-        sortingByLineOfSite("SourceLng", "SourceLat", "DestinationLng", "DestinationLat", "auxiliaryTable", "aux_Lat", "aux_Long", "", "FiberLength")
+//        sortingByLineOfSite("SourceLng", "SourceLat", "DestinationLng", "DestinationLat", "auxiliaryTable", "aux_Lat", "aux_Long", "", "FiberLength")
+		sortingByLineOfSite("auxiliaryTable");		
     });
+			
+	
     $('#sortByDistanceFiberTube').click(function() {
-        sortingByLineOfSite("tubeSource_Long", "tubeSource_Lat", "tubeDestination_Long", "tubeDestination_Lat", "TubeAuxTable", "tubeAuxiliary_Lat", "tubeAuxiliary_Lng", "FiberTube", "FiberTubeLength");
+//        sortingByLineOfSite("tubeSource_Long", "tubeSource_Lat", "tubeDestination_Long", "tubeDestination_Lat", "TubeAuxTable", "tubeAuxiliary_Lat", "tubeAuxiliary_Lng", "FiberTube", "FiberTubeLength");
+		sortingByLineOfSite("TubeAuxTable");		
     });
     $('#sortByDistanceFiberStrand').click(function() {
-        sortingByLineOfSite("strandSource_Long", "strandSource_Lat", "strandDestination_Long", "strandDestination_Lat", "StrandAuxTable", "strandAuxiliary_Lat", "strandAuxiliary_Lng", "FiberStrand", "FiberStrandLength");
+//        sortingByLineOfSite("strandSource_Long", "strandSource_Lat", "strandDestination_Long", "strandDestination_Lat", "StrandAuxTable", "strandAuxiliary_Lat", "strandAuxiliary_Lng", "FiberStrand", "FiberStrandLength");
+		sortingByLineOfSite("StrandAuxTable");		
     });
     $('#sortByDistanceTube').click(function() {
-        sortingByLineOfSite("sourcelong", "sourcelat", "destinationlong", "destinationlat", "auxiliaryTableTubes", "auxTube_Lat", "auxTube_Long", "Tube", "TubeLength");
+//        sortingByLineOfSite("sourcelong", "sourcelat", "destinationlong", "destinationlat", "auxiliaryTableTubes", "auxTube_Lat", "auxTube_Long", "Tube", "TubeLength");
+		sortingByLineOfSite("auxiliaryTableTubes");		
     });
     $('#sortByDistanceStrand').click(function() {
-        sortingByLineOfSite("sourcelongstrand", "sourcelatstrand", "destinationlongstrand", "destinationlatstrand", "auxiliaryTableStrands", "auxStrand_Lat", "auxStrand_Long", "Strand", "StrandLength");
+//        sortingByLineOfSite("sourcelongstrand", "sourcelatstrand", "destinationlongstrand", "destinationlatstrand", "auxiliaryTableStrands", "auxStrand_Lat", "auxStrand_Long", "Strand", "StrandLength");
+		sortingByLineOfSite("auxiliaryTableStrands");		
     });
     $('#sortByDistanceTrench').click(function() {
-        sortingByLineOfSite("SourceTrenchLng", "SourceTrenchLat", "DestinationTrenchLng", "DestinationTrenchLat", "auxiliary_trenchTable", "aux_Lattrench", "aux_Longtrench", "Trench", "trenchLength");
+//        sortingByLineOfSite("SourceTrenchLng", "SourceTrenchLat", "DestinationTrenchLng", "DestinationTrenchLat", "auxiliary_trenchTable", "aux_Lattrench", "aux_Longtrench", "Trench", "trenchLength");
+		sortingByLineOfSite("auxiliary_trenchTable");		
     });
     $('#sortByDistanceDuct').click(function() {
-        sortingByLineOfSite("SourceDuctLng", "SourceDuctLat", "DestinationDuctLng", "DestinationDuctLat", "auxiliary_ductTable", "aux_Latduct", "aux_Longduct", "Duct", "ductLength");
+//        sortingByLineOfSite("SourceDuctLng", "SourceDuctLat", "DestinationDuctLng", "DestinationDuctLat", "auxiliary_ductTable", "aux_Latduct", "aux_Longduct", "Duct", "ductLength");
+		sortingByLineOfSite("auxiliary_ductTable");		
     });
 }
 
@@ -829,9 +838,10 @@ function getCityFromCoords(lat, lng, geocoder) {
     });
 }
 
+/*
 function sortingByLineOfSite(srcLng, srcLat, dstLng, dstLat, tableID, auxiliaryLat, auxiliaryLng, target, pathLength) {
 	
-	console.log("Welcome to soring by line of site, the table ID is ", tableID);
+    console.log("Welcome to soring by line of site, the table ID is ", tableID);
 
     if (target == "FiberTube") {
         var sourceLng = $("#" + srcLng + indexTubeForAuxs).val();
@@ -1194,4 +1204,148 @@ function sortingByLineOfSite(srcLng, srcLat, dstLng, dstLat, tableID, auxiliaryL
         $("#totalDistance" + target).val(parseFloat(totalLength).toFixed(3));
         $("#distanceLstAuxToDest" + target).val('0.0');
     }
+}
+
+*/
+
+function sortingByLineOfSite(tableId) {
+
+    $("#loaderDiv").show();
+
+    const $table = $("#" + tableId);
+    const $tbody = $table.find("tbody");
+
+    if ($tbody.length === 0) {
+        console.log("No tbody found, aborting sorting.");
+        $("#loaderDiv").hide();
+        return;
+    }
+
+    const tbody = $tbody[0]; // DOM reference for performance
+
+    // ------------------------------------------------------------
+    // Collect rows
+    // ------------------------------------------------------------
+    const rows = [];
+
+    $tbody.find("tr").each(function(index) {
+
+        const $row = $(this);
+
+        const lat = parseFloat($row.find(".aux-lat").val()) || 0;
+        const lng = parseFloat($row.find(".aux-long").val()) || 0;
+
+        rows.push({
+            row: this,   // raw DOM element (IMPORTANT FIX)
+            lat: lat,
+            lng: lng,
+            visited: false
+        });
+    });
+
+    if (rows.length <= 1) {
+        console.log("Single or no row, skipping sorting.");
+        $("#loaderDiv").hide();
+        return;
+    }
+
+    // ------------------------------------------------------------
+    // Get Source point
+    // ------------------------------------------------------------
+    const ctx = window._auxTableContext?.[tableId];
+
+    if (!ctx) {
+        console.warn("Missing context for table:", tableId);
+        $("#loaderDiv").hide();
+        return;
+    }
+
+    const sourceLat = parseFloat($("#" + ctx.SourceLat).val()) || 0;
+    const sourceLng = parseFloat($("#" + ctx.SourceLng).val()) || 0;
+
+
+    // ------------------------------------------------------------
+    // Distance helper
+    // ------------------------------------------------------------
+    function dist(aLat, aLng, bLat, bLng) {
+		return haversine_distance(aLat, aLng, bLat, bLng) || 0;
+    }
+
+    // ------------------------------------------------------------
+    // Build nearest-neighbor chain
+    // ------------------------------------------------------------
+    const ordered = [];
+
+    let currentLat = sourceLat;
+    let currentLng = sourceLng;
+
+    for (let i = 0;i < rows.length;i++) {
+
+        let nearestIndex = -1;
+        let nearestDistance = Infinity;
+
+        for (let j = 0;j < rows.length;j++) {
+
+            if (rows[j].visited) continue;
+
+            const d = dist(
+                currentLat,
+                currentLng,
+                rows[j].lat,
+                rows[j].lng
+            );
+
+            if (d < nearestDistance) {
+                nearestDistance = d;
+                nearestIndex = j;
+            }
+        }
+
+        if (nearestIndex === -1) break;
+
+        rows[nearestIndex].visited = true;
+        ordered.push(rows[nearestIndex]);
+
+        currentLat = rows[nearestIndex].lat;
+        currentLng = rows[nearestIndex].lng;
+    }
+
+    // ------------------------------------------------------------
+    // Re-render table
+    // ------------------------------------------------------------
+    const fragment = document.createDocumentFragment();
+
+    ordered.forEach((r, idx) => {
+        fragment.appendChild(r.row);
+    });
+
+    tbody.innerHTML = "";
+
+    tbody.appendChild(fragment);
+
+    // ------------------------------------------------------------
+    // Renumber rows
+    // ------------------------------------------------------------
+    renumberAuxRows(tableId);
+
+    $("#loaderDiv").hide();
+}
+
+function renumberAuxRows(tableId) {
+
+    const $table = $("#" + tableId);
+
+    $table.find("tbody tr").each(function(index) {
+
+        const $row = $(this);
+
+        // 2nd column = sequence column (0-based index)
+        const $seqInput = $row.find("td").eq(1).find("input");
+
+        if ($seqInput.length) {
+            $seqInput.val(index + 1);
+        } else {
+            console.warn("Sequence column not found in row:", index);
+        }
+    });
 }

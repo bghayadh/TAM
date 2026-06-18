@@ -4473,6 +4473,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         }
     });
 */
+
+// To be deleted
+/*
     $("#saveDuct").on('click', function() {
         ductsLength = $("#ductsLength").val();
         checkLongLatInRows("auxiliary_ductTable", "auxiliary_LongitudeDuct", "auxiliary_LatitudeDuct");
@@ -4769,6 +4772,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             clearCreateFromMap(markerArrayAux);
         }
     });
+	
+*/	
 
     //////////// initial menu of all projects /////////////  
     /* menuProjects = new ContextMenu({
@@ -14290,6 +14295,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                     var countAuxRowBoq = $("#" + tableID + " > tbody").children().length;
                     if (document.querySelector("#" + appendToCheckBox).checked) {
+						console.log("It is appending");
                         if (tableID == "auxiliary_trenchTable") {
                             indextrench = countAuxRowBoq;
                         }
@@ -14307,6 +14313,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         }
                     }
                     else {
+						const tbody = $("#" + tableID + " > tbody")[0];
+						tbody.innerHTML = "";
+						
                         if (tableID == "auxiliary_trenchTable") {
                             indextrench = 0;
                         }
@@ -14325,9 +14334,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     }
 
                     if (tableID == "auxiliaryTable") {
-
+						// As the controller is returning List<List<Object>>, so we will use directly data and not data.auxWithName which we were using it when the type of the returned data is Map. 
                         fiberAction = "Import";
                         TargetFiber.Action = fiberAction;
+						console.log("the returned data is: ", data);
                         AuxAppendBOQ(data, "", "", TargetFiber, index);
                         TargetFiber.Action = "";
                     }
@@ -14371,7 +14381,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     objDiv.scrollTop = objDiv.scrollHeight;
                 }
                 data = null,
-                    dict = null
+                dict = null
             },
             complete: function() {
                 // Enable the button after a delay (example: 4 seconds)
@@ -17338,6 +17348,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     });
 
+/*	
     $("#delete_Aux").click(function() {
         slctDel = [];
         //console.log(dict);
@@ -17418,7 +17429,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         calculateDistanceSourceDestination($("#SourceLat").val(), $("#SourceLng").val(), $("#DestinationLat").val(), $("#DestinationLng").val(), "auxiliaryTable");
 
     });
-
+*/	
+/*
     $("#delete_Trench_Aux").click(function() {
         slctDel = [];
         $("#auxiliary_trenchTable > tbody").find('input[name="record"]').each(function() {
@@ -17496,7 +17508,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
 
     });
-
+*/
+/*	
     $("#delete_Duct_Aux").click(function() {
         slctDel = [];
         $("#auxiliary_ductTable > tbody").find('input[name="record"]').each(function() {
@@ -17570,6 +17583,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         calculateDistanceSourceDestination($("#SourceDuctLat").val(), $("#SourceDuctLng").val(), $("#DestinationDuctLat").val(), $("#DestinationDuctLng").val(), "auxiliary_ductTable");
 
     });
+*/	
 
     $("#delete_TubeAux").click(function() {
         slctDel = [];
@@ -20040,13 +20054,13 @@ function tree_prop_selection() {
 				$("#" + IdSelectedTemp + " > .TreeSpan").css("background", "");
 			}
 			
-			$(this).css("background-color", "#97b9cc");
+//			$(this).css("background-color", "#97b9cc");
 			$(this).addClass("selected-span");
 			IdSelectedTemp = $(this).parent().attr('id');			
         });
 }
-*/
 
+/*
 function tree_prop_selection() {
 	let $selectedSpan = null;
     $(document)
@@ -20063,6 +20077,26 @@ function tree_prop_selection() {
             IdSelectedTemp = this.parentNode.id;
         });
 }
+*/
+
+
+function tree_prop_selection() {
+    $("#network_tree, #Bottomdiv")
+        .off('click.treeSelection')
+        .on('click.treeSelection', '.TreeSpan', function () {
+
+			if (IdSelectedTemp != "") {
+				$("#" + IdSelectedTemp + " > .TreeSpan").removeClass("selected-span");
+				$("#" + IdSelectedTemp + " > .TreeSpan").css("background", "");
+			}
+			
+//			$(this).css("background-color", "#97b9cc");
+			$(this).addClass("selected-span");
+			IdSelectedTemp = $(this).parent().attr('id');			
+        });
+}
+
+
 
 
 function tree_prop_generalPhysical() {
