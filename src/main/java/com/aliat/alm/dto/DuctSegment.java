@@ -1,19 +1,22 @@
 package com.aliat.alm.dto;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
-public class DuctSegmentDTO {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class DuctSegment {
 	
+    @JsonIgnore
+    private int sortSequence;
     private String drawingHtml;
     private Integer cableQty;
     private LinkedHashMap<String,String> cables;
-    private Double fromSequence;
+	private String fromSequence;
     private String fromAuxId;
     private String fromAuxName;
     private String fromLongitude;
     private String fromLatitude;
-    private Double toSequence;
+    private String toSequence;
     private String toAuxId;
     private String toAuxName;
     private String toLongitude;
@@ -21,16 +24,17 @@ public class DuctSegmentDTO {
     private String panTo;
     private String showElement;
     
-	public DuctSegmentDTO() {
+	public DuctSegment() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public DuctSegmentDTO(String drawingHtml, Integer cableQty, LinkedHashMap<String, String> cables,
-			Double fromSequence, String fromAuxId, String fromAuxName, String fromLongitude, String fromLatitude,
-			Double toSequence, String toAuxId, String toAuxName, String toLongitude, String toLatitude, String panTo,
+	public DuctSegment(int sortSequence, String drawingHtml, Integer cableQty, LinkedHashMap<String, String> cables,
+			String fromSequence, String fromAuxId, String fromAuxName, String fromLongitude, String fromLatitude,
+			String toSequence, String toAuxId, String toAuxName, String toLongitude, String toLatitude, String panTo,
 			String showElement) {
 		super();
+		this.sortSequence = sortSequence;
 		this.drawingHtml = drawingHtml;
 		this.cableQty = cableQty;
 		this.cables = cables;
@@ -46,6 +50,14 @@ public class DuctSegmentDTO {
 		this.toLatitude = toLatitude;
 		this.panTo = panTo;
 		this.showElement = showElement;
+	}
+
+	public int getSortSequence() {
+		return sortSequence;
+	}
+
+	public void setSortSequence(int sortSequence) {
+		this.sortSequence = sortSequence;
 	}
 
 	public String getDrawingHtml() {
@@ -72,11 +84,11 @@ public class DuctSegmentDTO {
 		this.cables = cables;
 	}
 
-	public Double getFromSequence() {
+	public String getFromSequence() {
 		return fromSequence;
 	}
 
-	public void setFromSequence(Double fromSequence) {
+	public void setFromSequence(String fromSequence) {
 		this.fromSequence = fromSequence;
 	}
 
@@ -112,11 +124,11 @@ public class DuctSegmentDTO {
 		this.fromLatitude = fromLatitude;
 	}
 
-	public Double getToSequence() {
+	public String getToSequence() {
 		return toSequence;
 	}
 
-	public void setToSequence(Double toSequence) {
+	public void setToSequence(String toSequence) {
 		this.toSequence = toSequence;
 	}
 
@@ -167,4 +179,6 @@ public class DuctSegmentDTO {
 	public void setShowElement(String showElement) {
 		this.showElement = showElement;
 	}
+    
+	
 }
