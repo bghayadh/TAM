@@ -11,6 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.hibernate.query.Query;
@@ -25,12 +27,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.common.Notify;
-import com.aliat.alm.dto.CableIntervalDTO;
+import com.aliat.alm.dto.DuctSegment;
 import com.aliat.alm.dto.DuctSegmentDTO;
-import com.aliat.alm.dto.FiberCableDTO;
 import com.aliat.alm.dto.FiberCableDetailsDTO;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,6 +56,7 @@ public class DuctUtilizationReportController {
 	Object[] result;
 	private static StringWriter sw;
 	private static String exceptionAsString;
+	ObjectMapper mapper = new ObjectMapper();
 
 	@RequestMapping(value = "/DuctUtilizationReport", method = RequestMethod.GET)
 	public String DuctUtilizationReport(Locale locale, Model model, HttpServletRequest request,
@@ -128,10 +131,12 @@ public class DuctUtilizationReportController {
 	@RequestMapping(value = "/GenerateDuctUtilizationReport", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> GenerateDuctUtilizationReport(Locale locale, Model model, HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws JsonProcessingException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String ductID = request.getParameter("ductID");
+		System.out.println("Welcome to Generate Duct Util Report");
+		System.out.println("ductID is " + ductID);
 
 		String str = "";
 		Duct duct = new Duct();
@@ -144,8 +149,9 @@ public class DuctUtilizationReportController {
 		Map<String, Double> ductSeqMap = new HashMap<>();
 		Map<String, DuctAuxPoints> ductPointById = new HashMap<>();
 		List<DuctSegmentDTO> listDuctSegmentDTO = new ArrayList<DuctSegmentDTO>();
+		List<DuctSegment> reportSegments = new ArrayList<>();
 		int gapSeq = 0;
-		List<DuctSegmentDTO> listEmptyDuctSegmentDTO = new ArrayList<DuctSegmentDTO>();
+		List<DuctSegment> listEmptyDuctSegment = new ArrayList<DuctSegment>();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", "redirect:/");
 			return rtn;
@@ -153,25 +159,30 @@ public class DuctUtilizationReportController {
 			try {
 				session = AlmDbSession.getInstance().getSession();
 				if (session != null && session.isOpen()) {
-					duct = (Duct) session.createQuery("from Ducts where duct_id = :param").setParameter("param", ductID)
+					duct = (Duct) session.createQuery("from Duct where duct_id = :param").setParameter("param", ductID)
 							.getSingleResult();
+
+					System.out.println("duct is " + mapper.writeValueAsString(duct));
 
 					listDuctAuxPoints = session
 							.createQuery("from DuctAuxPoints where duct_id = :param order by seq_sorting",
 									DuctAuxPoints.class)
 							.setParameter("param", ductID).getResultList();
-					
+
+					System.out.println("listDuctAuxPoints is " + mapper.writeValueAsString(listDuctAuxPoints));
+
 					DuctAuxPoints ductSourceDesttination = new DuctAuxPoints(duct.getDuctID(), duct.getDuctID(),
 							duct.getSrcLong(), duct.getSrcLat(), 0, duct.getSourceWareId(), duct.getSourceName(),
 							duct.getSourceId(), duct.getCreationDate(), duct.getLastModifieddate(), 0, 0, 0);
-					
+
 					renderPoints.add(ductSourceDesttination);
 					renderPoints.addAll(listDuctAuxPoints);
 
-					ductSourceDesttination = new DuctAuxPoints(duct.getDuctID(), duct.getDuctID(),
-							duct.getDestLong(), duct.getDestLat(), 0, duct.getDestinationWareId(), duct.getDestinationName(),
-							duct.getDestinationId(), duct.getCreationDate(), duct.getLastModifieddate(), listDuctAuxPoints.size(), 0, 0);									
-					
+					ductSourceDesttination = new DuctAuxPoints(duct.getDuctID(), duct.getDuctID(), duct.getDestLong(),
+							duct.getDestLat(), 0, duct.getDestinationWareId(), duct.getDestinationName(),
+							duct.getDestinationId(), duct.getCreationDate(), duct.getLastModifieddate(),
+							listDuctAuxPoints.size() + 1, 0, 0);
+
 					renderPoints.add(ductSourceDesttination);
 
 					for (DuctAuxPoints p : renderPoints) {
@@ -181,6 +192,8 @@ public class DuctUtilizationReportController {
 
 					listFiberDuct = (List<FiberDuct>) session.createQuery("from FiberDuct where duct_id = :param")
 							.setParameter("param", ductID).getResultList();
+
+					System.out.println("listFiberDuct is " + mapper.writeValueAsString(listFiberDuct));
 
 					for (FiberDuct fd : listFiberDuct) {
 
@@ -220,21 +233,27 @@ public class DuctUtilizationReportController {
 						dto.setFromLatitude(from.getLat());
 
 						dto.setToLongitude(to.getLong());
-						dto.setToLatitude(to.getLat());						
+						dto.setToLatitude(to.getLat());
 
 						listDuctSegmentDTO.add(dto);
 					}
-					
+
 					listDuctSegmentDTO.sort(Comparator.comparingDouble(DuctSegmentDTO::getFromSequence));
 
 					str = "select distinct a.FIBER_PATH_ID, b.FIBER_CABLE_NAME, b.NUMBER_OF_TUBES, b.NUMBER_OF_STRANDS, "
-							+ "b.FIBER_NETWORK_LEVEL, b.FIBER_TYPE, b.FIBER_DEPLOYMENT from fiber_duct a, fiber_cables b "
-							+ "where a.duct_id = param and a.FIBER_PATH_ID = b.FIBER_CABLE_ID";
+							+ "b.FIBER_NETWORK_LEVEL, b.FIBER_TYPE, b.FIBER_DEPLOYMENT, b.CREATION_DATE from fiber_duct a, fiber_cables b "
+							+ "where a.duct_id = :param and a.FIBER_PATH_ID = b.FIBER_CABLE_ID order by CREATION_DATE asc, a.FIBER_PATH_ID asc";
+
 					listFiberCable = session.createNativeQuery(str).setParameter("param", ductID).getResultList();
+
+					System.out.println("listFiberCable is " + mapper.writeValueAsString(listFiberCable));
+
+					AtomicInteger sortingCounter = new AtomicInteger(1);
+
 					fiberCablesDetails = listFiberCable.stream().collect(Collectors.toMap(row -> String.valueOf(row[0]),
 							row -> new FiberCableDetailsDTO(String.valueOf(row[1]), String.valueOf(row[2]),
 									String.valueOf(row[3]), String.valueOf(row[4]), String.valueOf(row[5]),
-									String.valueOf(row[6])),
+									String.valueOf(row[6]), (Timestamp) row[7], sortingCounter.getAndIncrement()),
 							(existing, replacement) -> existing, LinkedHashMap::new));
 
 					for (FiberDuct fd : listFiberDuct) {
@@ -247,7 +266,10 @@ public class DuctUtilizationReportController {
 						}
 
 						double cableStart = Math.min(fromSeq, toSeq);
+						System.out.println("cableStart is " + cableStart);
+
 						double cableEnd = Math.max(fromSeq, toSeq);
+						System.out.println("cableEnd is " + cableEnd);
 
 						String cableId = fd.getFiberPathId();
 
@@ -261,6 +283,8 @@ public class DuctUtilizationReportController {
 							// overlap condition (IMPORTANT FIX)
 							boolean overlaps = cableStart <= segStart && cableEnd >= segEnd;
 
+							System.out.println("overlaps is " + overlaps);
+
 							if (overlaps) {
 								if (segment.getCables() == null) {
 									segment.setCables(new LinkedHashMap<>());
@@ -270,29 +294,53 @@ public class DuctUtilizationReportController {
 							}
 						}
 					}
-					
+
+					int destinationSeq = renderPoints.size() - 1;
+
 					for (DuctSegmentDTO segment : listDuctSegmentDTO) {
-						segment.setCableQty(segment.getCables() != null ? segment.getCables().size() : 0);
+						DuctSegment reportSegment = new DuctSegment();
+						reportSegment.setSortSequence(segment.getFromSequence().intValue());
+						reportSegment.setFromSequence(segment.getFromSequence().intValue() == 0 ? "Source"
+								: String.valueOf(segment.getFromSequence().intValue()));
+
+						reportSegment.setToSequence(segment.getToSequence().intValue() == destinationSeq ? "Destination"
+								: String.valueOf(segment.getToSequence().intValue()));
+						reportSegment.setCableQty(segment.getCables() != null ? segment.getCables().size() : 0);
+						reportSegment.setFromAuxId(segment.getFromAuxId());
+						reportSegment.setFromAuxName(segment.getFromAuxName());
+						reportSegment.setToAuxId(segment.getToAuxId());
+						reportSegment.setToAuxName(segment.getToAuxName());
+						reportSegment.setFromLongitude(segment.getFromLongitude());
+						reportSegment.setFromLatitude(segment.getFromLatitude());
+						reportSegment.setToLongitude(segment.getToLongitude());
+						reportSegment.setToLatitude(segment.getToLatitude());
+						reportSegment.setCables(segment.getCables());
+
+						reportSegments.add(reportSegment);
+
 						if (segment.getFromSequence().intValue() != gapSeq) {
-							DuctSegmentDTO emptyDuctSeqmentDTO = new DuctSegmentDTO();
-							emptyDuctSeqmentDTO.setFromSequence((double) gapSeq);
-							emptyDuctSeqmentDTO.setToSequence(segment.getFromSequence());
-							emptyDuctSeqmentDTO.setFromAuxId(renderPoints.get(gapSeq).getAuxPointID());
-							emptyDuctSeqmentDTO.setToAuxId(segment.getFromAuxId());
-							emptyDuctSeqmentDTO.setFromAuxName(renderPoints.get(gapSeq).getAuxPointName());
-							emptyDuctSeqmentDTO.setToAuxName(segment.getFromAuxName());
-							emptyDuctSeqmentDTO.setFromLongitude(renderPoints.get(gapSeq).getLong());
-							emptyDuctSeqmentDTO.setToLongitude(segment.getToLongitude());
-							emptyDuctSeqmentDTO.setFromLatitude(renderPoints.get(gapSeq).getLat());							
-							emptyDuctSeqmentDTO.setToLatitude(segment.getToLatitude());
-							emptyDuctSeqmentDTO.setCableQty(0);
-							emptyDuctSeqmentDTO.setCables(new LinkedHashMap<>());
-							listEmptyDuctSegmentDTO.add(emptyDuctSeqmentDTO);
+							DuctSegment emptyDuctSeqment = new DuctSegment();
+							emptyDuctSeqment.setSortSequence(gapSeq);
+							emptyDuctSeqment.setFromSequence(gapSeq == 0 ? "Source" : String.valueOf(gapSeq));
+							emptyDuctSeqment
+									.setToSequence(segment.getToSequence().intValue() == destinationSeq ? "Destination"
+											: String.valueOf(segment.getToSequence().intValue()));
+							emptyDuctSeqment.setFromAuxId(renderPoints.get(gapSeq).getAuxPointID());
+							emptyDuctSeqment.setToAuxId(segment.getFromAuxId());
+							emptyDuctSeqment.setFromAuxName(renderPoints.get(gapSeq).getAuxPointName());
+							emptyDuctSeqment.setToAuxName(segment.getFromAuxName());
+							emptyDuctSeqment.setFromLongitude(renderPoints.get(gapSeq).getLong());
+							emptyDuctSeqment.setToLongitude(segment.getToLongitude());
+							emptyDuctSeqment.setFromLatitude(renderPoints.get(gapSeq).getLat());
+							emptyDuctSeqment.setToLatitude(segment.getToLatitude());
+							emptyDuctSeqment.setCableQty(0);
+							emptyDuctSeqment.setCables(new LinkedHashMap<>());
+							listEmptyDuctSegment.add(emptyDuctSeqment);
 						}
-						gapSeq = segment.getFromSequence().intValue();;
+						gapSeq = segment.getToSequence().intValue();
 					}
-					listDuctSegmentDTO.addAll(listEmptyDuctSegmentDTO);
-					listDuctSegmentDTO.sort(Comparator.comparingDouble(DuctSegmentDTO::getFromSequence));
+					reportSegments.addAll(listEmptyDuctSegment);
+					reportSegments.sort(Comparator.comparingInt(DuctSegment::getSortSequence));
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error in DuctUtilizationReport loading page due to", e);
@@ -302,10 +350,18 @@ public class DuctUtilizationReportController {
 				}
 			}
 
+			System.out.println("duct is " + mapper.writeValueAsString(duct));
+			System.out.println("ductRenderPoints is " + mapper.writeValueAsString(renderPoints));
+			System.out.println("ductPointById is " + mapper.writeValueAsString(ductPointById));			
+			System.out.println("fiberCablesDetails is " + mapper.writeValueAsString(fiberCablesDetails));
+			System.out.println("reportSegments is " + mapper.writeValueAsString(reportSegments));
+
 			rtn.put("duct", duct);
-			rtn.put("renderPoints", renderPoints);
+			rtn.put("listDuctAuxPoints", listDuctAuxPoints);
+			rtn.put("ductRenderPoints", renderPoints);
+			rtn.put("ductPointById", ductPointById);
 			rtn.put("fiberCablesDetails", fiberCablesDetails);
-			rtn.put("listDuctSegmentDTO", listDuctSegmentDTO);
+			rtn.put("reportSegments", reportSegments);
 		}
 		return rtn;
 	}
