@@ -19,66 +19,253 @@ function trenchAuxTabEvents() {
     | SELECT ALL
     |------------------------------------------------------------
     */
+
+    /*	
+        $(document).on('click', '#selectAllTrench_Aux', function() {
+    
+            if ($(this).hasClass('allChecked')) {
+    
+                $('input[type="checkbox"]', '#auxiliary_trenchTable').prop('checked', false);
+    
+                showHideAllPoints(selectedTrenchContext, "trenchCheckSequence", "Hide");
+    
+                window['trenchCheckPoints_' + selectedTrenchContext] = "unchecked";
+                window['trenchCheckRealPoints_' + selectedTrenchContext] = "unchecked";
+                window['trenchCheckSequence_' + selectedTrenchContext] = "unchecked";
+    
+                var index = allTrenchsShowPoint.indexOf(selectedTrenchContext);
+                if (index > -1) {
+                    allTrenchsShowPoint.splice(index, 1);
+                }
+    
+                var index = allTrenchsShowRealPoint.indexOf(selectedTrenchContext);
+                if (index > -1) {
+                    allTrenchsShowRealPoint.splice(index, 1);
+                }
+    
+                var index = allTrenchsShowSeq.indexOf(selectedTrenchContext);
+                if (index > -1) {
+                    allTrenchsShowSeq.splice(index, 1);
+                }
+    
+                $("#trenchCheckIconSequence").hide();
+                $("#trenchCheckIconBox").hide();
+                $("#trenchCheckIconRealPoints").hide();
+    
+            }
+            else {
+    
+                checkLabel = "checked";
+    
+                allcheckedLabels = [];
+    
+                if ($(".checkboxSpan:checked").length > 0) {
+                    $(".checkboxSpan").each(function() {
+                        if ($(this).is(":checked")) {
+                            var id = $(this).attr('id');
+                            allcheckedLabels.push(id);
+                        }
+                    });
+                }
+    
+                $('input[type="checkbox"]', '#auxiliary_trenchTable').prop('checked', true);
+                showHideAllPoints(selectedTrenchContext, "trenchCheckSequence", "Show");
+                window['trenchCheckPoints_' + selectedTrenchContext] = "checked";
+                $("#trenchCheckIconBox").show();
+    
+                if (allTrenchsShowPoint.includes(selectedTrenchContext) == false) {
+                    allTrenchsShowPoint.push(selectedTrenchContext);
+                }
+            }
+    
+            $(this).toggleClass('allChecked');
+    
+            syncAllTrenchBoq();
+        });
+    */
+
     $(document).on('click', '#selectAllTrench_Aux', function() {
 
         if ($(this).hasClass('allChecked')) {
 
-            $('input[type="checkbox"]', '#auxiliary_trenchTable').prop('checked', false);
+            $('#auxiliary_trenchTable tbody input[name="record"]').prop('checked', false);
 
-            showHideAllPoints(selectedTrenchContext, "trenchCheckSequence", "Hide");
+            setTimeout(() => {
+                showHideAllPoints(
+                    selectedTrenchContext,
+                    "trenchCheckSequence",
+                    "Hide"
+                );
+            }, 0);
 
             window['trenchCheckPoints_' + selectedTrenchContext] = "unchecked";
             window['trenchCheckRealPoints_' + selectedTrenchContext] = "unchecked";
             window['trenchCheckSequence_' + selectedTrenchContext] = "unchecked";
 
-            var index = allTrenchsShowPoint.indexOf(selectedTrenchContext);
-            if (index > -1) {
-                allTrenchsShowPoint.splice(index, 1);
-            }
-
-            var index = allTrenchsShowRealPoint.indexOf(selectedTrenchContext);
-            if (index > -1) {
-                allTrenchsShowRealPoint.splice(index, 1);
-            }
-
-            var index = allTrenchsShowSeq.indexOf(selectedTrenchContext);
-            if (index > -1) {
-                allTrenchsShowSeq.splice(index, 1);
-            }
+            allTrenchsShowPoint = allTrenchsShowPoint.filter(x => x !== selectedTrenchContext);
+            allTrenchsShowRealPoint = allTrenchsShowRealPoint.filter(x => x !== selectedTrenchContext);
+            allTrenchsShowSeq = allTrenchsShowSeq.filter(x => x !== selectedTrenchContext);
 
             $("#trenchCheckIconSequence").hide();
             $("#trenchCheckIconBox").hide();
             $("#trenchCheckIconRealPoints").hide();
 
-        }
-        else {
+        } else {
 
             checkLabel = "checked";
 
-            allcheckedLabels = [];
+            allcheckedLabels = $("#auxiliary_trenchTable tbody input[name='record']:checked")
+                .map(function() {
+                    return this.id;
+                })
+                .get();
 
-            if ($(".checkboxSpan:checked").length > 0) {
-                $(".checkboxSpan").each(function() {
-                    if ($(this).is(":checked")) {
-                        var id = $(this).attr('id');
-                        allcheckedLabels.push(id);
-                    }
-                });
-            }
+            $('#auxiliary_trenchTable tbody input[name="record"]').prop('checked', true);
 
-            $('input[type="checkbox"]', '#auxiliary_trenchTable').prop('checked', true);
-            showHideAllPoints(selectedTrenchContext, "trenchCheckSequence", "Show");
+            setTimeout(() => {
+                showHideAllPoints(
+                    selectedTrenchContext,
+                    "trenchCheckSequence",
+                    "Show"
+                );
+            }, 0);
+
             window['trenchCheckPoints_' + selectedTrenchContext] = "checked";
+
             $("#trenchCheckIconBox").show();
 
-            if (allTrenchsShowPoint.includes(selectedTrenchContext) == false) {
+            if (!allTrenchsShowPoint.includes(selectedTrenchContext)) {
                 allTrenchsShowPoint.push(selectedTrenchContext);
             }
         }
 
         $(this).toggleClass('allChecked');
-
         syncAllTrenchBoq();
+    });
+
+    /*	
+        $("#delete_Trench_Aux").click(function() {
+            slctDel = [];
+            $("#auxiliary_trenchTable > tbody").find('input[name="record"]').each(function() {
+                if ($(this).is(":checked")) {
+                    slctDel.push($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val());
+                    if (actionTrenchContext == "Update") {
+    
+                        //Hide the deleted point from Map
+                        if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().includes("Auxiliary_Point") == true) {
+                            var AuxPtId = $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0];
+                            if (siteCltSrcMarkers[AuxPtId]) {
+                                siteCltSrcMarkers[AuxPtId].setMap(null);
+                            }
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val() == "null") {
+                            var AuxPtId = "null".concat("_" + $(this).parent().parent().children('td[name="TrenchSeq"]').children('input').val() + "_" + selectedTrenchContext);
+                            if (siteCltSrcMarkers[AuxPtId]) {
+                                siteCltSrcMarkers[AuxPtId].setMap(null);
+                            }
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split("_")[0] == "WARE") {
+    
+                            if (siteCltSrcMarkers[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]) {
+                                siteCltSrcMarkers[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            }
+    
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split("_")[0] == "MH") {
+                            markersManhole[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            markerClusterManhole.removeMarker(markersManhole[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);
+                            $("#" + $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop("checked", false);
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split("_")[0] == "HH") {
+                            markersHandhole[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            markerClusterHandhole.removeMarker(markersHandhole[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);
+                            $("#" + $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop("checked", false);
+                        }
+                        else if ($(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split("_")[0] == "DB") {
+                            markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]].setMap(null);
+                            Id = $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0];
+                            if (window["" + Id][8] == "backbone") {
+                                markerClusterBackboneDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);
+                            }
+                            else if (window["" + Id][8] == "metro") {
+                                markerClusterMetroDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);
+                            }
+                            else if (window["" + Id][8] == "access") {
+                                markerClusterAccessDistBoard.removeMarker(markersDistBoard[$(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]]);
+                            }
+    
+                            $("#" + $(this).parent().parent().children('td[name="auxiliaryTrench_Name"]').children('input').val().split(":")[0]).children(':checkbox').prop("checked", false);
+                        }
+                    }
+    
+                    $(this).parents("tr").remove();
+    
+                }
+            });
+    
+            for (i = 0;i <= slctDel.length;++i) {
+                if (slctDel.length == 0) {
+                    alert(' Select Row(s) to Delete');
+                    return false;
+                }
+            }
+    
+            $("#auxiliary_trenchTable").find('input[name="record"]').each(function() {
+                var rowIndex = $(this).closest('tr');
+                var currentIndex = rowIndex.index();
+    
+                $(this).parents("tr").find('input[name ="TrenchSeq"]').val(currentIndex + 1);
+            });
+    
+            calculateDistanceSourceDestination($("#SourceTrenchLat").val(), $("#SourceTrenchLng").val(), $("#DestinationTrenchLat").val(), $("#DestinationTrenchLng").val(), "auxiliary_trenchTable");
+    
+        });
+    
+    */
+
+    $("#delete_Trench_Aux").click(function() {
+
+        const $table = $("#auxiliary_trenchTable");
+        const $checked = $table.find("input[name='record']:checked");
+
+        if ($checked.length === 0) {
+            alert("Select Row(s) to Delete");
+            return;
+        }
+
+        const slctDel = [];
+
+        $checked.each(function() {
+
+            const $row = $(this).closest("tr");
+
+            const auxName = $row.find('td[name="auxiliaryTrench_Name"] input').val();
+            const seq = $row.find('td[name="TrenchSeq"] input').val();
+
+            slctDel.push(auxName);
+
+            removeAuxiliaryMarker(auxName, seq, selectedTrenchContext);
+
+            $row.remove();
+        });
+
+        if (slctDel.length === 0) {
+            alert("Select Row(s) to Delete");
+            return;
+        }
+
+        $table.find("input[name='record']").each(function() {
+            const $row = $(this).closest("tr");
+            $row.find('input[name="TrenchSeq"]').val($row.index() + 1);
+        });
+
+        calculateDistanceSourceDestination(
+            $("#SourceTrenchLat").val(),
+            $("#SourceTrenchLng").val(),
+            $("#DestinationTrenchLat").val(),
+            $("#DestinationTrenchLng").val(),
+            "auxiliary_trenchTable"
+        );
     });
 
 
@@ -640,8 +827,8 @@ function syncAllTrenchBoq() {
 
 
 function trenchAuxTab() {
-	
-	console.log("Hello, trench aux clicked.");
+
+    console.log("Hello, trench aux clicked.");
     const trenchAuxFlag = document.querySelector("#trenchAuxFlag").value;
     uncheckAutoCompleteCheckboxes("auxPtAutocomplete");
 
@@ -653,7 +840,7 @@ function trenchAuxTab() {
     document.querySelector("#trenchAuxFlag").value = "opened";
     trenchAuxData = [];
     checkedPoints = [];
-	console.log("Just before sending ajax for method: findTrenchAuxDetails");
+    console.log("Just before sending ajax for method: findTrenchAuxDetails");
 
     $.ajax({
         type: "GET",
@@ -666,8 +853,8 @@ function trenchAuxTab() {
         },
         success: function(data) {
             $("#loaderDivTrench").hide();
-            indextrench = 0;		
-			console.log("Success of the ajax");
+            indextrench = 0;
+            console.log("Success of the ajax");
             if (data && data.auxData) {
                 AuxAppendBOQ(
                     data.auxData,
@@ -679,7 +866,7 @@ function trenchAuxTab() {
                 trenchAuxData = data.auxData;
             }
             const objDiv = document.getElementById("auxiliary_trenchTable");
-			objDiv.scrollTop = objDiv.scrollHeight;
+            objDiv.scrollTop = objDiv.scrollHeight;
             calculateDistanceSourceDestination(
                 $("#SourceTrenchLat").val(),
                 $("#SourceTrenchLng").val(),

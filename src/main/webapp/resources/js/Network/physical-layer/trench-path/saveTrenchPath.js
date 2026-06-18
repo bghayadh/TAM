@@ -96,7 +96,7 @@ function saveTrenchPath() {
             dataType: "json",
             success: function(data) {
                 if (data != null) {
-
+					const trenchId = data.trenchId;
                     //Save trench case
                     if (savedTrenchId == "") {
 
@@ -106,9 +106,12 @@ function saveTrenchPath() {
                         window['trenchCheckPoints_' + data.trenchId] = "unchecked";
                         window['trenchCheckSequence_' + data.trenchId] = "unchecked";
                         window['trenchCheckRealPoints_' + data.trenchId] = "unchecked";
+						
+						console.log("Just before add contextmenu of saving new trench");
 
                         $("#" + data.trenchId + " > .TreeSpan").contextmenu(function() {
-                            selectedTrenchContext = data.trenchId;
+                            //selectedTrenchContext = data.trenchId;
+							selectedTrenchContext = trenchId;
                             menuName = singleTrench;
                             openContext(selectedTrenchContext, "trench", singleTrench, event);
                         });
@@ -299,24 +302,28 @@ function saveTrenchPath() {
                     $("#" + data.trenchId + "> .TreeSpan").css("display", "inline");
                     pathMapListener(data.trenchId, "Trench_f_");
                     $("#trenchCheckAllBoq").prop("checked", true);
-
-                    $('.tree li#Trench_f_' + IdNodeSelectedTemp + ' .TreeSpan').unbind("mouseover");
-                    $('.tree li#Trench_f_' + IdNodeSelectedTemp + ' .TreeSpan').bind("mouseover", function(e) {
-                        $(this).addClass('backgroundTree');
-                    }).on("mouseout", function(e) {
-                        $(this).removeClass('backgroundTree');
-
-                    });
-
-                    $('.tree li#Trench_f_' + IdNodeSelectedTemp + ' .TreeSpan').on('click', function(e) {
-                        $(".tree li#Trench_f_" + IdNodeSelectedTemp + " span").css("background-color", "");
-                        $(this).css("background-color", "#97b9cc");
-
-                        $(".tree li#Trench_f_" + IdNodeSelectedTemp + "  span").removeClass("selected-span");
-                        $(this).addClass("selected-span");
-                    });
-
+                    /*
+                                        $('.tree li#Trench_f_' + IdNodeSelectedTemp + ' .TreeSpan').unbind("mouseover");
+                                        $('.tree li#Trench_f_' + IdNodeSelectedTemp + ' .TreeSpan').bind("mouseover", function(e) {
+                                            $(this).addClass('backgroundTree');
+                                        }).on("mouseout", function(e) {
+                                            $(this).removeClass('backgroundTree');
+                    
+                                        });
+                    
+                                        $('.tree li#Trench_f_' + IdNodeSelectedTemp + ' .TreeSpan').on('click', function(e) {
+                                            $(".tree li#Trench_f_" + IdNodeSelectedTemp + "  span").removeClass("selected-span");
+                                            $(".tree li#Trench_f_" + IdNodeSelectedTemp + " span").css("background-color", "");                        
+                                            $(this).addClass("selected-span");
+                                        });
+                    */
+					console.log("cleaning data");
+                    data = null;
                 }
+				console.log("cleaning aux");
+                const tbody = $("#auxiliary_trenchTable tbody")[0];
+                tbody.innerHTML = "";
+                dict = [];
             },
             error: function(result) {
                 alert("Error: " + result);

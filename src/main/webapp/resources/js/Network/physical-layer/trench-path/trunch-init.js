@@ -1,10 +1,11 @@
 function initTrunchEvents() {
     console.log("Hello, just before putting click even in trench initialization");
+	
+	$("#saveTrench").on('click', function() {
+	    saveTrenchPath();
+	});
 
     trenchAuxTabEvents();
-    $("#saveTrench").on('click', function() {
-        saveTrenchPath();
-    });
 
     $("#generateTrenchFromPath").on("click", function() {
         console.log("Welcome to generate trench from Path");
