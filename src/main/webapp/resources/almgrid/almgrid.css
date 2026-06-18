@@ -107,7 +107,8 @@
 .almgrid-table-div {
     /* overflow-x: unset !important; */
     overflow: auto;
-    height: 430px;
+    min-height: 430px;
+    max-height: 1000px;
 }
 
 .almgrid-table {
