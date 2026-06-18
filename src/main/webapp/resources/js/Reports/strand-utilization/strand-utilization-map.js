@@ -183,11 +183,29 @@ function clearMapArrays() {
 
 function clearCablePaths() {
 
-    // MOVE EXISTING
-    // fiberCableArray clearing code
+    Object.values(fiberCableArray).forEach(path => {
+        if (path?.setMap) path.setMap(null);
+    });
 
-    // MOVE EXISTING
-    // relatedPathArray clearing code
+    Object.keys(fiberCableArray).forEach(key => delete fiberCableArray[key]);
+
+	// This is to be in safe. We can do more testing to confirm if it is needed or not.	
+	if (Array.isArray(fiberCableArray)) {
+	    fiberCableArray.length = 0;
+	}
+	
+	Object.values(relatedPathArray).forEach(path => {
+	    if (path?.setMap) path.setMap(null);
+	});
+
+	Object.keys(relatedPathArray).forEach(key => delete relatedPathArray[key]);
+
+	// This is to be in safe. We can do more testing to confirm if it is needed or not.	
+	if (Array.isArray(relatedPathArray)) {
+	    relatedPathArray.length = 0;
+	}
+
+
 }
 
 function recenterMap() {

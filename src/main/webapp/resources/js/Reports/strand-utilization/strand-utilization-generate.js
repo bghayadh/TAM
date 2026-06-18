@@ -138,7 +138,7 @@ function handleGenerateSuccess(data) {
 
             }
             window["mapPoints_" + pathID].push(new google.maps.LatLng(data.relatedPathCables[c][4], data.relatedPathCables[c][3]));
-            buildPath(pathID, relatedPathArray, data.relatedPathCables[c][11], window["mapPoints_" + pathID], data.relatedPathCables[c][12], 0.7, 4.5, 'blue', 13);
+            buildPath(pathID, relatedPathArray, data.relatedPathCables[c][11], window["mapPoints_" + pathID], data.relatedPathCables[c][12], 0.7, 4.5, 'blue', 13);			
         }
     }
     hideLoader();
