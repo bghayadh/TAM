@@ -632,7 +632,10 @@ function saveFiberPath() {
                     }
                 }
 				
-				$("#auxiliaryTable > tbody").empty();
+				//$("#auxiliaryTable > tbody").empty();				
+				
+				const tbody = $("#auxiliaryTable > tbody")[0];
+				tbody.innerHTML = "";			
 
                 $('.TreeSpan').css("display", "inline");
                 data = null

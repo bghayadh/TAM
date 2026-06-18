@@ -1,25 +1,3 @@
-/*
-|--------------------------------------------------------------------------
-| AUXILIARY TABLE EVENTS
-|-------------------------------------------------------------------------- 
-| Register ONCE only
-| Put this in initialization js file (NOT inside AuxAppendBOQ)
-|--------------------------------------------------------------------------
-*/
-
-// to be deleted
-/*
-// Active row highlight ONLY for auxiliary path tables
-$(document).on("focusin", ".auxiliary-table-path tr", function() {
-
-    const $row = $(this);
-    const $table = $row.closest(".auxiliary-table-path");
-
-    $table.find("tr.ativeRecord").removeClass("ativeRecord");
-    $row.addClass("ativeRecord");
-});
-*/
-
 
 // Distance recalculation
 let auxDistanceTimer;
@@ -143,6 +121,8 @@ function AuxAppendBOQ(auxArray, insertType, OrigiTermination, Target, indx) {
     // ---------------------------------------------------------------------
     // Store table context
     // ---------------------------------------------------------------------
+	
+	console.log("Welcome to AuxAppendBOQ, the auxArray is: " ,auxArray + " and the indx is " , indx);
 
     window._auxTableContext = window._auxTableContext || {};
     window._auxTableContext[Target.auxiliaryTable] = Target;
@@ -180,7 +160,7 @@ function AuxAppendBOQ(auxArray, insertType, OrigiTermination, Target, indx) {
 		}
 		
 		// Warehouse
-		if (value[3] !== "null" && value[3] != null) {
+		if (value[3] !== "null" && value[3] != null && value[3] != "") {
 		    return value[3] + ":" + value[5] + ":" + value[4];
 		}
 		

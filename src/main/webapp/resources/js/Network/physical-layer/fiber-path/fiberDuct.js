@@ -1,5 +1,5 @@
 function loadFiberDuctTable(dataArray) {
-	const fiberDuctTableBody = $("#fiberDuctTable tbody");
+    const fiberDuctTableBody = $("#fiberDuctTable tbody");
     fiberDuctTableBody.empty();
     if (!dataArray || dataArray.length === 0) {
         updateFiberDuctTotals();
@@ -12,15 +12,17 @@ function loadFiberDuctTable(dataArray) {
 
     refreshFiberDuctSequence();
     calculateFiberDuctLineDistances();
-
-    $("#fiberDuctTable tbody tr").each(function() {
-        initFiberDuctRowAutoComplete($(this));
-    });
+    /*
+        $("#fiberDuctTable tbody tr").each(function() {
+            initFiberDuctRowAutoComplete($(this));
+        });
+    */
+    bindFiberDuctAutoCompleteOnFocus()
 }
 
 function appendFiberDuctRow(data = {}) {
-	
-	const fiberDuctTableBody = $("#fiberDuctTable tbody");
+
+    const fiberDuctTableBody = $("#fiberDuctTable tbody");
     let rowCount = $("#fiberDuctTable tbody tr").length + 1;
     let row = `
         <tr class="fiberDuctRow">
@@ -107,7 +109,7 @@ function appendFiberDuctRow(data = {}) {
 
         </tr>
     `;
-	
+
     fiberDuctTableBody.append(row);
 }
 
@@ -145,12 +147,12 @@ function bindFiberDuctButtons() {
         const $targetRow = $checkedRow.length ? $checkedRow.next() : $tbody.find("tr:last");
 
         initFiberDuctRowAutoComplete($targetRow);
-		
-		$(".fiberDuctRowCheck").prop("checked", false);
-		$("#fiberDuctTable tbody tr").removeClass("selectedRow activeRecord");
+
+        $(".fiberDuctRowCheck").prop("checked", false);
+        $("#fiberDuctTable tbody tr").removeClass("selectedRow activeRecord");
 
         $targetRow.find(".fiberDuctRowCheck").prop("checked", true);
-		$targetRow.addClass("selectedRow activeRecord");
+        $targetRow.addClass("selectedRow activeRecord");
         $targetRow.find(".ductId").focus();
     });
 
@@ -374,10 +376,25 @@ function getFiberDuct() {
         });
 
     });
-	
+
     return fiberDuctDict;
 }
 
+function bindFiberDuctAutoCompleteOnFocus() {
+
+    const $table = $("#fiberDuctTable");
+
+    $table.off("focus.autocomplete", "input").on("focus.autocomplete", "input", function() {
+
+        const $input = $(this);
+
+        if ($input.data("ac-initialized")) return;
+
+        const $row = $input.closest("tr");
+
+        initFiberDuctRowAutoComplete($row);
+    });
+}
 
 function initFiberDuctRowAutoComplete($row) {
 
