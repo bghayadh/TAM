@@ -437,7 +437,7 @@ label, button {
 }
 */
 .selected-span {
-	background-color: #97b9cc;
+	background-color: #97b9cc !important;
 	color:#ff0000 !important;
 	font-weight: bold;
 }
@@ -638,6 +638,13 @@ width: 85%;
 #LayersTable td.title {
 	font-weight: bold;
 }
+
+td svg {
+    display: block;
+    margin: auto;
+/*    transform: translateY(-4px); */
+}
+
 #definition{
 font-weight: bold;
 margin-left:10px;
