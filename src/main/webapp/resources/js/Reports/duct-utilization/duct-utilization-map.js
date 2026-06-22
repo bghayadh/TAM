@@ -29,7 +29,7 @@ window.initMap = function() {
     initializeMapControls();
     initializeMarkers();
     initializeInfoWindows();
-	initOverlaySystem();
+    initOverlaySystem();
 
     $("#legendDiv").toggle();
 
@@ -367,9 +367,12 @@ function resolveIcon(iconImg, mode) {
 
     const rule = config[iconImg] || { size: 20 };
 
+    const size = rule.size; // ✅ DEFINE IT HERE
+
     return {
         url: baseUrl + iconImg,
-        scaledSize: new google.maps.Size(rule.size, rule.size)
+        scaledSize: new google.maps.Size(rule.size, rule.size),
+        labelOrigin: new google.maps.Point(size + 8, size / 2)
     };
 }
 

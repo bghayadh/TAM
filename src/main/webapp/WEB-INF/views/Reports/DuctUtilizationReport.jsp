@@ -137,6 +137,28 @@ height: 718px;
 position: relative;
 }
 
+/* Container for badges */
+.seq-container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* Reusable badge */
+.seq-badge {
+  width: 15px;
+  height: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #086D2F;
+  color: #fff;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+
 .box{
 width: 100%;
 height: 100%;            
@@ -609,7 +631,7 @@ max-width: 100%;
 		</div>
       <div class="legendContainer">
       <div class="card-body">      
-         <div class="box stack-top" id="legendDiv" style="position: relative;bottom:50px;width: 290px; float:left; height:570px;  background:white; margin:37px;display: none">
+         <div class="box stack-top" id="legendDiv" style="position: relative; bottom:50px; width: 290px; float:left; height:560px;  background:white; margin:37px;display: none">
          <div class="legendHeader"  id="legendHeader">
  			<h6 style="color:white;font-weight:bold; font-size:2.5ex;display:inline-block;position: relative;margin-left:20px;">Legend</h6>
   			 <select class="mapDropdown" id="mapDropdown">
@@ -620,7 +642,7 @@ max-width: 100%;
   		</div>
   
    <div id="tableDiv">
-  	<table id="strandUtilizationTableReport">
+  	<table id="ductUtilizationTableReport">
   <tr>
     <th style="position: relative;left:10px;"></th>
     <th style="position: relative;left:10px;"></th>    
@@ -635,80 +657,84 @@ max-width: 100%;
   </tr>
   
   	<tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideCableCheckbox" onclick="showHideCable();" value="blue"/></td>
-     <td style="position: relative;top:10px;left:62px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Fiber Cable</label></td>   
-     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="fiberCount" ></div></td>
-    </tr>
-    <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideRelatedCableCheckbox" onclick="showCableRelatedPath();" /></td>
-     <td style="position: relative;top:10px;left:62px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Show Related Path</label></td>   
-     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="relatedPathCount" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideDuctCheckbox" onclick="showHideDuct();" value="blue"/></td>
+     <td style="position: relative;top:10px;left:30px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/duct.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Duct Path</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div style="position: relative;left:-5px;color: black;" id="ductCount" ></div></td>
     </tr>
     
   	<tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesCheckbox" onclick="showHidePts('showHideAllManholesCheckbox');" value="red"/></td>
-     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole</label></td>   
-     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="manholesCount" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideDuctSectionCheckbox" onclick="showHideDuctSection();" value="blue"/></td>
+     <td style="position: relative;top:10px;left:30px;"><div style="width:14px;height:14px;border-radius:50%;background:#086D2F;"></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Duct Section Drawing</label></td>   
+     <td style="position: relative;top:8px;left:40px;"><div style="position: relative;left:-5px;color: black;" id="sectionCount"></div></td>
     </tr>
     
     <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesWithJctCheckbox" onclick="showHidePts('showHideAllManholesWithJctCheckbox');" value="red"/></td>
-     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeJct.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole with JCT</label></td>   
-     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="manholesCountWithJct" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideRelatedCableCheckbox" onclick="showCableRelatedPath();" /></td>
+     <td style="position: relative;top:10px;left:30px;"><div><img class='image' style='color: #08526D;'  src='${pageContext.request.contextPath}/resources/NetworkImages/fiber.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Show Related Path</label></td>   
+     <td style="position: relative;top:8px;left:40px;"><div style="position: relative;left:-20px;color: black;" id="relatedPathCount" ></div></td>
+    </tr>
+    
+  	<tr>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesCheckbox" onclick="showHidePts('showHideAllManholesCheckbox');" value="red"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeRed.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div style="position: relative;left:-5px;color: black;" id="manholesCount" ></div></td>
     </tr>
     
     <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesCheckbox" onclick="showHidePts('showHideAllHandholesCheckbox');" value="yellow"/></td>
-     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole</label></td>   
-     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="handholesCount" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllManholesWithJctCheckbox" onclick="showHidePts('showHideAllManholesWithJctCheckbox');" value="red"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/manholeJct.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Manhole with JCT</label></td>   
+     <td style="position: relative;top:8px;left:20px;"><div style="position: relative;left:-5px;color: black;" id="manholesCountWithJct" ></div></td>
+    </tr>
+    
+    <tr>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesCheckbox" onclick="showHidePts('showHideAllHandholesCheckbox');" value="yellow"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellow.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div style="position: relative;left:-5px;color: black;" id="handholesCount" ></div></td>
     </tr>
       <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesWithJctCheckbox" onclick="showHidePts('showHideAllHandholesWithJctCheckbox');" value="yellow"/></td>
-     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellowJct.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole with JCT</label></td>   
-     <td style="position: relative;top:8px;left:65px;"><div style="position: relative;left:-5px;color: black;" id="handholesCountWithJct" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllHandholesWithJctCheckbox" onclick="showHidePts('showHideAllHandholesWithJctCheckbox');" value="yellow"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/handholeYellowJct.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; ">Handhole with JCT</label></td>   
+     <td style="position: relative;top:8px;left:20px;"><div style="position: relative;left:-5px;color: black;" id="handholesCountWithJct" ></div></td>
     </tr>
     
     <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllDbCheckbox" onclick="showHidePts('showHideAllDbCheckbox');" value="blue"/></td>
-     <td style="position: relative;top:8px;left:62px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/backboneDB.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >DB</label></td>   
-     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="dbCount" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllDbCheckbox" onclick="showHidePts('showHideAllDbCheckbox');" value="blue"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/backboneDB.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; " >DB</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div style="position: relative;left:-5px;color: black;" id="dbCount" ></div></td>
     </tr>
      <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllJctCheckbox" onclick="showHidePts('showHideAllJctCheckbox');" value="orange"/></td>
-     <td style="position: relative;top:8px;left:58px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/junctionOrange.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Junction</label></td>   
-     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="jctCount" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllJctCheckbox" onclick="showHidePts('showHideAllJctCheckbox');" value="orange"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' src='${pageContext.request.contextPath}/resources/NetworkImages/junctionOrange.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Junction</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div style="position: relative;left:-5px;color: black;" id="jctCount" ></div></td>
     </tr>
       <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllCustCheckbox" onclick="showHidePts('showHideAllCustCheckbox');" value="red"/></td>
-     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 30px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/customerIcon.png'></div></td>
-     <td style="position: relative;top:10px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Customer</label></td>   
-     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="custCount" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllCustCheckbox" onclick="showHidePts('showHideAllCustCheckbox');" value="red"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' style="width: 30px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/customerIcon.png'></div></td>
+     <td style="position: relative;top:10px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Customer</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div style="position: relative;left:-5px;color: black;" id="custCount" ></div></td>
     </tr>
      <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllSitesCheckbox" onclick="showHidePts('showHideAllSitesCheckbox');" value="pink"/></td>
-     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/redSiteIcon.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Site</label></td>   
-     <td style="position: relative;top:8px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideAllSitesCheckbox" onclick="showHidePts('showHideAllSitesCheckbox');" value="pink"/></td>
+     <td style="position: relative;top:8px;left:30px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/redSiteIcon.png'></div></td>
+     <td style="position: relative;top:8px;left:40px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Site</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div style="position: relative;left:-5px;color: black;" id="sitesCount" ></div></td>
     </tr>
      <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSrcCheckbox" onclick="showHideSourceMarker();" value="pink"/></td>
-     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/SrcDest.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Source</label></td>   
+     <td style="position: relative;left:10px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideSequencesCheckbox" onclick="showHideSequences();" value="pink"/></td>
+     <td style="position: relative; top:8px; left:17px;"><div class="seq-container"><span class="seq-badge">1</span><span class="seq-badge">2</span><span class="seq-badge">3</span></div></td>
+     <td style="position: relative;top:8px;left:38px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Show Sequence</label></td>   
+     <td style="position: relative;top:8px;left:-10px;"><div></div></td>
     </tr>
-     <tr>
-     <td style="position: relative;left:37px;"><input style="position: relative;top: 11px;" type="checkbox" name="legendCheckbox" disabled class="showHideDstCheckbox" onclick="showHideDestinationMarker();" value="pink"/></td>
-     <td style="position: relative;top:8px;left:58px;"><div><img class='image' style="width: 25px; height: 30px;" src='${pageContext.request.contextPath}/resources/NetworkImages/SrcDest.png'></div></td>
-     <td style="position: relative;top:8px;left:65px;"><label style="color:black;font-weight:bold;font-size:2ex; " >Destination</label></td>   
-    </tr>
-     
+    
    
   </table>
   

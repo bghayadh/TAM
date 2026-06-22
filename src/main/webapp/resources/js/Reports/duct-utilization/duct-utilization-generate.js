@@ -72,11 +72,11 @@ function handleGenerateSuccess(data) {
         listDuctAuxPoints = data.listDuctAuxPoints; // It contains the aux points of the duct without the source and destination.
         ductRenderPoints = data.ductRenderPoints; // It contains the aux points of the duct with the source and destination.
         auxPointIndex = data.ductPointById; // It is map where the key is the aux ID and the value is the aux point details.
-		console.log("auxPointIndex  is ", auxPointIndex );
+        console.log("auxPointIndex  is ", auxPointIndex);
         fiberCablesDetails = data.fiberCablesDetails; // It is map of map, where key is the cable id and value is map for cable details
+        cablesAuxMap = data.cablesAuxMap;
+        fiberOwnerColorMap = data.fiberOwnerColorMap;
         ReportArrayGlobal = data.reportSegments; // Duct Segment Information
-		
-
         prepareDuctSectionDrawings(ReportArrayGlobal);
 
         if (ReportArrayGlobal.length == 0) {
@@ -87,26 +87,26 @@ function handleGenerateSuccess(data) {
 
             return;
         }
-		
-		const reportDataForGrid = ReportArrayGlobal.map(row => {
 
-		    const newRow = { ...row };
+        const reportDataForGrid = ReportArrayGlobal.map(row => {
 
-		    const cables = newRow.cables;
+            const newRow = { ...row };
 
-		    if (cables && typeof cables === "object" && !Array.isArray(cables)) {
-		        newRow.cables = Object.entries(cables)
-		            .map(([k, v]) => `${k} → ${v}`)
-		            .join(" , ");
-		    }
+            const cables = newRow.cables;
 
-		    return newRow;
-		});
-		
-		reportDataForGrid.forEach(segment => {
-		    window.reportSegmentByAuxId[segment.fromAuxId] = segment;
-		});
-		
+            if (cables && typeof cables === "object" && !Array.isArray(cables)) {
+                newRow.cables = Object.entries(cables)
+                    .map(([k, v]) => `${k} → ${v}`)
+                    .join(" , ");
+            }
+
+            return newRow;
+        });
+
+        reportDataForGrid.forEach(segment => {
+            window.reportSegmentByAuxId[segment.fromAuxId] = segment;
+        });
+
 
         initializeGrid(reportDataForGrid);
 
@@ -157,10 +157,69 @@ function handleGenerateSuccess(data) {
         }
         buildPath(ductID, pathArray, $("#ductPath").val().split(":")[1], window["mapPoints_" + ductID], '#8e8080', 0.6, 10, '#8e8080', 1);
         pathArray[ductID].setMap(map);
-        $('.showHideCableCheckbox').prop('checked', true);
-        $(".showHideCableCheckbox").attr('disabled', false);
+        $('.showHideDuctCheckbox').prop('checked', true);
+        $(".showHideDuctCheckbox").attr('disabled', false);
 
         map.fitBounds(window["bounds_" + ductID]);
+
+        relatedPathArray = [];
+
+        Object.keys(cablesAuxMap || {}).forEach(cableId => {
+
+            const auxList = cablesAuxMap[cableId];
+
+            if (!auxList) {
+                return;
+            }
+
+            const cablePoints = [];
+            cablePoints.push(new google.maps.LatLng(
+                parseFloat(fiberCablesDetails[cableId].srcLat),
+                parseFloat(fiberCablesDetails[cableId].srcLng)
+            ));
+
+            auxList.forEach(aux => {
+
+                if (!aux) {
+                    return;
+                }
+
+                cablePoints.push(
+                    new google.maps.LatLng(
+                        parseFloat(aux.lat),
+                        parseFloat(aux.long)
+                    )
+                );
+            });
+			
+			cablePoints.push(new google.maps.LatLng(
+			    parseFloat(fiberCablesDetails[cableId].destLat),
+			    parseFloat(fiberCablesDetails[cableId].destLng)
+			));
+
+            if (cablePoints.length < 2) {
+                return;
+            }
+
+            buildPath(
+                cableId,
+                relatedPathArray,
+                fiberCablesDetails[cableId]?.fiberCableName || cableId,
+                cablePoints,
+                fiberOwnerColorMap[fiberCablesDetails[cableId]?.fiberOwner] || "#ff0000",
+                0.7,
+                4.5,
+                fiberOwnerColorMap[fiberCablesDetails[cableId]?.fiberOwner] || "#ff0000",
+                1
+            );
+
+            relatedPathArray[cableId].setMap(null);
+        });
+		
+		$(".showHideRelatedCableCheckbox").attr('disabled', false);
+
+		document.getElementById("relatedPathCount").textContent =
+		    "(" + relatedPathArray.length + ")";
     }
 }
 

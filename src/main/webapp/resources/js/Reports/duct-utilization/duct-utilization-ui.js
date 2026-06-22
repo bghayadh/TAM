@@ -54,6 +54,6 @@ function resetAllLegendCheckboxes() {
     resetLegendCheckbox('.showHideAllManholesCheckbox', true);
     resetLegendCheckbox('.showHideAllManholesWithJctCheckbox', true);
     resetLegendCheckbox('.showHideAllSitesCheckbox', true);
-    resetLegendCheckbox('.showHideCableCheckbox', true);
+    resetLegendCheckbox('.showHideDuctCheckbox', true);
     resetLegendCheckbox('.showHideRelatedCableCheckbox', false);
 }

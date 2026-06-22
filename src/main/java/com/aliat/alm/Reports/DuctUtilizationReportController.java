@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 
 import com.aliat.alm.models.Duct;
 import com.aliat.alm.models.DuctAuxPoints;
+import com.aliat.alm.models.FiberAuxPoints;
 import com.aliat.alm.models.FiberCable;
 import com.aliat.alm.models.FiberDuct;
 import com.aliat.alm.models.StrandUtilizationReport;
@@ -144,6 +145,10 @@ public class DuctUtilizationReportController {
 		List<DuctAuxPoints> renderPoints = new ArrayList<>();
 		List<FiberDuct> listFiberDuct = new ArrayList<FiberDuct>();
 		List<Object[]> listFiberCable = new ArrayList<Object[]>();
+		List<FiberAuxPoints> listAuxCables = new ArrayList<FiberAuxPoints>();
+		LinkedHashMap<String, List<FiberAuxPoints>> cablesAuxMap = new LinkedHashMap<String, List<FiberAuxPoints>>();
+		List<Object[]> fiberOwnerColor = new ArrayList<Object[]>();
+		Map<String, String> fiberOwnerColorMap = new HashMap<>();
 		Map<String, DuctAuxPoints> usedPointsMap = new LinkedHashMap<>();
 		LinkedHashMap<String, FiberCableDetailsDTO> fiberCablesDetails = new LinkedHashMap<String, FiberCableDetailsDTO>();
 		Map<String, Double> ductSeqMap = new HashMap<>();
@@ -162,14 +167,15 @@ public class DuctUtilizationReportController {
 					duct = (Duct) session.createQuery("from Duct where duct_id = :param").setParameter("param", ductID)
 							.getSingleResult();
 
-					System.out.println("duct is " + mapper.writeValueAsString(duct));
+					// System.out.println("duct is " + mapper.writeValueAsString(duct));
 
 					listDuctAuxPoints = session
 							.createQuery("from DuctAuxPoints where duct_id = :param order by seq_sorting",
 									DuctAuxPoints.class)
 							.setParameter("param", ductID).getResultList();
 
-					System.out.println("listDuctAuxPoints is " + mapper.writeValueAsString(listDuctAuxPoints));
+					// System.out.println("listDuctAuxPoints is " +
+					// mapper.writeValueAsString(listDuctAuxPoints));
 
 					DuctAuxPoints ductSourceDesttination = new DuctAuxPoints(duct.getDuctID(), duct.getDuctID(),
 							duct.getSrcLong(), duct.getSrcLat(), 0, duct.getSourceWareId(), duct.getSourceName(),
@@ -193,7 +199,8 @@ public class DuctUtilizationReportController {
 					listFiberDuct = (List<FiberDuct>) session.createQuery("from FiberDuct where duct_id = :param")
 							.setParameter("param", ductID).getResultList();
 
-					System.out.println("listFiberDuct is " + mapper.writeValueAsString(listFiberDuct));
+					// System.out.println("listFiberDuct is " +
+					// mapper.writeValueAsString(listFiberDuct));
 
 					for (FiberDuct fd : listFiberDuct) {
 
@@ -241,20 +248,45 @@ public class DuctUtilizationReportController {
 					listDuctSegmentDTO.sort(Comparator.comparingDouble(DuctSegmentDTO::getFromSequence));
 
 					str = "select distinct a.FIBER_PATH_ID, b.FIBER_CABLE_NAME, b.NUMBER_OF_TUBES, b.NUMBER_OF_STRANDS, "
-							+ "b.FIBER_NETWORK_LEVEL, b.FIBER_TYPE, b.FIBER_DEPLOYMENT, b.CREATION_DATE from fiber_duct a, fiber_cables b "
-							+ "where a.duct_id = :param and a.FIBER_PATH_ID = b.FIBER_CABLE_ID order by CREATION_DATE asc, a.FIBER_PATH_ID asc";
+							+ "b.FIBER_NETWORK_LEVEL, b.FIBER_TYPE, b.FIBER_DEPLOYMENT, b.CREATION_DATE, FIBER_OWNER, b.SOURCE_WARE_ID, "
+							+ "b.SOURCE_ID, b.SOURCE_NAME, b.SOURCE_LNG, b.SOURCE_LAT, b.DESTINATION_WARE_ID, b.DESTINATION_ID, "
+							+ "b.DESTINATION_NAME, b.DESTINATION_LNG, b.DESTINATION_LAT from fiber_duct a, fiber_cables b "
+							+ "where a.duct_id = :param and a.FIBER_PATH_ID = b.FIBER_CABLE_ID "
+							+ "order by CREATION_DATE asc, a.FIBER_PATH_ID asc";
 
 					listFiberCable = session.createNativeQuery(str).setParameter("param", ductID).getResultList();
 
-					System.out.println("listFiberCable is " + mapper.writeValueAsString(listFiberCable));
+					// System.out.println("listFiberCable is " +
+					// mapper.writeValueAsString(listFiberCable));
 
 					AtomicInteger sortingCounter = new AtomicInteger(1);
 
-					fiberCablesDetails = listFiberCable.stream().collect(Collectors.toMap(row -> String.valueOf(row[0]),
-							row -> new FiberCableDetailsDTO(String.valueOf(row[1]), String.valueOf(row[2]),
-									String.valueOf(row[3]), String.valueOf(row[4]), String.valueOf(row[5]),
-									String.valueOf(row[6]), (Timestamp) row[7], sortingCounter.getAndIncrement()),
-							(existing, replacement) -> existing, LinkedHashMap::new));
+					fiberCablesDetails = listFiberCable.stream()
+							.collect(Collectors.toMap(row -> String.valueOf(row[0]),
+									row -> new FiberCableDetailsDTO(String.valueOf(row[1]), String.valueOf(row[2]),
+											String.valueOf(row[3]), String.valueOf(row[4]), String.valueOf(row[5]),
+											String.valueOf(row[6]), (Timestamp) row[7], String.valueOf(row[8]),
+											String.valueOf(row[9]), String.valueOf(row[10]), String.valueOf(row[11]),
+											String.valueOf(row[12]), String.valueOf(row[13]), String.valueOf(row[14]),
+											String.valueOf(row[15]), String.valueOf(row[16]), String.valueOf(row[17]),
+											String.valueOf(row[18]), sortingCounter.getAndIncrement()),
+									(existing, replacement) -> existing, LinkedHashMap::new));
+
+					listAuxCables = session
+							.createQuery("from FiberAuxPoints where fibercableID in :param order by seqSorting asc",
+									FiberAuxPoints.class)
+							.setParameter("param", fiberCablesDetails.keySet()).getResultList();
+
+					cablesAuxMap = listAuxCables.stream().collect(Collectors.groupingBy(
+							aux -> String.valueOf(aux.getFibercableID()), LinkedHashMap::new, Collectors.toList()));
+
+					fiberOwnerColor = session
+							.createNativeQuery("select distinct fiber_owner, fiber_color_owner from fiber_owner_color")
+							.getResultList();
+
+					for (Object[] ownerColor : fiberOwnerColor) {
+						fiberOwnerColorMap.put(ownerColor[0].toString(), ownerColor[1].toString());
+					}
 
 					for (FiberDuct fd : listFiberDuct) {
 
@@ -266,10 +298,10 @@ public class DuctUtilizationReportController {
 						}
 
 						double cableStart = Math.min(fromSeq, toSeq);
-						System.out.println("cableStart is " + cableStart);
+						// System.out.println("cableStart is " + cableStart);
 
 						double cableEnd = Math.max(fromSeq, toSeq);
-						System.out.println("cableEnd is " + cableEnd);
+						// System.out.println("cableEnd is " + cableEnd);
 
 						String cableId = fd.getFiberPathId();
 
@@ -283,7 +315,7 @@ public class DuctUtilizationReportController {
 							// overlap condition (IMPORTANT FIX)
 							boolean overlaps = cableStart <= segStart && cableEnd >= segEnd;
 
-							System.out.println("overlaps is " + overlaps);
+							// System.out.println("overlaps is " + overlaps);
 
 							if (overlaps) {
 								if (segment.getCables() == null) {
@@ -349,11 +381,16 @@ public class DuctUtilizationReportController {
 					session.close();
 				}
 			}
-
-			System.out.println("duct is " + mapper.writeValueAsString(duct));
-			System.out.println("ductRenderPoints is " + mapper.writeValueAsString(renderPoints));
-			System.out.println("ductPointById is " + mapper.writeValueAsString(ductPointById));			
+			/*
+			 * System.out.println("duct is " + mapper.writeValueAsString(duct));
+			 * System.out.println("ductRenderPoints is " +
+			 * mapper.writeValueAsString(renderPoints));
+			 * System.out.println("ductPointById is " +
+			 * mapper.writeValueAsString(ductPointById));
+			 */
 			System.out.println("fiberCablesDetails is " + mapper.writeValueAsString(fiberCablesDetails));
+			System.out.println("cablesAuxMap" + mapper.writeValueAsString(cablesAuxMap));
+			System.out.println("fiberOwnerColorMap" + mapper.writeValueAsString(fiberOwnerColorMap));
 			System.out.println("reportSegments is " + mapper.writeValueAsString(reportSegments));
 
 			rtn.put("duct", duct);
@@ -361,6 +398,8 @@ public class DuctUtilizationReportController {
 			rtn.put("ductRenderPoints", renderPoints);
 			rtn.put("ductPointById", ductPointById);
 			rtn.put("fiberCablesDetails", fiberCablesDetails);
+			rtn.put("cablesAuxMap", cablesAuxMap);
+			rtn.put("fiberOwnerColorMap", fiberOwnerColorMap);
 			rtn.put("reportSegments", reportSegments);
 		}
 		return rtn;

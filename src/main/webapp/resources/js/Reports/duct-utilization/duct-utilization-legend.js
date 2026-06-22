@@ -1,21 +1,239 @@
-function handleMapDropdownChange(selectedValue) {
+function setDuctViewMode(mode) {
 
-    if (mapFlag == "1") {
-        resetDistinctAndClusters();
-        if (selectedValue === "cableBased") {
-            showElementLocationPoints(
-                elementsArray,
-                filteredGridData,
-                "mapPointsNames_",
-                "mapPoints_"
-            );
-        } else if (selectedValue === "gridBased" && generateFlag == "1") {
-            renderGridBasedMode();
+    window.ductLayer.viewMode = mode;
+
+    clearDuctVisualizationLayer();
+    clearAllClusters();
+
+    showOnMap();
+}
+
+function showHideDuct() {
+
+    console.log("showHideDuct");
+
+    const checked = $('.showHideDuctCheckbox').is(':checked');
+
+    for (let v = 0;v < pathArray.length;v++) {
+
+        if (!pathArray[v]) continue;
+
+        pathArray[v].setMap(checked ? map : null);
+    }
+}
+
+function showHidePts(checkboxClass) {
+
+    const checked = $('.' + checkboxClass).is(':checked');
+
+    const bucketMap = {
+        showHideAllManholesCheckbox: "manhole",
+        showHideAllManholesWithJctCheckbox: "manholeWithJct",
+
+        showHideAllHandholesCheckbox: "handhole",
+        showHideAllHandholesWithJctCheckbox: "handholeWithJct",
+
+        showHideAllDbCheckbox: "DB",
+        showHideAllJctCheckbox: "junction",
+
+        showHideAllCustCheckbox: "customer",
+        showHideAllSitesCheckbox: "site"
+    };
+
+    const markerType = bucketMap[checkboxClass];
+
+    if (!markerType) {
+        console.warn("Unknown checkbox:", checkboxClass);
+        return;
+    }
+
+    const markers =
+        window.ductLayer?.markersByType?.[markerType];
+
+    if (!markers) {
+        return;
+    }
+
+    Object.values(markers).forEach(marker => {
+
+        if (!marker) {
+            return;
         }
 
-    } else {
-        showOnMap();
+        // Cluster mode
+        if (window.ductLayer.viewMode === "clusterMode") {
+
+            const type = detectAuxType(
+                marker.segment?.fromAuxId,
+                marker.segment?.fromAuxName
+            );
+
+            const cluster = resolveCluster(type);
+
+            if (cluster) {
+
+                if (checked) {
+                    cluster.addMarker(marker);
+                }
+                else {
+                    cluster.removeMarker(marker);
+                }
+            }
+        }
+
+        // Normal mode
+        else {
+            marker.setMap(checked ? map : null);
+        }
+    });
+}
+
+function legendCheckBoxesStatus() {
+
+    $('.showHideSequencesCheckbox').prop('disabled', false);
+
+    const hasSections =
+        ReportArrayGlobal && ReportArrayGlobal.length > 0;
+
+    $('.showHideDuctSectionCheckbox')
+        .prop('disabled', !hasSections);
+
+    const byType = window.ductLayer?.markersByType || {};
+
+    const mappings = [
+        ['.showHideAllManholesCheckbox', 'manhole', '#manholesCount'],
+        ['.showHideAllManholesWithJctCheckbox', 'manholeWithJct', '#manholesCountWithJct'],
+        ['.showHideAllHandholesCheckbox', 'handhole', '#handholesCount'],
+        ['.showHideAllHandholesWithJctCheckbox', 'handholeWithJct', '#handholesCountWithJct'],
+        ['.showHideAllDbCheckbox', 'DB', '#dbCount'],
+        ['.showHideAllJctCheckbox', 'junction', '#jctCount'],
+        ['.showHideAllCustCheckbox', 'customer', '#custCount'],
+        ['.showHideAllSitesCheckbox', 'site', '#sitesCount']
+    ];
+
+    mappings.forEach(([selector, type, countSelector]) => {
+
+        const count =
+            Object.keys(byType[type] || {}).length;
+
+        $(selector)
+            .prop('disabled', count === 0)
+            .prop('checked', count > 0);
+
+        $(countSelector).text(`(${count})`);
+    });
+
+    // Duct Path
+    $('#ductCount').text(
+        `(${pathArray && pathArray[ductID] ? 1 : 0})`
+    );
+
+    // Duct Sections
+    $('#sectionCount').text(
+        `(${ReportArrayGlobal ? ReportArrayGlobal.length : 0})`
+    );
+
+    // Related Cables
+    $('#relatedPathCount').text(
+        `(${Object.keys(relatedPathArray || {}).filter(k => isNaN(k)).length})`
+    );
+}
+
+function showHideDuctSection() {
+
+    const checked = $('.showHideDuctSectionCheckbox').is(':checked');
+
+    // If unchecked → remove all overlays
+    if (!checked) {
+        if (window.ductLayer?.overlays) {
+            window.ductLayer.overlays.forEach(o => o.setMap(null));
+            window.ductLayer.overlays.clear();
+        }
+        return;
     }
+
+    // If no data → nothing to show
+    if (!ReportArrayGlobal || ReportArrayGlobal.length === 0) {
+        return;
+    }
+
+    const bounds = new google.maps.LatLngBounds();
+    let hasBounds = false;
+
+    ReportArrayGlobal.forEach(segment => {
+
+        const auxId = segment.fromAuxId;
+
+        // expand bounds
+        if (segment.fromLatitude && segment.fromLongitude) {
+            bounds.extend(new google.maps.LatLng(segment.fromLatitude, segment.fromLongitude));
+            hasBounds = true;
+        }
+
+        // already exists → skip
+        if (window.ductLayer.overlays.has(auxId)) {
+            return;
+        }
+
+        // create overlay using existing logic
+        openSegmentOverlay(segment);
+    });
+
+    // fit map once
+    if (hasBounds) {
+        map.fitBounds(bounds);
+    }
+}
+
+
+function showCableRelatedPath() {
+
+    const checked =
+        $('.showHideRelatedCableCheckbox').is(':checked');
+
+    if (relatedPathArray.length === 0) {
+        alert("No Related Path to show or hide!");
+        return;
+    }
+
+    for (let i = 0;i < relatedPathArray.length;i++) {
+
+        if (!relatedPathArray[i]) {
+            continue;
+        }
+
+        relatedPathArray[i].setMap(
+            checked ? map : null
+        );
+    }
+}
+
+
+function showHideSequences() {
+
+    const byType = window.ductLayer?.markersByType;
+
+    if (!byType) return;
+
+    const show = $('.showHideSequencesCheckbox').is(':checked');
+
+    Object.values(byType).forEach(bucket => {
+        Object.values(bucket).forEach(marker => {
+
+            if (!marker?.segment?.fromSequence) return;
+
+            marker.setLabel(
+                show
+                    ? {
+                        text: String(marker.segment.fromSequence),
+                        color: "black",
+                        fontSize: "12px",
+                        fontWeight: "bold"
+                    }
+                    : null
+            );
+        });
+    });
 }
 
 function resetDistinctAndClusters() {
@@ -165,26 +383,7 @@ function showHideDestinationMarker() {
     });
 }
 
-function showHideCable() {
-
-    $('.showHideCableCheckbox').bind("change", function() {
-        if ($(this).is(':checked')) {
-            if (pathArray.length > 0) {
-                for (var v = 0;v < allCables.length;v++) {
-                    pathArray[allCables[v]].setMap(map);
-                }
-            }
-        }
-        else {
-            if (pathArray.length > 0) {
-                for (var v = 0;v < allCables.length;v++) {
-                    pathArray[allCables[v]].setMap(null);
-                }
-            }
-        }
-
-    });
-}
+/*
 function showCableRelatedPath() {
 
     if (showRelPathFlag == "notOpened") {
@@ -211,74 +410,5 @@ function showCableRelatedPath() {
         alert("No Related Path to show or hide!")
 
     }
-
 }
-
-function showHidePts(className) {
-
-    if (className == "showHideAllDbCheckbox") {
-        clusterArray = markerClusterDB;
-        markersArray = markersDB;
-        distinctArray = distinctDB;
-        clusterArray.clearMarkers();
-
-    }
-    else if (className == "showHideAllJctCheckbox") {
-        clusterArray = markerClusterJct;
-        markersArray = markersJct;
-        distinctArray = distinctJct;
-        clusterArray.clearMarkers();
-
-    }
-    else if (className == "showHideAllCustCheckbox") {
-        clusterArray = markerClusterCustomers;
-        markersArray = markersCustomer;
-        distinctArray = distinctCustomers;
-        clusterArray.clearMarkers();
-
-    }
-    else if (className == "showHideAllHandholesCheckbox") {
-        clusterArray = markerClusterHandholes;
-        markersArray = markersHandholes;
-        distinctArray = distinctHandholes;
-    }
-    else if (className == "showHideAllHandholesWithJctCheckbox") {
-        clusterArray = markerClusterHandholesWithJct;
-        markersArray = markersHandholesWithJct;
-        distinctArray = distinctHandholesWithJct;
-    }
-    else if (className == "showHideAllManholesCheckbox") {
-        clusterArray = markerClusterManholes;
-        markersArray = markersManholes;
-        distinctArray = distinctManholes;
-        clusterArray.clearMarkers();
-    }
-    else if (className == "showHideAllManholesWithJctCheckbox") {
-        clusterArray = markerClusterManholesWithJct;
-        markersArray = markersManholesWithJct;
-        distinctArray = distinctManholesWithJct;
-        clusterArray.clearMarkers();
-
-    }
-    else if (className == "showHideAllSitesCheckbox") {
-        clusterArray = markerClusterSites;
-        markersArray = markersSites;
-        distinctArray = distinctSites;
-        clusterArray.clearMarkers();
-
-    }
-
-    $('.' + className).bind("change", function() {
-
-        if ($(this).is(':checked')) {
-            for (var x = 0;x < distinctArray.length;x++) {
-                ID = distinctArray[x];
-                if (markersArray[ID].getMap() == null) {
-                    clusterArray.removeMarker(markersArray[ID]);
-                    markersArray[ID].setMap(map);
-                    clusterArray.addMarker(markersArray[ID]);
-                }
-            }
-        }
-    });
-}
+*/

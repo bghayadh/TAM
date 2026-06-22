@@ -34,7 +34,8 @@ function showOnMap() {
         applyRenderingPolicy(marker, type);
 
     });
-
+	
+	legendCheckBoxesStatus();
     map.fitBounds(window["bounds_" + ductID]);
     map.setZoom(10);
 
@@ -61,16 +62,6 @@ function applyRenderingPolicy(marker, type) {
     else {
         marker.setMap(map);
     }
-}
-
-function setDuctViewMode(mode) {
-
-    window.ductLayer.viewMode = mode;
-
-    clearDuctVisualizationLayer();
-    clearAllClusters();
-
-    showOnMap();
 }
 
 function openAuxWithDuct(marker) {
