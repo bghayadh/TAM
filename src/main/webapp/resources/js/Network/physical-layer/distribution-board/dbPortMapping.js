@@ -317,7 +317,12 @@ function dbAutoCompleteForMapping() {
         { name: 'FP_JunctionName', func: dbAutoCompleteJunctionName },
         { name: 'BP_JunctionName', func: dbAutoCompleteJunctionName },
         { name: 'FP_LocationID', func: dbAutoCompleteLocationID },
-        { name: 'FP_LocationM', func: dbAutoCompleteLocationM }
+		{ name: 'BP_LocationID', func: dbAutoCompleteLocationID },
+        { name: 'FP_LocationM', func: dbAutoCompleteLocationM },
+		{ name: 'BP_LocationM', func: dbAutoCompleteLocationM },
+		{ name: 'FP_Location', func: dbAutoCompleteLocationM },
+		{ name: 'BP_Location', func: dbAutoCompleteLocationM }
+		
     ];
 
     fields.forEach(f => {
@@ -1613,8 +1618,11 @@ function locationTypeChange() {
 
     // BP Location change -> update BP equipment
     $("#DbMappingTable").on("change", "select[name='BP_locationType']", function() {
+		console.log("location type is selected in the back of port mapping.");
         const index = $(this).attr("id").replace('BP_LocationType', '');
+		console.log("index is ", index);
         const loc = $(this).val();
+		console.log("loc is " , loc);
         const equipSelect = $("#BP_equipment" + index);
         if (equipSelect.length) {
             equipSelect.html(generateEquipmentOptions(loc));
@@ -1968,7 +1976,7 @@ $(document).ready(function() {
                 + "</td>"
                 + "<td name='FP_LocationID'><input name='FP_locationID' id='FP_LocationID" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_LocationM'><input name='FP_locationM' id='FP_LocationM" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='FP_Location'><input name='FP_locationM' id='FP_Location" + dBBoqIndex + "' class='form-control' type='text' readonly style='width:190px;position:relative;'/></td>"
+                + "<td name='FP_Location'><input name='FP_location' id='FP_Location" + dBBoqIndex + "' class='form-control' type='text' readonly style='width:190px;position:relative;'/></td>"
                 + "<td name='FP_Equipment'>"
                 + "<select class='form-control' name='FP_equipment' id='FP_equipment" + dBBoqIndex + "'></select>"
                 + "</td>"
@@ -2011,7 +2019,7 @@ $(document).ready(function() {
                 + "</td>"
                 + "<td name='BP_LocationID'><input name='BP_locationID' id='BP_LocationID" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_LocationM'><input name='BP_locationM' id='BP_LocationM" + dBBoqIndex + "' class='form-control' type='text' style='width:190px;position:relative;'/></td>"
-                + "<td name='BP_Location'><input name='BP_locationM' id='BP_Location" + dBBoqIndex + "' class='form-control' type='text' readonly style='width:190px;position:relative;'/></td>"
+                + "<td name='BP_Location'><input name='BP_location' id='BP_Location" + dBBoqIndex + "' class='form-control' type='text' readonly style='width:190px;position:relative;'/></td>"
                 + "<td name='BP_Equipment'>"
                 + "<select class='form-control' name='BP_equipment' id='BP_equipment" + dBBoqIndex + "'></select>"
                 + "</td>"
