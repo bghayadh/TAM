@@ -623,13 +623,14 @@ function saveFiberPath() {
                     $("#" + data.FiberPathId).children(':checkbox').prop("checked", true);
 
                     ModalReset("fiberPathModal");
-
+/*
                     if (actionFiberContext == "Update") {
                         $(".tree li > .TreeSpan").on('click', function(e) {
                             IdSelectedTemp = $(this).parent().attr('id');
                             e.stopPropagation();
                         });
                     }
+*/					
                 }
 				
 				//$("#auxiliaryTable > tbody").empty();				
