@@ -6,12 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Site Revenue Report</title>
      <link rel="shortcut icon" href="">
-        <!-- <script src="${pageContext.request.contextPath}/resources/js/jquery.slim.min.js" ></script>  -->
         <script src="${pageContext.request.contextPath}/resources/js/jquery.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/moment.min.js"></script>
         <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/tempusdominus-bootstrap-4.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/js/printThis.min.js"></script>
-        <!--  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>  -->
         <script src="${pageContext.request.contextPath}/resources/js/popper-1.12.9-min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
         <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
@@ -19,8 +17,6 @@
         <script src="${pageContext.request.contextPath}/resources/js/jquery-migrate-3.0.0.min.js"></script>
         <script src="${pageContext.request.contextPath}/resources/js/jquery2-ui.js"></script>
         <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery-ui.css" rel="stylesheet" />
-        <script src="${pageContext.request.contextPath}/resources/js/dataTables.min.js"></script>
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/dataTables.min.css">
         <script src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
        <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/font-awesome.min.css">
         <link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet">
@@ -65,8 +61,6 @@
 	   <!-- export scripts -->
        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jspdf-1.5.3-jspdf.min.js"></script>
        <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/html2canvas-1.3.2-html2canvas.min.js"></script>
-       <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
-       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>-->
 	    
 </head>
 <style>
@@ -132,7 +126,7 @@ background-image: linear-gradient(to right top, #b3b3b3, #b6b6b7, #b8b9ba, #bbbd
 }
   
 .legendContainer{
-height: 800px;
+height: 730px;
 position: relative;
 }
 
@@ -812,12 +806,6 @@ max-width: 100%;
 	     </div>
 	    
 			</div>
-			
-			
-		
-		
-		
-		
 		
 		
 <div class="wrapper" style="margin-top:-10px;">
@@ -924,10 +912,10 @@ max-width: 100%;
         </div>
          
     <div class="card-body">
-        <div class="box" id="mapContainer">
-         <canvas class="mt-5 w-100" id="doughnutChart" style="display:none;"></canvas>
+        <div class="box" id="mapContainer">        
+         	<canvas class="mt-5 w-100" id="doughnutChart" style="display:none;"></canvas>
         </div>
-        </div>
+    </div>
        </div>
       </div>
     </div>
@@ -3049,103 +3037,6 @@ $('#period').change(function() {
 
 });
 
-	//show and hide the filter when clicking on icon filter							 
-							
-/* $("#filter_chart_btn").off().on("click", function() {
-		console.log("doneee")
-if ($(this).closest('#filter_Chart_Sites, #filter_chart_btn').length == 0){
-    $("#filter_Chart_Sites").hide();
-
-    }
-	    
-    else{
-  $("#filter_Chart_Sites").toggle();
-	  
-    }
-}); */
-
-
-//change the size of cadre
-/* $('#filter_chart_btn').click(function(e) {
-
-	if ($(this).hasClass("expanded-div")){
-		   $(".normal-div").removeClass("compressed-div expanded-div");
-		  }
-	else{
-		 $(".normal-div").removeClass("compressed-div expanded-div").addClass("compressed-div");;
-	   $(toGetId).removeClass("compressed-div").addClass("expanded-div");  }
-	var left = $('#chartContainer3');
-if(left.hasClass('col-md-9') )
-
-{
-left.removeClass("col-md-9").addClass("col-md-12");
-$('#chartContainerDiv').animate({'width': '100%'});
-
-}
-else
-{
-left.removeClass("col-md-12").addClass("col-md-9");
-
-}
-}); */
-//when clicking on "Is Equals To"
-
-
-//datetimepicker for start date							   
-/* var startdate = new Date();
-startdate.setDate(startdate.getDate() - 2);
-
-
-startdate.setHours( 0,0,0,0 );
-
-var s = Date.parse(startdate);
-$('#startdate2').datetimepicker({
-    defaultDate:s
-});
-//datetimepicker for end date
-var enddate = new Date();
-enddate.setDate(enddate.getDate() - 2);
-
-$('#enddate2').datetimepicker({
-    defaultDate:enddate
-});  */
-
-
-// function filterChart(){
-	
-// 	var dataStore = new FusionCharts.DataStore();
-// var dataTable = dataStore.createDataTable(data,schema);
-
-// var filterQuery = FusionCharts.DataStore.Operators.filter((row, columns) => {
-//     return row[columns.siteName] === 'Nwarik Farm';
-// });
-
-// var filteredData = dataTable.query(filterQuery);
-	// var ReportArrayGlobal = ${revenueReportList};
-	// for(var i=0 ;i<ReportArrayGlobal.length ;i++){
-								
-	// 	var filterarray = ReportArrayGlobal.filter((siteee) =>{
-	// return siteee.siteName===ReportArrayGlobal[i]["siteName"];
-	
-
-	// })												 
-	 
-	// 							}
-	
-	
-//const filterresult = SiteRevenueParam.dataSource.dataset[0].filter(value => value>6);
-//   var filter1 = FusionCharts.DataStore.Operators.equals('siteName', 'Kayole_Rasta_Stage');
-//   var dataTable = dataT.query(filter1);
-//filter1 = fusionTable.CreateFilter(Fusioncharts::FilterType::Equals, "siteName", "Kayole_Rasta_Stage")
-
-//Applying the filter on fusion table
-//fusionTable.ApplyFilter(filter1)
-// console.log("filterresult:" + ReportArrayGlobal );
-
-
-//} 
-//
-
 
 	/////////////////////
 
@@ -3172,11 +3063,12 @@ function initMap() {
 	divRevTable =document.getElementById("revTable").innerHTML;
 	
 	// Define the Center
-	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	//var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	var Nairobi=new google.maps.LatLng(1,38);
 	
 	
   var map = new google.maps.Map(document.getElementById("mapContainer"), {
-    center:Nairobi ,
+    center:Nairobi,
     zoom:6
     
   });
@@ -3338,7 +3230,8 @@ $('#allSites').click(function(){
 		
 		$(this).val('1');		
 	      
-  	 var Nairobi=new google.maps.LatLng(-1.286389,36.817223);            		
+  	 //var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+  	var Nairobi=new google.maps.LatLng(1,38);
   	 document.getElementById("mapContainer").innerHTML ="";
      var map = new google.maps.Map(document.getElementById("mapContainer"), {
 
@@ -3517,7 +3410,8 @@ $('#warehouseAllSites'). click(function(){
 
 		$(this).val('1');
 		
-		 var Nairobi=new google.maps.LatLng(-1.286389,36.817223);            		
+		 //var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+		 var Nairobi=new google.maps.LatLng(1,38);
 	  	 document.getElementById("mapContainer").innerHTML ="";
 	      var map = new google.maps.Map(document.getElementById("mapContainer"), {
 
@@ -3599,7 +3493,8 @@ $('#prepaidRevenueSites'). click(function(){
 
 		$(this).val('1');
 
-		var Nairobi=new google.maps.LatLng(-1.286389,36.817223); 		
+		//var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+		var Nairobi=new google.maps.LatLng(1,38);
 	    document.getElementById("mapContainer").innerHTML ="";
 
 		var map = new google.maps.Map(document.getElementById("mapContainer"), {
@@ -3744,7 +3639,8 @@ $('#enable'). click(function(){
 	     concatenatedSites ="";
 	     selectedSites=[];
 
-	 		var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	 		//var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	 		var Nairobi=new google.maps.LatLng(1,38);
 		
  		
 	    document.getElementById("mapContainer").innerHTML ="";
@@ -3752,7 +3648,7 @@ $('#enable'). click(function(){
 		var map = new google.maps.Map(document.getElementById("mapContainer"), {
 
 			 mapTypeControl: false,
-			 center:Nairobi ,
+			 center:Nairobi,
 		      zoom: 6,
 			 
 			 mapTypeControl: true,
@@ -3819,15 +3715,15 @@ $('#disable'). click(function(){
 	     concatenatedSites ="";
 	     selectedSites=[];
 
-	 		var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
-			
+	 		//var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	 		var Nairobi=new google.maps.LatLng(1,38);
  		
 		    document.getElementById("mapContainer").innerHTML ="";
 
 			var map = new google.maps.Map(document.getElementById("mapContainer"), {
 
 				 mapTypeControl: false,
-				 center:Nairobi ,
+				 center:Nairobi,
 			      zoom: 6,
 				 
 				 mapTypeControl: true,
@@ -4258,36 +4154,24 @@ $(document).ready(function() {
     var wareAllSites =[]; 
 	//Generate Report Clicked
 	  $("#generate").click(  function() {
-       var selectedTechOption = $("#technologies").children("option:selected").val();
-		  var selectedPeriodOption = $("#period").children("option:selected").val();
+			console.log("Welcome to Generate");
+			var selectedTechOption = $("#technologies").children("option:selected").val();
+		  	var selectedPeriodOption = $("#period").children("option:selected").val();
 
 		  var startDate = document.getElementById("startdate").value;
-		  //console.log("startDate:" +startDate );
 		  var endDate = document.getElementById("enddate").value;
-		//  console.log("endDate:" +endDate );
 
 		  var date1 = new Date(startDate);
 		  var date2 = new Date(endDate);
 		   
-		// To calculate the time difference of two dates
-		 /* var Difference_In_Time = date2.getTime() - date1.getTime();
-		   
-		  // To calculate the no. of days between two dates
-		  var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-		   
-		  //To display the final no. of days (result)
-		  console.log("Total number of days between dates"+ date1 + " and "+ date2 + " is:" + Difference_In_Days);*/
 	      var checkBox1 = document.getElementById("Max");
 	      var checkBox2 = document.getElementById("Min");
 	      var nullSiteCheckbox = document.getElementById("noSiteName");
 
   		  defaultLegend();
 	      
-		//console.log(selectedPeriodOption);
-		
 		//closing side filters filter option
-		 $("#changeOptionsMSChart").val('null').trigger('change');
-		// $("#technologiesMSChart").val('null').trigger('change');	
+		 $("#changeOptionsMSChart").val('null').trigger('change');	
 		document.querySelector('#msChartTechnologies').toggleSelectAll(false);							 					
 		 $("#minValMSFltr").val('');
 		 $("#maxValMSFltr").val('');
@@ -4295,7 +4179,6 @@ $(document).ready(function() {
 		 $("#filterDivMSChart").hide();
 
 		 $("#changeOptionsStackChart").val('null').trigger('change');
-		 //$("#technologiesStackChart").val('null').trigger('change');
 		 document.querySelector('#stackChartTechnologies').toggleSelectAll(false);							 					
 		 $("#minValStackedFltr").val('');
 		 $("#maxValStackedFltr").val('');
@@ -4303,7 +4186,6 @@ $(document).ready(function() {
 		 $("#filterDivStackChart").hide();
 
 		 $("#changeOptionslineChart").val('null').trigger('change');
-		 //$("#technologieslineChart").val('null').trigger('change');
 		 document.querySelector('#lineChartTechnologies').toggleSelectAll(false);							 					
 		 $("#minValLineFltr").val('');
 		 $("#maxValLineFltr").val('');
@@ -4311,7 +4193,6 @@ $(document).ready(function() {
 		 $("#filterDivlineChart").hide();
 
 		  $("#changeOptionsPieChart").val('null').trigger('change');
-	      //$("#technologiesPieChart").val('null').trigger('change');
 	      document.querySelector('#pieChartTechnologies').toggleSelectAll(false);							 					
 		  $("#minValPiesFltr").val('');
 		  $("#maxValPiesFltr").val('');
@@ -4319,7 +4200,6 @@ $(document).ready(function() {
 		  $("#filterDivPieChart").hide();
 
 		  $("#changeOptionsStackChartMax").val('null').trigger('change');
-	     // $("#technologiesStackChartMax").val('null').trigger('change');
 	      document.querySelector('#maxStackChartTechnologies').toggleSelectAll(false);							 					
 		  $("#minValPiesFltrMax").val('');
 		  $("#maxValPiesFltrMax").val('');
@@ -4327,7 +4207,6 @@ $(document).ready(function() {
 		  $("#filterDivStackChartMax").hide();
 
 		  $("#changeOptionsStackChartMin").val('null').trigger('change');
-	      //$("#technologiesStackChartMin").val('null').trigger('change');
 	      document.querySelector('#minStackChartTechnologies').toggleSelectAll(false);							 					
 		  $("#minValPiesFltrMin").val('');
 		  $("#maxValPiesFltrMin").val('');
@@ -4335,7 +4214,6 @@ $(document).ready(function() {
 		  $("#filterDivStackChartMin").hide();
 
 		  $("#changeOptionsLineChartMax").val('null').trigger('change');
-	      //$("#technologiesLineChartMax").val('null').trigger('change');
 	      document.querySelector('#maxLineChartTechnologies').toggleSelectAll(false);							 					
 		  $("#minValPiesFltrMax").val('');
 		  $("#maxValPiesFltrMax").val('');
@@ -4343,7 +4221,6 @@ $(document).ready(function() {
 		  $("#filterDivLineChartMax").hide();
 
 		  $("#changeOptionsLineChartMin").val('null').trigger('change');
-	     // $("#technologiesMin").val('null').trigger('change');
 	     document.querySelector('#minLineChartTechnologies').toggleSelectAll(false);
 		  $("#minValPiesFltrMin").val('');
 		  $("#maxValPiesFltrMin").val('');
@@ -4385,8 +4262,6 @@ $(document).ready(function() {
 	
        else{
 
-
-
     	   $("#gridTable").remove();
     	   $("#tableGrid").append('<table id="gridTable" class="table table-striped table-bordered almgrid-table">'
 					+'<thead><tr class="header"><th>Site<li class="filter-dropdown dropdown"><button class="almgrid-filter" data-toggle="dropdown"> '
@@ -4424,8 +4299,6 @@ $(document).ready(function() {
 				  arrSelected.push(selectedTech[i]);
 				}
 			var siteSelectedTech = arrSelected.toString();
-
-  
 
 			  $("#enable").prop('checked',false);   
 			  $("#disable").prop('checked',true); 
@@ -4529,16 +4402,13 @@ $(document).ready(function() {
   				listSites=data.listSites;
   				listSitesClrFltr=listSites;
   		 		if (data != null) {
-  		 		var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
-  		 				     		
+  		 	
+  		 			var Nairobi=new google.maps.LatLng(1,38);
   		 		    document.getElementById("mapContainer").innerHTML ="";
-
   		 			var map = new google.maps.Map(document.getElementById("mapContainer"), {
-
   		 				 mapTypeControl: false,
-  		 				 center:Nairobi ,
-  					      zoom: 6,
-  		  				 
+  		 				 center:Nairobi,
+  					     zoom: 6,  		  				 
   		 				 mapTypeControl: true,
   		 				 mapTypeControlOptions: {
   		 					 style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
@@ -5030,78 +4900,8 @@ $(document).ready(function() {
 						 $("#min_time_revenue_line").css("display", "none");
 						 $("#chartContainer").css("display", "none");
 						 $("#noCharts").css("display", "block");
-						
-						 
-						 
-
-						 
-
-							/*  $('#collapseThree').on('hide.bs.collapse', function () {
-							    $(this).siblings('.panel-heading').addClass('active');
-							  });*/
-							  
-					     /*$('#collapseThree').siblings('.panel-heading').addClass('active');
-					     $('#collapseThree').siblings('.panel-collapse collapse').removeClass('show');
-					     $("#collapseThree").css("height", "0px");
-					     $("#collapseThree").css("display", "none");
-					     $("#chartsPanel").attr("aria-expanded","false");
-					     $("#chartsPanel").addClass('collapsed');*/
-					     
-							 
 					 }
-					 
-					  /*if(checkBox1.checked == true && checkBox2.checked == true){
-						// console.log("hereeeeee");
-						 $("#time_revenue_stack").css("display", "none");
-						 $("#time_revenue_line").css("display", "none");
-						 $("#site_revenue_chart").css("display", "none");
-						 $('#pie_charts').css("display", "none");
-						 $("#max_time_revenue_stack").css("display", "none");
-						 $("#max_time_revenue_line").css("display", "none");
-						 $("#min_time_revenue_stack").css("display", "none");
-						 $("#min_time_revenue_line").css("display", "none");
-					 }
-					  else if(checkBox1.checked == true ){
-						 $("#time_revenue_stack").css("display", "none");
-						 $("#time_revenue_line").css("display", "none");
-						 $("#site_revenue_chart").css("display", "none");
-						 $('#pie_charts').css("display", "block");
-						 $('#pie_charts').css({'margin-top':'-150px'}); 
-						 //$("#div.container-fluid-responsive").css({'padding':'0px'}); 
-						 $("#max_time_revenue_stack").css("display", "none");
-						 $("#max_time_revenue_line").css("display", "none");
-						 $("#min_time_revenue_stack").css("display", "none");
-						 $("#min_time_revenue_line").css("display", "none");
-						 
-					 }
-					  else if(checkBox2.checked == true ){
-							 $("#time_revenue_stack").css("display", "none");
-							 $("#time_revenue_line").css("display", "none");
-							 $("#site_revenue_chart").css("display", "none");
-							 $('#pie_charts').css({'margin-top':'-150px'}); 
-							 //$("#div.container-fluid-responsive").css({'padding':'0px'}); 
-							 $("#max_time_revenue_stack").css("display", "none");
-							 $("#max_time_revenue_line").css("display", "none");
-							 $("#min_time_revenue_stack").css("display", "none");
-							 $("#min_time_revenue_line").css("display", "none");
-							 
-						 }*/
 					 else{
-						 /*($('#collapseThree').siblings('.panel-heading').removeClass('active');
-					     $('#collapseThree').siblings('.panel-collapse collapse').addClass('show');
-					     $("#collapseThree").css("height", "198px");
-					     $("#chartsPanel").attr("aria-expanded","true");
-					     $("#chartsPanel").removeClass('collapsed');
-						 $("#collapseThree").css("display", "block");
-						 
-						 $('#collapseThree').on('show.bs.collapse', function () {
-						        
-						$(this).siblings('.panel-heading').removeClass('active');
-						});
-
-					   $('#collapseThree').on('hide.bs.collapse', function () {
-							$(this).siblings('.panel-heading').addClass('active');
-							  });*/
 					    $("#noCharts").css("display", "none");
 
 						 
@@ -7052,9 +6852,7 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 										  selectBox = document.getElementById("changeOptionsLineChartMax");
 										  selectedValue = selectBox.options[selectBox.selectedIndex].value;
 										  selectRevBox = document.getElementById("revenueOptionsLineChartMax");
-											 selectedRevValue = selectRevBox.options[selectRevBox.selectedIndex].value;
-											// selectTechBox = document.getElementById("technologiesLineChartMax");
-											// technologies1 = selectTechBox.options[selectTechBox.selectedIndex].value;
+										 selectedRevValue = selectRevBox.options[selectRevBox.selectedIndex].value;
 											 val1 =$('#minValLineFltrMax').val();
 											 val2 = $('#maxValLineFltrMax').val();
 
@@ -7075,8 +6873,6 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 										  selectedValue = selectBox.options[selectBox.selectedIndex].value;
 										  selectRevBox = document.getElementById("revenueOptionsLineChartMin");
 											 selectedRevValue = selectRevBox.options[selectRevBox.selectedIndex].value;
-											// selectTechBox = document.getElementById("technologiesLineChartMin");
-										//	 technologies1 = selectTechBox.options[selectTechBox.selectedIndex].value;
 											 val1 =$('#minValLineFltrMin').val();
 											 val2 = $('#maxValLineFltrMin').val();
 
@@ -7085,8 +6881,7 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 											   for (let i = 0; i < selectedTech.length; i++) {
 												 arrSelected.push(selectedTech[i]);
 												}
-											    siteSelectedTech = arrSelected.toString();
-									       
+											    siteSelectedTech = arrSelected.toString();									       
 											 }
 								
 										
@@ -7100,8 +6895,6 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 										    "startDate" :stDate,
 										    "endDate" : endDate,
 										    "site": siteName,
-						                    //"area": document.getElementById("Area").value,
-						                    //"technologyRegions": document.getElementById("Region").value,
 						                    "period": $("#period").children("option:selected").val(),
 								            "Payment Method" : $("#Payment Method").children("option:selected").val(),
 										    "technologies" :technologies1,
@@ -7111,18 +6904,9 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 						  					"allSitesNameChart":allSitesNameChart,	
 						  				 	"nullSite":nullSiteChecked,
 						  				 	"selectedTech":siteSelectedTech,
-						  					
-											
-
 										},
-										success : function(data) {
-											
-											 if (data != null) {
-												
-												
-												 
-							                        	// console.log("*******Enter ");
-							                        	 
+										success : function(data) {											
+											 if (data != null) {												
 							                        	 if (id == 'applyButtMSChart') {
 							                        		 msColumnChartObj2=jQuery.parseJSON(data.msColumnChartObj);
 									                		SiteRevenue(msColumnChartObj2);}
@@ -7162,12 +6946,6 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 							     						  alert("There is no data to display between these two selected dates for this site, or please check all the conditions selected in the upper side");
 							     						   
 							     					}
-							                         
-								                			
-								     					 
-
-										
-
 							  },
 							  
 							  error : function(error) {
@@ -7246,11 +7024,6 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 									     						  alert("There is no data to display between these two selected dates for this site, or please check all the conditions selected in the upper side");
 									     						   
 									     					}
-									                         
-										     					 
-
-												
-
 									  },
 									  
 									  error : function(error) {
@@ -7259,11 +7032,7 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 								     });
 
 							                }
-								
-									
 									});
-
-
 
                                 //exporting 
 								
@@ -7307,23 +7076,10 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 								});
 
 								$('#mapExport').click(function(){
-									//as excel
-                                	//exportDivToExcel("mapContainer");
-                                	// as image
 									exportDivToImage("mapContainer");
 								});
 
 								$('#chartsExport').click(function(){
-									// as excel
-									/*if($('#site_revenue_chart').is(':visible')){exportDivToExcel("site_revenue_chart"); }
-									if($('#time_revenue_stack').is(':visible')){exportDivToExcel("time_revenue_stack");}
-									if($('#time_revenue_line').is(':visible')){exportDivToExcel("time_revenue_line");}
-									if($('#pie_charts').is(':visible')){exportDivToExcel("pie_charts");}
-									if($('#max_time_revenue_stack').is(':visible')){exportDivToExcel("max_time_revenue_stack");}
-									if($('#min_time_revenue_stack').is(':visible')){exportDivToExcel("min_time_revenue_stack");}
-									if($('#max_time_revenue_line').is(':visible')){exportDivToExcel("max_time_revenue_line");}
-									if($('#min_time_revenue_line').is(':visible')){exportDivToExcel("min_time_revenue_line");}
-									*/
                                 	//as image
 									
 									if($('#site_revenue_chart').is(':visible')){exportDivToImage("site_revenue_chart"); }
@@ -7338,18 +7094,7 @@ $('.panel-collapse').on('show.bs.collapse', function () {
 
                                 $('#allExport').click(function(){
                                     //as excel
-                                    exportGrid();
-
-                                	/*exportDivToExcel("mapContainer");
-                                	if($('#site_revenue_chart').is(':visible')){exportDivToExcel("site_revenue_chart"); }
-									if($('#time_revenue_stack').is(':visible')){exportDivToExcel("time_revenue_stack");}
-									if($('#time_revenue_line').is(':visible')){exportDivToExcel("time_revenue_line");}
-									if($('#pie_charts').is(':visible')){exportDivToExcel("pie_charts");}
-									if($('#max_time_revenue_stack').is(':visible')){exportDivToExcel("max_time_revenue_stack");}
-									if($('#min_time_revenue_stack').is(':visible')){exportDivToExcel("min_time_revenue_stack");}
-									if($('#max_time_revenue_line').is(':visible')){exportDivToExcel("max_time_revenue_line");}
-									if($('#min_time_revenue_line').is(':visible')){exportDivToExcel("min_time_revenue_line");}*/
-									
+                                    exportGrid();									
 									// as image
                                 	exportDivToImage("mapContainer");
                                 	if($('#site_revenue_chart').is(':visible')){exportDivToImage("site_revenue_chart"); }
@@ -7386,59 +7131,8 @@ $('.panel-collapse').on('show.bs.collapse', function () {
                             			document.body.appendChild(download_link);
 
                             			download_link.click();
-                            		}
-                            		
+                            		}                            		
                             	}
-
-                            /*	function exportDivToExcel(div){
-                            		// Convert the div to image (canvas)
-                            		/*html2canvas(document.getElementById("site_revenue_chart"), {
-                            		    onrendered: function (canvas) {*/
-                            	/*	   	html2canvas(document.getElementById(div), {
-                                                useCORS: true,
-                                          }).then(function (canvas) {
-                            		        var img = canvas.toDataURL("image/jpeg", 0.9); //image data of canvas
-                                            var fileName = div;
-                            		        var a = document.createElement("a"); //Create <a>
-                            		        //a.href = "data:image/png;base64," + ImageBase64; 
-                            		        a.href = img;
-                            		        a.download = fileName + ".jpeg"; //File name Here
-                            		       // a.click();
-                            		       
-                            		        var uri = 'data:application/vnd.ms-excel;base64,'
-                            		            , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><img src="{table}" alt="grafica" /></body></html>'
-                            		            , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
-                            		            , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
-                            		        
-                            		       var ctx = { worksheet: name || 'export', table: fileName + ".jpeg" }
-                            		        //window.location.href = uri + base64(format(template, ctx))
-                            		        var link = document.createElement("a");
-                            		        link.href = uri + base64(format(template, ctx));
-                            		        link.download = fileName+".xls";
-                            		        
-                            		        link.click();
-
-                            		      /*  var imgurl = "https://image.flaticon.com/icons/svg/60/60752.svg"
-                            		        	var HTMLtext="<table><tr><td>Image export</td><td><img src='"+img+"'style='width:500px;height:600px;'></img></td></tr></table>";
-                            		        	//window.location.href = 'data:application/vnd.ms-excel,' + encodeURIComponent(HTMLtext);
-                            		        	//sa = window.location.href;
-                            		        	//     return (sa);
-                            		        	var link = document.createElement("a");
-                            		        	     link.href = 'data:application/vnd.ms-excel,' + encodeURIComponent(HTMLtext);
-                                     		        link.download = fileName+".xls";
-                                     		        
-                                     		        link.click();*/
-                                     		    
-                                     		       /*WorksheetImage img = new WorksheetImage(image);
-                                     		       img.TopLeftCornerCell = worksheet.Rows[rowIndex].Cells[0];
-                                     		       img.TopLeftCornerPosition = new PointF(0.0F, 0.0F);
-                                     		       img.BottomRightCornerCell = worksheet.Rows[rowIndex + 8].Cells[2];
-                                     		       img.BottomRightCornerPosition = new PointF(100.0F, 100.0F);
-                                     		       worksheet.Shapes.Add(img);*/  
-                                     		     
-                            		    //}
-                            		//});
-                                //}
 
                                 function exportDivToImage(div){
                                 	html2canvas(document.getElementById(div), {
@@ -7458,13 +7152,8 @@ $('.panel-collapse').on('show.bs.collapse', function () {
                                    });
                                 }
 
-								// print div
 								$('#print').click(function(){
 									printDiv("mapContainer");
-									/*printDiv("site_revenue_chart");
-									printDiv("time_revenue_stack");
-									printDiv("time_revenue_line");
-									printDiv("pie_charts");*/
 								});
 								
 								function printDiv(div) {
@@ -7474,53 +7163,6 @@ $('.panel-collapse').on('show.bs.collapse', function () {
                                            win.document.close();
                                            win.print();
                                 }
-
-								/*$('#pdf').click(function(){
-								html2canvas(document.getElementById('mapContainer'), {useCORS: true}).then(function(canvas) {
-					            	    var contentWidth = canvas.width;
-							            var contentHeight = canvas.height;
-
-							            //One page pdf shows the height of canvas generated by html page;
-							            var pageHeight = contentWidth / 592.28 * 841.89;
-							            //html page height without pdf generation
-							            var leftHeight = contentHeight;
-							            //Page offset
-							            var position = 0;
-							            //a4 paper size [595.28841.89], width and height of image in pdf of canvas generated by html page
-							            var imgWidth = 595.28; 
-							            var imgHeight = 592.28/contentWidth * contentHeight;
-							            //Return picture dataURL, parameters: picture format and sharpness (0-1)
-						                var pageData = canvas.toDataURL('image/jpeg', 1.0);
-
-						               //Direction is vertical by default, dimension ponits, format A4 [595.28841.89]
-						               var pdf = new jsPDF('', 'pt', 'a4');
-						            
-						               //There are two heights to distinguish, one is the actual height of the html page, and the height of the generated pdf page (841.89)
-						              //When the content does not exceed the display range of one page of pdf, paging is not required
-
-						               if (leftHeight < pageHeight) {
-							            	console.log("1");
-							                pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight );
-							            } else {
-							            	console.log("2");
-							                while(leftHeight > 0) {
-							                    pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight)
-							                    leftHeight -= pageHeight;
-							                    position -= 841.89;
-							                    //Avoid adding blank pages
-							                    if(leftHeight > 0) {
-							                      pdf.addPage();
-							                    }
-							                }
-							            }
-							            pdf.save('stone.pdf');
-						                
-						              //}
-						            });
-
-							});*/
-
-								
 						
 });
 </script>
