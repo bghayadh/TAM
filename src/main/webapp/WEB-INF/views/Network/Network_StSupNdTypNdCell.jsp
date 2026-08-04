@@ -450,8 +450,6 @@ function SupNdCellCore(id){
 						var listNodes=data.listNodes;
 						var listCells=data.listCells;
 						Create_TreeNode_Cell_Vendor(listNodes,listCells,NdTypeChildrenLength, true,selectedItem,selectedSupp);
-						//Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem);
-			            tree_prop_selection("#" +selectedNodetType+"_"+selectedItem+"_f .Node .TreeSpan");
 				}
 					data= null;
 				},
