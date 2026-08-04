@@ -1449,22 +1449,29 @@ function hideContext(){
 }
 
 
-function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,SiteName) {
+function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,SiteName, selectedVendor=0) {
+	let selector = "";
 	for(j=ChildrenLength;j<lstNodes.length;j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
-	{																        	
+	{
 	var str= "<ul><li class='Node' id='" + lstNodes[j][0] +"' style='display:none; margin-left:-18px' class='folder'>";
 	if(concat==true)
-	{	
+	{
+		if (selectedVendor == 0) {			
+			selector = "#"+lstNodes[j][3]+"_"+lstNodes[j][4]+"_f";
+		}
+		else {
+			selector = "#"+lstNodes[j][3]+"_"+lstNodes[j][4]+ "_" + selectedVendor + "_f";
+		}						
 		if(lstNodes[j][5]>0 || lstNodes[j][6]>0 || lstNodes[j][7]>0){		
 			str+="<span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
 			str += "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";
-			$("ul").find("#"+lstNodes[j][3]+"_"+lstNodes[j][4]+"_f").append(str);								        																	        				
+			$("ul").find(selector).append(str);
 			str ="<ul><li id='" + lstNodes[j][0] +"_f' style='display:none; margin-left:-10px;'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Cells </span></span></li></ul>";
 			$("#"+lstNodes[j][0]).append(str);
-		}																	        			
+		}
 		else{
 			str += "<span class='TreeSpan' style='width:395px; margin-left:18px;'><span class='tree-span'><i class='fas fa-server'></i>"+lstNodes[j][2]+"</span></span></li></ul>";
-			$("ul").find("#"+lstNodes[j][3]+"_"+lstNodes[j][4]+"_f").append(str);
+			$("ul").find(selector).append(str);
 		}
 	}
 	else{
@@ -1513,12 +1520,15 @@ function Create_TreeNode_CellGeneral(lstNodes,lstCells,ChildrenLength,concat,Sit
 				   }
 			]
 	});
+	}
+	if 	(concat != true) {
+		Tree_PropagationAppendedNodes(SiteName+"_f .Node");
+		tree_prop_selection("#" +SiteName+"_f .Node .TreeSpan");
 	}	
-	Tree_PropagationAppendedNodes(SiteName+"_f .Node");
-	tree_prop_selection("#" +SiteName+"_f .Node .TreeSpan");	
 }
 
-function Create_TreeNode_Cell_Vendor(lstNodes,lstCells,ChildrenLength,concat,SiteName,selectedVen) {	
+function Create_TreeNode_Cell_Vendor(lstNodes,lstCells,ChildrenLength,concat,SiteName,selectedVen) {
+	console.log("SiteName is ", SiteName);	
 	for(j=ChildrenLength;j<lstNodes.length;j++)//  NODE_PK, SITE_ID, NODE_NAME,NODE_MODEL
 	{																        	
 	var str= "<ul><li class='Node' id='" + lstNodes[j][0] +"' style='display:none; margin-left:-18px' class='folder'>";
