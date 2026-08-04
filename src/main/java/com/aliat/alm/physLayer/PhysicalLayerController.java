@@ -1518,7 +1518,7 @@ public class PhysicalLayerController {
 									}
 									// End Longitude with start & end latitude
 									else if (startLatPoint != null && startLatPoint.length() > 0
-											&& (endLatPoint != null && endLatPoint.length() > 0)) {
+											&& (endLatPoint != null && endLatPoint.length() > 0)) {																			
 
 										if (Double.parseDouble(startLatPoint) < Double.parseDouble(endLatPoint)) {
 											startlatitude = startLatPoint;
@@ -1613,7 +1613,7 @@ public class PhysicalLayerController {
 								} // end the End long condition
 
 								else if ((startLongPoint != null && !startLongPoint.equalsIgnoreCase(""))
-										&& (endLongPoint != null && !endLongPoint.equalsIgnoreCase(""))) {
+										&& (endLongPoint != null && !endLongPoint.equalsIgnoreCase(""))) {																	
 
 									if (Double.parseDouble(startLongPoint) < Double.parseDouble(endLongPoint)) {
 										startLng = startLongPoint;
@@ -2062,9 +2062,15 @@ public class PhysicalLayerController {
 								List<Object[]> batchResults = query.getResultList();
 								manholeList.addAll(batchResults);
 							}
+/*							
 							handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) ";
 							handholeList = session.createNativeQuery(handholeStr).setParameter("param", hhFilteredIDs)
 									.getResultList();
+*/							
+							
+							//handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) ";
+							handholeList = session.createNativeQuery(handholeStr).getResultList();
+							
 
 							dbStr = dbStr + " OR DB_ID IN (:param) ";
 							distribBoardList = session.createNativeQuery(dbStr).setParameter("param", dbFilteredIDs)
@@ -2300,10 +2306,13 @@ public class PhysicalLayerController {
 						}
 
 					} else if (StringUtils.equalsIgnoreCase(request.getParameter("Checked"), "connected")) {
-						System.out.println("it is inside ");
+						System.out.println("find connected");
 						filterFlag = 2;
 						checkedOption = request.getParameter("Checked");
+						String locationType = request.getParameter("locationType");
+						System.out.println("locationType is " +locationType);
 						String siteId = request.getParameter("siteId").split(":")[0];
+						System.out.println("siteId is " +siteId);
 						String showPointsType = request.getParameter("getRelatedPoints");
 						// String headerSearchlong = request.getParameter("headerSearchLong");
 						// String headerSearchlat = request.getParameter("headerSearchLat");
@@ -2365,7 +2374,6 @@ public class PhysicalLayerController {
 										+ "LEFT  JOIN DISTRIBUTION_BOARD D  ON A.SOURCE_ID = D.DB_ID OR A.DESTINATION_ID = D.DB_ID "
 										+ "WHERE D.WAREHOUSE LIKE '%" + siteId + "%' " + ")")
 								.getResultList();
-						// System.out.println("fiberList " + mapper.writeValueAsString(fiberList));
 
 						// fiberAuxiliary_Data = session.createNativeQuery("SELECT
 						// B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.AUXILIARY_ID
