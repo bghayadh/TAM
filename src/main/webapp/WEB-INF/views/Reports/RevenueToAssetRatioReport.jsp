@@ -973,8 +973,6 @@ function initMap() {
 	 infoWindow = new google.maps.InfoWindow(); // Define the info window to use it when clicking on marker
 
 	 getLongLatMouseMove(map); // Add long/lat above the map
-
-	
 	   
 	   //This is the map menu that will open when right click on the google map
 	    MenuMap = document.getElementById("mapMenu");
