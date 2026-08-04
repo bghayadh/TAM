@@ -265,6 +265,8 @@ $(document).on("triggerListenersEvent", function() {
 
         $("#selectCable").on('click', function() {
             //console.log("select Cablee is "+selectedPath +" and id "+selectedPathId);
+			console.log(window["mapPoints_" + selectedPathId]);
+			console.log(window["mapPointsNames_" + selectedPathId]);
             listenerPathDelete = map.addListener('click', deleteAuxPath);
             deleting = true;
 
@@ -290,6 +292,7 @@ $(document).on("triggerListenersEvent", function() {
                         // console.log("delete arraay "); 
                         for (d = 0;d < selectedMarkersPos.length;d++) {
                             var selectedMarkersId = selectedMarkersPos[d].Id;
+							console.log("selectedMarkersId is ", selectedMarkersId);
                             for (var i = 0;i < window["mapPoints_" + selectedPathId].length;i++) {
                                 //console.log("WINDOW " +window["mapPoints_"+selectedPathId][i]);
                                 let longLatStr = String(window["mapPoints_" + selectedPathId][i]);
@@ -299,6 +302,7 @@ $(document).on("triggerListenersEvent", function() {
                                 //console.log("enter pos "+selectedMarkersPos[d].lat+" and "+selectedMarkersPos[d].long);
                                 if (longLatStr[0] === String(selectedMarkersPos[d].lat) && longLatStr[1] === String(selectedMarkersPos[d].long)) {
                                     console.log("EQUAL ");
+									console.log("the selected point lat is: ", String(selectedMarkersPos[d].lat) + " and the selected point lng is: " , String(selectedMarkersPos[d].long));
                                     window["mapPoints_" + selectedPathId].splice(i, 1);
                                     break;
                                 }

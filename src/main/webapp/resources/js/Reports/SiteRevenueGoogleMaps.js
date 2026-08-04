@@ -44,7 +44,7 @@ function DefaultZoomControl(controlDiv2, map) {
 
     controlUI2.addEventListener("click", () => {
 
-    	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+    	var Nairobi=new google.maps.LatLng(1,38);
         map.setCenter(Nairobi);
         map.setZoom(6);
         
@@ -368,7 +368,7 @@ function applyChanges(){
      concatenatedSites ="";
      selectedSites=[];
 
-	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	var Nairobi=new google.maps.LatLng(1,38);
 	
 	document.getElementById("mapContainer").innerHTML ="";
 	var map = new google.maps.Map(document.getElementById("mapContainer"), {
@@ -465,7 +465,7 @@ var ctx = getContextPath();
 	//Set zoom level
 	map.setZoom(6);
 
-		var Nairobi=new google.maps.LatLng(-1.286389,36.817223);	
+		var Nairobi=new google.maps.LatLng(1,38);	
 		map.setCenter(Nairobi);
 		
 		for(i=0;i<lst.length;i++){
@@ -773,7 +773,7 @@ if (lst.length == 0) {
 
 function ShowClusterIconAllWarehouse(Two_g_list,Three_g_list,four_g_list,warehouseSitesList,color) {
 
-	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	var Nairobi=new google.maps.LatLng(1,38);
 	var map = new google.maps.Map(document.getElementById("mapContainer"), {
 		center:Nairobi ,
 		zoom: 6
@@ -2316,7 +2316,7 @@ function SelectUnselectAllRev() {
 
 function ShowClusterIconRev(firstRangeList,secondRangeList,thirdRangeList,fourthRangeList,fifthRangeList,color) {
 
-	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	var Nairobi=new google.maps.LatLng(1,38);
     var map = new google.maps.Map(document.getElementById("mapContainer"), {
 		center:Nairobi ,
 		zoom: 6
@@ -2597,7 +2597,7 @@ function UnselectAllRev(){
 
 function ShowClusterIcon(Two_g_list,Three_g_list,four_g_list,color) {
 
-	var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+	var Nairobi=new google.maps.LatLng(1,38);
 	var map = new google.maps.Map(document.getElementById("mapContainer"), {
 		center:Nairobi ,
 		zoom: 6
@@ -2928,7 +2928,7 @@ function ShowHideRevMarkers(color) {
 }
 function ShowRevClusterIcon(firstRangeList,secondRangeList,thirdRangeList,fourthRangeList,fifthRangeList,color) {
   
-    var Nairobi=new google.maps.LatLng(-1.286389,36.817223);
+    var Nairobi=new google.maps.LatLng(1,38);
     var map = new google.maps.Map(document.getElementById("mapContainer"), {
         center:Nairobi ,
         zoom: 6

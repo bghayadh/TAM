@@ -1430,6 +1430,11 @@ function createSiteCltMarker(Id, Name, Lat, Long, siteCltSrcMarkers) {
         });
 
         google.maps.event.addListener(siteCltMarker, 'click', function () {
+			console.log("********* Clicking on not existed marker");
+			if (deleting) {
+				console.log("Selecting the none existing marker to delete it");
+				deleteAuxPath({ latLng: siteCltMarker.getPosition() });
+			}			
             infowindow.open(map, siteCltMarker);
         });
     } else {
@@ -1448,7 +1453,11 @@ function createSiteCltMarker(Id, Name, Lat, Long, siteCltSrcMarkers) {
 
         google.maps.event.clearListeners(existingMarker, 'click'); // Remove existing click listeners
         google.maps.event.addListener(existingMarker, 'click', function () {
-            infowindow.open(map, existingMarker);
+			console.log("********** Clicking on general aux marker");
+			if (deleting) {
+				deleteAuxPath({ latLng: existingMarker.getPosition() });
+			}
+		infowindow.open(map, existingMarker);
         });
     }
 
@@ -5711,14 +5720,18 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 		    const lng = document.getElementById('connectedSearchLong').value
 		    const lat = document.getElementById('connectedSearchLat').value
 		    const selectedOp = document.querySelector(`#select${prefix}`).value;
+			const locationType = document.querySelector('#selectConnectedSearch').value;
+			console.log("locationType is: ", locationType);
 
 		    let urlString = `&siteId=${siteId}&selectConnectedSearch=${selectedOp}` +
 		                    `&connectedSearchLong=${lng}&connectedSearchLat=${lat}` +
 		                    `&connectedViewOnMap=off` +
 		                    `&getRelatedPoints=${$("#getRelatedPointsCon").val()}` +
-		                    `&updateModfUser=${updateModfUser}`;
+		                    `&updateModfUser=${updateModfUser}` +
+							`&locationType=${locationType}`;
 
-		    window.location.href = `${getContext()}/NetworkPhysicalLayer?Checked=connected${urlString}`;
+		    //window.location.href = `${getContext()}/NetworkPhysicalLayer?Checked=connected${urlString}`;
+			window.location.href = `${getContext()}/findConnected?Checked=connected${urlString}`;
 		});
 
 	
@@ -5727,6 +5740,9 @@ function searchConnectedButtonEvents(hash_Project,hash_manhole,hash_handhole,has
 
 function openSearchConnected(checkedOption, siteId, selectConnectedSearch, connectedSearchLong, connectedSearchLat, connectedViewOnMap, 
     arrayStrands, arrayTubes,  arrayFibers, arrayManhole, arrayHandhole, arrayDB,controllerList, distribBoardListSize, getRelatedPoints, fpPath, bpPath, NodeList ) {
+		
+	console.log("#fpPath is: ", fpPath);
+	console.log("#bpPath is: ", bpPath);
     // Show modal
     $('a[href="#connectedS"]').click();
     $("#fiberCitySearch").modal('show');
@@ -6218,7 +6234,9 @@ function calculateGeoDistanceNearestPoints(tableId, surveyArray) {
 }
 
 function appendConnectedTable(result) {
-    // Helper function to handle null and "null" values
+	
+	console.log("************ Welcome to appendConnectedTable ******************");
+    // Helper function to handle null and "null" values	
     const sanitizeValue = (value) => {
         return value === null || value === undefined || value === "null" ? '' : value.toString();
     };
@@ -6229,6 +6247,9 @@ function appendConnectedTable(result) {
     const fibers = result[2] || [];
     let fpPath = result[4] ? JSON.parse(result[4]) : [];
     let bpPath = result[5] ? JSON.parse(result[5]) : [];
+	
+	console.log("************* fpPath is: ", fpPath);
+	console.log("************* bpPath is: ", bpPath);
 
     let markupConFiber = "";
     let markupConDb = "";
