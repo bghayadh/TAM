@@ -30,7 +30,6 @@
 	<script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
 	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementTree.js"></script>
-	<!-- <script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementMap.js"></script> -->
 	<script src="${pageContext.request.contextPath}/resources/js/Network/NetworkElementMap.js"></script>
 			
 <style>
@@ -886,6 +885,8 @@ map.setCenter({lat: 33.8547, lng: 35.8623});
 	function Tree_PropagationAppendedNodes(selector) {
 		console.log("selector is ", selector);
 		$("#" + selector + " .folder").on('click', function (e) {
+		console.log("Expand clicked:", $(this).closest("li").attr("id"));
+
         //console.log("clicked folder Nodes and Cells");
         var parentLi = $(this).closest('li');
         var children = parentLi.find(' > ul > li');

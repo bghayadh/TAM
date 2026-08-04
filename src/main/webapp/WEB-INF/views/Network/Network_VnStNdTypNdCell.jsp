@@ -243,8 +243,8 @@ function VenStNdTypNdCellCore(id){
 						if(VenChildrenLength<listVenSites.length){
 							var dFrag = document.createDocumentFragment();
 							for (n = 0; n < listVenSites.length; n++) {		
-								var str = "<li class='SingleSiteVen' id='"+listVenSites[n][1]+"_"+listVenSites[n][4]+"' style='display:none; margin-left:-20px'><input type='checkbox' id='" + listVenSites[n][1]+"_"+listVenSites[n][4] +"_SingleSite' class='SingleSiteVen' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listVenSites[n][1]+"_"+listVenSites[n][4] + "_SingleSite)'></input><span class='folder' onclick='StNdTpNdCellCore("+listVenSites[n][1]+"_"+listVenSites[n][4]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px' onclick='PanTreeSites("+listVenSites[n][1]+"_"+listVenSites[n][4]+")'><i class='fas fa-crosshairs fa-2x'></i>"+listVenSites[n][0]+"</span>";
-								str+= "<ul><li id='" +listVenSites[n][1]+"_"+listVenSites[n][4]+"_f' class='NodeTypeFolder' style='display:none; margin-left:10px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> NodeType </span></span></li></ul></li></ul>";						   						    	
+								var str = "<li class='SingleSiteVen' id='"+listVenSites[n][1]+"_"+listVenSites[n][4]+ "' style='display:none; margin-left:-20px'><input type='checkbox' id='" + listVenSites[n][1]+"_"+listVenSites[n][4] +"_SingleSite' class='SingleSiteVen' style='margin-left: 15px' onclick='showMarkerSingleSite("+ listVenSites[n][1]+"_"+listVenSites[n][4] + "_SingleSite)'></input><span class='folder' onclick='StNdTpNdCellCore("+listVenSites[n][1]+"_"+listVenSites[n][4]+")'><i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px' onclick='PanTreeSites("+listVenSites[n][1]+"_"+listVenSites[n][4]+")'><i class='fas fa-crosshairs fa-2x'></i>"+listVenSites[n][0]+"</span>";
+								str+= "<ul><li id='" +listVenSites[n][1]+"_"+listVenSites[n][4]+ "_f' class='NodeTypeFolder' style='display:none; margin-left:10px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> NodeType </span></span></li></ul></li></ul>";						   						    	
 								const div = document.createElement('ul');
 								div.innerHTML = str;
 								dFrag.appendChild(div);   
@@ -385,14 +385,15 @@ function StNdTpNdCellCore(id)
 					//console.log("listNodesType : ", listNodesType);
 					for(j=0;j<listNodesType.length;j++)	
 						{												
-						var str= "<ul><li class='NodeType' id='" + listNodesType[j][0] +"_"+listNodesType[j][1]+"' style='display:none;margin-left:-20px;' class='folder'>";								  															
-						str+="<span class='folder' onclick='VenNdCellCore(" + listNodesType[j][0] +"_"+listNodesType[j][1]+")'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
+						var str= "<ul><li class='NodeType' id='" + listNodesType[j][0] +"_"+listNodesType[j][1]+ "_" + selectedVen + "' style='display:none;margin-left:-20px;' class='folder'>";								  															
+						str+="<span class='folder' onclick='VenNdCellCore(" + listNodesType[j][0] +"_"+listNodesType[j][1]+ "_" + selectedVen +")'> <i class='fa fa-folder' style='color: #08526D'></i></span>";
 						str+= "<span class='TreeSpan' style='width:395px'><span class='tree-span' style='margin-left:-15px;'><i class='fa fa-cogs'></i>"+listNodesType[j][0]+"</span></span></li></ul>";						
 						$("#"+selectedItem+"_"+selectedVen+"_f").append(str);
-						str="<ul><li id='" +listNodesType[j][0] +"_"+listNodesType[j][1]+"_f' class='NodeFolder' style='display:none; margin-left:-20px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node </span></span></li></ul>";				
-						$("#" + listNodesType[j][0] +"_"+listNodesType[j][1]).append(str);								
+						str="<ul><li id='" +listNodesType[j][0] +"_"+listNodesType[j][1]+"_" + selectedVen + "_f' class='NodeFolder' style='display:none; margin-left:-20px'><span class='folder'> <i class='fa fa-folder' style='color: #08526D'></i></span><span class='TreeSpan' style='width:395px'> Node </span></span></li></ul>";				
+						$("#" + listNodesType[j][0] +"_"+listNodesType[j][1]+"_" + selectedVen).append(str);
+						}
 						tree_prop_selection("#" +selectedItem+ "_" +selectedVen +"_f .NodeType .TreeSpan");
-				        Tree_PropagationAppendedNodes(selectedItem+ "_" +selectedVen +"_f .NodeType");
+				        Tree_PropagationAppendedNodes(selectedItem+ "_" +selectedVen +"_f .NodeType");						
 				        
 				        var selectedSingleNt;
 				        var selectedSite;
@@ -401,7 +402,7 @@ function StNdTpNdCellCore(id)
 			        		var index = selectedSingleNtIdContext.indexOf("WARE_2");
 			    			if (index !== -1) {
 			    				selectedSingleNt = selectedSingleNtIdContext.substring(0, index).slice(0, -1);
-			    			  	selectedSite = selectedSingleNtIdContext.substring(index);
+			    			  	selectedSite = selectedSingleNtIdContext.substring(index, selectedSingleNtIdContext.indexOf(selectedVen)-1);
 			    			}
 			    			menuName=SingleNt;	
 			        		openContext(selectedSingleNtIdContext,"",SingleNt,event);
@@ -417,7 +418,7 @@ function StNdTpNdCellCore(id)
 			        		}
 			        	]
 			        });
-					}
+					//}
 				}
 				data= null;
 			},
@@ -432,9 +433,14 @@ function StNdTpNdCellCore(id)
 
 function VenNdCellCore(id){
 	
+	console.log("Welcome to VendorNdCellCore, the id is: " , id);
 	var selectedNodetType = id.id.split("_")[0];
-	var selectedItem = id.id.substring(selectedNodetType.length + 1);
+	console.log("selectedNodetType is ", selectedNodetType);
 	var selectedVen = $(id).closest("li").closest(".Vendor").attr("id");
+	console.log("selectedVen is ", selectedVen);	
+	var selectedItem = id.id.substring(selectedNodetType.length + 1, id.id.length - selectedVen.length - 1);
+	//var selectedItem = id.id.substring(selectedNodetType.length + 1);
+	console.log("selectedItem is ", selectedItem);
 	   
 		var NdTypeChildrenLength=$("#" + selectedNodetType+"_"+selectedItem+"_f").find(' > ul > li').length;
 		if(NdTypeChildrenLength==0){
@@ -481,9 +487,9 @@ function VenNdCellCore(id){
 					if (data != null) {
 						var listNodes=data.listNodes;
 						var listCells=data.listCells;
-						Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem);
-			            Tree_PropagationAppendedNodes(selectedNodetType+ "_" +selectedItem+"_f  .Node");
-			            tree_prop_selection("#" + selectedNodetType+ "_" +selectedItem+"_f .Node .TreeSpan");
+						Create_TreeNode_CellGeneral(listNodes,listCells,NdTypeChildrenLength, true,selectedItem, selectedVen);
+			            Tree_PropagationAppendedNodes(selectedNodetType+ "_" +selectedItem+ "_" +selectedVen+ "_f  .Node");
+			            tree_prop_selection("#" + selectedNodetType+ "_" +selectedItem+ "_" +selectedVen+ "_f .Node .TreeSpan");			            
 				}
 					data= null;
 				},
