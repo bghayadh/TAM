@@ -1,5 +1,5 @@
 function initDuctEvents() {
-
+	selectedDuctContext = null;
     $("#saveDuct").on('click', function() {
         saveDuctPath();
     });
@@ -19,6 +19,13 @@ function initDuctEvents() {
 
     $("#confirmGenerateDuct").on('click', function() {
         console.log("Welcome generate duct from path confirm");
+		
+		
+		if (selectedDuctContext == null && selectedTrenchContext == null) {
+			alert("Please select the duct or at least the trench");
+			return;			
+		}
+		
         if (!$("#generateFromTrench").is(":checked"))
             if ($("#ductGenCableId").val().trim() == "" || $("#ductGenCableName").val().trim() == "") {
                 alert("Please select the fiber path to generate from it");
@@ -35,7 +42,8 @@ function initDuctEvents() {
             data: {
                 ID: $("#ductGenCableId").val(),
                 fromTrench: $("#generateFromTrench").is(":checked"),
-                selected: selectedDuctContext,
+                selectedDuct: selectedDuctContext,
+				selectedTrench: selectedTrenchContext,
                 append: $("#appendToDuctAuxPoints").is(":checked"),
                 includeSrcDest: $("#includeSourceDestination").is(":checked")
             },

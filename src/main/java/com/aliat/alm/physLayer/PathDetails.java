@@ -53,8 +53,8 @@ public class PathDetails {
 			return rtn;
 		} else {
 			String selectedFiberContext = request.getParameter("selectedFiberContext");
-			
-			System.out.println("selectedFiberContext is " +selectedFiberContext);
+
+			System.out.println("selectedFiberContext is " + selectedFiberContext);
 			List<Object[]> fiberDetails, fiberTubes, fiberStrands, accessJunctions;
 			List<FiberDuct> fiberDucts = new ArrayList<FiberDuct>();
 			session = AlmDbSession.getInstance().getSession();
@@ -69,14 +69,14 @@ public class PathDetails {
 							.getResultList();
 
 					// USED IN SHOW POINTS FOR AUXILIARIES //
-/*					
-					List<Object[]> fiberAuxiliaryData = session.createNativeQuery(
-							"SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.SEQ_SORTING, B.DRIVING_DISTANCE, B.GEO_DISTANCE, B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
-									+ selectedFiberContext + "' ORDER BY B.SEQ_SORTING ASC")
-							.getResultList();
-*/							
-					
-					fiberDucts = session.createQuery("from FiberDuct where fiberPathId = :param").setParameter("param", selectedFiberContext).getResultList();
+					/*
+					 * List<Object[]> fiberAuxiliaryData = session.createNativeQuery(
+					 * "SELECT B.LONGITUDE,B.LATITUDE,B.DISTANCE_FROM_SOURCE,B.WARE_ID,B.AUXILIARY_POINT_ID,B.AUXILIARY_POINT_NAME,B.FIBER_CABLE_ID,B.SEQ_SORTING, B.DRIVING_DISTANCE, B.GEO_DISTANCE, B.AUXILIARY_ID FROM FIBER_CABLES A,FIBER_AUXILIARY_POINTS B WHERE A.FIBER_CABLE_ID=B.FIBER_CABLE_ID AND B.FIBER_CABLE_ID ='"
+					 * + selectedFiberContext + "' ORDER BY B.SEQ_SORTING ASC") .getResultList();
+					 */
+
+					fiberDucts = session.createQuery("from FiberDuct where fiberPathId = :param")
+							.setParameter("param", selectedFiberContext).getResultList();
 
 					fiberTubes = session.createNativeQuery(
 							"SELECT TUBE_ID, FIBER_CABLE_ID, SOURCE_LONGITUDE,SOURCE_LATITUDE,DESTINATION_LONGITUDE,DESTINATION_LATITUDE,SOURCE_WARE_ID,SOURCE_ID,SOURCE_NAME,DESTINATION_WARE_ID,DESTINATION_ID,DESTINATION_NAME,TUBE_NAME,SOURCE_CITY, DESTINATION_CITY, TUBE_TYPE, TUBE_DEPLOYMENT, TUBE_NETWORK_LEVEL, TUBE_OWNER,TUBE_NUMBER,TUBE_COLOR,DRAWING_TYPE,TOTAL_GEO_DISTANCE,TOTAL_DRIVING_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DISTANCE,LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE FROM FIBER_TUBES WHERE FIBER_CABLE_ID='"
@@ -239,8 +239,10 @@ public class PathDetails {
 
 		logger.finest("FINEST at getPathForDuctGen");
 
-		String selectedDuctContext = request.getParameter("selected");
+		String selectedDuctContext = request.getParameter("selectedDuct");
 		System.out.println("selectedDuctContext is " + selectedDuctContext);
+		String selectedTrenchContext = request.getParameter("selectedTrench");
+		System.out.println("selectedDuctContext is " + selectedTrenchContext);
 		String pathID = request.getParameter("ID");
 		System.out.println("pathID is " + pathID);
 		boolean fromTrench = Boolean.parseBoolean(request.getParameter("fromTrench"));
@@ -252,17 +254,22 @@ public class PathDetails {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String trenchId = null;
-		session = AlmDbSession.getInstance().getSession();
-		if (session != null && session.isOpen()) {
-			try {
-				trenchId = session.createNativeQuery("SELECT TRENCH_ID FROM DUCTS WHERE DUCT_ID = :param")
-						.setParameter("param", selectedDuctContext).getSingleResult().toString();
-			} catch (Exception e) {
-				logger.log(Level.SEVERE, "Error in getPathForDuctGen when getting trenchId based on ductId due to", e);
-				trenchId = null;
-			} finally {
-				if (session != null && session.isOpen()) {
-					session.close();
+		trenchId = selectedTrenchContext;
+		if (trenchId == null && selectedDuctContext != null) {
+			System.out.println("trenchId is null and seelcted Duct is " +selectedDuctContext);
+			session = AlmDbSession.getInstance().getSession();
+			if (session != null && session.isOpen()) {
+				try {
+					trenchId = session.createNativeQuery("SELECT TRENCH_ID FROM DUCTS WHERE DUCT_ID = :param")
+							.setParameter("param", selectedDuctContext).getSingleResult().toString();
+				} catch (Exception e) {
+					logger.log(Level.SEVERE, "Error in getPathForDuctGen when getting trenchId based on ductId due to",
+							e);
+					trenchId = null;
+				} finally {
+					if (session != null && session.isOpen()) {
+						session.close();
+					}
 				}
 			}
 		}
@@ -354,7 +361,7 @@ public class PathDetails {
 
 				String sql = "SELECT duct_id, duct_name " + "FROM ducts " + "WHERE UPPER(duct_id) LIKE UPPER(:duct) "
 						+ "OR UPPER(duct_name) LIKE UPPER(:duct) " + "ORDER BY duct_name " + "FETCH FIRST 40 ROWS ONLY";
-				
+
 				List<Object[]> ductDetails = session.createNativeQuery(sql).setParameter("duct", "%" + duct + "%")
 						.getResultList();
 

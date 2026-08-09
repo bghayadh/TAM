@@ -1,6 +1,6 @@
 function initTrunchEvents() {
     console.log("Hello, just before putting click even in trench initialization");
-	
+	selectedTrenchContext = null;	
 	$("#saveTrench").on('click', function() {
 	    saveTrenchPath();
 	});
