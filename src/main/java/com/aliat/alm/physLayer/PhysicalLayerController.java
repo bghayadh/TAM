@@ -37,6 +37,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -86,6 +88,7 @@ import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -1518,7 +1521,7 @@ public class PhysicalLayerController {
 									}
 									// End Longitude with start & end latitude
 									else if (startLatPoint != null && startLatPoint.length() > 0
-											&& (endLatPoint != null && endLatPoint.length() > 0)) {																			
+											&& (endLatPoint != null && endLatPoint.length() > 0)) {
 
 										if (Double.parseDouble(startLatPoint) < Double.parseDouble(endLatPoint)) {
 											startlatitude = startLatPoint;
@@ -1613,7 +1616,7 @@ public class PhysicalLayerController {
 								} // end the End long condition
 
 								else if ((startLongPoint != null && !startLongPoint.equalsIgnoreCase(""))
-										&& (endLongPoint != null && !endLongPoint.equalsIgnoreCase(""))) {																	
+										&& (endLongPoint != null && !endLongPoint.equalsIgnoreCase(""))) {
 
 									if (Double.parseDouble(startLongPoint) < Double.parseDouble(endLongPoint)) {
 										startLng = startLongPoint;
@@ -2062,15 +2065,14 @@ public class PhysicalLayerController {
 								List<Object[]> batchResults = query.getResultList();
 								manholeList.addAll(batchResults);
 							}
-/*							
-							handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) ";
-							handholeList = session.createNativeQuery(handholeStr).setParameter("param", hhFilteredIDs)
-									.getResultList();
-*/							
-							
-							//handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) ";
+							/*
+							 * handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) "; handholeList =
+							 * session.createNativeQuery(handholeStr).setParameter("param", hhFilteredIDs)
+							 * .getResultList();
+							 */
+
+							// handholeStr = handholeStr + " OR HANDHOLE_ID IN (:param) ";
 							handholeList = session.createNativeQuery(handholeStr).getResultList();
-							
 
 							dbStr = dbStr + " OR DB_ID IN (:param) ";
 							distribBoardList = session.createNativeQuery(dbStr).setParameter("param", dbFilteredIDs)
@@ -2310,9 +2312,9 @@ public class PhysicalLayerController {
 						filterFlag = 2;
 						checkedOption = request.getParameter("Checked");
 						String locationType = request.getParameter("locationType");
-						System.out.println("locationType is " +locationType);
+						System.out.println("locationType is " + locationType);
 						String siteId = request.getParameter("siteId").split(":")[0];
-						System.out.println("siteId is " +siteId);
+						System.out.println("siteId is " + siteId);
 						String showPointsType = request.getParameter("getRelatedPoints");
 						// String headerSearchlong = request.getParameter("headerSearchLong");
 						// String headerSearchlat = request.getParameter("headerSearchLat");
@@ -6849,91 +6851,93 @@ public class PhysicalLayerController {
 					String newLongitude = "", newLatitude = "";
 
 					for (int i = 0; i < itemParameters.getDictParameter().size(); i++) {
-						
-						System.out.println("i is " +i + " long is: " +itemParameters.getDictParameter().get(i).get("longitude"));
-						System.out.println("i is " +i + " lat is: " +itemParameters.getDictParameter().get(i).get("latitude"));
-						
+
+						System.out.println(
+								"i is " + i + " long is: " + itemParameters.getDictParameter().get(i).get("longitude"));
+						System.out.println(
+								"i is " + i + " lat is: " + itemParameters.getDictParameter().get(i).get("latitude"));
+
 						longitude = itemParameters.getDictParameter().get(i).get("longitude");
 						String[] lngparts = longitude.split("\\.");
 						String lngBeforeDecimal = lngparts[0];
 						String lngAfterDecimal = lngparts[1];
-						
-						System.out.print("lngBeforeDecimal is " +lngBeforeDecimal + " lngAfterDecimal is " +lngAfterDecimal);
-						
+
+						System.out.print(
+								"lngBeforeDecimal is " + lngBeforeDecimal + " lngAfterDecimal is " + lngAfterDecimal);
+
 						latitude = itemParameters.getDictParameter().get(i).get("latitude");
 						String[] latparts = latitude.split("\\.");
 						String latBeforeDecimal = latparts[0];
 						String latAfterDecimal = latparts[1];
-						System.out.print("latBeforeDecimal is " +latBeforeDecimal + " latAfterDecimal is " +latAfterDecimal);
-						
+						System.out.print(
+								"latBeforeDecimal is " + latBeforeDecimal + " latAfterDecimal is " + latAfterDecimal);
+
 						newLongitude = longitude;
 						if (lngAfterDecimal.length() > 5) {
-						    newLongitude = lngBeforeDecimal + "." + lngAfterDecimal.substring(0, 5);
+							newLongitude = lngBeforeDecimal + "." + lngAfterDecimal.substring(0, 5);
 						}
 
 						newLatitude = latitude;
 						if (latAfterDecimal.length() > 5) {
-						    newLatitude = latBeforeDecimal + "." + latAfterDecimal.substring(0, 5);
-						}						
-						
+							newLatitude = latBeforeDecimal + "." + latAfterDecimal.substring(0, 5);
+						}
+
 						queryStmnt = "select MANHOLE_ID || ':' || MANHOLE_NAME from MANHOLE WHERE longitude LIKE '"
 								+ newLongitude + "%' AND  latitude LIKE '" + newLatitude
 								+ "%' FETCH FIRST 1 ROWS ONLY ";
 						resultList = session.createNativeQuery(queryStmnt).getResultList();
-						
+
 						if (resultList.size() == 0) {
 							queryStmnt = "SELECT HANDHOLE_ID || ':' || HANDHOLE_NAME FROM HANDHOLE WHERE longitude LIKE '"
 									+ newLongitude + "%' AND  latitude LIKE '" + newLatitude + "%' "
 									+ "FETCH FIRST 1 ROWS ONLY";
-							resultList = session.createNativeQuery(queryStmnt).getResultList();							
+							resultList = session.createNativeQuery(queryStmnt).getResultList();
 						}
-						
-/*
-						if (lngAfterDecimal.length() <= 5 && latAfterDecimal.length() <= 5) {
-							System.out.println("Length is less than 5");
-							newLongitude = longitude;
-							newLatitude = latitude;
 
-							queryStmnt = "select MANHOLE_ID || ':' || MANHOLE_NAME from MANHOLE WHERE longitude LIKE '"
-									+ newLongitude + "%' AND  latitude LIKE '" + newLatitude
-									+ "%' FETCH FIRST 1 ROWS ONLY ";
-							query = session.createNativeQuery(queryStmnt);
-
-							if (query.getResultList().size() == 0) {
-								queryStmnt = "SELECT HANDHOLE_ID || ':' || HANDHOLE_NAME FROM HANDHOLE WHERE longitude LIKE '"
-										+ newLongitude + "%' AND  latitude LIKE '" + newLatitude + "%' "
-										+ "FETCH FIRST 1 ROWS ONLY";
-								query = session.createNativeQuery(queryStmnt);
-							}
-
-						} else if (lngAfterDecimal.length() >= 6 && latAfterDecimal.length() >= 6) {
-							System.out.println ("length more than 6, actually the lngAfterDecimal is " + lngAfterDecimal.length() + " latAfterDecimal is " +latAfterDecimal.length());							
-							
-							lngAfterDecimal = lngAfterDecimal.substring(0, lngAfterDecimal.length() - 1);
-							newLongitude = lngBeforeDecimal + "." + lngAfterDecimal;
-							latAfterDecimal = latAfterDecimal.substring(0, latAfterDecimal.length() - 1);
-							newLatitude = latBeforeDecimal + "." + latAfterDecimal;
-							
-							System.out.println("i is: " + i +" newLongitude is " +newLongitude + " newLatitude is " +newLatitude);
-							
-
-							queryStmnt = "select MANHOLE_ID || ':' || MANHOLE_NAME from MANHOLE WHERE longitude LIKE '"
-									+ newLongitude + "%' AND latitude LIKE '" + newLatitude
-									+ "%'  FETCH FIRST 1 ROWS ONLY ";
-							query = session.createNativeQuery(queryStmnt);
-
-							if (query.getResultList().size() == 0) {
-								queryStmnt = "select HANDHOLE_ID || ':' || HANDHOLE_NAME from HANDHOLE WHERE longitude LIKE '"
-										+ newLongitude + "%' AND latitude LIKE '" + newLatitude
-										+ "%' FETCH FIRST 1 ROWS ONLY ";
-								query = session.createNativeQuery(queryStmnt);
-							}
-						}
-						System.out.println("Just before executing the query the queryStmnt is " +queryStmnt);
-						
-						resultList = query.getResultList();
-						
-*/						
+						/*
+						 * if (lngAfterDecimal.length() <= 5 && latAfterDecimal.length() <= 5) {
+						 * System.out.println("Length is less than 5"); newLongitude = longitude;
+						 * newLatitude = latitude;
+						 * 
+						 * queryStmnt =
+						 * "select MANHOLE_ID || ':' || MANHOLE_NAME from MANHOLE WHERE longitude LIKE '"
+						 * + newLongitude + "%' AND  latitude LIKE '" + newLatitude +
+						 * "%' FETCH FIRST 1 ROWS ONLY "; query = session.createNativeQuery(queryStmnt);
+						 * 
+						 * if (query.getResultList().size() == 0) { queryStmnt =
+						 * "SELECT HANDHOLE_ID || ':' || HANDHOLE_NAME FROM HANDHOLE WHERE longitude LIKE '"
+						 * + newLongitude + "%' AND  latitude LIKE '" + newLatitude + "%' " +
+						 * "FETCH FIRST 1 ROWS ONLY"; query = session.createNativeQuery(queryStmnt); }
+						 * 
+						 * } else if (lngAfterDecimal.length() >= 6 && latAfterDecimal.length() >= 6) {
+						 * System.out.println ("length more than 6, actually the lngAfterDecimal is " +
+						 * lngAfterDecimal.length() + " latAfterDecimal is " +latAfterDecimal.length());
+						 * 
+						 * lngAfterDecimal = lngAfterDecimal.substring(0, lngAfterDecimal.length() - 1);
+						 * newLongitude = lngBeforeDecimal + "." + lngAfterDecimal; latAfterDecimal =
+						 * latAfterDecimal.substring(0, latAfterDecimal.length() - 1); newLatitude =
+						 * latBeforeDecimal + "." + latAfterDecimal;
+						 * 
+						 * System.out.println("i is: " + i +" newLongitude is " +newLongitude +
+						 * " newLatitude is " +newLatitude);
+						 * 
+						 * 
+						 * queryStmnt =
+						 * "select MANHOLE_ID || ':' || MANHOLE_NAME from MANHOLE WHERE longitude LIKE '"
+						 * + newLongitude + "%' AND latitude LIKE '" + newLatitude +
+						 * "%'  FETCH FIRST 1 ROWS ONLY "; query =
+						 * session.createNativeQuery(queryStmnt);
+						 * 
+						 * if (query.getResultList().size() == 0) { queryStmnt =
+						 * "select HANDHOLE_ID || ':' || HANDHOLE_NAME from HANDHOLE WHERE longitude LIKE '"
+						 * + newLongitude + "%' AND latitude LIKE '" + newLatitude +
+						 * "%' FETCH FIRST 1 ROWS ONLY "; query = session.createNativeQuery(queryStmnt);
+						 * } } System.out.println("Just before executing the query the queryStmnt is "
+						 * +queryStmnt);
+						 * 
+						 * resultList = query.getResultList();
+						 * 
+						 */
 						String AuxName = "";
 						if (resultList.size() == 1) {
 							AuxName = resultList.get(0).toString();
@@ -6946,13 +6950,12 @@ public class PhysicalLayerController {
 						} else if (addedNames.add(AuxName)) {
 							// add only if not already added
 							auxWithName.add(Arrays.asList(longitude, latitude, "", AuxName, "", ""));
-						} 
+						}
 					}
 				}
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error in getPathForDuctGen when getting trenchId based on ductId due to", e);
-			}
-			finally {
+			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
@@ -8730,14 +8733,12 @@ public class PhysicalLayerController {
 		return rtn;
 	}
 
-	@RequestMapping(value = "/DeleteFiberPathAux", method = RequestMethod.GET)
+	@RequestMapping(value = "/DeleteFiberPathAux", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String, Object> DeleteFiberPathAux(Locale locale, Model model, HttpServletRequest request,
 			HttpServletResponse response) throws JsonProcessingException {
-		// logger.info("Welcome home! The client locale is {}.", locale);
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
-
 		session = AlmDbSession.getInstance().getSession();
 		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
 			rtn.put("Login", LoginServices.checkSession(request, response));
@@ -8746,35 +8747,112 @@ public class PhysicalLayerController {
 		if (session != null && session.isOpen()) {
 			tx = session.beginTransaction();
 			try {
-				System.out.println("Inside delete aux ");
 				String fiberpathID = request.getParameter("fiberpathID");
-				String[] markersArray = request.getParameterValues("markersArray[]");
-				System.out.println("delete aux array " + mapper.writeValueAsString(markersArray));
+				System.out.println("fiberpathID is " + fiberpathID);
+				String pointsJson = request.getParameter("points"); // JSON array [{lat:"..",lng:".."}, ...]
+				System.out.println("pointsJson is " + pointsJson);
+				List<Map<String, String>> capturedPoints = mapper.readValue(pointsJson,
+						new TypeReference<List<Map<String, String>>>() {
+						});
 
-				query = session.createNativeQuery("delete from FIBER_AUXILIARY_POINTS where FIBER_CABLE_ID='"
-						+ fiberpathID + "' and AUXILIARY_POINT_ID IN (:param1) ");
+				System.out.println("capturedPoints is " + mapper.writeValueAsString(capturedPoints));
 
-				query.setParameter("param1", Arrays.asList(markersArray));
-				query.executeUpdate();
+				// ---- 1. DELETE matched points (truncated 5-decimal compare, both sides) ----
+				if (capturedPoints != null && !capturedPoints.isEmpty()) {
+					StringBuilder deleteSql = new StringBuilder(
+							"DELETE FROM FIBER_AUXILIARY_POINTS WHERE FIBER_CABLE_ID = :fiberpathID AND (");
+					for (int i = 0; i < capturedPoints.size(); i++) {
+						if (i > 0)
+							deleteSql.append(" OR ");
+						deleteSql.append("(TRUNC(TO_NUMBER(LONGITUDE),5) = TRUNC(TO_NUMBER(:lng").append(i)
+								.append("),5)").append(" AND TRUNC(TO_NUMBER(LATITUDE),5) = TRUNC(TO_NUMBER(:lat")
+								.append(i).append("),5))");
+					}
+					deleteSql.append(")");
+					System.out.println("deleteSql is: " + deleteSql);
 
+					query = session.createNativeQuery(deleteSql.toString());
+					query.setParameter("fiberpathID", fiberpathID);
+					for (int i = 0; i < capturedPoints.size(); i++) {
+						query.setParameter("lng" + i, capturedPoints.get(i).get("lng"));
+						query.setParameter("lat" + i, capturedPoints.get(i).get("lat"));
+					}
+					int deletedCount = query.executeUpdate();
+					rtn.put("deletedCount", deletedCount);
+				} else {
+					rtn.put("deletedCount", 0);
+				}
+
+				// ---- 2. SELECT remaining auxiliary points for this cable, joined for display
+				// names ----
+				String selectSql = "SELECT B.LONGITUDE, B.LATITUDE, B.DISTANCE_FROM_SOURCE, B.WARE_ID, "
+						+ "B.AUXILIARY_POINT_ID, B.AUXILIARY_POINT_NAME, B.FIBER_CABLE_ID, B.AUXILIARY_ID "
+						+ "FROM FIBER_AUXILIARY_POINTS B " + "WHERE B.FIBER_CABLE_ID = :fiberpathID "
+						+ "ORDER BY B.SEQ_SORTING ASC";
+
+				NativeQuery<?> selectQuery = session.createNativeQuery(selectSql);
+				selectQuery.setParameter("fiberpathID", fiberpathID);
+				selectQuery.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+
+				@SuppressWarnings("unchecked")
+				List<Map<String, Object>> remainingPoints = (List<Map<String, Object>>) selectQuery.getResultList();
+				rtn.put("remainingPoints", remainingPoints);
+				rtn.put("fiberpathID", fiberpathID);
 			} catch (Exception e) {
 				sw = new StringWriter();
 				e.printStackTrace(new PrintWriter(sw));
 				exceptionAsString = sw.toString();
 				logger.finest("Error in DeleteFiberPathAux due to \n " + exceptionAsString);
 				logger.info("Error in DeleteFiberPathAux due to \n " + exceptionAsString);
-			}
-
-			finally {
+				rtn.put("error", true);
+			} finally {
 				if (session != null && session.isOpen()) {
 					tx.commit();
 					session.close();
-
 				}
 			}
 		}
 		return rtn;
 	}
+
+// To be deleted	
+	/*
+	 * @RequestMapping(value = "/DeleteFiberPathAux", method = RequestMethod.GET)
+	 * 
+	 * @ResponseBody public Map<String, Object> DeleteFiberPathAux(Locale locale,
+	 * Model model, HttpServletRequest request, HttpServletResponse response) throws
+	 * JsonProcessingException { //
+	 * logger.info("Welcome home! The client locale is {}.", locale);
+	 * 
+	 * Map<String, Object> rtn = new LinkedHashMap<>();
+	 * 
+	 * session = AlmDbSession.getInstance().getSession(); if
+	 * (LoginServices.checkSession(request, response).equals("redirect:/")) {
+	 * rtn.put("Login", LoginServices.checkSession(request, response)); return rtn;
+	 * } if (session != null && session.isOpen()) { tx = session.beginTransaction();
+	 * try { System.out.println("Inside delete aux "); String fiberpathID =
+	 * request.getParameter("fiberpathID"); String[] markersArray =
+	 * request.getParameterValues("markersArray[]");
+	 * System.out.println("delete aux array " +
+	 * mapper.writeValueAsString(markersArray));
+	 * 
+	 * query = session.
+	 * createNativeQuery("delete from FIBER_AUXILIARY_POINTS where FIBER_CABLE_ID='"
+	 * + fiberpathID + "' and AUXILIARY_POINT_ID IN (:param1) ");
+	 * 
+	 * query.setParameter("param1", Arrays.asList(markersArray));
+	 * query.executeUpdate();
+	 * 
+	 * } catch (Exception e) { sw = new StringWriter(); e.printStackTrace(new
+	 * PrintWriter(sw)); exceptionAsString = sw.toString();
+	 * logger.finest("Error in DeleteFiberPathAux due to \n " + exceptionAsString);
+	 * logger.info("Error in DeleteFiberPathAux due to \n " + exceptionAsString); }
+	 * 
+	 * finally { if (session != null && session.isOpen()) { tx.commit();
+	 * session.close();
+	 * 
+	 * } } } return rtn; }
+	 */
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/saveDistributionBoard", method = RequestMethod.POST)

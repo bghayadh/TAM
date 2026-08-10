@@ -265,51 +265,174 @@ $(document).on("triggerListenersEvent", function() {
 
         $("#selectCable").on('click', function() {
             //console.log("select Cablee is "+selectedPath +" and id "+selectedPathId);
-			console.log(window["mapPoints_" + selectedPathId]);
-			console.log(window["mapPointsNames_" + selectedPathId]);
+            console.log(window["mapPoints_" + selectedPathId]);
+            console.log(window["mapPointsNames_" + selectedPathId]);
             listenerPathDelete = map.addListener('click', deleteAuxPath);
             deleting = true;
 
         });
+
+        // To be deleted
+
+        /*		
+                $("#approveDelete").on('click', function(e) {
+                    console.log("approveDelete selected Cablee is " + selectedPathId);
+                    console.log("MarkerArrayId " + MarkerArrayId);
+        
+                    $.ajax({
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        url: getContext() + '/DeleteFiberPathAux',
+                        data: {
+                            "markersArray": MarkerArrayId,
+                            "fiberpathID": selectedPathId
+                        },
+                        dataType: "json",
+                        success: function(data) {
+                            //console.log("selected Cablee mapPoints beforee "+window["mapPoints_"+selectedPathId]);
+                            //console.log("array of marker position "+selectedMarkersPos);
+        
+                            if (PathsArray.length > 0) {
+                                // console.log("delete arraay "); 
+                                for (d = 0;d < selectedMarkersPos.length;d++) {
+                                    var selectedMarkersId = selectedMarkersPos[d].Id;
+                                    console.log("selectedMarkersId is ", selectedMarkersId);
+                                    for (var i = 0;i < window["mapPoints_" + selectedPathId].length;i++) {
+                                        //console.log("WINDOW " +window["mapPoints_"+selectedPathId][i]);
+                                        let longLatStr = String(window["mapPoints_" + selectedPathId][i]);
+                                        longLatStr = longLatStr.substring(1, longLatStr.length - 1).split(", ");
+                                        //console.log("enter "+longLatStr);
+                                        //console.log("enter window "+longLatStr[0]+" and "+longLatStr[1]);
+                                        //console.log("enter pos "+selectedMarkersPos[d].lat+" and "+selectedMarkersPos[d].long);
+                                        if (longLatStr[0] === String(selectedMarkersPos[d].lat) && longLatStr[1] === String(selectedMarkersPos[d].long)) {
+                                            console.log("EQUAL ");
+                                            console.log("the selected point lat is: ", String(selectedMarkersPos[d].lat) + " and the selected point lng is: " , String(selectedMarkersPos[d].long));
+                                            window["mapPoints_" + selectedPathId].splice(i, 1);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+        
+                            eventDelete = 0;
+                            MarkerArrayId = [];
+                            selectedMarkersPos = [];
+                            MarkersArray = [];
+                            PathsArray = [];
+                            selectedMarkers = [];
+                            deleting = false;
+                            for (i = 0;i < MarkerAuxArray.length;i++) {
+                                if (MarkerAuxArray.length > 0) {
+                                    MarkerAuxArray[i].setMap(null);
+        
+                                }
+                            }
+                            alert(MarkerAuxArray.length + " points have been deleted");
+                            MarkerAuxArray = [];
+                            if (typeof listenerPathDelete !== 'undefined') {
+                                google.maps.event.removeListener(listenerPathDelete);
+                            }
+        
+        
+                            fiberArray[selectedPathId].setMap(null);
+                            buildPath(selectedPathId, window["mapPoints_" + selectedPathId], fiberArray, allFiberCables, "FiberPath_f_", window['FiberColor_' + window['' + selectedPathId][22]], 0.7, 4.5, 'blue', 13);
+                            fiberArray[selectedPathId].setMap(map);
+                            //console.log("selected Cablee mapPoints after "+window["mapPoints_"+selectedPathId]);
+        
+                        },
+                        error: function(result) {
+                            alert("Error");
+                        }
+                    });
+        
+        
+                });
+            	
+        */
+
         $("#approveDelete").on('click', function(e) {
-            console.log("approveDelete selected Cablee is " + selectedPathId);
-            console.log("MarkerArrayId " + MarkerArrayId);
+            var capturedPoints = selectedMarkersPos.map(function(p) {
+                var lngStr = String(p.long);
+                var latStr = String(p.lat);
+                return {
+                    lng: lngStr.substring(0, lngStr.indexOf('.') + 6),
+                    lat: latStr.substring(0, latStr.indexOf('.') + 6)
+                };
+            });
+
+            var token = $('input[name="csrfToken"]').attr('value');
 
             $.ajax({
-                type: "GET",
-                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                headers: {
+                    'X-CSRFToken': token
+                },
                 url: getContext() + '/DeleteFiberPathAux',
                 data: {
-                    "markersArray": MarkerArrayId,
+                    "points": JSON.stringify(capturedPoints),
                     "fiberpathID": selectedPathId
                 },
                 dataType: "json",
                 success: function(data) {
-                    //console.log("selected Cablee mapPoints beforee "+window["mapPoints_"+selectedPathId]);
-                    //console.log("array of marker position "+selectedMarkersPos);
-
-                    if (PathsArray.length > 0) {
-                        // console.log("delete arraay "); 
-                        for (d = 0;d < selectedMarkersPos.length;d++) {
-                            var selectedMarkersId = selectedMarkersPos[d].Id;
-							console.log("selectedMarkersId is ", selectedMarkersId);
-                            for (var i = 0;i < window["mapPoints_" + selectedPathId].length;i++) {
-                                //console.log("WINDOW " +window["mapPoints_"+selectedPathId][i]);
-                                let longLatStr = String(window["mapPoints_" + selectedPathId][i]);
-                                longLatStr = longLatStr.substring(1, longLatStr.length - 1).split(", ");
-                                //console.log("enter "+longLatStr);
-                                //console.log("enter window "+longLatStr[0]+" and "+longLatStr[1]);
-                                //console.log("enter pos "+selectedMarkersPos[d].lat+" and "+selectedMarkersPos[d].long);
-                                if (longLatStr[0] === String(selectedMarkersPos[d].lat) && longLatStr[1] === String(selectedMarkersPos[d].long)) {
-                                    console.log("EQUAL ");
-									console.log("the selected point lat is: ", String(selectedMarkersPos[d].lat) + " and the selected point lng is: " , String(selectedMarkersPos[d].long));
-                                    window["mapPoints_" + selectedPathId].splice(i, 1);
-                                    break;
-                                }
-                            }
-                        }
+                    if (data.error) {
+                        alert("Error deleting points");
+                        return;
                     }
 
+                    // 1. Hide whichever mode is currently active, BEFORE updating the arrays,
+                    //    so the hide operation walks the OLD (pre-delete) point list.
+                    if (window['fiberCheckRealPoints_' + selectedPathId] == "checked") {
+                        showHideRealPoints(selectedPathId, "fiberCheckSequence", "Hide");
+                    }
+                    else if (window['fiberCheckPoints_' + selectedPathId] == "checked") {
+                        showHideAllPoints(selectedPathId, "fiberCheckSequence", "Hide");
+                    }
+
+                    // 2. Remove old polyline
+                    fiberArray[selectedPathId].setMap(null);
+
+                    // 3. Remove temp red "remove" pins
+                    for (i = 0;i < MarkerAuxArray.length;i++) {
+                        MarkerAuxArray[i].setMap(null);
+                    }
+
+                    // 4. Rebuild mapPoints_ / mapPointsNames_ from server's remaining points
+                    var oldPoints = window["mapPoints_" + selectedPathId];
+                    var oldNames = window["mapPointsNames_" + selectedPathId];
+                    var srcPoint = oldPoints[0];
+                    var dstPoint = oldPoints[oldPoints.length - 1];
+                    var srcName = oldNames[0];
+                    var dstName = oldNames[oldNames.length - 1];
+
+                    var newPoints = [srcPoint];
+                    var newNames = [srcName];
+
+                    data.remainingPoints.forEach(function(row) {
+                        var latLng = new google.maps.LatLng(row.LATITUDE, row.LONGITUDE);
+                        newPoints.push(latLng);
+                        newNames.push(buildAuxPointName(row));
+                    });
+
+                    newPoints.push(dstPoint);
+                    newNames.push(dstName);
+
+                    window["mapPoints_" + selectedPathId] = newPoints;
+                    window["mapPointsNames_" + selectedPathId] = newNames;
+
+                    // 5. Redraw path
+                    buildPath(selectedPathId, window["mapPoints_" + selectedPathId], fiberArray, allFiberCables,
+                        "FiberPath_f_", window['FiberColor_' + window['' + selectedPathId][22]], 0.7, 4.5, 'blue', 13);
+                    fiberArray[selectedPathId].setMap(map);
+
+                    // 6. Re-show whichever mode was active, now against the NEW point list
+                    if (window['fiberCheckRealPoints_' + selectedPathId] == "checked") {
+                        showHideRealPoints(selectedPathId, "fiberCheckSequence", "Show");
+                    }
+                    else if (window['fiberCheckPoints_' + selectedPathId] == "checked") {
+                        showHideAllPoints(selectedPathId, "fiberCheckSequence", "Show");
+                    }
+
+                    // 7. Reset delete-mode state
                     eventDelete = 0;
                     MarkerArrayId = [];
                     selectedMarkersPos = [];
@@ -317,32 +440,20 @@ $(document).on("triggerListenersEvent", function() {
                     PathsArray = [];
                     selectedMarkers = [];
                     deleting = false;
-                    for (i = 0;i < MarkerAuxArray.length;i++) {
-                        if (MarkerAuxArray.length > 0) {
-                            MarkerAuxArray[i].setMap(null);
-
-                        }
-                    }
-                    alert(MarkerAuxArray.length + " points have been deleted");
                     MarkerAuxArray = [];
                     if (typeof listenerPathDelete !== 'undefined') {
                         google.maps.event.removeListener(listenerPathDelete);
                     }
-
-
-                    fiberArray[selectedPathId].setMap(null);
-                    buildPath(selectedPathId, window["mapPoints_" + selectedPathId], fiberArray, allFiberCables, "FiberPath_f_", window['FiberColor_' + window['' + selectedPathId][22]], 0.7, 4.5, 'blue', 13);
-                    fiberArray[selectedPathId].setMap(map);
-                    //console.log("selected Cablee mapPoints after "+window["mapPoints_"+selectedPathId]);
-
+                    alert(data.deletedCount + " points have been deleted");
                 },
                 error: function(result) {
                     alert("Error");
                 }
             });
-
-
         });
+
+
+
         //cancel from delete menu path
         $("#cancelDeletePathMenu").on('click', function() {
 

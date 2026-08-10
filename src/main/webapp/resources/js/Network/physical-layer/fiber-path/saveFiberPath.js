@@ -272,7 +272,7 @@ function saveFiberPath() {
                         var dstId = "null";
                         var dstName = destination;
                     }
-                    window["" + data.FiberPathId] = [sourceLng, sourceLat, destinationLng, destinationLat, data.FiberPathId, srcWareId, srcId, srcName, dstWareId, dstId, dstName, numberOfAssoc_Tubes, numberOfAssoc_Strands, fiberName, IdNodeSelectedTemp, sourceCity, destinationCity, NumTubes, NumStrands, FiberLength, drawingType, fiberowner, fiberInstaller, fiberEngineerName, fiberCableSize];
+                    window["" + data.FiberPathId] = [sourceLng, sourceLat, destinationLng, destinationLat, data.FiberPathId, srcWareId, srcId, srcName, dstWareId, dstId, dstName, numberOfAssoc_Tubes, numberOfAssoc_Strands, fiberName, IdNodeSelectedTemp, sourceCity, destinationCity, NumTubes, NumStrands, FiberLength, drawingType, fiberInstaller, fiberowner, fiberEngineerName, fiberCableSize];
 
                     myLatLng = new google.maps.LatLng(sourceLat, sourceLng);
                     window["mapPoints_" + data.FiberPathId].push(myLatLng);
