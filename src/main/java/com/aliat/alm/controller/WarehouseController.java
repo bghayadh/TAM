@@ -427,6 +427,9 @@ public class WarehouseController {
 						model.addAttribute("wareSite", "");
 					}
 					model.addAttribute("siteId", wareh.getWareSiteID());
+					model.addAttribute("siteType", wareh.getSiteType());
+					model.addAttribute("unitCount", wareh.getUnitCount());
+					model.addAttribute("unitBreakdown", wareh.getUnitBreakdown());
 					model.addAttribute("areaID", wareh.getAreaID());
 					model.addAttribute("areaName", wareh.getAreaName());
 					model.addAttribute("regionID", wareh.getRegionID());
@@ -937,6 +940,9 @@ public class WarehouseController {
 				Wareh.setWareLat(request.getParameter("wareLat"));
 				Wareh.setWareSite(request.getParameter("wareSite").charAt(0));
 				Wareh.setWareSiteID(request.getParameter("siteId"));
+				Wareh.setSiteType(request.getParameter("siteType"));
+				Wareh.setUnitCount(Integer.parseInt(request.getParameter("unitCount")));
+				Wareh.setUnitBreakDown(request.getParameter("unitBreakdown"));
 				Wareh.setTech2G(request.getParameter("tech2G").charAt(0));
 				Wareh.setTech3G(request.getParameter("tech3G").charAt(0));
 				Wareh.setTech4G(request.getParameter("tech4G").charAt(0));

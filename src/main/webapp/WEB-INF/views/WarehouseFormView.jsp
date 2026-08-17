@@ -591,7 +591,42 @@ select {
 						</td>
 					</tr>
 
+					<tr>
+						<td class="left_col">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Site Type</span> <input
+										type="text" id="siteType" value="${siteType}"
+										class="form-control text-input" />
+								</div>
+							</div>
+						</td>
+					</tr>
+					
+					<tr>
+						<td class="left_col">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Unit Count</span> <input
+										type="text" id="unitCount" value="${unitCount}"
+										class="form-control text-input" />
+								</div>
+							</div>
+						</td>
+					</tr>
 
+					<tr>
+						<td class="left_col">
+							<div class="form-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">Unit Breakdown</span> <input
+										type="text" id="unitBreakdown" value="${unitBreakdown}"
+										class="form-control text-input" />
+								</div>
+							</div>
+						</td>
+					</tr>
+					
 
 					<tr>
 						<td class="left_col">
@@ -2609,6 +2644,11 @@ function saverowsintables()
 	 var clusterID = document.getElementById("clusterID").value;
 	 var wareAddress = document.getElementById("wareAddress").value;
 	 var siteMode = document.getElementById("siteMode").value;
+	 
+	 var siteType = document.getElementById("siteType").value;
+	 var unitCount = document.getElementById("unitCount").value;
+	 var unitBreakdown = document.getElementById("unitBreakdown").value;
+	 
 	 var status = document.getElementById("ordstat").value; 
 	 var wsite ;
 	 if (warsite.checked == true){
@@ -2680,7 +2720,10 @@ function saverowsintables()
 				"wareLat" : $("#warlatt").val(),
 				"siteMode" : $("#siteMode").val(),
 				"wareSite" : wsite,	
-				"siteId" : siteId, 
+				"siteId" : siteId,
+				"siteType": siteType,
+				"unitCount" : unitCount,
+				"unitBreakdown" : unitBreakdown,
 				"tech2G" : tech2,
 				"tech3G" : tech3,
 				"tech4G" : tech4,
