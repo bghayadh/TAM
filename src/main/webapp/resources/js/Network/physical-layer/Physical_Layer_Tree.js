@@ -5928,6 +5928,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 if (data.junctionDetails[0][15] != null) {
                                     $("#JunctionEngineerName").val("" + data.junctionDetails[0][15]);
                                 }
+								if (data.junctionDetails[0][16] != null) {
+								    $("#JunctionType").val("" + data.junctionDetails[0][16]);
+								}
+								
 
                                 $("#JctName").on("input", function() {
 
@@ -6501,6 +6505,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 if (data.junctionDetails[0][15] != null) {
                                     $("#manholeJctEngineerName").val("" + data.junctionDetails[0][15]);
                                 }
+								
+								if (data.junctionDetails[0][16] != null) {
+								    $("#manholeJctType").val("" + data.junctionDetails[0][16]);
+								}
 
                                 $("#manholeJctName").on("input", function() {
 
@@ -7084,7 +7092,12 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                 }
                                 if (data.junctionDetails[0][15] != null) {
                                     $("#handholeJctEngineerName").val("" + data.junctionDetails[0][15]);
-                                }
+                                }								
+
+								if (data.junctionDetails[0][16] != null) {
+								    $("#handholeJctType").val("" + data.junctionDetails[0][16]);
+								}								
+								
                                 $("#handholeJctName").on("input", function() {
 
                                     $("#handholeJunctionHeader").text("Junction: " + $(this).val());

@@ -2062,7 +2062,7 @@
 															<option value="others">Others</option>
 														</select>
 							</div></div></div> </div>
-							     <div class="row">
+							    <div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
 												<div class="input-group-prepend">
@@ -2073,7 +2073,18 @@
 											<div class="form-group">
 												<div class="input-group-prepend">
 													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="manholeJctInstaller" class="form-control text-input" />
-						</div></div></div></div></div>
+								</div></div></div></div>
+								
+							    <div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Junction Type </b></span><input type="text" id="manholeJctType" class="form-control text-input" />
+										</div></div></div>
+										<div class="col-sm-6"></div>
+								</div>						
+						</div>
 							<div class="tab-pane" id="jctMapping" role="tabpanel" aria-labelledby="jctMapping-tab"><p></p>
 								<div class="container-fluid"><form>
 										<div class="table-responsive-sm" id="manholeJctMappingDiv">
@@ -2279,6 +2290,17 @@
 												<div class="input-group-prepend">
 													<span style="width: 100px; " class="input-group-text"><b>Installer </b></span> <input type="text" id="handholeJctInstaller" class="form-control text-input" />
 						    </div></div></div></div>
+						    
+								<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Junction Type </b></span> <input type="text" id="handholeJctType" class="form-control text-input" />
+										</div></div></div>
+										<div class="col-sm-6"></div>						    
+						    	</div>
+						    
 							</div>
 							<div class="tab-pane" id="handholeJctMapping" role="tabpanel" aria-labelledby="handholeJctMapping-tab">
 								<p></p>
@@ -2481,7 +2503,22 @@
 												</div>
 											</div>
 										</div>
-								</div></div></div>
+								</div>
+								
+								<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<div class="input-group-prepend">
+													<span style="width: 120px;"
+														class="input-group-text"><b>Junction Type </b></span> <input type="text" id="JunctionType" class="form-control text-input" />
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6"></div>
+								</div>
+								
+								
+								</div></div>
 							<div class="tab-pane" id="JctMapping" role="tabpanel" aria-labelledby="jctMapping-tab"><p></p>
 								<div class="container-fluid"><form>
 										<div class="table-responsive-sm" id="JctMappingDiv">
