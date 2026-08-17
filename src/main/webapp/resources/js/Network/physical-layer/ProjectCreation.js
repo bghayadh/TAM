@@ -619,7 +619,8 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 str = "<ul><li id='" + distribBoardList[i][0] + "'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/backboneDB.png'> " + distribBoardList[i][3] + "/" + distribBoardList[i][0] + " </span></li></ul>";
                 $("#DistributionBoard_backbone__" + distribBoardList[i][6]).append(str);
 
-                create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterBackboneDistBoard, "", boardCity);
+                //create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterBackboneDistBoard, "", boardCity);
+				create_DB_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterBackboneDistBoard, "", boardCity);
                 markerClusterBackboneDistBoard.removeMarker(distribBoardList[i][0]);
                 clusterName = markerClusterBackboneDistBoard;
 
@@ -628,7 +629,8 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 str = "<ul><li id='" + distribBoardList[i][0] + "'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/metroDb.png'> " + distribBoardList[i][3] + "/" + distribBoardList[i][0] + " </span></li></ul>";
                 $("#DistributionBoard_metro__" + distribBoardList[i][6]).append(str);
 
-                create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterMetroDistBoard, "", boardCity);
+                //create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterMetroDistBoard, "", boardCity);
+				create_DB_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterMetroDistBoard, "", boardCity)
                 markerClusterMetroDistBoard.removeMarker(distribBoardList[i][0]);
                 clusterName = markerClusterMetroDistBoard;
             }
@@ -636,7 +638,8 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
                 str = "<ul><li id='" + distribBoardList[i][0] + "'  class='DistributionBoard' style='display:none;width:100px;'><input type='checkbox' class='DistBoard checkFilter' class='filter' ></input> <span class='TreeSpan' style='color:black;width:355px'><img class='image' src='" + getContext() + "/resources/NetworkImages/accessDb.png'> " + distribBoardList[i][3] + "/" + distribBoardList[i][0] + " </span></li></ul>";
                 $("#DistributionBoard_access__" + distribBoardList[i][6]).append(str);
 
-                create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterAccessDistBoard, "", boardCity);
+                //create_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterAccessDistBoard, "", boardCity);
+				create_DB_Marker_Click(distribBoardList[i][0], distribBoardList[i][3], distribBoardList[i][1], distribBoardList[i][2], markersDistBoard, markerClusterAccessDistBoard, "", boardCity);
                 markerClusterAccessDistBoard.removeMarker(distribBoardList[i][0]);
                 clusterName = markerClusterAccessDistBoard;
             }

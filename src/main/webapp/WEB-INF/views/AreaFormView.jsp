@@ -2828,9 +2828,7 @@ var rowindxFinance=0;
 
 
 </script>
-<!--   <script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&libraries=drawing" async defer>
-	</script> -->
+	
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&callback=initMap&libraries=drawing&v=weekly"
 	async defer></script>

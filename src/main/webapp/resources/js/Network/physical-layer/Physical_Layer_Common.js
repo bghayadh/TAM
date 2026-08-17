@@ -978,7 +978,7 @@ function showDB(selectedContext, target, name) {
 
 // Function to create markers oon manhole, handhole and distribution board
 
-function create_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type, city) {
+function create_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type, city) {	
 
     const pos = new google.maps.LatLng(Lat, Long);
     var data = "<div>" + Name + "</div>";

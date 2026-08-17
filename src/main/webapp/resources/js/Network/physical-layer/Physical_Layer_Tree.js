@@ -7759,38 +7759,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         }
                         if (data.DistBoardDetails[0][9] != null) {
                             $("#boardCity").val("" + data.DistBoardDetails[0][9]);
-                        }
-
-                        if (data.DistBoardDetails[0][18] != null || data.DistBoardDetails[0][18] != "") {
-                            $("#DBType").val("" + data.DistBoardDetails[0][18]);
-                        }
-
-
-
-
-                        if (data.DistBoardDetails[0][19] != null || data.DistBoardDetails[0][19] != "") {
-                            $("#DBSerialNum").val("" + data.DistBoardDetails[0][19]);
-                        }
-                        if (data.DistBoardDetails[0][20] != null || data.DistBoardDetails[0][20] != "") {
-                            $("#DBController").val("" + data.DistBoardDetails[0][20]);
-                            //console.log("yee");
-
-
-                        }
-
-
-                        if (data.DistBoardDetails[0][21] != null || data.DistBoardDetails[0][21] != "") {
-                            $("#DBControllerName").val("" + data.DistBoardDetails[0][21]);
-                        }
-
-
-                        if (data.DistBoardDetails[0][22] != null || data.DistBoardDetails[0][22] != "") {
-                            rowCountValue = data.DistBoardDetails[0][22];
-                            if (rowCountValue === "Up To Down") rowCountValue = "upToDown";
-                            if (rowCountValue === "Down To Up") rowCountValue = "downToUp";
-
-                            $("#rowCounting").val(rowCountValue);
-                        }
+                        }						
+						
                         if (data.DistBoardDetails[0][10] != null) {
                             if (data.DistBoardDetails[0][1] != null) {
                                 if (data.DistBoardDetails[0][1].split("_")[0] == "CUST") {
@@ -7826,16 +7796,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                             $("#boardCreationDate").val(data.DistBoardDetails[0][12]);
                         }
 
-                        if (data.DistBoardDetails[0][23] != null) {
-                            $("#DistributionBoardNumModules").val(data.DistBoardDetails[0][23]);
-                        }
-
-
-                        if (data.DistBoardDetails[0][24] != null) {
-                            $("#DistributionBoardRowPerModule").val(data.DistBoardDetails[0][24]);
-                        }
-
-
+						
                         if (data.DistBoardDetails[0][13] != null) {
                             $("#boardLastModifiedDate").val(data.DistBoardDetails[0][13]);
                         }
@@ -7859,7 +7820,60 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         } else {
                             $("#distController").show();
                             $("#distControllerName").show();
-                        }
+                        }						
+						
+						if (data.DistBoardDetails[0][18] != null || data.DistBoardDetails[0][18] != "") {
+						    $("#DBType").val("" + data.DistBoardDetails[0][18]);
+						}
+
+						if (data.DistBoardDetails[0][19] != null || data.DistBoardDetails[0][19] != "") {
+						    $("#DBSerialNum").val("" + data.DistBoardDetails[0][19]);
+						}
+						if (data.DistBoardDetails[0][20] != null || data.DistBoardDetails[0][20] != "") {
+						    $("#DBController").val("" + data.DistBoardDetails[0][20]);
+						    //console.log("yee");
+						}
+
+
+						if (data.DistBoardDetails[0][21] != null || data.DistBoardDetails[0][21] != "") {
+						    $("#DBControllerName").val("" + data.DistBoardDetails[0][21]);
+						}
+
+
+						if (data.DistBoardDetails[0][22] != null || data.DistBoardDetails[0][22] != "") {
+						    rowCountValue = data.DistBoardDetails[0][22];
+						    if (rowCountValue === "Up To Down") rowCountValue = "upToDown";
+						    if (rowCountValue === "Down To Up") rowCountValue = "downToUp";
+
+						    $("#rowCounting").val(rowCountValue);
+						}
+
+						if (data.DistBoardDetails[0][23] != null) {
+						    $("#DistributionBoardNumModules").val(data.DistBoardDetails[0][23]);
+						}
+
+
+						if (data.DistBoardDetails[0][24] != null) {
+						    $("#DistributionBoardRowPerModule").val(data.DistBoardDetails[0][24]);
+						}
+
+						if (data.DistBoardDetails[0][25] != null) {
+						    $("#DBSubType").val(data.DistBoardDetails[0][25]);
+						}						
+						
+						if (data.DistBoardDetails[0][26] != null) {
+						    $("#DBIsSplitter").val(data.DistBoardDetails[0][26]);
+						}
+
+
+						if (data.DistBoardDetails[0][27] != null) {
+						    $("#DBSplitRatio").val(data.DistBoardDetails[0][27]);
+						}
+
+						if (data.DistBoardDetails[0][28] != null) {
+						    $("#DBSplitInpCount").val(data.DistBoardDetails[0][28]);
+						}
+						
                         var dbTypeValue = $("#DBType").val();
 
                         if (dbTypeValue === "active") {

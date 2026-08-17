@@ -84,8 +84,8 @@ public class AreaController {
 				notification.headerNotifications(session, model);
 				query = session.createNativeQuery(
 						"SELECT AREA_ID as id,AREA_ID as areaID, AREA_NAME as name,REGION_NAME as regionName, Status as arStatus, "
-						+ "TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate, "
-						+ "TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
+								+ "TO_CHAR(CREATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as creationDate, "
+								+ "TO_CHAR(LAST_MODIFICATION_DATE, 'YYYY-MM-DD HH24:MI:SS') as lastModifieddate from Area  ORDER BY LAST_MODIFICATION_DATE DESC");
 				model.addAttribute("ListGridTable", mapper.writeValueAsString(query.list()));
 			} catch (Exception e) {
 				sw = new StringWriter();
@@ -172,7 +172,7 @@ public class AreaController {
 		return rtn;
 	}
 
-	@SuppressWarnings({ "unchecked"})
+	@SuppressWarnings({ "unchecked" })
 	@RequestMapping(value = "/AreaFormView", method = RequestMethod.GET)
 	public String AreaFormView(Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) {
 
@@ -201,6 +201,7 @@ public class AreaController {
 				query = session.createNativeQuery("SELECT REGION_ID FROM REGION");
 				if (query.list().size() > 0) {
 					regionIDs = query.list();
+					System.out.println("regionIDs is: " + mapper.writeValueAsString(regionIDs));
 					for (int i = 0; i < regionIDs.size(); i++) {
 						regions = new ArrayList<>();
 
@@ -211,19 +212,27 @@ public class AreaController {
 										+ " GROUP BY a.REGION_ID,b.REGION_NAME,b.REGION_CODE");
 
 						List<Object[]> listOfArrays = query.list();
-						// Convert list of arrays to a single array
-						String[] resultArray = listOfArrays.stream()
-								.flatMap(array -> Arrays.stream(array).map(Object::toString)).toArray(String[]::new);
-
-						if (resultArray[3] == null) {
-							resultArray[3] = "N/A";
-						}
 						
-						regions.add(resultArray[0]);
-						regions.add(resultArray[1]);
-						regions.add(resultArray[2]);
-						regions.add(resultArray[3]);
-						regionData.add(regions);
+						System.out.println("listOfArrays is " +mapper.writeValueAsString(listOfArrays));
+						System.out.println("listOfArrays size is " +listOfArrays.size());
+
+						if (listOfArrays.size() > 0) {
+
+							// Convert list of arrays to a single array
+							String[] resultArray = listOfArrays.stream()
+									.flatMap(array -> Arrays.stream(array).map(Object::toString))
+									.toArray(String[]::new);
+
+							if (resultArray[3] == null) {
+								resultArray[3] = "N/A";
+							}
+
+							regions.add(resultArray[0]);
+							regions.add(resultArray[1]);
+							regions.add(resultArray[2]);
+							regions.add(resultArray[3]);
+							regionData.add(regions);
+						}
 					}
 				}
 
@@ -296,12 +305,13 @@ public class AreaController {
 
 						// List<Object[]> result1 = query.getResultList();
 
-						List<Map<String, String>> listRegionBorder = ((List<Object[]>) query.getResultList()).stream().map(arr -> {
-							Map<String, String> newMap = new HashMap<>();
-							newMap.put("lng", String.valueOf(arr[0])); // Convert to String
-							newMap.put("lat", String.valueOf(arr[1])); // Convert to String
-							return newMap;
-						}).collect(Collectors.toList());
+						List<Map<String, String>> listRegionBorder = ((List<Object[]>) query.getResultList()).stream()
+								.map(arr -> {
+									Map<String, String> newMap = new HashMap<>();
+									newMap.put("lng", String.valueOf(arr[0])); // Convert to String
+									newMap.put("lat", String.valueOf(arr[1])); // Convert to String
+									return newMap;
+								}).collect(Collectors.toList());
 
 						hash_map1.put(regionId, listRegionBorder);
 						model.addAttribute("listRegionBorder", mapper.writeValueAsString(hash_map1));
@@ -313,23 +323,24 @@ public class AreaController {
 					query = session.createQuery(
 							"select  TO_CHAR(t.startDate,'YYYY-MM-DD') as startDate , TO_CHAR(t.endDate,'YYYY-MM-DD') as endDate,t.areaId as areaId,t.number2gSites as number2gSites, t.number2g3gSites as number2g3gSites , t.number2g3g4gSites as number2g3g4gSites, t.pl2g as pl2g, t.pl2g3g as pl2g3g, t.pl2g3g4g as pl2g3g4g, t.totalSites as totalSites, t.sumProfitLoss as sumProfitLoss, t.id as id from AreaFinance t where t.areaId like :param1");
 					query.setParameter("param1", areaID);
-									
-					List<Map<String, String>> ListAreaFinance = ((List<Object[]>) query.getResultList()).stream().map(arr -> {
-						Map<String, String> newMap = new HashMap<>();
-						newMap.put("startDate", String.valueOf(arr[0])); // Convert to String
-						newMap.put("endDate", String.valueOf(arr[1])); // Convert to String
-						newMap.put("areaId", String.valueOf(arr[2])); // Convert to String
-						newMap.put("number2gSites", String.valueOf(arr[3])); // Convert to String
-						newMap.put("number2g3gSites", String.valueOf(arr[4])); // Convert to String
-						newMap.put("number2g3g4gSites", String.valueOf(arr[5])); // Convert to String
-						newMap.put("pl2g", String.valueOf(arr[6])); // Convert to String
-						newMap.put("pl2g3g", String.valueOf(arr[7])); // Convert to String
-						newMap.put("pl2g3g4g", String.valueOf(arr[8])); // Convert to String
-						newMap.put("totalSites", String.valueOf(arr[9])); // Convert to String
-						newMap.put("sumProfitLoss", String.valueOf(arr[10])); // Convert to String
-						newMap.put("id", String.valueOf(arr[11])); // Convert to String
-						return newMap;
-					}).collect(Collectors.toList());
+
+					List<Map<String, String>> ListAreaFinance = ((List<Object[]>) query.getResultList()).stream()
+							.map(arr -> {
+								Map<String, String> newMap = new HashMap<>();
+								newMap.put("startDate", String.valueOf(arr[0])); // Convert to String
+								newMap.put("endDate", String.valueOf(arr[1])); // Convert to String
+								newMap.put("areaId", String.valueOf(arr[2])); // Convert to String
+								newMap.put("number2gSites", String.valueOf(arr[3])); // Convert to String
+								newMap.put("number2g3gSites", String.valueOf(arr[4])); // Convert to String
+								newMap.put("number2g3g4gSites", String.valueOf(arr[5])); // Convert to String
+								newMap.put("pl2g", String.valueOf(arr[6])); // Convert to String
+								newMap.put("pl2g3g", String.valueOf(arr[7])); // Convert to String
+								newMap.put("pl2g3g4g", String.valueOf(arr[8])); // Convert to String
+								newMap.put("totalSites", String.valueOf(arr[9])); // Convert to String
+								newMap.put("sumProfitLoss", String.valueOf(arr[10])); // Convert to String
+								newMap.put("id", String.valueOf(arr[11])); // Convert to String
+								return newMap;
+							}).collect(Collectors.toList());
 					model.addAttribute("ListAreaFinance", mapper.writeValueAsString(ListAreaFinance));
 					model.addAttribute("docStatus", "Existed");
 					model.addAttribute("ordStatus", area.getStatus());

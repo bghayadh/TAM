@@ -8287,7 +8287,8 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 														</select>
 											</div></div></div>
 									</div>
-							
+									
+									
 							<div class="row">
         						
 									<div class="col-md-6" id="distSerialNum">
@@ -8300,8 +8301,44 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 										<div class="col-md-6" id="distType">
 										<div class="form-group">
 											<div class="input-group-prepend">
-												<span style="width: 140px;" class="input-group-text"><b>Type</b></span>
+												<span style="width: 140px;" class="input-group-text"><b>DB Type</b></span>
 													<input type="text" id="DBType" class="form-control text-input" readonly/>
+										</div></div></div>
+								</div>
+								
+							<div class="row">        						
+									<div class="col-md-6" id="distIsSplitter">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="min-width: 120px;" class="input-group-text"><b>Is Splitter</b> 
+													<input type='checkbox' id="DBIsSplitter" style='position: relative; margin-left: 20px'></span>
+											</div>										
+										</div></div>
+										
+										<div class="col-md-6" id="distSubType">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 140px;" class="input-group-text"><b>DB Sub Type</b></span>
+													<input type="text" id="DBSubType" class="form-control text-input"/>
+											</div>
+										</div></div>
+								</div>
+								
+
+
+							<div class="row">        						
+									<div class="col-md-6" id="distSplitRatio">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 140px;" class="input-group-text"><b>Splitter Ratio</b></span>
+													<input type="text" id="DBSplitRatio" class="form-control text-input" />
+										</div></div></div>
+										
+										<div class="col-md-6" id="distSplitInptCount">
+										<div class="form-group">
+											<div class="input-group-prepend">
+												<span style="width: 200px;" class="input-group-text"><b>Splitter Input Port Count</b></span>
+													<input type="text" id="DBSplitInpCount" class="form-control text-input"/>
 										</div></div></div>
 								</div>
 							</div>
