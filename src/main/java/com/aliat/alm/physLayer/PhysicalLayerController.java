@@ -8985,6 +8985,21 @@ public class PhysicalLayerController {
 						Float.parseFloat(request.getParameter("DistributionBoardCapacity") != ""
 								? request.getParameter("DistributionBoardCapacity")
 								: "0"));
+				
+				distributionBoard.setDbSubType(request.getParameter("DBSubType"));				
+				String isSplitter = request.getParameter("DBIsSplitter");
+
+				if (isSplitter != null && !isSplitter.isEmpty()) 
+				    distributionBoard.setIs_Splitter(isSplitter.charAt(0));				
+				else
+				    distributionBoard.setIs_Splitter('0');				    
+								
+				distributionBoard.setSplitterRatio(request.getParameter("DBSplitRatio"));
+				String splitInpCount = request.getParameter("DBSplitInpCount");
+
+				if (splitInpCount != null && !splitInpCount.isEmpty())
+				    distributionBoard.setSplitInpCount(Integer.parseInt(splitInpCount));				
+								
 				session.saveOrUpdate(distributionBoard);
 				session.flush();
 				session.clear();

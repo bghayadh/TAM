@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "DISTRIBUTION_BOARD")
 public class DistributionBoard {
+	
 	@Id
 	@Column(name = "DB_ID", nullable = false)
 	private String DistributionBoardId;
@@ -96,39 +97,51 @@ public class DistributionBoard {
 	
 	@Column(name = "DB_ADAPTOR_PANEL_TYPE")
 	private String DBAdaptorPanelType;
-
-
 	
+	@Column(name = "DB_SUBTYPE")
+	private String dbSubType;
+	
+	@Column(name = "IS_SPLITTER")
+	private char is_Splitter;
+	
+	@Column(name = "SPLITTER_RATIO")
+	private String splitterRatio;
+	
+	@Column(name = "SPLITTER_INPUT_PORT_COUNT")
+	private Integer splitInpCount;
+
 	public DistributionBoard() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-
-
-	public DistributionBoard(String distributionBoardId, String distributionBoardName, String distributionBoardLong,
-			String distributionBoardLat, String distributionBoardCity, String distributionBoardSite,
-			String distributionBoardSiteName, String distributionBoardWarehouse, Float distributionBoardCapacity,
-			Float distributionBoardRowsNum, Float distributionBoardColsNum, Float distributionBoardFront,
-			Float distributionBoardBack, String distributionBoardProjectId, Timestamp boardCreationDate,
-			Timestamp boardLastModifiedDate, String dbNetLevel, String dBEngineerName, String dBInstaller,
-			String dBDeploymentType, String dBAdaptorPanelType, String distributionBoardSerialNum, String distributionBoardControllerName,String rowCounting, String distributionBoardControllerId, int rowPerModule, int totalNumModule) {
+	public DistributionBoard(String distributionBoardId, String distributionBoardName, String distributionBoardType,
+			String distributionBoardLong, String rowCounting, int rowPerModule, int totalNumModule,
+			String distributionBoardSerialNum, String distributionBoardControllerId,
+			String distributionBoardControllerName, String distributionBoardLat, String distributionBoardCity,
+			String distributionBoardSite, String distributionBoardSiteName, String distributionBoardWarehouse,
+			Float distributionBoardCapacity, Float distributionBoardRowsNum, Float distributionBoardColsNum,
+			Float distributionBoardFront, Float distributionBoardBack, String distributionBoardProjectId,
+			Timestamp boardCreationDate, Timestamp boardLastModifiedDate, String dbNetLevel, String dBEngineerName,
+			String dBInstaller, String dBDeploymentType, String dBAdaptorPanelType, String dbSubType, char is_Splitter,
+			String splitterRatio, Integer splitInpCount) {
 		super();
 		DistributionBoardId = distributionBoardId;
 		this.distributionBoardName = distributionBoardName;
+		this.distributionBoardType = distributionBoardType;
 		this.distributionBoardLong = distributionBoardLong;
+		this.rowCounting = rowCounting;
+		this.rowPerModule = rowPerModule;
+		this.totalNumModule = totalNumModule;
+		this.distributionBoardSerialNum = distributionBoardSerialNum;
+		this.distributionBoardControllerId = distributionBoardControllerId;
+		this.distributionBoardControllerName = distributionBoardControllerName;
 		this.distributionBoardLat = distributionBoardLat;
-		this.rowPerModule =rowPerModule;
-		this.distributionBoardSerialNum=distributionBoardSerialNum;
 		this.distributionBoardCity = distributionBoardCity;
-		this.rowCounting=rowCounting;
 		this.distributionBoardSite = distributionBoardSite;
 		this.distributionBoardSiteName = distributionBoardSiteName;
 		this.distributionBoardWarehouse = distributionBoardWarehouse;
 		DistributionBoardCapacity = distributionBoardCapacity;
-		this.totalNumModule=totalNumModule;
-		this.distributionBoardControllerName=distributionBoardControllerName;
-		this.distributionBoardControllerId=distributionBoardControllerId;
 		this.distributionBoardRowsNum = distributionBoardRowsNum;
 		this.distributionBoardColsNum = distributionBoardColsNum;
 		this.distributionBoardFront = distributionBoardFront;
@@ -137,352 +150,270 @@ public class DistributionBoard {
 		BoardCreationDate = boardCreationDate;
 		BoardLastModifiedDate = boardLastModifiedDate;
 		this.dbNetLevel = dbNetLevel;
-		this.distributionBoardType=distributionBoardType;
 		DBEngineerName = dBEngineerName;
 		DBInstaller = dBInstaller;
 		DBDeploymentType = dBDeploymentType;
 		DBAdaptorPanelType = dBAdaptorPanelType;
+		this.dbSubType = dbSubType;
+		this.is_Splitter = is_Splitter;
+		this.splitterRatio = splitterRatio;
+		this.splitInpCount = splitInpCount;
 	}
-
-
-
-	public int getTotalNumModule() {
-		return totalNumModule;
-	}
-
-
-
-	public void setTotalNumModule(int totalNumModule) {
-		this.totalNumModule = totalNumModule;
-	}
-
-
-
-	public int getRowPerModule() {
-		return rowPerModule;
-	}
-
-
-
-	public void setRowPerModule(int rowPerModule) {
-		this.rowPerModule = rowPerModule;
-	}
-
-
-
-	public String getRowCounting() {
-		return rowCounting;
-	}
-
-
-
-	public void setRowCounting(String rowCounting) {
-		this.rowCounting = rowCounting;
-	}
-
-
-
-	public String getDistributionBoardSerialNum() {
-		return distributionBoardSerialNum;
-	}
-
-
-
-	public void setDistributionBoardSerialNum(String distributionBoardSerialNum) {
-		this.distributionBoardSerialNum = distributionBoardSerialNum;
-	}
-
-
-
-	public String getDistributionBoardControllerId() {
-		return distributionBoardControllerId;
-	}
-
-
-
-	public void setDistributionBoardControllerId(String distributionBoardControllerId) {
-		this.distributionBoardControllerId = distributionBoardControllerId;
-	}
-
-
-
-	public String getDistributionBoardControllerName() {
-		return distributionBoardControllerName;
-	}
-
-
-
-	public void setDistributionBoardControllerName(String distributionBoardControllerName) {
-		this.distributionBoardControllerName = distributionBoardControllerName;
-	}
-
-
-
-	public String getDistributionBoardType() {
-		return distributionBoardType;
-	}
-
-
-
-	public void setDistributionBoardType(String distributionBoardType) {
-		this.distributionBoardType = distributionBoardType;
-	}
-
-
 
 	public String getDistributionBoardId() {
 		return DistributionBoardId;
 	}
 
-
-
 	public void setDistributionBoardId(String distributionBoardId) {
 		DistributionBoardId = distributionBoardId;
 	}
-
-
 
 	public String getDistributionBoardName() {
 		return distributionBoardName;
 	}
 
-
-
 	public void setDistributionBoardName(String distributionBoardName) {
 		this.distributionBoardName = distributionBoardName;
 	}
 
+	public String getDistributionBoardType() {
+		return distributionBoardType;
+	}
 
+	public void setDistributionBoardType(String distributionBoardType) {
+		this.distributionBoardType = distributionBoardType;
+	}
 
 	public String getDistributionBoardLong() {
 		return distributionBoardLong;
 	}
 
-
-
 	public void setDistributionBoardLong(String distributionBoardLong) {
 		this.distributionBoardLong = distributionBoardLong;
 	}
 
+	public String getRowCounting() {
+		return rowCounting;
+	}
 
+	public void setRowCounting(String rowCounting) {
+		this.rowCounting = rowCounting;
+	}
+
+	public int getRowPerModule() {
+		return rowPerModule;
+	}
+
+	public void setRowPerModule(int rowPerModule) {
+		this.rowPerModule = rowPerModule;
+	}
+
+	public int getTotalNumModule() {
+		return totalNumModule;
+	}
+
+	public void setTotalNumModule(int totalNumModule) {
+		this.totalNumModule = totalNumModule;
+	}
+
+	public String getDistributionBoardSerialNum() {
+		return distributionBoardSerialNum;
+	}
+
+	public void setDistributionBoardSerialNum(String distributionBoardSerialNum) {
+		this.distributionBoardSerialNum = distributionBoardSerialNum;
+	}
+
+	public String getDistributionBoardControllerId() {
+		return distributionBoardControllerId;
+	}
+
+	public void setDistributionBoardControllerId(String distributionBoardControllerId) {
+		this.distributionBoardControllerId = distributionBoardControllerId;
+	}
+
+	public String getDistributionBoardControllerName() {
+		return distributionBoardControllerName;
+	}
+
+	public void setDistributionBoardControllerName(String distributionBoardControllerName) {
+		this.distributionBoardControllerName = distributionBoardControllerName;
+	}
 
 	public String getDistributionBoardLat() {
 		return distributionBoardLat;
 	}
 
-
-
 	public void setDistributionBoardLat(String distributionBoardLat) {
 		this.distributionBoardLat = distributionBoardLat;
 	}
-
-
 
 	public String getDistributionBoardCity() {
 		return distributionBoardCity;
 	}
 
-
-
 	public void setDistributionBoardCity(String distributionBoardCity) {
 		this.distributionBoardCity = distributionBoardCity;
 	}
-
-
 
 	public String getDistributionBoardSite() {
 		return distributionBoardSite;
 	}
 
-
-
 	public void setDistributionBoardSite(String distributionBoardSite) {
 		this.distributionBoardSite = distributionBoardSite;
 	}
-
-
 
 	public String getDistributionBoardSiteName() {
 		return distributionBoardSiteName;
 	}
 
-
-
 	public void setDistributionBoardSiteName(String distributionBoardSiteName) {
 		this.distributionBoardSiteName = distributionBoardSiteName;
 	}
-
-
 
 	public String getDistributionBoardWarehouse() {
 		return distributionBoardWarehouse;
 	}
 
-
-
 	public void setDistributionBoardWarehouse(String distributionBoardWarehouse) {
 		this.distributionBoardWarehouse = distributionBoardWarehouse;
 	}
-
-
 
 	public Float getDistributionBoardCapacity() {
 		return DistributionBoardCapacity;
 	}
 
-
-
 	public void setDistributionBoardCapacity(Float distributionBoardCapacity) {
 		DistributionBoardCapacity = distributionBoardCapacity;
 	}
-
-
 
 	public Float getDistributionBoardRowsNum() {
 		return distributionBoardRowsNum;
 	}
 
-
-
 	public void setDistributionBoardRowsNum(Float distributionBoardRowsNum) {
 		this.distributionBoardRowsNum = distributionBoardRowsNum;
 	}
-
-
 
 	public Float getDistributionBoardColsNum() {
 		return distributionBoardColsNum;
 	}
 
-
-
 	public void setDistributionBoardColsNum(Float distributionBoardColsNum) {
 		this.distributionBoardColsNum = distributionBoardColsNum;
 	}
-
-
 
 	public Float getDistributionBoardFront() {
 		return distributionBoardFront;
 	}
 
-
-
 	public void setDistributionBoardFront(Float distributionBoardFront) {
 		this.distributionBoardFront = distributionBoardFront;
 	}
-
-
 
 	public Float getDistributionBoardBack() {
 		return distributionBoardBack;
 	}
 
-
-
 	public void setDistributionBoardBack(Float distributionBoardBack) {
 		this.distributionBoardBack = distributionBoardBack;
 	}
-
-
 
 	public String getDistributionBoardProjectId() {
 		return distributionBoardProjectId;
 	}
 
-
-
 	public void setDistributionBoardProjectId(String distributionBoardProjectId) {
 		this.distributionBoardProjectId = distributionBoardProjectId;
 	}
-
-
 
 	public Timestamp getBoardCreationDate() {
 		return BoardCreationDate;
 	}
 
-
-
 	public void setBoardCreationDate(Timestamp boardCreationDate) {
 		BoardCreationDate = boardCreationDate;
 	}
-
-
 
 	public Timestamp getBoardLastModifiedDate() {
 		return BoardLastModifiedDate;
 	}
 
-
-
 	public void setBoardLastModifiedDate(Timestamp boardLastModifiedDate) {
 		BoardLastModifiedDate = boardLastModifiedDate;
 	}
-
-
 
 	public String getDbNetLevel() {
 		return dbNetLevel;
 	}
 
-
-
 	public void setDbNetLevel(String dbNetLevel) {
 		this.dbNetLevel = dbNetLevel;
 	}
-
-
 
 	public String getDBEngineerName() {
 		return DBEngineerName;
 	}
 
-
-
 	public void setDBEngineerName(String dBEngineerName) {
 		DBEngineerName = dBEngineerName;
 	}
-
-
 
 	public String getDBInstaller() {
 		return DBInstaller;
 	}
 
-
-
 	public void setDBInstaller(String dBInstaller) {
 		DBInstaller = dBInstaller;
 	}
-
-
 
 	public String getDBDeploymentType() {
 		return DBDeploymentType;
 	}
 
-
-
 	public void setDBDeploymentType(String dBDeploymentType) {
 		DBDeploymentType = dBDeploymentType;
 	}
-
-
 
 	public String getDBAdaptorPanelType() {
 		return DBAdaptorPanelType;
 	}
 
-
-
 	public void setDBAdaptorPanelType(String dBAdaptorPanelType) {
 		DBAdaptorPanelType = dBAdaptorPanelType;
 	}
 
+	public String getDbSubType() {
+		return dbSubType;
+	}
 
+	public void setDbSubType(String dbSubType) {
+		this.dbSubType = dbSubType;
+	}
 
-	
+	public char getIs_Splitter() {
+		return is_Splitter;
+	}
+
+	public void setIs_Splitter(char is_Splitter) {
+		this.is_Splitter = is_Splitter;
+	}
+
+	public String getSplitterRatio() {
+		return splitterRatio;
+	}
+
+	public void setSplitterRatio(String splitterRatio) {
+		this.splitterRatio = splitterRatio;
+	}
+
+	public Number getSplitInpCount() {
+		return splitInpCount;
+	}
+
+	public void setSplitInpCount(Integer splitInpCount) {
+		this.splitInpCount = splitInpCount;
+	}
+
 }
-
-

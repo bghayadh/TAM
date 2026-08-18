@@ -7875,12 +7875,12 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 						}						
 						
 						if (data.DistBoardDetails[0][26] != null) {
-						    $("#DBIsSplitter").val(data.DistBoardDetails[0][26]);
+						    $("#DBIsSplitter").prop("checked", data.DistBoardDetails[0][26] == 1);
 						}
 
-
 						if (data.DistBoardDetails[0][27] != null) {
-						    $("#DBSplitRatio").val(data.DistBoardDetails[0][27]);
+							
+						     $("#DBSplitRatio").val(data.DistBoardDetails[0][27]);
 						}
 
 						if (data.DistBoardDetails[0][28] != null) {

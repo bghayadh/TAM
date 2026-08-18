@@ -120,11 +120,11 @@ function saveDistributionBoard() {
             distboardControllerName = document.getElementById("DBControllerName").value;
             distboardSerialNum = document.getElementById("DBSerialNum").value;
             distboardRowCount = $("#rowCounting option:selected").text();
-            /*			
-                        distboardNumModules = document.getElementById("DistributionBoardNumModules").value;
-                        distboardRowPerModule = document.getElementById("DistributionBoardRowPerModule").value;
-            */
-
+			DBIsSplitter = document.getElementById("DBIsSplitter").checked ? '1' : '0';			
+			DBSubType = document.getElementById("DBSubType").value;
+			DBSplitRatio = document.getElementById("DBSplitRatio").value;
+			DBSplitInpCount = document.getElementById("DBSplitInpCount").value;
+			
             if ($("#projectIdDB").is(":visible") && $("#projectNameDB").is(":visible")) {
                 if ($("#DBProjectId").val() == "") {
                     IdNodeSelectedTemp = "CurrentPhysicalLayer";
@@ -238,9 +238,11 @@ function saveDistributionBoard() {
                     "kitData": JSON.stringify(kitData),
                     "moduleData": JSON.stringify(moduleData),
                     "distboardNumModules": distboardNumModules,
-                    "distboardRowPerModule": distboardRowPerModule
-
-
+                    "distboardRowPerModule": distboardRowPerModule,
+					"DBIsSplitter": DBIsSplitter,
+					"DBSubType": DBSubType,
+					"DBSplitRatio": DBSplitRatio,
+					"DBSplitInpCount": DBSplitInpCount
                 },
                 dataType: "json",
                 success: function(data) {
