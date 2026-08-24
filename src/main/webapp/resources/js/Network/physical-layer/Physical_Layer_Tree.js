@@ -6111,6 +6111,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             },
             {
                 'icon': 'link', 'name': 'View Junction Mapping', action: () => {
+					console.log("Welcome to View Junction Mapping");
                     $.ajax({
                         type: "GET",
                         contentType: "application/json; charset=utf-8",
@@ -6708,8 +6709,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                                 $("#junction_TitleId").text("Internal Junction Mapping: " + data.junctionMappingPts[0][14]);
 
-                                var jctNumCols = 8;
-                                var jctNumRows = 3;
+                                var jctNumCols = 12;
+								var totalPorts = data.junctionMappingPts.length;
+								var jctNumRows = Math.ceil(totalPorts / jctNumCols);
 
                                 if (data.junctionMappingPts) {
 
@@ -6720,87 +6722,97 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                                     $("#contentJctMappingModal").width(totWidth);
                                     dpJctWidth = $("#contentJctMappingModal").width();
-
+									
                                     jctSvg = "<svg id='mysvgJct' width='" + width + "px' height='" + height + "px' min-width='" + minWidth + "px'></svg>";
                                     $("#junction_tabContentPortsMap").append(jctSvg);
+																		
+									var cellWidth = 90;
+									var cellHeight = 100;
 
-                                    //////*********** DRAWIN BOARDS BORDERS *************///////
-                                    var line = makeSVGJct('line', { x1: 50, y1: 50, x2: 50, y2: 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    line = makeSVGJct('line', { x1: 50, y1: 50, x2: 100, y2: 50, stroke: 'red', 'stroke-width': 1, fill: 'red' });
+									var boardLeft = 15;
+									var boardTop = 100;
 
-                                    line = makeSVGJct('line', { x1: 100, y1: 100, x2: (jctNumCols + 2) * 100, y2: 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('mysvgJct').appendChild(line);
+									var boardRight = boardLeft + (jctNumCols * cellWidth);
+									var boardBottom = boardTop + (jctNumRows + 1) * cellHeight;
+									
+									
+									line = makeSVGJct('line', {
+									    x1: boardLeft,
+									    y1: boardTop,
+									    x2: boardRight,
+									    y2: boardTop,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('mysvgJct').appendChild(line);
 
-                                    line = makeSVGJct('line', { x1: 100, y1: 100, x2: 100, y2: (jctNumRows + 2) * 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('mysvgJct').appendChild(line);
+									line = makeSVGJct('line', {
+									    x1: boardLeft,
+									    y1: boardTop,
+									    x2: boardLeft,
+									    y2: boardBottom,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('mysvgJct').appendChild(line);
 
-                                    line = makeSVGJct('line', { x1: (jctNumCols + 2) * 100, y1: 100, x2: (jctNumCols + 2) * 100, y2: (jctNumRows + 2) * 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('mysvgJct').appendChild(line);
+									line = makeSVGJct('line', {
+									    x1: boardRight,
+									    y1: boardTop,
+									    x2: boardRight,
+									    y2: boardBottom,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('mysvgJct').appendChild(line);
 
-                                    line = makeSVGJct('line', { x1: 100, y1: (jctNumRows + 2) * 100, x2: (jctNumCols + 2) * 100, y2: (jctNumRows + 2) * 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('mysvgJct').appendChild(line);
+									line = makeSVGJct('line', {
+									    x1: boardLeft,
+									    y1: boardBottom,
+									    x2: boardRight,
+									    y2: boardBottom,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('mysvgJct').appendChild(line);
+																		
+									svgJctNS = "http://www.w3.org/2000/svg";
+									
+									var newText = document.createElementNS(svgJctNS, "text");
 
+									newText.setAttributeNS(null, "x", 20);
+									newText.setAttributeNS(null, "y", 30);
+									newText.setAttributeNS(null, "font-size", "15");
+									newText.setAttributeNS(null, "stroke", "#00757C");
 
+									var textNode = document.createTextNode(
+									    "Number of Junctions : " + data.junctionMappingPts.length
+									);
+
+									newText.appendChild(textNode);
+									document.getElementById("mysvgJct").appendChild(newText);									
+									
                                     //////*********** DRAWING JUNCTION MAPPING RELATIVE TO EACh ROW AND COLUMN *************///////
 
                                     for (i = 0;i < data.junctionMappingPts.length;i++) {
 
                                         window["JCT_" + data.junctionMappingPts[i][1]] = [];
                                         window["JCT_" + data.junctionMappingPts[i][1]] = data.junctionMappingPts[i];
-                                        var colNum = 0;
-                                        var rowNum = 0;
-                                        var rowColIndex = 0;
-                                        if (parseFloat(data.junctionMappingPts[i][0]) >= 1 && parseFloat(data.junctionMappingPts[i][0]) <= 8) {
-                                            rowNum = 1;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) >= 9 && parseFloat(data.junctionMappingPts[i][0]) <= 16) {
-                                            rowNum = 2;
-                                        }
-                                        else {
-                                            rowNum = 3;
-                                        }
+										
+										
+										var portNumber = parseInt(data.junctionMappingPts[i][0], 10);
 
-                                        if (parseFloat(data.junctionMappingPts[i][0]) == 1 || parseFloat(data.junctionMappingPts[i][0]) == 9 || parseFloat(data.junctionMappingPts[i][0]) == 17) {
-                                            colNum = 1;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 2 || parseFloat(data.junctionMappingPts[i][0]) == 10 || parseFloat(data.junctionMappingPts[i][0]) == 18) {
-                                            colNum = 2;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 3 || parseFloat(data.junctionMappingPts[i][0]) == 11 || parseFloat(data.junctionMappingPts[i][0]) == 19) {
-                                            colNum = 3;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 4 || parseFloat(data.junctionMappingPts[i][0]) == 12 || parseFloat(data.junctionMappingPts[i][0]) == 20) {
-                                            colNum = 4;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 5 || parseFloat(data.junctionMappingPts[i][0]) == 13 || parseFloat(data.junctionMappingPts[i][0]) == 21) {
-                                            colNum = 5;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 6 || parseFloat(data.junctionMappingPts[i][0]) == 14 || parseFloat(data.junctionMappingPts[i][0]) == 22) {
-                                            colNum = 6;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 7 || parseFloat(data.junctionMappingPts[i][0]) == 15 || parseFloat(data.junctionMappingPts[i][0]) == 23) {
-                                            colNum = 7;
-                                        }
-                                        else {
-                                            colNum = 8;
-                                        }
-
-                                        svgJctNS = "http://www.w3.org/2000/svg";
-
-                                        var newText = document.createElementNS(svgJctNS, "text");
-                                        newText.setAttributeNS(null, "x", 20);
-                                        newText.setAttributeNS(null, "y", 30);
-                                        newText.setAttributeNS(null, "font-size", "15");
-                                        newText.setAttributeNS(null, "stroke", "#00757C");
-
-                                        var textNode = document.createTextNode("Number of Junctions : " + data.junctionMappingPts[0][15]);
-                                        newText.appendChild(textNode);
-                                        document.getElementById("mysvgJct").appendChild(newText);
-
+										var rowNum = Math.floor((portNumber - 1) / jctNumCols) + 1;
+										var colNum = ((portNumber - 1) % jctNumCols) + 1;
+																				
                                         //Drawing green circle to represent the junction
 
                                         var circle = document.createElementNS(svgJctNS, "circle");
-                                        circle.setAttributeNS(null, "cx", (colNum * 100) + 100);
+                                        circle.setAttributeNS(null, "cx", ((colNum-1) * 90) + 35);
                                         circle.setAttributeNS(null, "cy", (rowNum * 100) + 80);
                                         circle.setAttributeNS(null, "r", 13);
                                         circle.setAttributeNS(null, "fill", "green");
@@ -6812,9 +6824,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         //Drawing line inside the junction green circle 
 
                                         var upLine = document.createElementNS(svgJctNS, "line");
-                                        upLine.setAttributeNS(null, "x1", (colNum * 100) + 100);
+                                        upLine.setAttributeNS(null, "x1", ((colNum-1) * 90) + 35);
                                         upLine.setAttributeNS(null, "y1", (rowNum * 100) + 100);
-                                        upLine.setAttributeNS(null, "x2", (colNum * 100) + 100);
+                                        upLine.setAttributeNS(null, "x2", ((colNum-1) * 90) + 35);
                                         upLine.setAttributeNS(null, "y2", (rowNum * 100) + 60);
                                         upLine.setAttributeNS(null, "stroke", "black");
                                         upLine.setAttributeNS(null, "stroke-width", "2");
@@ -6824,7 +6836,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         //Show the strand id of side A
 
                                         var newTextJct = document.createElementNS(svgJctNS, "text");
-                                        newTextJct.setAttributeNS(null, "x", (colNum * 100) + 55);
+                                        newTextJct.setAttributeNS(null, "x", ((colNum-1) * 90) + 30);
                                         newTextJct.setAttributeNS(null, "y", (rowNum * 100) + 50);
                                         newTextJct.setAttributeNS(null, "class", "text");
                                         newTextJct.setAttributeNS(null, "font-size", "9");
@@ -6840,7 +6852,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         //Show the strand id of side B
 
                                         var downTextJct = document.createElementNS(svgJctNS, "text");
-                                        downTextJct.setAttributeNS(null, "x", (colNum * 100) + 55);
+                                        downTextJct.setAttributeNS(null, "x", ((colNum-1) * 90) + 30);
                                         downTextJct.setAttributeNS(null, "y", (rowNum * 100) + 120);
                                         downTextJct.setAttributeNS(null, "class", "text");
                                         downTextJct.setAttributeNS(null, "font-size", "9");
@@ -6860,8 +6872,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                                         var jctMappingId = $(this).attr('id').split("-");
                                         jctMappingId = jctMappingId[1];
-
-
+										
                                         if (fiberArray[window['JCT_' + jctMappingId][6]]) {
                                             console.log("enter to null");
                                             fiberArray[window['JCT_' + jctMappingId][6]].setMap(null);
@@ -6874,20 +6885,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                             console.log("enter to null");
                                             strandArray[window['JCT_' + jctMappingId][2]].setMap(null);
                                         }
-                                        //buildFiberPath(window['JCT_'+jctMappingId][6],window["mapPoints_"+window['JCT_'+jctMappingId][6]]);
                                         buildPath(window['JCT_' + jctMappingId][6], window["mapPoints_" + window['JCT_' + jctMappingId][6]], fiberArray, allFiberCables, "FiberPath_f_", window['FiberColor_' + window['' + window['JCT_' + jctMappingId][6]][22]], 0.7, 4.5, 'blue', 13);
                                         fiberArray[window['JCT_' + jctMappingId][6]].setMap(map);
-
-                                        //buildTubePath(window['JCT_'+jctMappingId][4],window["mapPoints_"+window['JCT_'+jctMappingId][4]]);
-                                        buildPath(window['JCT_' + jctMappingId][4], window["mapPoints_" + window['JCT_' + jctMappingId][4]], tubeArray, allTubes, "Tube", 'green', 0.7, 3.3, 'green', 0);
-                                        tubeArray[window['JCT_' + jctMappingId][4]].setMap(map);
-
-                                        //buildStrandPath(window['JCT_'+jctMappingId][2],window["mapPoints_"+window['JCT_'+jctMappingId][2]]);
-                                        buildPath(window['JCT_' + jctMappingId][2], window["mapPoints_" + window['JCT_' + jctMappingId][2]], strandArray, allStrands, "Strand", 'purple', 0.7, 2.8, 'purple', 0);
-                                        strandArray[window['JCT_' + jctMappingId][2]].setMap(map);
-
-
-                                        $("#junction_MappingModal").modal('hide');
                                     });
 
                                     $('.sideBStrand').click(function() {
@@ -6908,20 +6907,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                             console.log("enter to null");
                                             strandArray[window['JCT_' + jctMappingId][8]].setMap(null);
                                         }
-                                        //buildFiberPath(window['JCT_'+jctMappingId][12],window["mapPoints_"+window['JCT_'+jctMappingId][12]]);
                                         buildPath(window['JCT_' + jctMappingId][12], window["mapPoints_" + window['JCT_' + jctMappingId][12]], fiberArray, allFiberCables, "FiberPath_f_", window['FiberColor_' + window['' + window['JCT_' + jctMappingId][12]][22]], 0.7, 3.5, 'blue', 13);
                                         fiberArray[window['JCT_' + jctMappingId][12]].setMap(map);
 
-                                        //buildTubePath(window['JCT_'+jctMappingId][10],window["mapPoints_"+window['JCT_'+jctMappingId][10]]);
-                                        buildPath(window['JCT_' + jctMappingId][10], window["mapPoints_" + window['JCT_' + jctMappingId][10]], tubeArray, allTubes, "Tube", 'green', 0.7, 3.3, 'green', 0);
-                                        tubeArray[window['JCT_' + jctMappingId][10]].setMap(map);
-
-                                        //buildStrandPath(window['JCT_'+jctMappingId][8],window["mapPoints_"+window['JCT_'+jctMappingId][8]]);
-                                        buildPath(window['JCT_' + jctMappingId][8], window["mapPoints_" + window['JCT_' + jctMappingId][8]], strandArray, allStrands, "Strand", 'purple', 0.7, 2.8, 'purple', 0);
-                                        strandArray[window['JCT_' + jctMappingId][8]].setMap(map);
-
-
-                                        $("#junction_MappingModal").modal('hide');
+                                        //$("#junction_MappingModal").modal('hide');
                                     });
 
                                     $('.junctionImage').click(function() {
@@ -7269,6 +7258,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             },
             {
                 'icon': 'link', 'name': 'View Junction Mapping', action: () => {
+					console.log("Welcome to handhole junction");
 
                     $.ajax({
                         type: "GET",
@@ -7285,17 +7275,16 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                             $("#handJunctionTabContentPortsMap").empty();
                             $("#handJunctionMappingModal").modal('show');
 
-
                             if (data.junctionMappingPts != 'noData') {
-
                                 $("#handJunctionTitleId").text("Internal Junction Mapping: " + data.junctionMappingPts[0][14]);
-
-                                var jctNumCols = 8;
-                                var jctNumRows = 3;
+								var jctNumCols = 12;
+								var totalPorts = data.junctionMappingPts.length;
+								var jctNumRows = Math.ceil(totalPorts / jctNumCols);
+								
 
                                 if (data.junctionMappingPts) {
 
-                                    var minWidth = "700";
+                                    var minWidth = "500";
                                     var width = 1200, height = 400;
 
                                     var totWidth = width;
@@ -7305,83 +7294,94 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
                                     handholeJctSvg = "<svg id='svgHandJct' width='" + width + "px' height='" + height + "px' min-width='" + minWidth + "px'></svg>";
                                     $("#handJunctionTabContentPortsMap").append(handholeJctSvg);
+									
+									
+									var cellWidth = 90;
+									var cellHeight = 100;
 
-                                    //////*********** DRAWIN BOARDS BORDERS *************///////
-                                    var line = makeSVGJct('line', { x1: 50, y1: 50, x2: 50, y2: 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    line = makeSVGJct('line', { x1: 50, y1: 50, x2: 100, y2: 50, stroke: 'red', 'stroke-width': 1, fill: 'red' });
+									var boardLeft = 15;
+									var boardTop = 100;
 
-                                    line = makeSVGJct('line', { x1: 100, y1: 100, x2: (jctNumCols + 2) * 100, y2: 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('svgHandJct').appendChild(line);
+									var boardRight = boardLeft + (jctNumCols * cellWidth);
+									var boardBottom = boardTop + (jctNumRows + 1) * cellHeight;
 
-                                    line = makeSVGJct('line', { x1: 100, y1: 100, x2: 100, y2: (jctNumRows + 2) * 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('svgHandJct').appendChild(line);
 
-                                    line = makeSVGJct('line', { x1: (jctNumCols + 2) * 100, y1: 100, x2: (jctNumCols + 2) * 100, y2: (jctNumRows + 2) * 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('svgHandJct').appendChild(line);
+									line = makeSVGJct('line', {
+									    x1: boardLeft,
+									    y1: boardTop,
+									    x2: boardRight,
+									    y2: boardTop,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('svgHandJct').appendChild(line);
 
-                                    line = makeSVGJct('line', { x1: 100, y1: (jctNumRows + 2) * 100, x2: (jctNumCols + 2) * 100, y2: (jctNumRows + 2) * 100, stroke: 'red', 'stroke-width': 1, fill: 'red' });
-                                    document.getElementById('svgHandJct').appendChild(line);
+									line = makeSVGJct('line', {
+									    x1: boardLeft,
+									    y1: boardTop,
+									    x2: boardLeft,
+									    y2: boardBottom,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('svgHandJct').appendChild(line);
 
-                                    //////*********** DRAWING JUNCTION MAPPING RELATIVE TO EACh ROW AND COLUMN *************///////
+									line = makeSVGJct('line', {
+									    x1: boardRight,
+									    y1: boardTop,
+									    x2: boardRight,
+									    y2: boardBottom,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('svgHandJct').appendChild(line);
 
+									line = makeSVGJct('line', {
+									    x1: boardLeft,
+									    y1: boardBottom,
+									    x2: boardRight,
+									    y2: boardBottom,
+									    stroke: 'red',
+									    'stroke-width': 1,
+									    fill: 'red'
+									});
+									document.getElementById('svgHandJct').appendChild(line);									
+
+									svgHandJctNS = "http://www.w3.org/2000/svg";
+
+									var newText = document.createElementNS(svgHandJctNS, "text");
+
+									newText.setAttributeNS(null, "x", 20);
+									newText.setAttributeNS(null, "y", 30);
+									newText.setAttributeNS(null, "font-size", "15");
+									newText.setAttributeNS(null, "stroke", "#00757C");
+
+									var textNode = document.createTextNode(
+									    "Number of Junctions : " + data.junctionMappingPts.length
+									);
+
+									newText.appendChild(textNode);
+									document.getElementById("svgHandJct").appendChild(newText);									
+									
                                     for (i = 0;i < data.junctionMappingPts.length;i++) {
 
                                         window["JCT_" + data.junctionMappingPts[i][1]] = [];
                                         window["JCT_" + data.junctionMappingPts[i][1]] = data.junctionMappingPts[i];
-                                        var colNum = 0;
-                                        var rowNum = 0;
+										
+										var portNumber = parseInt(data.junctionMappingPts[i][0], 10);
 
-                                        if (parseFloat(data.junctionMappingPts[i][0]) >= 1 && parseFloat(data.junctionMappingPts[i][0]) <= 8) {
-                                            rowNum = 1;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) >= 9 && parseFloat(data.junctionMappingPts[i][0]) <= 16) {
-                                            rowNum = 2;
-                                        }
-                                        else {
-                                            rowNum = 3;
-                                        }
-
-                                        if (parseFloat(data.junctionMappingPts[i][0]) == 1 || parseFloat(data.junctionMappingPts[i][0]) == 9 || parseFloat(data.junctionMappingPts[i][0]) == 17) {
-                                            colNum = 1;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 2 || parseFloat(data.junctionMappingPts[i][0]) == 10 || parseFloat(data.junctionMappingPts[i][0]) == 18) {
-                                            colNum = 2;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 3 || parseFloat(data.junctionMappingPts[i][0]) == 11 || parseFloat(data.junctionMappingPts[i][0]) == 19) {
-                                            colNum = 3;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 4 || parseFloat(data.junctionMappingPts[i][0]) == 12 || parseFloat(data.junctionMappingPts[i][0]) == 20) {
-                                            colNum = 4;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 5 || parseFloat(data.junctionMappingPts[i][0]) == 13 || parseFloat(data.junctionMappingPts[i][0]) == 21) {
-                                            colNum = 5;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 6 || parseFloat(data.junctionMappingPts[i][0]) == 14 || parseFloat(data.junctionMappingPts[i][0]) == 22) {
-                                            colNum = 6;
-                                        }
-                                        else if (parseFloat(data.junctionMappingPts[i][0]) == 7 || parseFloat(data.junctionMappingPts[i][0]) == 15 || parseFloat(data.junctionMappingPts[i][0]) == 23) {
-                                            colNum = 7;
-                                        }
-                                        else {
-                                            colNum = 8;
-                                        }
-
-                                        svgHandJctNS = "http://www.w3.org/2000/svg";
-
-                                        var newText = document.createElementNS(svgHandJctNS, "text");
-                                        newText.setAttributeNS(null, "x", 20);
-                                        newText.setAttributeNS(null, "y", 30);
-                                        newText.setAttributeNS(null, "font-size", "15");
-                                        newText.setAttributeNS(null, "stroke", "#00757C");
-
-                                        var textNode = document.createTextNode("Number of Junctions : " + data.junctionMappingPts[0][15]);
-                                        newText.appendChild(textNode);
-                                        document.getElementById("svgHandJct").appendChild(newText);
+										var rowNum = Math.floor((portNumber - 1) / jctNumCols) + 1;
+										var colNum = ((portNumber - 1) % jctNumCols) + 1;										
 
                                         //Drawing green circle to represent the junction
+										
 
                                         var handholeJctCircle = document.createElementNS(svgHandJctNS, "circle");
-                                        handholeJctCircle.setAttributeNS(null, "cx", (colNum * 100) + 100);
+
+/*										                                        handholeJctCircle.setAttributeNS(null, "cx", (colNum * 100) + 100);
                                         handholeJctCircle.setAttributeNS(null, "cy", (rowNum * 100) + 80);
                                         handholeJctCircle.setAttributeNS(null, "r", 13);
                                         handholeJctCircle.setAttributeNS(null, "fill", "green");
@@ -7389,10 +7389,24 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         handholeJctCircle.setAttributeNS(null, "id", "handJct-" + data.junctionMappingPts[i][1]);
                                         handholeJctCircle.setAttributeNS(null, "cursor", "pointer");
                                         document.getElementById("svgHandJct").appendChild(handholeJctCircle);
+*/										
+										
+										
+										handholeJctCircle.setAttributeNS(null, "cx", ((colNum-1) * 90) + 35);
+										handholeJctCircle.setAttributeNS(null, "cy", (rowNum * 100) + 80);
+										handholeJctCircle.setAttributeNS(null, "r", 13);
+										handholeJctCircle.setAttributeNS(null, "fill", "green");
+										handholeJctCircle.setAttributeNS(null, "class", "hJunctionImage");
+										handholeJctCircle.setAttributeNS(null, "id", "handJct-" + data.junctionMappingPts[i][1]);
+										handholeJctCircle.setAttributeNS(null, "cursor", "pointer");
+										document.getElementById("svgHandJct").appendChild(handholeJctCircle);
+
 
                                         //Drawing line inside the junction green circle 
 
                                         var upLineHandJct = document.createElementNS(svgHandJctNS, "line");
+
+/*										
                                         upLineHandJct.setAttributeNS(null, "x1", (colNum * 100) + 100);
                                         upLineHandJct.setAttributeNS(null, "y1", (rowNum * 100) + 100);
                                         upLineHandJct.setAttributeNS(null, "x2", (colNum * 100) + 100);
@@ -7400,10 +7414,22 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         upLineHandJct.setAttributeNS(null, "stroke", "black");
                                         upLineHandJct.setAttributeNS(null, "stroke-width", "2");
                                         document.getElementById("svgHandJct").appendChild(upLineHandJct);
-
+*/
+										
+										upLineHandJct.setAttributeNS(null, "x1", ((colNum-1) * 90) + 35);
+										upLineHandJct.setAttributeNS(null, "y1", (rowNum * 100) + 100);
+										upLineHandJct.setAttributeNS(null, "x2", ((colNum-1) * 90) + 35);
+										upLineHandJct.setAttributeNS(null, "y2", (rowNum * 100) + 60);
+										upLineHandJct.setAttributeNS(null, "stroke", "black");
+										upLineHandJct.setAttributeNS(null, "stroke-width", "2");
+										document.getElementById("svgHandJct").appendChild(upLineHandJct);
+										
+										
                                         //Show the strand id of side A
+										
 
                                         var newTextHJct = document.createElementNS(svgHandJctNS, "text");
+/*										
                                         newTextHJct.setAttributeNS(null, "x", (colNum * 100) + 55);
                                         newTextHJct.setAttributeNS(null, "y", (rowNum * 100) + 50);
                                         newTextHJct.setAttributeNS(null, "class", "text");
@@ -7412,12 +7438,25 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         newTextHJct.setAttributeNS(null, "cursor", "pointer");
                                         newTextHJct.setAttributeNS(null, "class", "sideAStrandHandJct");
                                         newTextHJct.setAttributeNS(null, "id", "strndHandJctSideA-" + data.junctionMappingPts[i][1]);
-                                        var textNodeHJct = document.createTextNode(data.junctionMappingPts[i][16]);
-                                        newTextHJct.appendChild(textNodeHJct);
-                                        document.getElementById("svgHandJct").appendChild(newTextHJct);
+*/										
+
+										newTextHJct.setAttributeNS(null, "x", ((colNum-1) * 90) + 30);
+										newTextHJct.setAttributeNS(null, "y", (rowNum * 100) + 50);
+										newTextHJct.setAttributeNS(null, "class", "text");
+										newTextHJct.setAttributeNS(null, "font-size", "9");
+										newTextHJct.setAttributeNS(null, "stroke", "#00757C");
+										newTextHJct.setAttributeNS(null, "cursor", "pointer");
+										newTextHJct.setAttributeNS(null, "class", "sideAStrandHandJct");
+										newTextHJct.setAttributeNS(null, "id", "strndHandJctSideA-" + data.junctionMappingPts[i][1]);
+
+										var textNodeHJct = document.createTextNode(data.junctionMappingPts[i][16]);
+										newTextHJct.appendChild(textNodeHJct);
+										document.getElementById("svgHandJct").appendChild(newTextHJct);
+																				
 
                                         //Show the strand id of side B
                                         var downTextHJct = document.createElementNS(svgHandJctNS, "text");
+/*										
                                         downTextHJct.setAttributeNS(null, "x", (colNum * 100) + 55);
                                         downTextHJct.setAttributeNS(null, "y", (rowNum * 100) + 120);
                                         downTextHJct.setAttributeNS(null, "class", "text");
@@ -7426,6 +7465,17 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         downTextHJct.setAttributeNS(null, "cursor", "pointer");
                                         downTextHJct.setAttributeNS(null, "class", "sideBStrandHandJct");
                                         downTextHJct.setAttributeNS(null, "id", "strndHandJctSideB-" + data.junctionMappingPts[i][1]);
+*/										
+										
+										downTextHJct.setAttributeNS(null, "x", ((colNum-1) * 90) + 30);
+										downTextHJct.setAttributeNS(null, "y", (rowNum * 100) + 120);
+										downTextHJct.setAttributeNS(null, "class", "text");
+										downTextHJct.setAttributeNS(null, "font-size", "9");
+										downTextHJct.setAttributeNS(null, "stroke", "#00757C");
+										downTextHJct.setAttributeNS(null, "cursor", "pointer");
+										downTextHJct.setAttributeNS(null, "class", "sideBStrandHandJct");
+										downTextHJct.setAttributeNS(null, "id", "strndHandJctSideB-" + data.junctionMappingPts[i][1]);										
+										
 
                                         var downTextNodeHJct = document.createTextNode(data.junctionMappingPts[i][17]);
                                         downTextHJct.appendChild(downTextNodeHJct);
@@ -7453,14 +7503,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         buildPath(window['JCT_' + jctMappingId][6], window["mapPoints_" + window['JCT_' + jctMappingId][6]], fiberArray, allFiberCables, "FiberPath_f_", window['FiberColor_' + window['' + window['JCT_' + jctMappingId][6]][22]], 0.7, 4.5, 'blue', 13);
                                         fiberArray[window['JCT_' + jctMappingId][6]].setMap(map);
 
-                                        buildPath(window['JCT_' + jctMappingId][4], window["mapPoints_" + window['JCT_' + jctMappingId][4]], tubeArray, allTubes, "Tube", 'green', 0.7, 3.3, 'green', 0);
-                                        tubeArray[window['JCT_' + jctMappingId][4]].setMap(map);
-
-                                        buildPath(window['JCT_' + jctMappingId][2], window["mapPoints_" + window['JCT_' + jctMappingId][2]], strandArray, allStrands, "Strand", 'purple', 0.7, 2.8, 'purple', 0);
-                                        strandArray[window['JCT_' + jctMappingId][2]].setMap(map);
-
-
-                                        $("#handJunctionMappingModal").modal('hide');
+                                        //$("#handJunctionMappingModal").modal('hide');
                                     });
 
                                     $('.sideBStrandHandJct').click(function() {
@@ -7481,14 +7524,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                                         buildPath(window['JCT_' + jctMappingId][12], window["mapPoints_" + window['JCT_' + jctMappingId][12]], fiberArray, allFiberCables, "FiberPath_f_", window['FiberColor_' + window['' + window['JCT_' + jctMappingId][12]][22]], 0.7, 4.5, 'blue', 13);
                                         fiberArray[window['JCT_' + jctMappingId][12]].setMap(map);
 
-                                        buildPath(window['JCT_' + jctMappingId][10], window["mapPoints_" + window['JCT_' + jctMappingId][10]], tubeArray, allTubes, "Tube", 'green', 0.7, 3.3, 'green', 0);
-                                        tubeArray[window['JCT_' + jctMappingId][10]].setMap(map);
-
-                                        buildPath(window['JCT_' + jctMappingId][8], window["mapPoints_" + window['JCT_' + jctMappingId][8]], strandArray, allStrands, "Strand", 'purple', 0.7, 2.8, 'purple', 0);
-                                        strandArray[window['JCT_' + jctMappingId][8]].setMap(map);
-
-
-                                        $("#handJunctionMappingModal").modal('hide');
+                                        //$("#handJunctionMappingModal").modal('hide');
                                     });
 
                                     $('.hJunctionImage').click(function() {
