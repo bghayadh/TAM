@@ -33,6 +33,4 @@ public class Junction {
 	
 	@Column(name = "PROJECT_ID")
 	private Number projectID;
-	
-	
 }

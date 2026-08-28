@@ -208,24 +208,24 @@ a{
 		</div>
 		<div class="col-md-3 DataMigration">
 			<div class="card bg-c-blue order-card">
-				<a href="${pageContext.request.contextPath}/DumpsProcessing" style="text-decoration: none">
+				<a href="${pageContext.request.contextPath}/DataMigration" style="text-decoration: none">
 					<div class="card-block">
 						<i class="fa fa-table" style="color:gold; width:40px; height:40px"></i>
 						<h5 class="m-b-20">Data Migration</h5>
 					</div>
 				</a>
 			</div>					
-		</div>		
-		<div class="col-md-3 Notification">
+		</div>
+		<div class="col-md-3 DataMigration">
 			<div class="card bg-c-blue order-card">
-				<a href="${pageContext.request.contextPath}/EmailAccountsListView" style="text-decoration: none">
+				<a href="${pageContext.request.contextPath}/DumpsProcessing" style="text-decoration: none">
 					<div class="card-block">
-						<i class="fas fa-users glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
-						<h5 class="m-b-20">Email Accounts</h5>
+						<i class="fa fa-table" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Dumps Processing</h5>
 					</div>
 				</a>
 			</div>					
-		</div>		
+		</div>						
 	</div>
 	<div class="row">		
 		<div class="col-md-3 ReportsList">				
@@ -257,6 +257,16 @@ a{
 					</div>
 				</a>
 			</div>
+		</div>
+		<div class="col-md-3 Notification">
+			<div class="card bg-c-blue order-card">
+				<a href="${pageContext.request.contextPath}/EmailAccountsListView" style="text-decoration: none">
+					<div class="card-block">
+						<i class="fas fa-users glyphicon-align-center" style="color:gold; width:40px; height:40px"></i>
+						<h5 class="m-b-20">Email Accounts</h5>
+					</div>
+				</a>
+			</div>					
 		</div>
 	</div>
  </div>

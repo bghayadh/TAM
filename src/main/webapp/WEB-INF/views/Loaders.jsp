@@ -5,232 +5,278 @@
 
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<script src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
-   <link href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
-    <link href="${pageContext.request.contextPath}/resources/css/all.min.css" rel="stylesheet" />
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
-    
-    <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
-    
-    
-   
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script
+	src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/css/bootstrap.min.css"
+	rel="stylesheet" />
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resources/js/jquery.min.js"></script>
+<link
+	href="${pageContext.request.contextPath}/resources/css/all.min.css"
+	rel="stylesheet" />
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resources/js/all.min.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/header.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/resources/css/ListView.css">
+
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
+
+
+
 <title>Loaders</title>
 <style>
 .cadr {
-   border: 0.1em solid #08526d;
-   border-radius: .25rem;
+	border: 0.1em solid #08526d;
+	border-radius: .25rem;
 }
 
-.card-body{
-	padding:0px !important;
+.card-body {
+	padding: 0px !important;
 }
 
 .cardsClass {
-    min-width: 310px;
-    min-height: 260px;
-    border-radius: 10px;
-    padding: 10px 2px;
+	min-width: 310px;
+	min-height: 260px;
+	border-radius: 10px;
+	padding: 10px 2px;
 }
 
 .Cardheader {
-    text-align: center;
-    font-family: cursive;
-    color: #DCF8C6;
-    border-radius: 25px 25px 0px 0px!important;
-    border-style: groove;
-    border-width: 2px;
-    border-color: #4B8C8C;
-    box-shadow: 5px 5px 5px rgb(75,140,140);
-    font-size: 14px;
+	text-align: center;
+	font-family: cursive;
+	color: #DCF8C6;
+	border-radius: 25px 25px 0px 0px !important;
+	border-style: groove;
+	border-width: 2px;
+	border-color: #4B8C8C;
+	box-shadow: 5px 5px 5px rgb(75, 140, 140);
+	font-size: 14px;
 }
 
 .CardBody {
-    justify-content: center;
-    background-color: lightgray;
-    border-radius: 0px 0px 25px 25px!important;
-    font-size: 16px;
-    font-family: cursive;
-    border-style: groove;
-    border-width: 2px;
-    border-color: #4B8C8C;
-    box-shadow: 5px 5px 5px rgb(75,140,140);
-    min-height: 180px;
-    border-top:none;
+	justify-content: center;
+	background-color: lightgray;
+	border-radius: 0px 0px 25px 25px !important;
+	font-size: 16px;
+	font-family: cursive;
+	border-style: groove;
+	border-width: 2px;
+	border-color: #4B8C8C;
+	box-shadow: 5px 5px 5px rgb(75, 140, 140);
+	min-height: 180px;
+	border-top: none;
 }
 
-.title_card{
+.title_card {
 	text-anchor: middle;
-    font-family: Verdana, sans;
-    font-weight: bold;
-    margin-bottom: 15px;
-    font-size: 17px;
+	font-family: Verdana, sans;
+	font-weight: bold;
+	margin-bottom: 15px;
+	font-size: 17px;
 }
 
 .card {
 	margin-bottom: 20px !important;
 }
 
-.block{
-	border:1px solid #4B8C8C !important;
+.block {
+	border: 1px solid #4B8C8C !important;
 	padding: 10px;
 }
 
-.loadingMsg{
+.loadingMsg {
 	text-align: center;
 	display: none;
-	margin-right:20px;
+	margin-right: 20px;
 }
 
-
 .center {
-  text-align:center;
-  margin-top: 10%;
+	text-align: center;
+	margin-top: 10%;
 }
 
 .order-card {
-	color:#fff;
-	
+	color: #fff;
 }
 
-.headerText{
-    color: white;
-    font-weight:bold;
-    padding: 8px 15px;
-    text-align: center;
-    display: inline-block;
+.headerText {
+	color: white;
+	font-weight: bold;
+	padding: 8px 15px;
+	text-align: center;
+	display: inline-block;
 }
-.importButton{
+
+.importButton {
 	background-color: #858d8d;
-    border: 1px solid gold;
-    color: white;
-    padding: 8px 15px;
-    text-align: center;
-    text-decoration: red;
-    display: inline-block;
-    margin: 0px 0px;
-    cursor: pointer;
-    border-radius: 5px;
+	border: 1px solid gold;
+	color: white;
+	padding: 8px 15px;
+	text-align: center;
+	text-decoration: red;
+	display: inline-block;
+	margin: 0px 0px;
+	cursor: pointer;
+	border-radius: 5px;
 }
 
-.importButton:hover{
+.importButton:hover {
 	background-color: #9EA3A3;
 	color: gold;
 	border: 1px solid #D3D3D3;
 }
 
-.card-header{
-	padding:6px 20px !important;
+.card-header {
+	padding: 6px 20px !important;
 	height: 54px !important;
 }
 
- .note {
-    font-family: 'Courier New', monospace;
-    color: #858d8d;
-  }
+.note {
+	font-family: 'Courier New', monospace;
+	color: #858d8d;
+}
 </style>
 </head>
 <body>
-<c:set var="pg" value="setup" scope="session"  />
-<jsp:include page="header.jsp"></jsp:include>
-<hr style="margin-top: 0rem;">
-<div class="container-fluid" >
-<br><br>
-	<div class="row" >
-		<div class="col-xl-12">
-			<div class="card card-primary card-tabs cards-margin block">
-				<div class="title_card d-flex justify-content-between align-items-center">
-                    <span style="margin-left:10px;">Fiber</span>
-                    <button class="importButton" id="downloadSample">Download Excel Sample</button>
-                </div>
-				<div class="card-body cadr">
-					<div class="card-group ">
-						<div class="mx-auto cardsClass">
-            				<div class="card bg-light mb-3 mx-auto ">
-                				<div class="card-header Cardheader">
-                					<div class="row">
-	                					<div class="col-sm-10">         
-	                						<h6 class="headerText">Manhole</h6>       				 	                					       				 	                					
-	                					</div>
-	                				</div> 
-	                			</div>
-                				<div class="card-body mycard CardBody">
-                				<div class="input-group-prepend">
-										<label class="file"><input type="file" style="font-size:13px;margin-left:13px;" id="importManholeExcelFile" accept=".xlsx" class="btn btn-light file"></label>
-								</div>
-						<div class="input-group-prepend">
-								<button class="importButton" id="runManholeScript" style="align:center; margin-left:100px;">Import</button>
-								</div>
-									<p id="manholeSuccessAlert" style=" margin-top: 0; padding-top:5px;margin-left:80px;color:black;display:none"></p>
-                					<div id="manholeLoader" class="loadingMsg">
-                						<img  src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" style="width: 40px;height:40px;margin-right:10px;">Loading Data...
-                					</div>
-                				</div>                				
-           					 </div>
-           					 <p class="note">This Loader will only load the Manholes <br>and its Junctions,even if the excel sheet<br> is containing Manholes and Handholes . </p>
-           					 
-      					</div>
-      					<div class="mx-auto cardsClass">
-            				<div class="card bg-light mb-3 mx-auto ">
-                				<div class="card-header Cardheader">
-                					<div class="row">
-	                					<div class="col-sm-10">         
-	                						<h6 class="headerText">Handhole</h6>       				 	                					       				 	                					
-	                					</div>
-	                				</div> 
-	                			</div>
-                				<div class="card-body mycard CardBody">
-                				<div class="input-group-prepend">
-										<label class="file"><input type="file" style="font-size:13px;margin-left:13px;" id="importHandholeExcelFile" accept=".xlsx" class="btn btn-light file"></label>
-								</div>
-							<div class="input-group-prepend">
-								<button class="importButton" id="runHandholeScript" style="align:center; margin-left:100px;">Import</button>
-							</div>
-								<p id="handholeSuccessAlert" style=" margin-top: 0; padding-top:5px;margin-left:80px;color:black;display:none"></p>
-                					<div id="handholeLoader" class="loadingMsg">
-                						<img  src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" style="width: 40px;height:40px;margin-right:10px;">Loading Data...
-                					</div>
-                				</div>
-           					 </div>
-           					<p class="note">This Loader will only load the Handholes <br>and its Junctions,even if the excel sheet<br> is containing Manholes and Handholes . </p>
-      					</div>
-      					
-      			<div class="mx-auto cardsClass">
-            				<div class="card bg-light mb-3 mx-auto ">
-                				<div class="card-header Cardheader">
-                					<div class="row">
-	                					<div class="col-sm-10">         
-	                						<h6 class="headerText">Generate City</h6>       				 	                					       				 	                					
-	                					</div>
-	                				</div> 
-	                			</div>
-                				<div class="card-body mycard CardBody">
-                				<div class="input-group-prepend">
-									<label class="file"><input type="file" style="font-size:13px;margin-left:13px;" id="importCityExcelFile" accept=".xlsx" class="btn btn-light file"></label>
-								</div>
-							<div class="input-group-prepend">
-								<button class="importButton" id="generateCity" style="align:center; margin-left:100px;">Generate</button>
-							</div>
-								<p id="generateCitySuccessAlert" style=" margin-top: 0; padding-top:5px;margin-left:80px;color:black;display:none"></p>
-                					<div id="generateCityLoader" class="loadingMsg">
-                						<img  src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif" style="width: 40px;height:40px;margin-right:10px;">Loading Data...
-                					</div>
-                				</div>
-           					 </div>
-      					</div>
-      					
-      					
+	<c:set var="pg" value="setup" scope="session" />
+	<jsp:include page="header.jsp"></jsp:include>
+	<hr style="margin-top: 0rem;">
+	<div class="container-fluid">
+		<br>
+		<br>
+		<div class="row">
+			<div class="col-xl-12">
+				<div class="card card-primary card-tabs cards-margin block">
+					<div
+						class="title_card d-flex justify-content-between align-items-center">
+						<span style="margin-left: 10px;">Fiber</span>
+						<button class="importButton" id="downloadSample">Download
+							Excel Sample</button>
 					</div>
-				</div>
+					<div class="card-body cadr">
+						<div class="card-group ">
+							<div class="mx-auto cardsClass">
+								<div class="card bg-light mb-3 mx-auto ">
+									<div class="card-header Cardheader">
+										<div class="row">
+											<div class="col-sm-10">
+												<h6 class="headerText">Manhole</h6>
+											</div>
+										</div>
+									</div>
+									<div class="card-body mycard CardBody">
+										<div class="input-group-prepend">
+											<label class="file"><input type="file"
+												style="font-size: 13px; margin-left: 13px;"
+												id="importManholeExcelFile" accept=".xlsx"
+												class="btn btn-light file"></label>
+										</div>
+										<div class="input-group-prepend">
+											<button class="importButton" id="runManholeScript"
+												style="align: center; margin-left: 100px;">Import</button>
+										</div>
+										<p id="manholeSuccessAlert"
+											style="margin-top: 0; padding-top: 5px; margin-left: 80px; color: black; display: none"></p>
+										<div id="manholeLoader" class="loadingMsg">
+											<img
+												src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif"
+												style="width: 40px; height: 40px; margin-right: 10px;">Loading
+											Data...
+										</div>
+									</div>
+								</div>
+								<p class="note">
+									This Loader will only load the Manholes <br>and its
+									Junctions,even if the excel sheet<br> is containing
+									Manholes and Handholes .
+								</p>
 
+							</div>
+							<div class="mx-auto cardsClass">
+								<div class="card bg-light mb-3 mx-auto ">
+									<div class="card-header Cardheader">
+										<div class="row">
+											<div class="col-sm-10">
+												<h6 class="headerText">Handhole</h6>
+											</div>
+										</div>
+									</div>
+									<div class="card-body mycard CardBody">
+										<div class="input-group-prepend">
+											<label class="file"><input type="file"
+												style="font-size: 13px; margin-left: 13px;"
+												id="importHandholeExcelFile" accept=".xlsx"
+												class="btn btn-light file"></label>
+										</div>
+										<div class="input-group-prepend">
+											<button class="importButton" id="runHandholeScript"
+												style="align: center; margin-left: 100px;">Import</button>
+										</div>
+										<p id="handholeSuccessAlert"
+											style="margin-top: 0; padding-top: 5px; margin-left: 80px; color: black; display: none"></p>
+										<div id="handholeLoader" class="loadingMsg">
+											<img
+												src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif"
+												style="width: 40px; height: 40px; margin-right: 10px;">Loading
+											Data...
+										</div>
+									</div>
+								</div>
+								<p class="note">
+									This Loader will only load the Handholes <br>and its
+									Junctions,even if the excel sheet<br> is containing
+									Manholes and Handholes .
+								</p>
+							</div>
+
+							<div class="mx-auto cardsClass">
+								<div class="card bg-light mb-3 mx-auto ">
+									<div class="card-header Cardheader">
+										<div class="row">
+											<div class="col-sm-10">
+												<h6 class="headerText">Generate City</h6>
+											</div>
+										</div>
+									</div>
+									<div class="card-body mycard CardBody">
+										<div class="input-group-prepend">
+											<label class="file"><input type="file"
+												style="font-size: 13px; margin-left: 13px;"
+												id="importCityExcelFile" accept=".xlsx"
+												class="btn btn-light file"></label>
+										</div>
+										<div class="input-group-prepend">
+											<button class="importButton" id="generateCity"
+												style="align: center; margin-left: 100px;">Generate</button>
+										</div>
+										<p id="generateCitySuccessAlert"
+											style="margin-top: 0; padding-top: 5px; margin-left: 80px; color: black; display: none"></p>
+										<div id="generateCityLoader" class="loadingMsg">
+											<img
+												src="${pageContext.request.contextPath}/resources/images/ajax-loader.gif"
+												style="width: 40px; height: 40px; margin-right: 10px;">Loading
+											Data...
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
-	</div>	
-</div>
+	</div>
 </body>
 <script type="text/javascript">
 var excelSheetSample=[];
