@@ -3707,7 +3707,6 @@ function pathCheckFilter(Target, type, Id, drawingTypeIndex, pathArray, allPathA
 
 function mainPathCheckFilterEvent(Id, type) {
     $("#" + Id).children('input').bind("change", function() {
-        console.log("the Id is " + Id);
         if ($(this).is(':checked')) {
             mainPathCheckFilter($(this));
         }// end check  case 			
@@ -13583,7 +13582,8 @@ function StrandCreatePopup() {
 }
 
 function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
-    //console.log("Id ");
+	
+	ContextMenu.classList.add('show-menu');	
     const w = window.innerWidth;
     const h = window.innerHeight;
 
@@ -13597,9 +13597,7 @@ function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
     if (y + mh > h) { y = y - mh; }
     //console.log(" x is "+ x+" and y is "+ y);
     ContextMenu.style.top = y + "px";
-    ContextMenu.style.left = x + "px";
-    ContextMenu.classList.add('show-menu');
-
+    ContextMenu.style.left = x + "px";    
 }
 function HideContextMenuGoolge(ContextMenu) {
     ContextMenu.classList.remove('show-menu');

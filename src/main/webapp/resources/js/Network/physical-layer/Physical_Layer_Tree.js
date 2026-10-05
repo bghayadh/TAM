@@ -4959,11 +4959,45 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         });
                     });
                 }
-            },
+            },						
 			{'icon': 'file-export', 'name': 'Export', action: () => {
-					console.log("Welcome to export");				
-				}
-			}
+			    selectedProjectIdContext = selectedProjectIdContext.replace("Project_span_", "");
+
+			    // reset modal to loading state every time it's opened
+			    $("#exportGdbLoading").show();
+			    $("#exportGdbResult").hide();
+			    $("#exportGdbError").hide();
+			    $("#exportGdbCloseBtn").prop("disabled", true); // optional: block close while generating
+			    $("#exportGdbModal").modal('show');
+
+			    $.ajax({
+			        type: "GET",
+			        contentType: "application/json; charset=utf-8",
+			        url: getContext() + '/exportProjectGdb',
+			        data: {
+			            "projectId": selectedProjectIdContext
+			        },
+			        dataType: "json",
+			        // no async:false here on purpose — this can be slow, don't freeze the tab
+			        success: function(data) {
+			            // expected: { "downloadToken": "...", "fileName": "FTTH_FDT19_ALKHALEEJ.gdb.zip" }
+			            var downloadUrl = getContext() + '/downloadGdb?token=' + encodeURIComponent(data.downloadToken);
+
+			            $("#exportGdbDownloadLink")
+			                .attr("href", downloadUrl)
+			                .attr("download", data.fileName);
+
+			            $("#exportGdbLoading").hide();
+			            $("#exportGdbResult").show();
+			            $("#exportGdbCloseBtn").prop("disabled", false);
+			        },
+			        error: function(result) {
+			            $("#exportGdbLoading").hide();
+			            $("#exportGdbError").show();
+			            $("#exportGdbCloseBtn").prop("disabled", false);
+			        }
+			    });
+			}}
         ]
     });
 
@@ -10492,12 +10526,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
     });
 
 
-
-
-
-
-
-
     menuName = "";
 
     /////////////*********************	all Nodes ELEMENT CONTEXTS MENU  ***********************///////////////
@@ -10628,8 +10656,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     });
 
-    $("#DistributionBoard_backboneController__CurrentPhysicalLayer > .TreeSpan , .DistributionBoard_f_projects > .TreeSpan ").contextmenu(function() {
-
+	$("#DistributionBoard_backboneController__CurrentPhysicalLayer > .TreeSpan").contextmenu(function() {
         // checking the DistributionBoard project id  
         IdNodeSelectedTemp = $(this).parent().attr('id').split("DistributionBoard_f_")[1];
         networkLayer = "Backbone";
@@ -10638,8 +10665,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     });
 
-    $("#DistributionBoard_metroController__CurrentPhysicalLayer > .TreeSpan , .DistributionBoard_f_projects > .TreeSpan ").contextmenu(function() {
-
+	$("#DistributionBoard_metroController__CurrentPhysicalLayer > .TreeSpan").contextmenu(function() {
         // checking the DistributionBoard project id  
         IdNodeSelectedTemp = $(this).parent().attr('id').split("DistributionBoard_f_")[1];
         networkLayer = "Metro";
@@ -10647,7 +10673,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         openContext("", "", menuName, event);
 
     });
-    $("#DistributionBoard_accessController__CurrentPhysicalLayer > .TreeSpan , .DistributionBoard_f_projects > .TreeSpan ").contextmenu(function() {
+
+	$("#DistributionBoard_accessController__CurrentPhysicalLayer > .TreeSpan").contextmenu(function() {		
 
         // checking the DistributionBoard project id  
         IdNodeSelectedTemp = $(this).parent().attr('id').split("DistributionBoard_f_")[1];
@@ -10656,15 +10683,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         openContext("", "", menuName, event);
 
     });
-
-
-
-
-
-
-
-
-
 
     $(".backboneDBFolder > .TreeSpan, .backboneDBFolder> .TreeSpan").contextmenu(function() {
         IdNodeSelectedTemp = $(this).parent().attr('id').split("DistributionBoard_backbone__")[1];
@@ -10686,11 +10704,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
     $(".NodeActive_f_CurrentPhysicalLayer > .TreeSpan ").contextmenu(function() {
         IdNodeSelectedTemp = $(this).parent().attr('id').split("NodeActive_f_")[1];
-
         menuName = menuNodeesActive;
         openContext("", "", menuNodeesActive, event);
-
-
     });
 
     $(".EntrepriseNodeFolder > .TreeSpan, .EntrepriseNodeFolder > .TreeSpan").contextmenu(function() {

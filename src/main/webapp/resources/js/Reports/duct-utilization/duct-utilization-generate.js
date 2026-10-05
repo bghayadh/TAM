@@ -1,5 +1,4 @@
 function onGenerateClick() {
-
     generateFlag = "1";
     prepareGenerateProcess();
 

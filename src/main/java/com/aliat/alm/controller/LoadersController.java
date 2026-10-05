@@ -378,7 +378,7 @@ public class LoadersController {
 		
 		String city = "";
 		GeoApiContext context = new GeoApiContext.Builder()
-			    .apiKey("AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo")
+			    .apiKey("AIzaSyC9VQsa9xxDCGKWH73uwlZV2ndnNhIumDU")
 			    .build();
 			GeocodingResult[] results = null;
 			try {

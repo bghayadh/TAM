@@ -645,15 +645,16 @@ function appendProjectElement(ListManhole, ListManholeJunction, ListHandhole, Li
             }
 
             DistributionBoardCheckFilter(distribBoardList[i][0], "", clusterName);
-
-            $(".DistributionBoard > .TreeSpan").contextmenu(function() {
-                menuName = singleDistBoard;
-                IdNodeSelectedTemp = $(this).parents().eq(2).attr('id').split("__")[1];
-                selectedDistBoardContext = $(this).parents().attr('id');
-                selectedDistBoardName = $(this).text();
-                openContext(selectedDistBoardContext, selectedDistBoardName, singleDistBoard, event);
-            });
         }
+
+		$(".DistributionBoard > .TreeSpan").contextmenu(function() {
+			console.log("Welcome to Distribution Board right click");
+		    menuName = singleDistBoard;
+		    IdNodeSelectedTemp = $(this).parents().eq(2).attr('id').split("__")[1];
+		    selectedDistBoardContext = $(this).parents().attr('id');
+		    selectedDistBoardName = $(this).text();
+		    openContext(selectedDistBoardContext, selectedDistBoardName, singleDistBoard, event);
+		});
 
         AllDistributionBoardCheckFilter("DistributionBoard_backbone__" + ProjectId, markerClusterBackboneDistBoard);
         AllDistributionBoardCheckFilter("DistributionBoard_metro__" + ProjectId, markerClusterMetroDistBoard);

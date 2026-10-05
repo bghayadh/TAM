@@ -204,8 +204,8 @@ function clearCablePaths() {
 	if (Array.isArray(relatedPathArray)) {
 	    relatedPathArray.length = 0;
 	}
-
-
+	
+	allRelatedPathCables=[];	
 }
 
 function recenterMap() {

@@ -891,7 +891,7 @@ function DefaultZoomControl(controlDiv, map) {
 
 </script>
 <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=geometry,places&v=3.43&amp">
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9VQsa9xxDCGKWH73uwlZV2ndnNhIumDU&libraries=geometry,places&v=3.43&amp">
 </script>
 
 <!-- 2️⃣ Load MapLabel AFTER Maps API is ready -->

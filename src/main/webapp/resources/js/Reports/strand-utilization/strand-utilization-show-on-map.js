@@ -104,7 +104,7 @@ function showElementLocationPoints(elementsDetailsArray, filteredGridArray, wind
 
                 }
                 else if (elementsDetailsArray[z][2].startsWith("HH_") == true) {
-                    var ID = showPointsArray[x].split(":")[0];
+                    //var ID = showPointsArray[x].split(":")[0];
                     var ID = elementsDetailsArray[z][2];
                     var handholeName = elementsDetailsArray[z][3];
 

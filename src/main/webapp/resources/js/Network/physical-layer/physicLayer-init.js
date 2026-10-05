@@ -13,7 +13,13 @@ $(document).ready(function() {
     initFiberEvents();
     initTrunchEvents();
     initDuctEvents();
+	initPermissionTabs();
+	initSectionVisibility();	
 });
+
+window.onload = function () {
+    initAfterPageLoad();
+};	
 
 
 /* =========================================================

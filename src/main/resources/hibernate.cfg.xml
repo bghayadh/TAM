@@ -4,10 +4,10 @@
 <hibernate-configuration>
  <session-factory name="alm">
   <property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-  <property name="hibernate.connection.password">alm</property>
-  <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1523:ALM</property>
-  <property name="hibernate.connection.username">alm</property>
-  <property name="hibernate.default_schema">alm</property>
+  <property name="hibernate.connection.password">demo</property>
+  <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1527:DEMO</property>
+  <property name="hibernate.connection.username">demo</property>
+  <property name="hibernate.default_schema">demo</property>
   <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>  
   <property name="connection.pool_size">10</property>
   
@@ -168,5 +168,9 @@
 <mapping class="com.aliat.alm.models.PanelModule"/>
 <mapping class="com.aliat.alm.models.PatchingWorkOrder"/>
 <mapping class="com.aliat.alm.models.WorkOrderTask"/>
+<mapping class="com.aliat.alm.models.JunctionMapping"/>
+<mapping class="com.aliat.alm.models.Junctions"/>
+<mapping class="com.aliat.alm.models.Project"/>
+
    </session-factory>
 </hibernate-configuration>

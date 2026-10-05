@@ -1,7 +1,8 @@
 Create TABLESPACE ALM_RPT
 DATAFILE 'C:\App\oradata\ALM_RPT\DATAFILE\ALM_RPT.DBF'
 SIZE 1m
-AUTOEXTEND ON MAXSIZE UNLIMITED;
+AUTOEXTEND ON
+MAXSIZE UNLIMITED;
 
 alter session set "_ORACLE_SCRIPT" = TRUE;
 
@@ -10,12 +11,9 @@ IDENTIFIED BY almrpt
 DEFAULT TABLESPACE ALM_RPT
 QUOTA 20m on ALM_RPT;
 
-
 GRANT ALL PRIVILEGES TO almrpt;
 
-
 alter profile DEFAULT limit password_life_time UNLIMITED;
-
 
 ---------------SCRIPT TO CREATE RPT OBJECT-------------------------------------------------------
 /* if dblinkalm is existed and we need to create dblink from scratch, then we need to drop the dblinkalm. */
@@ -48,6 +46,14 @@ SELECT * FROM warehouse@dblinkalm;
 // To confirm that SYNONYM is working fine:
 
 select * from alm_warehouse;
+
+
+DROP SYNONYM alm_warehouse;
+DROP SYNONYM alm_region;
+DROP SYNONYM alm_regionborder;
+DROP DATABASE LINK dblinkalm;
+
+----------------------------
 
 DROP TABLE PREPAID_PAYG_REVENUE;
 
@@ -94,9 +100,6 @@ TRUNCATE TABLE PREPAID_PAYG_REVENUE;
 
 --alter SEQUENCE PREPAID_PAYG_REVENUE_SEQ restart start with 1;
 
-CREATE SEQUENCE PREPAID_PAYG_REVENUE_SEQ MINVALUE 1 MAXVALUE 10000000000 INCREMENT BY 1 START WITH 571841 CACHE 20 NOORDER  NOCYCLE;
+CREATE SEQUENCE PREPAID_PAYG_REVENUE_SEQ MINVALUE 1 MAXVALUE 10000000000 INCREMENT BY 1 START WITH 1 NOCACHE NOORDER NOCYCLE;
 
 DROP SEQUENCE PREPAID_PAYG_REVENUE_SEQ;
-
-
-

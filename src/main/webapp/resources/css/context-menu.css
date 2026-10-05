@@ -3,7 +3,7 @@
 /* ============================================================================================ */
 
 .context-menu-default {
-  position: absolute;
+  position: fixed;
   width: 235px;
   padding: 0;
   margin: 0;

@@ -26,6 +26,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/NetworkMapStylesLayers.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/maps.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/physicLayer-init.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/mainNetworkPhysicalLayer.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/physicLayer-triggerListenersEvent.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Tree.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/Physical_Layer_Map.js"></script>
@@ -55,6 +56,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/show-points-and-seq.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
+
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/xlsx.full.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/jszip.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/BordersFindNearest.js"></script>
@@ -69,8 +71,14 @@
 <script src="${pageContext.request.contextPath}/resources/js/konva.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distribution-board/panel.js"></script>
 
-
 <style>
+
+html, body {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+}
+
 .close {
   float: right;
   font-size: 1.5rem;
@@ -176,7 +184,7 @@
 </style>
 </head>
 <%@ include file="/WEB-INF/views/Network/FiberSearch.jsp" %> 
-<body style=" overflow-y:hidden;">
+<body>
 	<c:set var="pg" value="network" scope="session" />
 	<jsp:include page="../header.jsp"></jsp:include><p></p><br>
 	<input type="text" id="fiberAuxFlag" name="fiberAuxFlag" value="" class="form-control text-input" hidden="hidden" />
@@ -224,7 +232,7 @@
 			</div>
 			<div class="col-md-1" id="dropDownCheckDiv"style="text-align: right; margin-top: 6px;"></div>
 			<div class="col-md-2" style="text-align: right; margin-top: 12px;">
-				<div id="txtDiv"><input id="mapText" type='text' disabled style="width:266px;height:35px; text-align: center; margin-left:52px;position:relative;top:-1px;" /></div>
+				<div id="txtDiv"><input id="mapText" type='text' disabled style="width:280px;height:35px; text-align: center; margin-left:52px;position:relative;top:-1px;" /></div>
 			</div>
 			<div class="col-md-4" style="text-align: right; margin-top: 4px;">
 				<div class="btn-group pull-right"><div class="glyph"><button type="button" class="btn btn-light" data-placement="top"title="Map Operations" data-toggle="modal" onclick="mapOperation()"><i class="fas fa-toolbox"></i></button>
@@ -497,7 +505,7 @@
 		</div>
 		<!-- End of Left Div that contains the Tree div, arrows div, layers, options and Boq div -->
 		<!--  Beginning of GIS part -->
-		<div id="right" style=" overflow-y:hidden; overflow-x:auto;">
+		<div id="right" style="overflow:hidden;">
   <div class="tab" style="display:flex; gap:10px; position:relative;">
     <button class="tablink" onclick="openRightab(event, 'mapContainer')" id="DefaultRightbutton"
             style="color:#FFD966; font-weight:bold; position:relative;">Map</button>		
@@ -513,7 +521,7 @@
     </button>		
   </div>
 
-  <div id="mapContainer" class="rightcontent" style="width:100%; height:100%;"></div>
+  <div id="mapContainer" class="rightcontent" style="width:100%; height:calc(100% - 30px);"></div>
 
   <div id="panelContainer" class="rightcontent" style="display:none; width:100%; height:100%;">
     <div id="panelStage" style="width:100%; height:600px; border:1px solid #ccc; "></div>
@@ -8638,11 +8646,13 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 							</div>
 						</div>
 					</div>
-	<div class="container" style="max-width: 900px; height: 900px; overflow-x: auto;">
+<!-- 					
+	<div class="container" style="max-width: 100%;">	
+ -->	
     <div id="dB_MappingModal" class="modal fade custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
-       <div class="modal-dialog modal-dialog-centered" style="max-width:900px !important;">
+       <div class="modal-dialog modal-dialog-centered" style="width:auto; max-width:1200px; max-height:90vh;">
 
-            <div class="modal-content" id="contentMappingModal" style="width: 100%; max-width: 900px;">
+            <div class="modal-content" id="contentMappingModal" style="max-width:100%; max-height:90vh;">
                 <div class="modal-header" style="background-color: #2678CC; height: 55px;">
                     <h5 class="modal-title" id="dB_TitleId" style="font-weight: bold; color: #E9ECEF; position: relative; bottom: 12px;"></h5>
                     <div style="float:right">
@@ -8655,15 +8665,17 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
                 <div class="modal-body">
                     <div class="tab-content">
                         <!-- Set overflow-x to auto for horizontal scrolling -->
-                        <div id="dB_tabContentPortsMap"
-     style=" overflow-x:auto; overflow-y:auto; white-space:nowrap;"></div>
+                        <div id="dB_tabContentPortsMap" style="max-height:calc(90vh - 120px); overflow-x:auto; overflow-y:auto; white-space:nowrap;"></div>
                     </div>
                 </div>
                 <div class="modal-footer"></div>
             </div>
         </div>
     </div>
+<!--      
 </div>
+ -->
+
 
 	<div id="BackPortAssignedPortsModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
 		<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
@@ -8868,18 +8880,60 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 			</div>
 		</div>
 	</div>
+	
+	<div class="modal fade" id="exportGdbModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title">Export Project to GDB</h5>
+	      </div>
+	      <div class="modal-body" id="exportGdbBody">
+	        <div id="exportGdbLoading" class="text-center">
+	          <div class="spinner-border" role="status"></div>
+	          <p class="mt-2">Generating GDB file, please wait...</p>
+	        </div>
+	        <div id="exportGdbResult" style="display:none;" class="text-center">
+	          <p>Your export is ready.</p>
+	          <a id="exportGdbDownloadLink" href="#" class="btn btn-primary" download>
+	            <i class="fa fa-download"></i> Download GDB
+	          </a>
+	        </div>
+	        <div id="exportGdbError" style="display:none;" class="text-center text-danger">
+	          <p>Export failed. Please try again.</p>
+	        </div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="exportGdbCloseBtn">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>	
+	
+	
+	
+	
 </body>
 
 <script>
+
+systemLong = ${systemLong},
+systemLat = ${systemLat},
+checkedOption = '${checkedOption}',
+filterFlag = ${filterFlag},
+physicalLayerList = ${physicalLayerList},
+physicalLayerData = ${physicalLayerData},
+searchPopupPerm = '${searchPopup}',
+findConnedtedPerm = '${findConnedted}',
+readDB = '${readDB}',
+readManhole = '${readManhole}',
+readHandhole = '${readHandhole}'	    
+
 
 let fiberList = [];
 let auxDat = [];
 let auxGrouped = [];
 let geoDistances = [];
 let dict = []; // global like your reference code
-systemLong = ${systemLong};
-systemLat = ${systemLat};
-
 
 // Parse them into JavaScript objects
 var circleDraw = '${circleDraw}';
@@ -8944,13 +8998,14 @@ var trenchModel=[];
 var trenchAuxModel=[];
 var junManModel=[];
 var junHanModel=[];
-//var Hashmap=[];
 var hashMapList=[];
 var createdUser ;
 var lstModfUser;
 var updateModfUser;
 var MenuMap;
+
 let srcCityAutocomplete, dstCityAutocomplete;
+
 var manholeSurveyArray=[];
 var handholeSurveyArray=[];
 var dbSurveyArray=[];
@@ -8958,16 +9013,13 @@ var nodeSurveyArray=[];var fiberCableSurveyArray=[];var fiberTubesSurveyArray=[]
 var manholeJctAttachmentIndex=0,handholeJctAttachmentIndex=0,projectAttachmentIndex=0;
 var deletedKitIds= [];
 var deletedModuleIds= [];
-
 updateModfUser=`${userFullName}`;
-var searchPopupPerm = '${searchPopup}';
-var findConnedtedPerm='${findConnedted}';
 var projects='${projects}';
-var readManhole='${readManhole}';
+
 var writeManhole='${writeManhole}';
 var addManhole='${addManhole}';
 var delManhole='${delManhole}';
-var readHandhole='${readHandhole}';
+
 var writeHandhole='${writeHandhole}';
 var addHandhole='${addHandhole}';
 var delHandhole='${delHandhole}';
@@ -8975,247 +9027,62 @@ var readFiber='${readFiber}';
 var writeFiber='${writeFiber}';
 var addFiber='${addFiber}';
 var delFiber='${delFiber}';
-var readDB='${readDB}';
+
 var writeDB='${writeDB}';
 var addDB='${addDB}';
 var delDB='${delDB}';
 
-var onlyReadManExcep= '${onlyReadManExcep}'
-
-	var exceptionManWriteList= '${exceptionManWriteList1}';
-		if(exceptionManWriteList){
-	 exceptionManWriteList = JSON.parse(exceptionManWriteList);
-
-	}
-		console.log(exceptionManWriteList);
-	var readExceptionMan='${readExceptionMan}';
-	var treeExceptionMan='${treeExceptionMan}';
-	var writeExceptionMan='${writeExceptionMan}';
-	console.log(writeExceptionMan);
-	var onlyReadHandExcep= '${onlyReadHandExcep}';
-		var exceptionHandWriteList= '${exceptionHandWriteList1}';
-		if(exceptionHandWriteList){
-		 exceptionHandWriteList = JSON.parse(exceptionHandWriteList);
-
-		}
-		
-		var readExceptionHand='${readExceptionHand}';
-		var treeExceptionHand='${treeExceptionHand}';
-		var writeExceptionHand= '${writeExceptionHand}';
-		
-
-	
-		var onlyReadDBExcep= '${onlyReadDBExcep}';
-			
-			var exceptionDBWriteList= '${exceptionDBWriteList1}';
-			if(exceptionDBWriteList){
-			 exceptionDBWriteList = JSON.parse(exceptionDBWriteList);
-			}
-			var readExceptionDB='${readExceptionDB}';
-			var treeExceptionDB='${TtreeExceptionDB}';
-			var writeExceptionDB= '${writeExceptionDB}';
-
-			
-			var onlyReadFiberExcep= '${onlyReadFiberExcep}';
-				
-				var exceptionFiberWriteList= '${exceptionFiberWriteList1}';
-				if(exceptionFiberWriteList){
-				 exceptionFiberWriteList = JSON.parse(exceptionFiberWriteList);
-				}
-				var readExceptionFiber='${readExceptionFiber}';
-				var writeExceptionFiber= '${writeExceptionFiber}';
-			
-document.addEventListener('DOMContentLoaded', function() {
-    var elements = {
-        fibersearchtab: document.getElementById('fiber-search-tab'),
-        customTabsFilterTab: document.getElementById('custom-tabs-filter-tab'),
-        closestSearchTab: document.getElementById('closest-search-tab'),
-        MultyClosestSearchTab: document.getElementById('MultyClosest-search-tab'),
-        connectedSearchtab: document.getElementById('connectedSearch-tab'),
-        projects: document.getElementById('initial_ul_Projects')
-    };
-
-    function toggleElementDisplay(element, permission) {
-        if (element) { // Check if element exists before accessing its style
-            if (permission === '1') {
-                element.style.display = 'block';
-            } else {
-                element.style.display = 'none';
-            }
-        }
-    }
-
-    toggleElementDisplay(elements.fibersearchtab, searchPopupPerm);
-    toggleElementDisplay(elements.customTabsFilterTab, searchPopupPerm);
-    toggleElementDisplay(elements.closestSearchTab, searchPopupPerm);
-    toggleElementDisplay(elements.MultyClosestSearchTab, searchPopupPerm);
-    
-  
-    
-    toggleElementDisplay(elements.connectedSearchtab, findConnedtedPerm);
-});
-
-
-//function on map clustring
-function initMap() {
-
- $("#default").prop('checked', true);
- $("#landscape").prop('checked', true);
- $("#water").prop('checked', true);
- $("#transit").prop('checked', true);
- $("#poi").prop('checked', true);
- $("#road").prop('checked', true);
- $("#blank").prop('checked', false);
- $("#mapgeography").prop('checked', false);
- $("#maplabels").prop('checked', false);
- $("#countrynames").prop('checked', false);
- $("#countryprovince").prop('checked', false);
- 
-	button = document.getElementById('customMap');
-	data = button.getAttribute('data-map');
-
-	//console.log("Data is"+data);
-	document.getElementById("network_tree").innerHTML ="";
-	$("#network_tree").resizable({
-		handles: "s", 	
-
-	});
-
-	var directionsDisplay=new google.maps.DirectionsRenderer();
-	var directionsService=new google.maps.DirectionsService();
-
-	  createdUser = $("#crtdByFiberCable").val();
-	  lstModfUser = $("#modifiedByFiberCable").val();
-	//New Map//
-	map = new google.maps.Map(document.getElementById("mapContainer"), {
-		center: { lat: systemLat, lng: systemLong },
-		mapTypeControl: true,
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		mapTypeControlOptions: {
-			style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-			position: google.maps.ControlPosition.TOP_CENTER,
-		},						          				 			
-		zoomControl: true,
-		zoomControlOptions: {
-			position: google.maps.ControlPosition.LEFT_CENTER,
-		},
-		scaleControl: true,
-		streetViewControl: true,
-		streetViewControlOptions: {
-			position: google.maps.ControlPosition.LEFT_TOP,
-		},
-		fullscreenControl: true,
-	});
-	
-	map.setOptions({ minZoom: 3, maxZoom: 28});
-	directionsDisplay.setMap(map);
-	
-	restingMap();
-	var x = document.getElementById("removeFilter");								 
-	$("#open-popup-btn").removeAttr('disabled');
-	console.log("Inside the success of physical layer");
-	var keys =[];
-	var Emptydiv=null;
-	var projectID;
-	filterFlag = ${filterFlag};
-	checkedOption = '${checkedOption}';
-	$("#filterSection").empty();
-	 // This loop to build the filter tab information which is existed in the search popup.
-	for (i = 0;i<Object.keys(${physicalLayerList}).length;i++){
-	  if(Object.keys(${physicalLayerList})[i]=="Project"){
-		str="<div class='row' style='margin-left:-15px;'  ><div class='col-md-6'><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>Project</b></span><input	type='text' name='filteredField' id='FilteredProject' class='form-control text-input' placeholder='Project'/></div></div></div><p></p><p></p>";
-	  } else if(Object.keys(${physicalLayerList})[i].includes("_")){
-	  	let text = Object.keys(${physicalLayerList})[i];
-		let result = text.replace("_", " ");
-		result = result.charAt(0).toUpperCase() + result.slice(1);
-		str="<div class='rowhashMapList' style='margin-left:-15px;' id='hashMapList'><div class='col-md-6' ><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>"+result+"</b></span><input	type='text' name='filteredField' id='Filtered"+Object.keys(${physicalLayerList})[i]+"'class='form-control text-input' placeholder='"+result+"'/></div></div></div><p></p><p></p>";
-		}else{
-			let	result = (Object.keys(${physicalLayerList})[i]).charAt(0).toUpperCase() + (Object.keys(${physicalLayerList})[i]).slice(1);
-			str="<div class='rowhashMapList' style='margin-left:-15px;' id='hashMapList'><div class='col-md-6'><div class='input-group-prepend'><span style='font-size: 14px;width:200px;'class='input-group-text' ><b>"+result+"</b></span><input	type='text' name='filteredField' id='Filtered"+Object.keys(${physicalLayerList})[i]+"'class='form-control text-input' placeholder='"+result+"'/></div></div></div><p></p><p></p>";
-		}
-		$("#filterSection").append(str);
-	}	physicalLayerFilter(); // to build click event on Filter Submit.
-
-		CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node']);
-		CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node'],systemLong, systemLat);
-	
-//	    CreateTree_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Junction_Manhole'],${physicalLayerList}['Junction_Handhole'],filterFlag,${physicalLayerList}['duct'],${physicalLayerData}['ductAuxiliary'],${physicalLayerList}['Node']);
-//		CreateMap_PhysicalLayer(${physicalLayerList}['Project'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['fiber'],${physicalLayerList}['Distribution_Board'],${physicalLayerData}['fiber_Tubes'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Auxiliary'],${physicalLayerData}['tubes_Auxiliaries'],${physicalLayerData}['strands_Auxiliaries'],${physicalLayerList}['Trench'],${physicalLayerData}['trench_Auxiliary'],${physicalLayerList}['Node']); 
-		if(checkedOption == "circleRange"){
-			openFindNearest(checkedOption,'${closestLatPoint}','${closestLongPoint}','${closestDisRange}','${noP}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}','${startLng}','${endLng}','${startLat}','${endLat}','${CustomerID}','${CustomerName}', '${serviceReq}','${serviceRef}');
-		}else if(checkedOption == "StartEnd"){
-			openFindBetweenMarkers(checkedOption,'${startLongPoint}','${startLatPoint}','${endLongPoint}','${endLatPoint}',${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['fiber'],${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['Node'],'${getRelatedPoints}');
-		}else if(checkedOption == "circleRange_multy"){
-			openFindNearestMultySite(checkedOption,'${rowData}','${noOfPoints}','${closestDisRange}',`${ptList}`,'${ptData}','${getRelatedPoints}' , '${borderCircleLatitudes}' , '${borderCircleLongitudes}', circleDraw, squareDraw,locationNum, '${rowMultyIndex}');
-		}else if(checkedOption == "connected"){
-			openSearchConnected(checkedOption,'${siteId}','${selectConnectedSearch}','${connectedSearchLong}','${connectedSearchLat}','${connectedViewOnMap}',${physicalLayerData}['fiber_Strands'],${physicalLayerData}['fiber_Tubes'],${physicalLayerList}['fiber'],${physicalLayerList}['Manhole'],${physicalLayerList}['Handhole'],${physicalLayerList}['Distribution_Board'],${physicalLayerList}['controllerList'],'${distribBoardListSize}','${getRelatedPoints}', '${fpPath}','${bpPath}', ${physicalLayerList}['Node']);
-		}
-		
-// to be deleted		
-/*			  
-		$(document).ready(function () { 
-			$(function(){			 
-			 $(document).trigger("triggerListenersEvent");
-			});
-		});
-*/		
-
-} /// End of init Map
-
-window.onload = function () {makeAllSortable();
-if(checkedOption == "circleRange"){ 
-	calculateGeoDistanceNearestPoints("findNearstHandhole",handholeSurveyArray);
-	calculateGeoDistanceNearestPoints("findNearstManhole",manholeSurveyArray);//call the calculateGeoDistance function here after creating the map
-	calculateGeoDistanceNearestPoints("findNearstDB",dbSurveyArray);
-	calculateGeoDistanceNearestPoints("findNearstNode",nodeSurveyArray);
-	getAllSurveyArrays("nearFiberId",fiberCableSurveyArray);
-	getAllSurveyArrays("nearTubeId",fiberTubesSurveyArray);
-	getAllSurveyArrays("nearStrandId",fiberStrandsSurveyArray);
-}
-};	
-document.addEventListener("DOMContentLoaded", function() {
-    var readDB = ${readDB}; // or fetch this value from the server if necessary
-    if (readDB == 1) {
-        document.getElementById("dbSection").style.display = "block";
-    }
-    var readManhole = ${readManhole}; // or fetch this value from the server if necessary
-    if (readManhole == 1) {
-        document.getElementById("manholeSection").style.display = "block";
-    }
-    var readHandhole = ${readHandhole}; // Fetch this value from the server if necessary
-    if (readHandhole == 1) {
-        document.getElementById("handholeSection").style.display = "block";
-    }
-});
-
-
 var actiondistControllerContext = ""; 
 var dbContNtLevel= "";
 
-function showPassword() {
-    const pwd = document.getElementById("password");
-    pwd.type = "text";
+var onlyReadManExcep= '${onlyReadManExcep}'
+var exceptionManWriteList= '${exceptionManWriteList1}';
 
-    const icon = document.getElementById("pwdIcon");
-    if(icon.classList.contains('fa-eye')) {
-        icon.classList.replace('fa-eye', 'fa-eye-slash');
-    }
+if(exceptionManWriteList){
+	exceptionManWriteList = JSON.parse(exceptionManWriteList);
 }
 
-function hidePassword() {
-    const pwd = document.getElementById("password");
-    pwd.type = "password";
+console.log(exceptionManWriteList);
 
-    const icon = document.getElementById("pwdIcon");
-    if(icon.classList.contains('fa-eye-slash')) {
-        icon.classList.replace('fa-eye-slash', 'fa-eye');
-    }
+var readExceptionMan='${readExceptionMan}';
+var treeExceptionMan='${treeExceptionMan}';
+var writeExceptionMan='${writeExceptionMan}';
+console.log(writeExceptionMan);
+var onlyReadHandExcep= '${onlyReadHandExcep}';
+var exceptionHandWriteList= '${exceptionHandWriteList1}';
+if(exceptionHandWriteList){
+	exceptionHandWriteList = JSON.parse(exceptionHandWriteList);
 }
+		
+var readExceptionHand='${readExceptionHand}';
+var treeExceptionHand='${treeExceptionHand}';
+var writeExceptionHand= '${writeExceptionHand}';
+	
+var onlyReadDBExcep= '${onlyReadDBExcep}';			
+var exceptionDBWriteList= '${exceptionDBWriteList1}';
+
+if(exceptionDBWriteList) {
+	exceptionDBWriteList = JSON.parse(exceptionDBWriteList);
+}
+	
+var readExceptionDB='${readExceptionDB}';
+var treeExceptionDB='${TtreeExceptionDB}';
+var writeExceptionDB= '${writeExceptionDB}';
+			
+var onlyReadFiberExcep= '${onlyReadFiberExcep}';
+var exceptionFiberWriteList= '${exceptionFiberWriteList1}';
+if(exceptionFiberWriteList) {
+	exceptionFiberWriteList = JSON.parse(exceptionFiberWriteList);
+}
+
+var readExceptionFiber='${readExceptionFiber}';
+var writeExceptionFiber= '${writeExceptionFiber}';
 
 </script>
+
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/distribution-board/dbCreation.js"></script>
 <script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJXAds-Gt4I39hRFHhYHMEg3XcBqihYoo&libraries=places&callback=initMap&amp;v=3.43&amp"></script>
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9VQsa9xxDCGKWH73uwlZV2ndnNhIumDU&libraries=places&callback=initMap"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resources/js/maplabel.js"></script>
 <script type="text/javascript"

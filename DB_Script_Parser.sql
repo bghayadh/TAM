@@ -4,31 +4,31 @@
 --THE SCRIPT IS BELOW
 ---------------------------
 
+CREATE TABLESPACE PARSER_TB
+DATAFILE 'C:\App\oradata\PARSER\datafile\PARSER.DBF' 
+SIZE 400M
+REUSE
+AUTOEXTEND ON
+MAXSIZE UNLIMITED;
 
+OR:
 
-CREATE TABLESPACE alm
-  DATAFILE 'C:\App\oradata\ALM\almpdb\almp.dat' 
-    SIZE 400M
-    REUSE
-    AUTOEXTEND ON NEXT 400M MAXSIZE 400M;
+CREATE TABLESPACE PARSER_TB
+DATAFILE '/mnt/oradata/PARSER/datafile/PARSER.DBF' 
+SIZE 400M
+REUSE
+AUTOEXTEND ON
+MAXSIZE UNLIMITED;
 
 -- important before create new user
 alter session set "_ORACLE_SCRIPT"=true;  
 
-Create user alm identified by alm;
-grant DBA to alm;
-grant connect to alm;
-grant resource to alm;
-ALTER USER alm DEFAULT TABLESPACE alm; 
+CREATE USER parser 
+IDENTIFIED BY parser
+DEFAULT TABLESPACE PARSER_TB
+QUOTA 20M ON PARSER_TB;
 
---CREATE TABLESPACE almparser 
-  -- DATAFILE 'C:\app\orauser\oradata\ALM\DATAFILE\almparser.dbf' 
-  -- SIZE 2000M;
-
- --  Create user almparser identified by almparser;
-
-  -- ALTER USER almparser DEFAULT TABLESPACE almparser; 
-  
+GRANT ALL PRIVILEGES TO PARSER;
   
 alter profile DEFAULT limit password_life_time UNLIMITED;
 -----------------------------------#

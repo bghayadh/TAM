@@ -459,6 +459,17 @@ function clearPaths() {
     if (Array.isArray(pathArray)) {
         pathArray.length = 0;
     }
+	
+	
+	Object.values(relatedPathArray).forEach(path => {
+	    if (path?.setMap) path.setMap(null);
+	});
+
+	Object.keys(relatedPathArray).forEach(key => delete relatedPathArray[key]);
+
+	if (Array.isArray(relatedPathArray)) {
+	    relatedPathArray.length = 0;
+	}
 }
 
 function recenterMap() {

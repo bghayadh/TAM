@@ -138,7 +138,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 	
 	$(".Initial_CurrentPhysicalLayer > .TreeSpan").on("click",function(){
 		console.log("click1");
-		map.setZoom(7);	
+		map.setZoom(6);	
 		map.setCenter(center);
 		google.maps.event.addListenerOnce(map, 'idle', function() {
 			markerClusterManhole.repaint();
@@ -196,9 +196,17 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 	filterMapTrenchDuctLabels("DUCT",ductArray,"ductMapCheck_Labels");
 	sitesMapLabel();
 	clientsMapLabel();
-	map.setZoom(6);
-		
-	//This is the google map menu that will open when right click on the google map
+	map.setZoom(5);
+
+	document.querySelectorAll("#mapMenu, #deletePathMenu").forEach(function(menu) {
+
+	    menu.addEventListener("contextmenu", function(e) {
+	        e.preventDefault();
+	        e.stopPropagation();
+	    }, true);
+
+	});
+	
     MenuMap = document.getElementById("mapMenu");
     google.maps.event.addListener(map, 'rightclick', function (e) {
     	for (prop in e) {
@@ -206,10 +214,13 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 			       ShowContextMenuGoolge(MenuMap, e[prop].clientX,e[prop].clientY); 
 		           break;
 		        }
-		    }   
+		    }
+			   
     /** this stop NOT stopping DOM 'context-menu' event from firing */
+	
     e.stop();
     });
+
 
     google.maps.event.addListener(map, 'click', function () {	
 		console.log("click2");
