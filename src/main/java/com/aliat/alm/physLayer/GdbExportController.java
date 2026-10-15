@@ -131,6 +131,80 @@ public class GdbExportController {
 		return rtn;
 	}
 
+	@RequestMapping(value = "/exportSitesGdb", method = RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> exportSitesGdb(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) throws JsonProcessingException {
+
+		logger.log(Level.INFO, "Welcome to exportSitesGdb");
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", LoginServices.checkSession(request, response));
+			return rtn;
+		}
+
+		Session session = AlmDbSession.getInstance().getSession();
+		Transaction tx = null;
+		File workDir = null;
+
+		if (session != null && session.isOpen()) {
+			tx = session.beginTransaction();
+			try {
+				// 1. Fixed name: we export every site, not a single project
+				final String projectName = "AllSites";
+
+				// 2. Isolated temp sandbox for this export
+				String token = UUID.randomUUID().toString();
+				File baseTempDir = new File(getGdbTempBasePath());
+				if (!baseTempDir.exists())
+					baseTempDir.mkdirs();
+				workDir = new File(baseTempDir, token);
+				workDir.mkdirs();
+
+				File shapefileDir = new File(workDir, "shp_src");
+				shapefileDir.mkdirs();
+
+				// 3. Query WAREHOUSE sites, write shapefile
+				writeSites(session, shapefileDir);
+
+				// 4. Shapefiles -> File Geodatabase
+				File gdbDir = new File(workDir, GdbFileUtils.sanitizeFileName(projectName) + ".gdb");
+				GdbFileUtils.runOgr2Ogr(shapefileDir, gdbDir);
+
+				if (!gdbDir.exists()) {
+					throw new RuntimeException("GDB generation failed - output directory not created");
+				}
+
+				// 5. Zip it
+				File zipFile = new File(workDir, GdbFileUtils.sanitizeFileName(projectName) + "_export.zip");
+				GdbFileUtils.zipMultipleDirectories(zipFile, gdbDir, shapefileDir);
+
+				// 6. Register token -> file so /downloadGdb can find it later
+				gdbExportRegistry.registerExport(token, zipFile.getAbsolutePath(), zipFile.getName());
+
+				rtn.put("success", true);
+				rtn.put("downloadToken", token);
+				rtn.put("fileName", zipFile.getName());
+
+				tx.commit();
+			} catch (Exception e) {
+				if (tx != null)
+					tx.rollback();
+				logger.log(Level.SEVERE, "Error in exportSitesGdb due to", e);
+				rtn.put("success", false);
+				rtn.put("message", "Export failed");
+				if (workDir != null)
+					GdbFileUtils.deleteRecursively(workDir);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+
 	// ---------- Endpoint 2: stream the already-built file ----------
 
 	@RequestMapping(value = "/downloadGdb", method = RequestMethod.GET)
@@ -213,6 +287,69 @@ public class GdbExportController {
 		writeFiberCables(session, projectId, outputDir);
 		writeDucts(session, projectId, outputDir);
 		writeTrenches(session, projectId, outputDir);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void writeSites(Session session, File outputDir) throws Exception {
+		List<Object[]> rows = session.createNativeQuery(
+				"SELECT WARE_ID, CREATION_DATE, LAST_MODIFY_DATE, WARE_NAME, CITY, TOTAL_INITIAL_COST, "
+						+ "TOTAL_NET_COST, TOTAL_ACCUMULATED_DEPR, SITE_TYPE, LONGITUDE, LATITUDE, SITE, POPULATION, "
+						+ "SITE_ID, TECH_2G, TECH_3G, TECH_4G, TECH_5G, AREA_ID, AREA_NAME, ADDRESS, CLUSTER_ID, "
+						+ "CLUSTER_NAME, STATUS, COMBINATION_TECHNOLOGY, REGION_ID, REGION_NAME, UNIT_COUNT, "
+						+ "UNIT_BREAKDOWN " + "FROM DEMO.WAREHOUSE")
+				// + " WHERE SITE = '1'") // <-- see note below
+				.list();
+
+		List<Map<String, Object>> features = new ArrayList<>();
+		for (Object[] r : rows) {
+			Double lon = parseCoord(r[9]);
+			Double lat = parseCoord(r[10]);
+			if (lon == null || lat == null)
+				continue;
+
+			Map<String, Object> f = new LinkedHashMap<>();
+			f.put("lon", lon);
+			f.put("lat", lat);
+			f.put("WARE_ID", r[0]);
+			f.put("CR_DATE", r[1]);
+			f.put("MOD_DATE", r[2]);
+			f.put("WARE_NAME", r[3]);
+			f.put("CITY", r[4]);
+			f.put("INIT_COST", parseCoord(r[5]));
+			f.put("NET_COST", parseCoord(r[6]));
+			f.put("ACC_DEPR", parseCoord(r[7]));
+			f.put("SITE_TYPE", r[8]);
+			f.put("LONGITUDE", r[9]);
+			f.put("LATITUDE", r[10]);
+			f.put("SITE", r[11]);
+			f.put("POPULATION", parseCoord(r[12]));
+			f.put("SITE_ID", r[13]);
+			f.put("TECH_2G", r[14]);
+			f.put("TECH_3G", r[15]);
+			f.put("TECH_4G", r[16]);
+			f.put("TECH_5G", r[17]);
+			f.put("AREA_ID", r[18]);
+			f.put("AREA_NAME", r[19]);
+			f.put("ADDRESS", r[20]);
+			f.put("CLUSTER_ID", r[21]);
+			f.put("CLUSTR_NM", r[22]);
+			f.put("STATUS", r[23]);
+			f.put("COMB_TECH", r[24]);
+			f.put("REGION_ID", r[25]);
+			f.put("REGION_NM", r[26]);
+			f.put("UNIT_COUNT", parseCoord(r[27]));
+			f.put("UNIT_BRKDN", r[28]);
+			features.add(f);
+		}
+
+		ShapefileWriter.writePoints(outputDir, "Site",
+				"WARE_ID:String,CR_DATE:java.util.Date,MOD_DATE:java.util.Date,WARE_NAME:String,CITY:String,"
+						+ "INIT_COST:Double,NET_COST:Double,ACC_DEPR:Double,SITE_TYPE:String,LONGITUDE:String,"
+						+ "LATITUDE:String,SITE:String,POPULATION:Double,SITE_ID:String,TECH_2G:String,TECH_3G:String,"
+						+ "TECH_4G:String,TECH_5G:String,AREA_ID:String,AREA_NAME:String,ADDRESS:String,"
+						+ "CLUSTER_ID:String,CLUSTR_NM:String,STATUS:String,COMB_TECH:String,REGION_ID:String,"
+						+ "REGION_NM:String,UNIT_COUNT:Double,UNIT_BRKDN:String",
+				features);
 	}
 
 	@SuppressWarnings("unchecked")

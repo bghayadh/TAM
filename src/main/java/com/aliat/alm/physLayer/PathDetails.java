@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.aliat.alm.common.AlmDbSession;
 import com.aliat.alm.models.FiberDuct;
+import com.aliat.alm.routing.SidewalkRouteService;
+import com.aliat.alm.routing.SidewalkRouteService.LatLon;
 import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -39,6 +42,9 @@ public class PathDetails {
 	private Query query = null;
 	private StringWriter sw;
 	private String exceptionAsString;
+
+	@Autowired
+	private SidewalkRouteService routeService;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/findFiberDetails", method = RequestMethod.GET)
@@ -128,7 +134,8 @@ public class PathDetails {
 	@RequestMapping(value = "/findFiberAuxDetails", method = RequestMethod.GET)
 	@ResponseBody
 	public Map<String, Object> findFiberAuxDetails(Locale locale, Model model, HttpServletRequest request,
-			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response) {
+			@ModelAttribute ItemParameters itemParameters, HttpServletResponse response)
+			throws JsonProcessingException {
 
 		Map<String, Object> rtn = new LinkedHashMap<>();
 		String selectedFiberContext = request.getParameter("ID");
@@ -256,7 +263,7 @@ public class PathDetails {
 		String trenchId = null;
 		trenchId = selectedTrenchContext;
 		if (trenchId == null && selectedDuctContext != null) {
-			System.out.println("trenchId is null and seelcted Duct is " +selectedDuctContext);
+			System.out.println("trenchId is null and seelcted Duct is " + selectedDuctContext);
 			session = AlmDbSession.getInstance().getSession();
 			if (session != null && session.isOpen()) {
 				try {
@@ -382,7 +389,8 @@ public class PathDetails {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<String, Object> getFiberAux(String fiberPathID, List<Map<String, String>> aux) {
+	private Map<String, Object> getFiberAux(String fiberPathID, List<Map<String, String>> aux)
+			throws JsonProcessingException {
 
 		System.out.println("Welcome to getFiberAux, the fiberPathID is " + fiberPathID);
 
@@ -399,6 +407,8 @@ public class PathDetails {
 								+ "WHERE A.FIBER_CABLE_ID = B.FIBER_CABLE_ID " + "AND B.FIBER_CABLE_ID = :fiberId "
 								+ "ORDER BY B.SEQ_SORTING ASC")
 						.setParameter("fiberId", fiberPathID).getResultList();
+
+				System.out.println("fiberAuxiliaryData is: " + mapper.writeValueAsString(fiberAuxiliaryData));
 
 				rtn.put("auxData", fiberAuxiliaryData);
 
@@ -427,6 +437,10 @@ public class PathDetails {
 				session.clear();
 			} catch (Exception e) {
 				logger.log(Level.SEVERE, "Error in getFiberAux", e);
+
+				System.out.println("Exception type: " + e.getClass().getName());
+				System.out.println("Exception message: " + e.getMessage());
+
 				rtn.put("auxData", null);
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -434,6 +448,7 @@ public class PathDetails {
 				}
 			}
 		}
+		System.out.println("auxData in rtn is " + mapper.writeValueAsString(rtn.get("auxData")));
 		return rtn;
 	}
 
@@ -488,6 +503,67 @@ public class PathDetails {
 			} finally {
 				if (session != null && session.isOpen()) {
 					session.close();
+				}
+			}
+		}
+		return rtn;
+	}
+
+	@RequestMapping(value = "/findRouteByGraphHopper", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> findRouteByGraphHopper(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		System.out.println("Welcome to findRouteByGraphHopper");
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		} else {
+			String pathID = request.getParameter("pathID");
+			System.out.println("srcLat is: " + request.getParameter("srcLat"));
+			Double srcLat = Double.valueOf(request.getParameter("srcLat"));
+			Double srcLng = Double.valueOf(request.getParameter("srcLng"));
+			Double destLat = Double.valueOf(request.getParameter("destLat"));
+			Double destLng = Double.valueOf(request.getParameter("destLng"));
+
+			System.out.println("pathID is " + pathID);
+			session = AlmDbSession.getInstance().getSession();
+
+			if (session != null && session.isOpen()) {
+				tx = session.beginTransaction();
+				List<Object[]> fiberAuxiliaryData = new ArrayList<Object[]>();
+				try {
+					List<LatLon> pts = routeService.route(new LatLon(srcLat, srcLng), new LatLon(destLat, destLng));
+					System.out.println("pts size is: " + pts.size());
+					if (pts.size() >= 2) {
+						pts.remove(pts.size() - 1);
+						pts.remove(0);
+					}
+					int sorting = 1;
+					for (LatLon latLon : pts) {
+						fiberAuxiliaryData
+								.add(new Object[] { latLon.lon, latLon.lat, 0, "", "", "", pathID, sorting, 0, 0, "" });
+						sorting++;
+					}
+
+					System.out.println("fiberAuxiliaryData is: " + mapper.writeValueAsString(fiberAuxiliaryData));
+					rtn.put("auxData", fiberAuxiliaryData);
+
+				} catch (Exception e) {
+					sw = new StringWriter();
+					e.printStackTrace(new PrintWriter(sw));
+					exceptionAsString = sw.toString();
+					logger.finest("Error in findFiberDetails due to \n " + exceptionAsString);
+					logger.info("Error in findFiberDetails due to \n " + exceptionAsString);
+					rtn.put("fiberDetails", null);
+				} finally {
+					if (session != null && session.isOpen()) {
+						tx.commit();
+						session.close();
+					}
 				}
 			}
 		}

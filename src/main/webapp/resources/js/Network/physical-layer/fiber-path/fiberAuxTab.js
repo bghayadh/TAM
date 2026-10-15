@@ -1,6 +1,7 @@
 function fiberAuxTabEvents() {
 
     $("#fiber_aux_tab").on("click", function() {
+		console.log("fiber aux tab clicked");
         fiberAuxTab();
     });
 
@@ -675,12 +676,14 @@ function fiberAuxTab() {
 
     fiberCableAuxData = [];
     checkedPoints = [];
+	
+	console.log("Just before sending ajax");
 
     $.ajax({
         type: "GET",
         url: getContext() + "/findFiberAuxDetails",
+		dataType: "json",
         data: { ID: selectedFiberContext },
-
         beforeSend: function() {
             $("#loaderDiv").show();
         },
@@ -690,8 +693,11 @@ function fiberAuxTab() {
             $("#loaderDiv").hide();
 
             index = 0;
+			
+			console.log("auxData is: " ,data.auxData);
 
             if (data && data.auxData) {
+				console.log("Just before calling AuxAppendBOQ");
                 AuxAppendBOQ(data.auxData, "", "", TargetFiber, index);
                 fiberCableAuxData = data.auxData;
             }

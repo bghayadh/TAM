@@ -531,7 +531,7 @@ html, body {
 	</div>
 	<!-- Projects Model -->
 	<div class="container">
-		<div id="projectModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"  data-keyboard="false" data-backdrop="static">
+		<div id="projectModal" class="modal fade  custom-class-assignedto-modal" tabindex="-1" role="dialog" data-backdrop="false" data-keyboard="false" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
 			<div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header" style="background-color: #2678CC ; height: 55px;">
@@ -3024,7 +3024,7 @@ html, body {
 										<button type="button" id="addStrandAuxBelow">Insert Row Below</button>
 										<button type="button" id="addStrandAuxAbove">Insert Row Above</button>
 										<button type="button" id="delete_AuxStrand">Delete Row</button></c:if>
-										<button type="button" id="sortByDistanceStrand">Sort by distance</button>
+										<button type="button" id="sortByDistanceStrand">Sort by distance</button>										
 										<button type="button"><b>Draw By </b> 
                                           <select id ="strandDrawingBy"> 
                                             <option value = "DEFAULT"></option>
@@ -4609,7 +4609,11 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 
 <button type="button" id="delete_Aux" class="hide-button">Delete Row</button></c:if>
 <c:if test="${writeFiber == 1}">
-<button type="button" id="sortingDistance" class="hide-button">Sort By Distance</button></c:if>
+<button type="button" id="sortingDistance" class="hide-button">Sort By Distance</button>
+<button type="button" id="findRouteByGraphHopper">Find Route By GraphHopper</button>
+<button type="button" id="findRouteByGoogle">Find Route By Google</button>
+</c:if>
+
 
 <button type="button">
     <b>Draw By </b> 

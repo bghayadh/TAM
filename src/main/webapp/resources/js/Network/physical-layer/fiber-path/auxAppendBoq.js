@@ -121,7 +121,8 @@ function AuxAppendBOQ(auxArray, insertType, OrigiTermination, Target, indx) {
     // ---------------------------------------------------------------------
     // Store table context
     // ---------------------------------------------------------------------
-	
+
+	console.log("****************************************");	
 	console.log("Welcome to AuxAppendBOQ, the auxArray is: " ,auxArray + " and the indx is " , indx);
 
     window._auxTableContext = window._auxTableContext || {};

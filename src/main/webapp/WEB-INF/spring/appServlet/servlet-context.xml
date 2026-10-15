@@ -71,6 +71,7 @@
     <context:component-scan base-package="com.aliat.alm.proc" />
     <context:component-scan base-package="com.aliat.alm.config" />
 	<context:component-scan base-package="com.aliat.alm.gdb" />
-	<context:component-scan base-package="com.aliat.alm.scheduler" />    
+	<context:component-scan base-package="com.aliat.alm.scheduler" />
+	<context:component-scan base-package="com.aliat.alm.routing" />	    
 
 </beans>

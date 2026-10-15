@@ -46,34 +46,44 @@ function calculateDistanceInit() {
     });
 
     $('#sortingDistance').click(function() {
-//        sortingByLineOfSite("SourceLng", "SourceLat", "DestinationLng", "DestinationLat", "auxiliaryTable", "aux_Lat", "aux_Long", "", "FiberLength")
-		sortingByLineOfSite("auxiliaryTable");		
+        //        sortingByLineOfSite("SourceLng", "SourceLat", "DestinationLng", "DestinationLat", "auxiliaryTable", "aux_Lat", "aux_Long", "", "FiberLength")
+        sortingByLineOfSite("auxiliaryTable");
     });
-			
+
+    $('#findRouteByGraphHopper').click(function() {
+        console.log("fiberPathId is: ", $("#FiberPathId").val());
+        findRouteByGraphHopper($("#FiberPathId").val());
+    });
 	
+	$('#findRouteByGoogle').click(function() {
+	    console.log("fiberPathId is: ", $("#FiberPathId").val());
+	    findRouteByGoogle($("#FiberPathId").val());
+	});
+	
+
     $('#sortByDistanceFiberTube').click(function() {
-//        sortingByLineOfSite("tubeSource_Long", "tubeSource_Lat", "tubeDestination_Long", "tubeDestination_Lat", "TubeAuxTable", "tubeAuxiliary_Lat", "tubeAuxiliary_Lng", "FiberTube", "FiberTubeLength");
-		sortingByLineOfSite("TubeAuxTable");		
+        //        sortingByLineOfSite("tubeSource_Long", "tubeSource_Lat", "tubeDestination_Long", "tubeDestination_Lat", "TubeAuxTable", "tubeAuxiliary_Lat", "tubeAuxiliary_Lng", "FiberTube", "FiberTubeLength");
+        sortingByLineOfSite("TubeAuxTable");
     });
     $('#sortByDistanceFiberStrand').click(function() {
-//        sortingByLineOfSite("strandSource_Long", "strandSource_Lat", "strandDestination_Long", "strandDestination_Lat", "StrandAuxTable", "strandAuxiliary_Lat", "strandAuxiliary_Lng", "FiberStrand", "FiberStrandLength");
-		sortingByLineOfSite("StrandAuxTable");		
+        //        sortingByLineOfSite("strandSource_Long", "strandSource_Lat", "strandDestination_Long", "strandDestination_Lat", "StrandAuxTable", "strandAuxiliary_Lat", "strandAuxiliary_Lng", "FiberStrand", "FiberStrandLength");
+        sortingByLineOfSite("StrandAuxTable");
     });
     $('#sortByDistanceTube').click(function() {
-//        sortingByLineOfSite("sourcelong", "sourcelat", "destinationlong", "destinationlat", "auxiliaryTableTubes", "auxTube_Lat", "auxTube_Long", "Tube", "TubeLength");
-		sortingByLineOfSite("auxiliaryTableTubes");		
+        //        sortingByLineOfSite("sourcelong", "sourcelat", "destinationlong", "destinationlat", "auxiliaryTableTubes", "auxTube_Lat", "auxTube_Long", "Tube", "TubeLength");
+        sortingByLineOfSite("auxiliaryTableTubes");
     });
     $('#sortByDistanceStrand').click(function() {
-//        sortingByLineOfSite("sourcelongstrand", "sourcelatstrand", "destinationlongstrand", "destinationlatstrand", "auxiliaryTableStrands", "auxStrand_Lat", "auxStrand_Long", "Strand", "StrandLength");
-		sortingByLineOfSite("auxiliaryTableStrands");		
+        //        sortingByLineOfSite("sourcelongstrand", "sourcelatstrand", "destinationlongstrand", "destinationlatstrand", "auxiliaryTableStrands", "auxStrand_Lat", "auxStrand_Long", "Strand", "StrandLength");
+        sortingByLineOfSite("auxiliaryTableStrands");
     });
     $('#sortByDistanceTrench').click(function() {
-//        sortingByLineOfSite("SourceTrenchLng", "SourceTrenchLat", "DestinationTrenchLng", "DestinationTrenchLat", "auxiliary_trenchTable", "aux_Lattrench", "aux_Longtrench", "Trench", "trenchLength");
-		sortingByLineOfSite("auxiliary_trenchTable");		
+        //        sortingByLineOfSite("SourceTrenchLng", "SourceTrenchLat", "DestinationTrenchLng", "DestinationTrenchLat", "auxiliary_trenchTable", "aux_Lattrench", "aux_Longtrench", "Trench", "trenchLength");
+        sortingByLineOfSite("auxiliary_trenchTable");
     });
     $('#sortByDistanceDuct').click(function() {
-//        sortingByLineOfSite("SourceDuctLng", "SourceDuctLat", "DestinationDuctLng", "DestinationDuctLat", "auxiliary_ductTable", "aux_Latduct", "aux_Longduct", "Duct", "ductLength");
-		sortingByLineOfSite("auxiliary_ductTable");		
+        //        sortingByLineOfSite("SourceDuctLng", "SourceDuctLat", "DestinationDuctLng", "DestinationDuctLat", "auxiliary_ductTable", "aux_Latduct", "aux_Longduct", "Duct", "ductLength");
+        sortingByLineOfSite("auxiliary_ductTable");
     });
 }
 
@@ -441,7 +451,7 @@ async function loadFiberList() {
     $('body').append('<div id="loading"><img id="loading-image" src="' + getContext() + '/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
 
     $.ajax({
-        url: "${pageContext.request.contextPath}/getFiberScript",
+        url: getContext() + "/getFiberScript",
         type: "GET",
         success: async function(response) {
             fiberList = response.fiberList || [];
@@ -500,7 +510,7 @@ async function loadFiberList() {
 
             // ---- Send geoDistances to server ----
             $.ajax({
-                url: "${pageContext.request.contextPath}/updateGeoDistances",
+                url: getContext() + "/updateGeoDistances",
                 type: "POST",
                 data: { geoDistances: JSON.stringify(geoDistances) },
                 success: function(response) {
@@ -594,7 +604,7 @@ function updateLineOfSites() {
     $('body').append('<div id="loading"><img id="loading-image" src="' + getContext() + '/resources/images/ajax-loader.gif" alt="Loading..." /><span>Loading, please wait.</span></div>')
 
     $.ajax({
-        url: "${pageContext.request.contextPath}/updateLineOfSites",
+        url: getContext() + "/updateLineOfSites",
         type: "GET",
         success: async function(response) {
 
@@ -621,7 +631,7 @@ async function updateCities(item) {
         try {
             // Fetch fiber list
             const response = await $.ajax({
-                url: `${pageContext.request.contextPath}/getFiberInfoCity`,
+                url: getContext() + "/getFiberInfoCity",
                 type: "GET"
             });
 
@@ -659,7 +669,7 @@ async function updateCities(item) {
                 console.log("All fibers processed. City list:", fiberCityList);
 
                 $.ajax({
-                    url: `${pageContext.request.contextPath}/saveFiberCities`, // POST to server
+                    url: getContext() + "/saveFiberCities", // POST to server
                     type: "POST",
                     data: { fiberCityList: JSON.stringify(fiberCityList) },
                     success: function(response) {
@@ -685,7 +695,7 @@ async function updateCities(item) {
         try {
             // Fetch fiber list
             const response = await $.ajax({
-                url: `${pageContext.request.contextPath}/getManholeInfoCity`,
+                url: getContext() + "/getManholeInfoCity",
                 type: "GET"
             });
 
@@ -720,7 +730,7 @@ async function updateCities(item) {
                 console.log("All manholes processed. City list:", manholeCityList);
 
                 $.ajax({
-                    url: `${pageContext.request.contextPath}/saveManholeCities`, // POST to server
+                    url: getContext() + "/saveManholeCities", // POST to server
                     type: "POST",
                     data: { manholeCityList: JSON.stringify(manholeCityList) },
                     success: function(response) {
@@ -747,7 +757,7 @@ async function updateCities(item) {
             // Fetch fiber list
 
             const response = await $.ajax({
-                url: `${pageContext.request.contextPath}/getHandholeInfoCity`,
+                url: getContext() + "/getHandholeInfoCity",
                 type: "GET"
             });
 
@@ -783,7 +793,7 @@ async function updateCities(item) {
                 console.log("All handholes processed. City list:", handholeCityList);
 
                 $.ajax({
-                    url: `${pageContext.request.contextPath}/saveHandholeCities`, // POST to server
+                    url: getContext() + "/saveHandholeCities", // POST to server
                     type: "POST",
                     data: { handholeCityList: JSON.stringify(handholeCityList) },
                     success: function(response) {
@@ -1268,7 +1278,7 @@ function sortingByLineOfSite(tableId) {
     // Distance helper
     // ------------------------------------------------------------
     function dist(aLat, aLng, bLat, bLng) {
-		return haversine_distance(aLat, aLng, bLat, bLng) || 0;
+        return haversine_distance(aLat, aLng, bLat, bLng) || 0;
     }
 
     // ------------------------------------------------------------
@@ -1329,6 +1339,341 @@ function sortingByLineOfSite(tableId) {
     renumberAuxRows(tableId);
 
     $("#loaderDiv").hide();
+}
+
+
+function findRouteByGraphHopper(pathID) {
+	
+	let token = $('input[name="csrfToken"]').attr('value');
+	
+	console.log("Source Lat is: " ,$("#SourceLat").val());
+
+    $("#loaderDiv").show();
+    $.ajax({
+        url: getContext() + "/findRouteByGraphHopper",
+        type: "POST",
+		headers: {
+		    'X-CSRFToken': token
+		},		
+        data: {
+            "pathID": pathID,
+			"srcLat": $("#SourceLat").val(),
+			"srcLng": $("#SourceLng").val(),
+			"destLat": $("#DestinationLat").val(),
+			"destLng": $("#DestinationLng").val()			
+        },
+        dataType: "json",
+        success: function(data) {
+            $("#loaderDiv").hide();			
+			console.log("auxData is: ", data.auxData);			
+            index = 0;
+			
+            if (data && data.auxData) {
+                AuxAppendBOQ(data.auxData, "", "", TargetFiber, index);
+            }
+			
+            const objDiv = document.getElementById("auxiliaryTable");
+            objDiv.scrollTop = objDiv.scrollHeight;
+
+            calculateDistanceSourceDestination(
+                $("#SourceLat").val(),
+                $("#SourceLng").val(),
+                $("#DestinationLat").val(),
+                $("#DestinationLng").val(),
+                "auxiliaryTable"
+            );
+            data = null;
+        },
+        error: function(err) {
+            console.error("Error while finding the route between the source and destination of the cable using GraphHopper:", err);
+        }
+    });
+}
+
+
+
+// =====================================================================
+// Settings
+// =====================================================================
+const USE_SHIFT = true;         // false = Google's raw walking route, no shift
+
+const OVERPASS_URL = "https://overpass-api.de/api/interpreter";
+const BLDG_SEARCH_M = 100;       // ignore buildings farther than this from the route
+const BLDG_MARGIN_M = 1.5;      // stay this far from the building face
+const BLDG_MAX_OFFSET_M = 8;    // never shift more than this
+const STEP_M = 5;               // spacing of the densified points
+const SMOOTH_WINDOW = 7;        // median window (odd number), ~35 m
+
+
+// =====================================================================
+// Main function (your original, with the shift added)
+// =====================================================================
+function findRouteByGoogle(pathID) {
+	
+	console.log("[SHIFT] findRouteByGoogle called, USE_SHIFT =", USE_SHIFT);
+
+    const src = { lat: parseFloat($("#SourceLat").val()), lng: parseFloat($("#SourceLng").val()) };
+    const dst = { lat: parseFloat($("#DestinationLat").val()), lng: parseFloat($("#DestinationLng").val()) };
+
+    $("#loaderDiv").show();
+
+    new google.maps.DirectionsService().route({
+        origin: src,
+        destination: dst,
+        travelMode: google.maps.TravelMode.WALKING
+    }, async function (result, status) {
+
+        if (status !== google.maps.DirectionsStatus.OK) {
+            $("#loaderDiv").hide();
+            // ZERO_RESULTS = no walking route; REQUEST_DENIED = key/API not enabled
+            console.error("Google route failed:", status);
+            return;
+        }
+
+        try {
+            // Detailed geometry: every step's path (overview_path is simplified, avoid it for cable)
+            const raw = [];
+            result.routes[0].legs.forEach(function (leg) {
+                leg.steps.forEach(function (step) {
+                    step.path.forEach(function (p) { raw.push({ lat: p.lat(), lng: p.lng() }); });
+                });
+            });
+
+            // Move the line from the road centre towards the buildings (sidewalk side).
+            // On any problem it returns the original route unchanged.
+            let base = raw;
+            if (USE_SHIFT) {
+                try {
+                    base = await offsetPathByBuildings(raw, src, dst);
+                } catch (err) {
+                    console.warn("Shift failed, using the original route:", err);
+                    base = raw;
+                }
+            }
+
+            // Same shape as the old server output: src + points + dst, no near-duplicates
+            const pts = [src];
+            base.concat([dst]).forEach(function (p) { addIfFar(pts, p); });
+
+            // The old server code removed the first and last point (the real src/dst)
+            const inner = pts.length >= 2 ? pts.slice(1, -1) : pts;
+
+            const auxData = inner.map(function (p, i) {
+                return [p.lng, p.lat, 0, "", "", "", pathID, i + 1, 0, 0, ""];
+            });
+
+            index = 0;
+            AuxAppendBOQ(auxData, "", "", TargetFiber, index);
+
+            const objDiv = document.getElementById("auxiliaryTable");
+            objDiv.scrollTop = objDiv.scrollHeight;
+
+            calculateDistanceSourceDestination(
+                $("#SourceLat").val(), $("#SourceLng").val(),
+                $("#DestinationLat").val(), $("#DestinationLng").val(),
+                "auxiliaryTable"
+            );
+        } catch (e) {
+            console.error("Error while building the route:", e);
+        } finally {
+            $("#loaderDiv").hide();
+        }
+    });
+}
+
+
+// =====================================================================
+// Helpers
+// =====================================================================
+
+// Adds a point unless it is within 10 cm of the previous one
+function addIfFar(list, p) {
+    if (list.length > 0 && distanceMeters(list[list.length - 1], p) <= 0.1) return;
+    list.push(p);
+}
+
+// Haversine distance in meters.
+// If you already have a function with this name in your project, delete this one.
+function distanceMeters(a, b) {
+    const R = 6371008.8, rad = Math.PI / 180;
+    const dLat = (b.lat - a.lat) * rad, dLng = (b.lng - a.lng) * rad;
+    const h = Math.sin(dLat / 2) ** 2 +
+              Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+}
+
+
+// =====================================================================
+// Sidewalk shift based on the nearest buildings (OpenStreetMap / Overpass)
+// =====================================================================
+
+// Downloads building outlines around the route
+async function fetchBuildings(raw) {
+    let s = 90, w = 180, n = -90, e = -180;
+    raw.forEach(p => {
+        s = Math.min(s, p.lat); n = Math.max(n, p.lat);
+        w = Math.min(w, p.lng); e = Math.max(e, p.lng);
+    });
+    const padLat = BLDG_SEARCH_M / 111320;
+    const padLng = BLDG_SEARCH_M / (111320 * Math.cos(((s + n) / 2) * Math.PI / 180));
+    const bbox = [s - padLat, w - padLng, n + padLat, e + padLng].join(",");
+    const query = '[out:json][timeout:25];way["building"](' + bbox + ');out geom;';
+
+    const resp = await fetch(OVERPASS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "data=" + encodeURIComponent(query)
+    });
+    if (!resp.ok) throw new Error("Overpass HTTP " + resp.status);
+    const data = await resp.json();
+    return data.elements.filter(el => el.geometry && el.geometry.length > 1).map(el => el.geometry);
+}
+
+// =====================================================================
+// DEBUG version. Replace your existing offsetPathByBuildings with this one
+// (keep fetchBuildings and everything else). All messages start with [SHIFT].
+// =====================================================================
+
+// Draws: red = Google route, blue = shifted route, gray = buildings found
+function debugDraw(raw, shifted, buildings) {
+    const m = window.map || (typeof map !== "undefined" ? map : null);
+    if (!m) {
+        console.warn("[SHIFT] no global 'map' variable found: nothing drawn. Replace 'map' with your map variable name in debugDraw.");
+        return;
+    }
+    new google.maps.Polyline({ path: raw, strokeColor: "#FF0000", strokeWeight: 3, zIndex: 3, map: m });
+    new google.maps.Polyline({ path: shifted, strokeColor: "#0000FF", strokeWeight: 3, zIndex: 4, map: m });
+    (buildings || []).forEach(ring => {
+        new google.maps.Polyline({
+            path: ring.map(p => ({ lat: p.lat, lng: p.lon })),
+            strokeColor: "#808080", strokeWeight: 1, zIndex: 1, map: m
+        });
+    });
+}
+
+async function offsetPathByBuildings(raw, src, dst) {
+    console.log("[SHIFT] 1. started, route points from Google =", raw.length);
+    if (raw.length < 2) return raw;
+
+    let buildings;
+    try {
+        console.time("[SHIFT] overpass");
+        buildings = await fetchBuildings(raw);
+        console.timeEnd("[SHIFT] overpass");
+    } catch (err) {
+        console.error("[SHIFT] 2. OVERPASS FAILED (this is why nothing moved):", err);
+        return raw;
+    }
+    console.log("[SHIFT] 2. buildings downloaded =", buildings.length);
+    if (!buildings.length) {
+        console.warn("[SHIFT] NO BUILDINGS in OSM around this route (this is why nothing moved)");
+        return raw;
+    }
+
+    const rad = Math.PI / 180, M_PER_DEG = 111320;
+    const o = raw[0], k = Math.cos(o.lat * rad);
+    const toXY = (lat, lng) => ({ x: (lng - o.lng) * k * M_PER_DEG, y: (lat - o.lat) * M_PER_DEG });
+    const toLL = q => ({ lat: o.lat + q.y / M_PER_DEG, lng: o.lng + q.x / (k * M_PER_DEG) });
+
+    const E = [];
+    buildings.forEach(ring => {
+        for (let i = 0; i < ring.length - 1; i++) {
+            const a = toXY(ring[i].lat, ring[i].lon), b = toXY(ring[i + 1].lat, ring[i + 1].lon);
+            E.push([a.x, a.y, b.x, b.y]);
+        }
+    });
+    console.log("[SHIFT] 3. building edges =", E.length);
+
+    const R = raw.map(p => toXY(p.lat, p.lng));
+    const P = [R[0]];
+    for (let i = 1; i < R.length; i++) {
+        const dx = R[i].x - R[i - 1].x, dy = R[i].y - R[i - 1].y;
+        const steps = Math.max(1, Math.ceil(Math.hypot(dx, dy) / STEP_M));
+        for (let j = 1; j <= steps; j++) {
+            P.push({ x: R[i - 1].x + dx * j / steps, y: R[i - 1].y + dy * j / steps });
+        }
+    }
+    console.log("[SHIFT] 4. densified points =", P.length);
+
+    const N = P.map((p, i) => {
+        const a = P[Math.max(i - 1, 0)], b = P[Math.min(i + 1, P.length - 1)];
+        const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
+        return { x: -dy / l, y: dx / l };
+    });
+
+    const qs = toXY(src.lat, src.lng);
+    let bi = 0, bd = Infinity;
+    P.forEach((p, i) => {
+        const d = Math.hypot(qs.x - p.x, qs.y - p.y);
+        if (d < bd) { bd = d; bi = i; }
+    });
+    const handholeSign = ((qs.x - P[bi].x) * N[bi].x + (qs.y - P[bi].y) * N[bi].y) >= 0 ? 1 : -1;
+    console.log("[SHIFT] 5. handhole is " + bd.toFixed(1) + " m from the route, side=" + (handholeSign > 0 ? "left" : "right"));
+
+    const nearest = [];   // nearest building distance per point, for the log
+    const off = P.map((p, i) => {
+        let dL = Infinity, dR = Infinity;
+        for (const [x1, y1, x2, y2] of E) {
+            const vx = x2 - x1, vy = y2 - y1, ll = vx * vx + vy * vy;
+            const t = ll ? Math.max(0, Math.min(1, ((p.x - x1) * vx + (p.y - y1) * vy) / ll)) : 0;
+            const cx = x1 + t * vx - p.x, cy = y1 + t * vy - p.y;
+            const d = Math.hypot(cx, cy);
+            if (d > BLDG_SEARCH_M) continue;
+            if (cx * N[i].x + cy * N[i].y >= 0) { if (d < dL) dL = d; } else { if (d < dR) dR = d; }
+        }
+        nearest.push(Math.min(dL, dR));
+        if (dL === Infinity && dR === Infinity) return null;
+        const both = dL < Infinity && dR < Infinity;
+        const sgn = (both && Math.abs(dL - dR) < 3) ? handholeSign : (dL < dR ? 1 : -1);
+        const d = sgn > 0 ? dL : dR;
+        return sgn * Math.max(0, Math.min(d - BLDG_MARGIN_M, BLDG_MAX_OFFSET_M));
+    });
+
+    const withBuilding = off.filter(v => v !== null).length;
+    const finite = nearest.filter(v => v !== Infinity);
+    console.log("[SHIFT] 6. points with a building within " + BLDG_SEARCH_M + " m: " + withBuilding + " of " + P.length);
+    if (finite.length) {
+        console.log("[SHIFT]    nearest building distance: min=" + Math.min(...finite).toFixed(1) +
+                    " m, max=" + Math.max(...finite).toFixed(1) + " m");
+    }
+    if (withBuilding === 0) {
+        console.warn("[SHIFT] buildings exist but none is near the route (this is why nothing moved)");
+        return raw;
+    }
+
+    for (let i = 0; i < off.length; i++) {
+        if (off[i] !== null) continue;
+        for (let d = 1; d < off.length; d++) {
+            if (i - d >= 0 && off[i - d] !== null) { off[i] = off[i - d]; break; }
+            if (i + d < off.length && off[i + d] !== null) { off[i] = off[i + d]; break; }
+        }
+    }
+
+    const half = Math.floor(SMOOTH_WINDOW / 2);
+    const sm = off.map((_, i) => {
+        const w = off.slice(Math.max(0, i - half), Math.min(off.length, i + half + 1)).sort((a, b) => a - b);
+        return w[Math.floor(w.length / 2)];
+    });
+
+    const abs = sm.map(Math.abs);
+    console.log("[SHIFT] 7. offsets after smoothing: min=" + Math.min(...sm).toFixed(1) +
+                " m, max=" + Math.max(...sm).toFixed(1) + " m, average |shift|=" +
+                (abs.reduce((a, v) => a + v, 0) / abs.length).toFixed(1) + " m");
+    console.log("[SHIFT]    first 10 offsets:", sm.slice(0, 10).map(v => +v.toFixed(1)));
+
+    const result = P.map((p, i) => toLL({ x: p.x + N[i].x * sm[i], y: p.y + N[i].y * sm[i] }));
+    console.log("[SHIFT] 8. done, returning " + result.length + " shifted points");
+    debugDraw(raw, result, buildings);
+    return result;
+}
+
+// Haversine, so you don't need to add libraries=geometry to the script URL
+function distanceMeters(a, b) {
+    const R = 6371008.8, rad = Math.PI / 180;
+    const dLat = (b.lat - a.lat) * rad, dLng = (b.lng - a.lng) * rad;
+    const h = Math.sin(dLat / 2) ** 2 +
+              Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(h));
 }
 
 function renumberAuxRows(tableId) {
