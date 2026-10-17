@@ -1120,7 +1120,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         url: getContext() + '/boqNodesCount',
                         data: {
                         },
-
+						dataType: "json",
                         success: function(data) {
 
                             if (data != null) {
@@ -1159,9 +1159,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     contentType: "application/json; charset=utf-8",
                     url: getContext() + '/findCountHandHoles',
                     data: {
-
                         "ProjectId": IdNodeSelectedTemp,
-
                     },
                     dataType: "json",
                     success: function(data) {
@@ -1200,9 +1198,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     contentType: "application/json; charset=utf-8",
                     url: getContext() + '/findCountHandHoles',
                     data: {
-
                         "ProjectId": IdNodeSelectedTemp
-
                     },
                     dataType: "json",
                     success: function(data) {
@@ -1294,10 +1290,9 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     async: false,
                     url: getContext() + '/findCountStrands',
                     data: {
-
                         "fiberID": selectedFiberContext
-
                     },
+					dataType: "json",
                     success: function(data) {
 
                         if (data != null) {
@@ -1495,6 +1490,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     data: {
                         "fiberID": selectedFiberContext
                     },
+					dataType: "json",
                     success: function(data) {
                         if (data != null) {
                             var tr = "<tr><td><b>Number of Tubes: </b>" + data.TubesCount + "</td></tr>"
@@ -3530,11 +3526,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         async: false,
                         url: getContext() + '/TrenchBoQ',
                         data: {
-
                             "trenchID": selectedTrenchContext,
                             "projectID": IdNodeSelectedTemp
-
                         },
+						dataType: "json",
                         success: function(data) {
 
                             if (data != null) {
@@ -4118,6 +4113,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         data: {
                             "ductID": selectedDuctContext
                         },
+						dataType: "json",
                         success: function(data) {
                             if (data != null) {
                                 if (data.DuctData[0][0] != "null") {
@@ -5058,9 +5054,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         data: {
                             "selectedProjectIdContext": selectedProjectIdContext
                         },
-
                         dataType: "json",
-
                         success: function(data) {
                             window["" + selectedProjectIdContext] = data.ProjectDetails;
                             console.log("proj details is " + data.ProjectDetails);
@@ -5463,6 +5457,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         "ManholeId": selectedManIdContext,
                         "ProjectId": IdNodeSelectedTemp
                     },
+					dataType: "json",
                     success: function(data) {
                         showBoq();
                         var tr = "<tr><td><b>ID: </b>" + selectedManIdContext + "</td></tr>" +
@@ -5754,6 +5749,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         "ProjectId": IdNodeSelectedTemp
 
                     },
+					dataType: "json",
                     success: function(data) {
 
                         showBoq();
@@ -7687,8 +7683,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     dataType: "json",
                     success: function(data) {
 
-
-
                         $("#DbMappingTable > tbody").empty();
                         actiondistBoardContext = "Update";
                         $("#DBnetlevel").val(data.DBnetLevel);
@@ -8190,7 +8184,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         "selectedDistBoardContext": selectedDistBoardContext
                     },
                     dataType: "json",
-
                     success: function(data) {
 
                         var dpWidth = $("#dB_MappingModal").width();
@@ -8709,6 +8702,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         "projectID": IdNodeSelectedTemp
 
                     },
+					dataType: "json",
                     success: function(data) {
 
                         if (data != null) {
@@ -9202,11 +9196,10 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                     async: false,
                     url: getContext() + '/FiberBoQ',
                     data: {
-
                         "fiberID": selectedFiberContext,
                         "projectID": IdNodeSelectedTemp
-
                     },
+					dataType: "json",
                     success: function(data) {
 
                         if (data != null) {
@@ -10225,18 +10218,16 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         {
             'icon': 'paste', 'name': 'Show BoQ', action: () => {
 
-
                 $.ajax({
                     type: "GET",
                     contentType: "application/json; charset=utf-8",
                     async: false,
                     url: getContext() + '/TubeBoQ',
                     data: {
-
                         "tubeID": selectedTube,
                         "fiberID": selectedFiberContext
-
                     },
+					dataType: "json",
                     success: function(data) {
 
                         if (data != null) {
@@ -10797,14 +10788,12 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
 
             console.log("projectType" + projectType);
 
-
             $.ajax({
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 url: getContext() + '/saveProject',
                 data: {
-
                     "ProjectId": ProjectId,
                     "ProjectName": ProjectName,
                     "projectType": projectType,
@@ -11999,7 +11988,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                 contentType: "application/json; charset=utf-8",
                 url: getContext() + '/saveManhole',
                 data: {
-
                     "ManholeId": ManholeId,
                     "ManholeName": ManholeName,
                     "ManholeLong": ManholeLong,
@@ -18138,8 +18126,6 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
     });
 
 
-
-
     $('#uploadForm').submit(function(e) {
         e.preventDefault();
         var formData = new FormData();
@@ -18155,6 +18141,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             },
             url: getContext() + '/SaveFile',
             data: formData,
+			dataType: "json",
             processData: false,
             contentType: false,
             success: function(data) {
@@ -18169,8 +18156,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                 alert('Failed to upload file: ' + error);
             }
         });
-
     });
+	
     $('#handJctUploadForm').submit(function(e) {
         e.preventDefault();
         var formData = new FormData();
@@ -18187,6 +18174,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             },
             url: getContext() + '/SaveFile',
             data: formData,
+			dataType: "json",
             processData: false,
             contentType: false,
             success: function(data) {
@@ -18219,6 +18207,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
             },
             url: getContext() + '/SaveFile',
             data: formData,
+			dataType: "json",
             processData: false,
             contentType: false,
             success: function(data) {
@@ -18263,7 +18252,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                 'X-CSRFToken': token
             },
             url: getContext() + '/DeleteAttachment',
-            contentType: "application/json",
+            contentType: "application/json; charset=utf-8",
+			dataType: "json",
             data: JSON.stringify(slctDel),
             success: function(data) {
             },
@@ -18307,7 +18297,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                 'X-CSRFToken': token
             },
             url: getContext() + '/DeleteAttachment',
-            contentType: "application/json",
+            contentType: "application/json; charset=utf-8",
+			dataType: "json",
             data: JSON.stringify(slctDel),
             success: function(data) {
             },
@@ -18351,7 +18342,8 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                 'X-CSRFToken': token
             },
             url: getContext() + '/DeleteAttachment',
-            contentType: "application/json",
+            contentType: "application/json; charset=utf-8",
+			dataType: "json",
             data: JSON.stringify(slctDel),
             success: function(data) {
             },
@@ -19720,10 +19712,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                 dataType: "json",
                 success: function(data) {
                     if (data != null) {
-
-
                         response(data.ListProjectId);
-
                     }
                 },
                 error: function(result) {
@@ -19775,10 +19764,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                 dataType: "json",
                 success: function(data) {
                     if (data != null) {
-
-
                         response(data.ListProjectId);
-
                     }
                 },
                 error: function(result) {
@@ -22728,7 +22714,6 @@ function createPathFromMap(cancelpoints, selectedIdContext, originationSource, t
                 contentType: "application/json; charset=utf-8",
                 url: getContext() + '/findByLatLng',
                 data: {
-
                     "SourceLng": srclng,
                     "SourceLat": srclat,
                     "DestinationLng": destlng,

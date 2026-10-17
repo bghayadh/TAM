@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -4673,6 +4674,8 @@ public class PhysicalLayerController {
 								+ "') and FIBER_NETWORK_LEVEL = 'access'")
 						.getResultList();
 				rtn.put("DistributionCableData", DistributionCableData);
+				
+				System.out.println("DistributionCableData is: " +mapper.writeValueAsString(DistributionCableData));
 
 				List<Object[]> DistributionTubeData = session.createNativeQuery(
 						"Select DISTINCT a.TUBE_ID,a.TUBE_NAME,c.FIBER_CABLE_ID, c.FIBER_CABLE_NAME,a.TUBE_NETWORK_LEVEL,a.TUBE_COLOR,a.TUBE_NUMBER from FIBER_TUBES a left join TUBE_AUXILIARY_POINTS b ON a.TUBE_ID = b.TUBE_ID left join FIBER_CABLES c ON a.FIBER_CABLE_ID = c.FIBER_CABLE_ID where (a.SOURCE_ID='"
@@ -4694,15 +4697,19 @@ public class PhysicalLayerController {
 				exceptionAsString = sw.toString();
 				logger.finest("Error in manHandHolePath due to \n " + exceptionAsString);
 				logger.info("Error in manHandHolePath due to \n " + exceptionAsString);
-				rtn.put("BackboneCableData", null);
-				rtn.put("BackboneTubeData", null);
-				rtn.put("BackboneStrandData", null);
-				rtn.put("MetroCableData", null);
-				rtn.put("MetroTubeData", null);
-				rtn.put("MetroStrandData", null);
-				rtn.put("DistributionCableData", null);
-				rtn.put("DistributionTubeData", null);
-				rtn.put("DistributionStrandData", null);
+				
+				rtn.put("BackboneCableData", Collections.emptyList());
+				rtn.put("BackboneTubeData", Collections.emptyList());
+				rtn.put("BackboneStrandData", Collections.emptyList());
+
+				rtn.put("MetroCableData", Collections.emptyList());
+				rtn.put("MetroTubeData", Collections.emptyList());
+				rtn.put("MetroStrandData", Collections.emptyList());
+
+				rtn.put("DistributionCableData", Collections.emptyList());
+				rtn.put("DistributionTubeData", Collections.emptyList());
+				rtn.put("DistributionStrandData", Collections.emptyList());				
+								
 
 			} finally {
 				if (session != null && session.isOpen()) {
@@ -7537,9 +7544,10 @@ public class PhysicalLayerController {
 	}
 
 	public void findIDsSrcDest(List<Object[]> listOfObjects, String target, List<String> mhIDs, List<String> hhIDs,
-			List<String> dbIDs, double newStartLngPt, double newStartLatPt, double newEndLngPt, double newEndLatPt) {
+			List<String> dbIDs, double newStartLngPt, double newStartLatPt, double newEndLngPt, double newEndLatPt) throws JsonProcessingException {
 		double sourceLng, sourceLat, destLng, destLat;
-
+		
+		System.out.println("listOfObjects is: " + mapper.writeValueAsString(listOfObjects));
 		for (Object[] row : listOfObjects) {
 
 			if (target == "Cables") {
@@ -16971,7 +16979,7 @@ public class PhysicalLayerController {
 		fiberList = findnearest.createNativeQuery(
 				"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR "
 						+ "FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID "
-						+ "WHERE ( to_number(SUBSTR(A.SOURCE_LNG,1,6)) > " + borderCircleLongitudes[0]
+						+ "WHERE (to_number(SUBSTR(A.SOURCE_LNG,1,6)) > " + borderCircleLongitudes[0]
 						+ "and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >  " + bordeCircleLatitudes[0]
 						+ " and to_number (SUBSTR(A.SOURCE_LNG,1,6)) < " + borderCircleLongitudes[1]
 						+ " AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " + bordeCircleLatitudes[1] + ") "
@@ -16982,13 +16990,14 @@ public class PhysicalLayerController {
 						+ "OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > " + borderCircleLongitudes[0]
 						+ "and  to_number(SUBSTR(D.LATITUDE,1,6)) >  " + bordeCircleLatitudes[0]
 						+ " and to_number (SUBSTR(D.LONGITUDE,1,6)) < " + borderCircleLongitudes[1]
-						+ " AND to_number (SUBSTR(D.LATITUDE,1,6)) < " + bordeCircleLatitudes[1] + ") ")
+						+ " AND to_number (SUBSTR(D.LATITUDE,1,6)) < " + bordeCircleLatitudes[1] + ")")
 				.getResultList();
 
 		List<String> cablesIDs = Arrays
 				.asList((findListId(fiberList, "FiberCable")).length > 0 ? findListId(fiberList, "FiberCable")
 						: new String[] { "" });
 		combinedCablesList.addAll(cablesIDs);// used in get related points
+		System.out.println("I am finding the nearest cables, actually the query is depending on the aux. The cablesIDs is: " +mapper.writeValueAsString(cablesIDs));
 		findIDsSrcDest(fiberList, "Cables", mhFilteredIDs, hhFilteredIDs, dbFilteredIDs, borderCircleLongitudes[0],
 				bordeCircleLatitudes[0], borderCircleLongitudes[1], bordeCircleLatitudes[1]); // Add the cables src/dest
 																								// points that are

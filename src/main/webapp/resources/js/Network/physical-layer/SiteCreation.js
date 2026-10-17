@@ -412,6 +412,7 @@ function Site_Boq(SiteId){
 		 $.ajax({
 			type: "GET",
 			contentType: "application/json; charset=utf-8",
+			dataType: "json",
 			url: getContext()+'/boqSitesCount',
 			data: {
 			    "SiteId" : SiteId

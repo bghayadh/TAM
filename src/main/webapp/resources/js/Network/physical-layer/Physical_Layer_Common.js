@@ -978,7 +978,7 @@ function showDB(selectedContext, target, name) {
 
 // Function to create markers oon manhole, handhole and distribution board
 
-function create_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type, city) {	
+function create_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type, city) {
 
     const pos = new google.maps.LatLng(Lat, Long);
     var data = "<div>" + Name + "</div>";
@@ -13582,8 +13582,8 @@ function StrandCreatePopup() {
 }
 
 function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
-	
-	ContextMenu.classList.add('show-menu');	
+
+    ContextMenu.classList.add('show-menu');
     const w = window.innerWidth;
     const h = window.innerHeight;
 
@@ -13597,7 +13597,7 @@ function ShowContextMenuGoolge(ContextMenu, eventX, eventY) {
     if (y + mh > h) { y = y - mh; }
     //console.log(" x is "+ x+" and y is "+ y);
     ContextMenu.style.top = y + "px";
-    ContextMenu.style.left = x + "px";    
+    ContextMenu.style.left = x + "px";
 }
 function HideContextMenuGoolge(ContextMenu) {
     ContextMenu.classList.remove('show-menu');
@@ -13675,19 +13675,42 @@ function showBoq() {
 // show path for manhole/handhole/DB
 function showPath(url, dataSel, tr) {
 
+    console.log("url is: ", url);
+
     $.ajax({
-        type: "GET",
-        contentType: "application/json; charset=utf-8",
+        type: "GET",        
         async: false,
         url: getContext() + url,
+		contentType: "application/json; charset=utf-8",
         data: {
             "dataSel": dataSel,
             "ProjectId": IdNodeSelectedTemp
 
         },
+		dataType: "json",
         success: function(data) {
-            showPathTab();
 
+            // Ensure the response and all data lists exist.
+			console.log("the returned data is: ", data);
+			console.log("the returned DistributionCableData is: ", data.DistributionCableData);
+			
+            data = data || {};
+
+            data.BackboneCableData = data.BackboneCableData || [];
+            data.BackboneTubeData = data.BackboneTubeData || [];
+            data.BackboneStrandData = data.BackboneStrandData || [];
+
+            data.MetroCableData = data.MetroCableData || [];
+            data.MetroTubeData = data.MetroTubeData || [];
+            data.MetroStrandData = data.MetroStrandData || [];
+
+            data.DistributionCableData = data.DistributionCableData || [];						
+            data.DistributionTubeData = data.DistributionTubeData || [];
+            data.DistributionStrandData = data.DistributionStrandData || [];
+			
+			console.log("the returned data is: ", data);
+
+            showPathTab();
 
             $("#path_table").append(tr);
 
@@ -13769,6 +13792,7 @@ function showPath(url, dataSel, tr) {
 
             /* **** Metro ***** */
             if (data.MetroCableData.length > 0 || data.MetroTubeData.length > 0 || data.MetroStrandData.length > 0) {
+				console.log("data.MetroCableData.length is: ", data.MetroCableData.length + " and the data is: ", data.MetroCableData);
                 var str = "<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_metro__showPath' style='display:none;margin-left:-20px;' class='metroFolder'> <input type='checkbox' class='MetroFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Metro </span></li></ul></li></ul>";
                 $("#FiberPath_f_showPath").append(str);
                 pathCheckFilter("initial_ul", "parentFolderCheck__showPath", "FiberPath_metro__showPath", "", "", "", "", "", "", "", "", "");
@@ -13840,6 +13864,7 @@ function showPath(url, dataSel, tr) {
 
             /* **** Distribution **** */
             if (data.DistributionCableData.length > 0 || data.DistributionTubeData.length > 0 || data.DistributionStrandData.length > 0) {
+				console.log("data.DistributionCableData.length is: ", data.DistributionCableData.length + " and the data is: ", data.DistributionCableData);				
                 var str = "<ul style='list-style-type:none;cursor: pointer;'><li id ='FiberPath_distribution__showPath' style='display:none;margin-left:-20px;' class='distributionFolder'> <input type='checkbox' class='AccessFiber_showpath checkFilter' id ='BackboneMetroAcc__showPath' checked class='filter'></input> <span  class='Parentfolder' ><i class='fa fa-folder' style='color: #08526D'></i></span><span style='color:black;margin-left:5px;' class='TreeSpan'>Access </span></li></ul></li></ul>";
                 $("#FiberPath_f_showPath").append(str);
                 pathCheckFilter("initial_ul", "parentFolderCheck__showPath", "FiberPath_distribution__showPath", "", "", "", "", "", "", "", "", "");

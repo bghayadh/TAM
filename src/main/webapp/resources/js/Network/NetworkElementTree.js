@@ -118,6 +118,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -188,6 +189,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -259,6 +261,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -328,6 +331,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 			    },
+			dataType: "json",				
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -400,6 +404,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 		},
+		dataType: "json",
 		success : function(data) {
 			$('#boq_table').empty();				 
 			siteList.push(SiteId);	          	 
@@ -468,6 +473,7 @@ if(arrayParam[3]==1){
 			    "paramCore" : paramCore,
 			    "arrayParam" : arrayParam
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -538,6 +544,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -609,6 +616,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -680,6 +688,7 @@ if(arrayParam[3]==1){
 			    "arrayParam" : arrayParam,
 			    "date" : date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -749,6 +758,7 @@ function SitePO_Boq(SiteId){
 			    "paramCore":paramCore,
 			    "date" : date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				 $('#boq_table').empty();				 
@@ -820,6 +830,7 @@ function POSite_Boq(SiteId){
 				"paramCore":paramCore,
 				"date":date,
 				},
+			dataType: "json",
 			success : function(data)
 			{
 				$('#boq_table').empty();
@@ -896,6 +907,7 @@ function  Node_Boq(WareId,NodeId){
 			    "paramCore":paramCore,
 			    "date": date,
 			    },
+			dataType: "json",
 			success : function(data)
 			    {
 				$('#boq_table').empty();
@@ -971,6 +983,7 @@ function  NodeT_Boq(SiteId,NodeTId){
 			    "paramCore":paramCore,
 			    "date": date,
 			    },
+			dataType: "json",
 			success : function(data)
 			  {
 				$('#boq_table').empty();
@@ -1040,6 +1053,7 @@ function  SuppNdTyp_Boq(SuppId,NodeTId){
 			    "paramCore":paramCore,
 			    "date": date,
 			    },
+			dataType: "json",
 			success : function(data)
 			  {
 				$('#boq_table').empty();
@@ -1109,6 +1123,7 @@ function  SiteNodeType_Boq(SiteId,NodeTId){
 			    "paramCore":paramCore,
 			    "date":date,
 			    },
+			dataType: "json",
 			success : function(data)
 			  {
 				$('#boq_table').empty();
@@ -1180,6 +1195,7 @@ function  VenNdTyp_Boq(VenId,NodeTId){
 			    "paramCore":paramCore,
 			    "date":date,
 			    },
+			dataType: "json",
 			success : function(data)
 			  {
 				$('#boq_table').empty();
@@ -1251,6 +1267,7 @@ function  NodeTSup_Boq(SiteId,NodeTId,SuppId){
 			    "paramCore":paramCore,
 			    "date":date,
 			    },
+			dataType: "json",
 			success : function(data)
 			  {
 				$('#boq_table').empty();
@@ -1321,6 +1338,7 @@ function NodeTVen_Boq(SiteId,NodeTId,VendorId){
 			    "paramCore":paramCore,
 			    "date":date,
 			    },
+			dataType: "json",
 			success : function(data)
 			  {
 				$('#boq_table').empty();
@@ -1396,6 +1414,7 @@ function PO_Boq(SiteId){
 			    "paramCore":paramCore,
 			    "date":date,
 			},
+			dataType: "json",
 			success : function(data)
 			{
 				$('#boq_table').empty();
