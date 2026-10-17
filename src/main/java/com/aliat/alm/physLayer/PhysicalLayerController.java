@@ -3032,8 +3032,14 @@ public class PhysicalLayerController {
 					physicalLayerList.put("Project", projectList);
 					physicalLayerList.put("Junction_Manhole", junctionManholeList);
 					physicalLayerList.put("Manhole", manholeList);
+					
+					System.out.println("Manhole in physicalLayerList is: " +mapper.writeValueAsString(physicalLayerList.get("Manhole")));
+					
 					physicalLayerList.put("Junction_Handhole", junctionHandholeList);
 					physicalLayerList.put("Handhole", handholeList);
+					
+					System.out.println("Handhole in physicalLayerList is: " +mapper.writeValueAsString(physicalLayerList.get("Handhole")));
+					
 					physicalLayerList.put("fiber", fiberList);
 					physicalLayerList.put("Distribution_Board", distribBoardList);
 					physicalLayerList.put("controllerList", controllerList);
@@ -16979,7 +16985,8 @@ public class PhysicalLayerController {
 		fiberList = findnearest.createNativeQuery(
 				"SELECT distinct A.SOURCE_LNG,A.SOURCE_LAT,A.DESTINATION_LNG,A.DESTINATION_LAT, A.FIBER_CABLE_ID,A.SOURCE_WARE_ID,A.SOURCE_ID,A.SOURCE_NAME,A.DESTINATION_WARE_ID,A.DESTINATION_ID,A.DESTINATION_NAME,(SELECT COUNT(*) FROM FIBER_TUBES B WHERE B.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Tube_Count,(SELECT COUNT(*) FROM FIBER_STRANDS C WHERE C.FIBER_CABLE_ID=A.FIBER_CABLE_ID) AS Strand_Count,A.FIBER_CABLE_NAME,A.PROJECT_ID,A.SOURCE_CITY,A.DESTINATION_CITY,A.NUMBER_OF_TUBES,A.NUMBER_OF_STRANDS,A.LENGTH,A.DRAWING_TYPE,A.FIBER_NETWORK_LEVEL,A.FIBER_OWNER,(select B.FIBER_COLOR_OWNER from FIBER_OWNER_COLOR B WHERE B.FIBER_OWNER=A.FIBER_OWNER) AS FIBER_CABLE_COLOR "
 						+ "FROM FIBER_CABLES A LEFT JOIN FIBER_AUXILIARY_POINTS D ON A.FIBER_CABLE_ID=D.FIBER_CABLE_ID "
-						+ "WHERE (to_number(SUBSTR(A.SOURCE_LNG,1,6)) > " + borderCircleLongitudes[0]
+						+ "WHERE ("
+						+ "(to_number(SUBSTR(A.SOURCE_LNG,1,6)) > " + borderCircleLongitudes[0]
 						+ "and  to_number(SUBSTR(A.SOURCE_LAT,1,6)) >  " + bordeCircleLatitudes[0]
 						+ " and to_number (SUBSTR(A.SOURCE_LNG,1,6)) < " + borderCircleLongitudes[1]
 						+ " AND to_number (SUBSTR(A.SOURCE_LAT,1,6)) < " + bordeCircleLatitudes[1] + ") "
@@ -16990,7 +16997,16 @@ public class PhysicalLayerController {
 						+ "OR ( to_number(SUBSTR(D.LONGITUDE,1,6)) > " + borderCircleLongitudes[0]
 						+ "and  to_number(SUBSTR(D.LATITUDE,1,6)) >  " + bordeCircleLatitudes[0]
 						+ " and to_number (SUBSTR(D.LONGITUDE,1,6)) < " + borderCircleLongitudes[1]
-						+ " AND to_number (SUBSTR(D.LATITUDE,1,6)) < " + bordeCircleLatitudes[1] + ")")
+						+ " AND to_number (SUBSTR(D.LATITUDE,1,6)) < " + bordeCircleLatitudes[1] + ")"
+						+ ")"
+					    + " AND A.SOURCE_LNG IS NOT NULL"
+					    + " AND LOWER(TRIM(A.SOURCE_LNG)) <> 'null'"
+					    + " AND A.SOURCE_LAT IS NOT NULL"
+					    + " AND LOWER(TRIM(A.SOURCE_LAT)) <> 'null'"
+					    + " AND A.DESTINATION_LNG IS NOT NULL"
+					    + " AND LOWER(TRIM(A.DESTINATION_LNG)) <> 'null'"
+					    + " AND A.DESTINATION_LAT IS NOT NULL"
+					    + " AND LOWER(TRIM(A.DESTINATION_LAT)) <> 'null'")
 				.getResultList();
 
 		List<String> cablesIDs = Arrays
@@ -17244,12 +17260,15 @@ public class PhysicalLayerController {
 						+ " and to_number (SUBSTR(LONGITUDE,1,6)) < " + borderCircleLongitudes[1]
 						+ " AND to_number (SUBSTR(LATITUDE,1,6)) < " + bordeCircleLatitudes[1] + ")")
 				.getResultList();
-
+		
+		System.out.println("manholeListQuery is: " +mapper.writeValueAsString(manholeListQuery));
 		// Filter the MH that have distance < distanceRange or MH that exists in
 		// mhFilteredIDs (mhFilteredIDs contains MH that are src/dst/aux of
 		// cables,tubes,strands)
 		manholeList = findLinearDistance(mhFilteredIDs, manholeListQuery, Double.valueOf(closestLatPoint),
 				Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Manhole", noOfPoints);
+		
+		System.out.println("manholeList is: " +mapper.writeValueAsString(manholeList));
 
 		// Select all HH details that are within the range
 
@@ -17260,12 +17279,17 @@ public class PhysicalLayerController {
 						+ " and to_number (SUBSTR(LONGITUDE,1,6)) < " + borderCircleLongitudes[1]
 						+ " AND to_number (SUBSTR(LATITUDE,1,6)) < " + bordeCircleLatitudes[1] + ")")
 				.getResultList();
+		
+		System.out.println("handholeListQuery is: " +mapper.writeValueAsString(handholeListQuery));
 
 		// Filter the HH that have distance<distanceRange or HH that exists in
 		// hhFilteredIDs (hhFilteredIDs contains HH that are src/dst/aux of
 		// cables,tubes,strands)
 		handholeList = findLinearDistance(hhFilteredIDs, handholeListQuery, Double.valueOf(closestLatPoint),
 				Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "Handhole", noOfPoints);
+		
+		
+		System.out.println("handholeList is: " +mapper.writeValueAsString(handholeList));
 
 		// Select all DB details that are within the range
 		List<Object[]> distribBoardListQuery = findnearest.createNativeQuery(
@@ -17281,7 +17305,8 @@ public class PhysicalLayerController {
 		// cables/tubes/strands)
 		distribBoardList = findLinearDistance(dbFilteredIDs, distribBoardListQuery, Double.valueOf(closestLatPoint),
 				Double.valueOf(closestLongPoint), Double.valueOf(closestDisRange), "DistribBoard", noOfPoints);
-		System.out.print(distribBoardListQuery);
+		System.out.print("distribBoardListQuery is: " + mapper.writeValueAsString(distribBoardListQuery));
+		System.out.print("distribBoardList is: " + mapper.writeValueAsString(distribBoardList));
 		System.out.print("wwwwwwwwwwwwwwwwwwwww");
 // To select the data needed in show points/real points & are outside the range
 		if (getRelatedPoints.equals("1")) {

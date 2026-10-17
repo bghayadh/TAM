@@ -191,11 +191,6 @@ function openFindNearest(checkedOption, closestLatPoint, closestLongPoint, close
         drawLine("#006400", endlangPath);
         endlatgPath = [new google.maps.LatLng(endLat, endLng), new google.maps.LatLng(endLat, strtLng)];
         drawLine("#006400", endlatgPath);
-
-
-
-
-
     } else {
         alert("Please Fill All Fields");
     }
@@ -218,7 +213,6 @@ $("#saveSurvey").on('click', function() {
         return false;
     }
     else {
-
         customerID = document.getElementById("customerDetails").value;
         serviceReference = document.getElementById("serviceReference").value.split(":")[1];
         serviceRequest = document.getElementById("serviceReference").value.split(":")[0];
@@ -235,7 +229,6 @@ $("#saveSurvey").on('click', function() {
                 'X-CSRFToken': token
             },
             data: {
-
                 "customerID": customerID,
                 "serviceReference": serviceReference,
                 "serviceRequest": serviceRequest,
@@ -251,7 +244,6 @@ $("#saveSurvey").on('click', function() {
                 "surveyID": surveyID,
                 "serviceAppNo": serviceAppNo,
                 "updateModfUser": updateModfUser,
-
             },
             beforeSend: function() {
                 $("#saveSurveyLoaderDiv").show();
@@ -333,8 +325,6 @@ $("#updateOnMySD").on('click', function() {
         });
     }
 });
-
-
 
 
 function selectAsNearest(e) {

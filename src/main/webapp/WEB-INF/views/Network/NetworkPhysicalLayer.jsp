@@ -9081,6 +9081,19 @@ if(exceptionFiberWriteList) {
 
 var readExceptionFiber='${readExceptionFiber}';
 var writeExceptionFiber= '${writeExceptionFiber}';
+var closestLatPoint = '${closestLatPoint}';
+var	closestLongPoint = '${closestLongPoint}';
+var	closestDisRange = '${closestDisRange}';
+var	noP = '${noP}';
+var	getRelatedPoints = '${getRelatedPoints}';
+var	startLng = '${startLng}';
+var	endLng = '${endLng}';
+var	startLat = '${startLat}';
+var	endLat = '${endLat}';
+var	CustomerID = '${CustomerID}';
+var	CustomerName = '${CustomerName}';
+var	serviceReq = '${serviceReq}';
+var	serviceRef = '${serviceRef}';
 
 </script>
 
