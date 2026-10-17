@@ -48,7 +48,7 @@ function CreateMap_PhysicalLayer(ListProject,ListManhole,ListHandhole,fiberList,
 
 	markerClusterController = new MarkerClusterer();
 	markerClusterController.setMap(map);
-	
+	console.log("Getting the center");	
 	center=new google.maps.LatLng(systemLat,systemLong);					
 	LatLanMouse(map);
 	iconManhole = {

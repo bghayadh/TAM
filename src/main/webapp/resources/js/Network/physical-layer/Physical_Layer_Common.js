@@ -5688,11 +5688,10 @@ function openFindBetweenMarkers(checkedOption, startLongPoint, startLatPoint, en
     $("#totalDB").val(arrayDB.length);
     $("#totalNode").val(arrayNodes.length);
 
-
     if (startLongPoint != '' && startLatPoint != '' && endLongPoint != '' && endLatPoint != '') {
 
         startlangPath = [new google.maps.LatLng(startLatPoint, startLongPoint), new google.maps.LatLng(endLatPoint, startLongPoint)];
-        drawLine("#FF0000", startlangPath);
+        drawLine("#FF0000", startlangPath);		
 
         startlatgPath = [new google.maps.LatLng(startLatPoint, startLongPoint), new google.maps.LatLng(startLatPoint, endLongPoint)];
         drawLine("#FF0000", startlatgPath);

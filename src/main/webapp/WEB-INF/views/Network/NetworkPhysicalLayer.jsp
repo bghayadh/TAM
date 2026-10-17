@@ -9094,6 +9094,11 @@ var	CustomerID = '${CustomerID}';
 var	CustomerName = '${CustomerName}';
 var	serviceReq = '${serviceReq}';
 var	serviceRef = '${serviceRef}';
+var startLongPoint = '${startLongPoint}';
+var startLatPoint = '${startLatPoint}';
+var endLongPoint = '${endLongPoint}';
+var endLatPoint = '${endLatPoint}';
+var getRelatedPoints = '${getRelatedPoints}';
 
 </script>
 

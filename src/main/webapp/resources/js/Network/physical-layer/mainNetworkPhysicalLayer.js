@@ -171,7 +171,6 @@ function initMap() {
             physicalLayerData['ductAuxiliary'],
             physicalLayerList['Node']
         );
-		console.log("Current Physical Layer is created");
     }
 
     if (typeof CreateMap_PhysicalLayer === 'function') {
