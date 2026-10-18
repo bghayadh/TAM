@@ -1010,25 +1010,6 @@ function create_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type,
         markerType = "DistributionBoard";
     }
 
-    /* else if (markers == markersNodeActive && marker_Cluster == markerClusterMSANNodes) {
-         mapIcon = iconMSANNode; 
-         markerType="NodeActive";
-    }
-          else if (markers == markersNodeActive && marker_Cluster == markerClusterDWDMNodes) {
-         mapIcon = iconDWDMNode; 
-         markerType="NodeActive";
-    }
-    else if (markers == markersNodeActive && marker_Cluster == markerClusterSDHNodes) {
-         mapIcon = iconSDHNode; 
-         markerType="NodeActive";
-    }
-    else if (markers == markersNodeActive && marker_Cluster == markerClusterGPONNodes) {
-         mapIcon = iconGPONNode; 
-         markerType="NodeActive";
-    }*/
-
-
-
     else {
         if (Type == "Junction") {
             mapIcon = iconHandholeJct;
@@ -1101,49 +1082,6 @@ function create_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type,
                 }
 
                 $("#" + IdSelected + " > .TreeSpan").addClass("selected-span");
-                //                       $("#" + IdSelected + " > .TreeSpan").css("background-color", "#97b9cc");
-
-
-
-
-
-                /*										
-                                    nodeFileId=$("#"+IdSelected).parent().parent().attr('id').split("__")[1];
-                                        var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
-                                            var children =  $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li');
-                                    var networkLevelFolder =  $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li >ul >li');
-                
-                                	
-                                    if(IdSelected!=IdSelectedTemp){	
-                                        if(IdSelectedTemp!=""){
-                                            $("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-                                            $("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-                                        }
-                                        IdSelectedTemp=IdSelected;							
-                                    }
-                                    childrenInitial.show('fast');
-                                    if(!children.is(":visible")){
-                                        children.show();
-                                    }
-                                    networkLevelFolder.show(); 
-                                	
-                                    $("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
-                                    $("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
-                
-                                    $("#initial_ul_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-                                    $("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-                                    $("#"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
-                                    $("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-                
-                                    $("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-                                    $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li > .Parentfolder >svg ').removeClass('fa fa-folder').addClass('fa-folder-open');
-                */
-
-                /*offset=$("#"+IdSelected).offset().top;
-                projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
-                offsetTotal=(offset-projectOffset);
-                $("#network_tree").animate({ scrollTop: offsetTotal}, "slow");*/
-
                 var targetOffsetTop = $("#" + IdSelected).offset().top;
                 var treeOffsetTop = $("#network_tree").offset().top;
                 var currentScrollTop = $("#network_tree").scrollTop();
@@ -1216,72 +1154,6 @@ function create_Marker_Click(Id, Name, Long, Lat, markers, marker_Cluster, Type,
                 }
 
                 $("#" + IdSelected + " > .TreeSpan").addClass("selected-span");
-                //$("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
-
-
-                /*					
-                                	
-                            	
-                                    console.log("parents ID of selected eq0: ", $("#"+IdSelected).parents().eq(0).attr("id"));
-                                    console.log("parents html of selected eq0: ", $("#"+IdSelected).parents().eq(0).html());
-                                    console.log("parents ID of selected eq1: ", $("#"+IdSelected).parents().eq(1).attr("id"));
-                                    console.log("parents html of selected eq1: ", $("#"+IdSelected).parents().eq(1).html());
-                                    console.log("parents ID of selected eq2: ", $("#"+IdSelected).parents().eq(2).attr("id"));
-                                    console.log("parents html of selected eq2: ", $("#"+IdSelected).parents().eq(2).html());
-                                    console.log("parents ID of selected eq3: ", $("#"+IdSelected).parents().eq(3).attr("id"));
-                                	
-                                	
-                                    console.log("parents eq0 full html: ", $("#"+IdSelected).parents().eq(0).prop("outerHTML"));
-                
-                                    console.log("parents eq1 full html: ", $("#"+IdSelected).parents().eq(1).prop("outerHTML"));
-                
-                                    console.log("parents eq2 full html: ", $("#"+IdSelected).parents().eq(2).prop("outerHTML"));
-                
-                                    console.log("parents eq3 full html: ", $("#"+IdSelected).parents().eq(3).prop("outerHTML"));					
-                                	
-                                	
-                                    nodeFileId = $("#"+IdSelected).parents().eq(3).attr("id").split("initial_ul_")[1];
-                                    console.log("nodeFileId is " +nodeFileId);
-                                    var projectInitial=$("#initial_ul_Projects").find('>ul > #'+nodeFileId);
-                                    console.log("projectInitial is " +$("#initial_ul_Projects").find('>ul > #'+nodeFileId).prop("outerHTML"));
-                                    var projectRel=$("#"+nodeFileId+"").find('>ul > #initial_ul_'+nodeFileId);
-                                    console.log("projectRel is " +$("#"+nodeFileId+"").find('>ul > #initial_ul_'+nodeFileId).prop("outerHTML"));
-                                    var childrenInitial=$("#initial_ul_"+nodeFileId+"").find(' > ul > li');
-                                    var children = $("#"+markerType+"_f_"+nodeFileId+"").find(' > ul > li');
-                                	
-                                    if(IdSelected!=IdSelectedTemp){	
-                                        if(IdSelectedTemp!=""){
-                                            $("#"+IdSelectedTemp+" > .TreeSpan").removeClass("selected-span");
-                                            $("#"+IdSelectedTemp+" > .TreeSpan").css("background","");
-                                        }
-                                        IdSelectedTemp=IdSelected;							
-                                    }
-                                    childrenInitial.show('fast');
-                                    if(!children.is(":visible")){
-                                        children.show();
-                                    }
-                                    projectInitial.show('fast');
-                                    projectRel.show('fast');
-                
-                                    $("#"+IdSelected+" > .TreeSpan").addClass("selected-span");
-                                    $("#"+IdSelected+" > .TreeSpan").css("background-color", "#97b9cc");
-                
-                                    $("#initial_ul_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-                                    $("#initial_ul_Projects > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-                                    $("#"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');	
-                                    $("#"+markerType+"_f_"+nodeFileId+" > .Parentfolder >svg").removeClass('fa fa-folder').addClass('fa-folder-open');
-                                	
-                                	
-                */
-
-                /*offset=$("#"+IdSelected).offset().top;
-                projectOffset=$("#initial_ul_"+nodeFileId).offset().top;
-                offsetTotal=(offset-projectOffset);
-                $("#network_tree").animate({ scrollTop: offsetTotal}, "slow");*/
-
-
-
-
 
                 var targetOffsetTop = $("#" + IdSelected).offset().top;
                 var treeOffsetTop = $("#network_tree").offset().top;

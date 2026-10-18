@@ -23,6 +23,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/ListView.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/header.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/Network_Index.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/areaSearch.css">
 <script src="${pageContext.request.contextPath}/resources/js/Network/NetworkMapStylesLayers.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/maps.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/physicLayer-init.js"></script>
@@ -53,6 +54,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/JunctionCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/SiteCreation.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/ProjectCreation.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/areaSearch.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/Network/physical-layer/show-points-and-seq.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/context-menu.js"></script>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/context-menu.css">
@@ -183,7 +185,8 @@ html, body {
 }
 </style>
 </head>
-<%@ include file="/WEB-INF/views/Network/FiberSearch.jsp" %> 
+<%@ include file="/WEB-INF/views/Network/FiberSearch.jsp" %>
+<%@ include file="AreaSearchPopup.jsp" %> 
 <body>
 	<c:set var="pg" value="network" scope="session" />
 	<jsp:include page="../header.jsp"></jsp:include><p></p><br>

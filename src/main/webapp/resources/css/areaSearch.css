@@ -1,0 +1,132 @@
+/* areaSearch.css : styles for the standalone Area Search popup (all rules scoped to #areaSearchPopup) */
+
+#areaSearchPopup {
+    position: fixed;
+    width: 760px;
+    height: 520px;
+    min-width: 560px;
+    min-height: 320px;
+    z-index: 1045;              /* above the map and tree, below Bootstrap modals (1050) */
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .25);
+    border-radius: 6px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .35);
+}
+
+#areaSearchPopup .areaSearchHeader {
+    background-color: #2678CC;
+    height: 45px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    border-radius: 5px 5px 0 0;
+    cursor: move;
+}
+
+#areaSearchPopup .areaSearchTitle {
+    margin: 0;
+    font-weight: bold;
+    color: #E9ECEF;
+    font-size: 1.1rem;
+}
+
+#areaSearchPopup .areaSearchClose {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1.3rem;
+    opacity: .7;
+    cursor: pointer;
+}
+
+#areaSearchPopup .areaSearchClose:hover { opacity: 1; }
+
+#areaSearchPopup .areaSearchBody {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+#areaSearchPopup .areaSearchToolbar { margin-bottom: 6px; }
+#areaSearchPopup #areaSearchInfo { margin-left: 12px; font-size: 13px; color: #555; }
+#areaSearchPopup .areaSearchNote { margin-bottom: 8px; font-size: 12px; color: #777; }
+
+/* Tabs : same look as the other tabs of the page */
+#areaSearchPopup .nav-tabs { background-color: #00757C; flex: 0 0 auto; }
+#areaSearchPopup .nav-tabs .nav-link { color: gold; }
+#areaSearchPopup .nav-tabs .nav-link.active {
+    background-color: #FFD966 !important;
+    color: #00757c !important;
+}
+
+#areaSearchPopup .areaSearchTabContent {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+#areaSearchPopup .areaSearchTabContent > .tab-pane.active {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#areaSearchPopup .areaSearchTableWrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    margin-top: 8px;
+}
+
+#areaSearchPopup .areaSearchTableWrap table { margin-bottom: 0; }
+
+#areaSearchPopup thead th {
+    position: sticky;
+    top: 0;
+    background: #E9ECEF;
+    z-index: 1;
+}
+
+#areaSearchPopup .areaSearchTotal { padding-top: 8px; flex: 0 0 auto; }
+#areaSearchPopup .areaSearchTotal input {
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #DC143C;
+    background: transparent;
+}
+
+/* While drawing on the map the popup lets the mouse through so the drag is never interrupted */
+#areaSearchPopup.areaSearchDrawing {
+    opacity: .35;
+    pointer-events: none;
+}
+
+/* Crosshair cursor over the map while Ctrl is held (or while selecting an area) */
+body.areaSearchCrosshair #mapContainer,
+body.areaSearchCrosshair #mapContainer * {
+    cursor: crosshair !important;
+}
+
+/* Header buttons: minimize (-) then close (X) at the far right */
+#areaSearchPopup .areaSearchHeaderBtns { display: flex; align-items: center; }
+#areaSearchPopup .areaSearchHeaderBtns .areaSearchClose { margin-left: 10px; padding: 0 4px; }
+
+/* Minimize / restore icons */
+#areaSearchPopup .areaSearchIconRestore { display: none; }
+#areaSearchPopup.areaSearchMinimized .areaSearchIconMin { display: none; }
+#areaSearchPopup.areaSearchMinimized .areaSearchIconRestore { display: inline-block; }
+
+/* Minimized: only the header stays visible */
+#areaSearchPopup.areaSearchMinimized {
+    height: auto !important;
+    min-height: 0 !important;
+}
+#areaSearchPopup.areaSearchMinimized .areaSearchBody { display: none; }
+#areaSearchPopup.areaSearchMinimized .areaSearchHeader { border-radius: 5px; }
+#areaSearchPopup.areaSearchMinimized .ui-resizable-handle { display: none; }
