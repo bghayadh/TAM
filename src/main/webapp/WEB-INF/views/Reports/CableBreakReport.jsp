@@ -963,6 +963,11 @@ function initMap() {
 	 });
 
 
+	 document.querySelector("#mapMenu").addEventListener("contextmenu", function(e) {
+		 e.preventDefault();
+		 e.stopPropagation();
+		 }, true);
+	 
 	   MenuMap = document.getElementById("mapMenu");
 	    google.maps.event.addListener(map, 'rightclick', function (e) {
 	    	for (prop in e) {
