@@ -1676,6 +1676,143 @@ function distanceMeters(a, b) {
     return 2 * R * Math.asin(Math.sqrt(h));
 }
 
+
+// ================================================================
+// A) Generic popupModal helpers (reusable for any message in the application).
+//    Requires the popupModal markup (popupModal.html) in the page.
+// ================================================================
+
+function popupReset(title) {
+    $("#popupModalTitle").text(title);
+    $("#popupModalLoading").hide();
+    $("#popupModalMessage").hide().empty();
+    $("#popupModalActionBtn").hide().off("click");
+    $("#popupModalCloseBtn").prop("disabled", false);
+}
+
+// Waiting state: spinner + text, Close button disabled while processing.
+function showPopupLoading(title, text) {
+    popupReset(title);
+    $("#popupModalLoadingText").text(text || "Please wait...");
+    $("#popupModalLoading").show();
+    $("#popupModalCloseBtn").prop("disabled", true);
+    $("#popupModal").modal('show');
+}
+
+// Message state. html is inserted as HTML, so escape any user data before passing it.
+function showPopupMessage(title, html, isError) {
+    popupReset(title);
+    $("#popupModalMessage")
+        .toggleClass("text-danger", !!isError)
+        .html(html)
+        .show();
+    $("#popupModal").modal('show');
+}
+
+// Confirmation: action button runs onConfirm, Close cancels.
+function showPopupConfirm(title, html, actionLabel, onConfirm) {
+    popupReset(title);
+    $("#popupModalMessage").removeClass("text-danger").html(html).show();
+    $("#popupModalActionBtn").text(actionLabel).show().on("click", function() {
+        $(this).off("click");
+        onConfirm();
+    });
+    $("#popupModal").modal('show');
+}
+
+function escapeHtml(s) {
+    return $("<div>").text(s).html();
+}
+
+
+// ================================================================
+// C) Bulk routing functions
+// ================================================================
+
+var GH_POPUP_TITLE = "Find GraphHopper Route";
+
+// Works for a project AND for the live layer: the live layer is stored with the id
+// "CurrentPhysicalLayer", so its access folder is #FiberPath_access__CurrentPhysicalLayer.
+function resolveAccessLayerId(projectId) {
+    if (projectId && $("#FiberPath_access__" + projectId).length > 0) {
+        return projectId;
+    }
+    return "CurrentPhysicalLayer";
+}
+
+// Fiber cable id = id of the <li class="FIBER"> whose checkbox (.FiberCable) is checked.
+function getSelectedAccessFiberCableIds(layerId) {
+    var ids = [];
+    $("#FiberPath_access__" + layerId).find("li.FIBER > input.FiberCable:checked").each(function() {
+        ids.push($(this).parent().attr("id"));
+    });
+    return ids;
+}
+
+function findBulkRoutesByGraphHopper(projectId) {
+
+    var layerId = resolveAccessLayerId(projectId);
+    var fiberCableIds = getSelectedAccessFiberCableIds(layerId);
+    console.log("Layer: " + layerId + ", selected access fiber cables for GraphHopper: ", fiberCableIds);
+
+    if (fiberCableIds.length === 0) {
+        showPopupMessage(GH_POPUP_TITLE, "<p>Please check at least one fiber cable under the Access layer first.</p>", true);
+        return;
+    }
+
+    showPopupConfirm(GH_POPUP_TITLE,
+        "<p>The existing auxiliary points of <b>" + fiberCableIds.length
+            + "</b> fiber cable(s) will be deleted and replaced by the GraphHopper route.</p><p>Do you want to continue?</p>",
+        "Continue",
+        function() { runBulkGraphHopper(layerId, fiberCableIds); });
+}
+
+function runBulkGraphHopper(layerId, fiberCableIds) {
+
+    let token = $('input[name="csrfToken"]').attr('value');
+
+    showPopupLoading(GH_POPUP_TITLE, "Routing " + fiberCableIds.length + " fiber cable(s) using GraphHopper, please wait...");
+
+    $.ajax({
+        url: getContext() + "/findBulkRoutesByGraphHopper",
+        type: "POST",
+        headers: {
+            'X-CSRFToken': token
+        },
+        traditional: true, // fiberCableIds=a&fiberCableIds=b&... -> request.getParameterValues("fiberCableIds")
+        data: {
+            "projectId": layerId, // "CurrentPhysicalLayer" for the live layer
+            "fiberCableIds": fiberCableIds
+        },
+        dataType: "json",
+        // no async:false on purpose: routing can be slow, do not freeze the tab
+        success: function(data) {
+            if (data && data.Login === "redirect:/") {
+                window.location.href = getContext() + "/";
+                return;
+            }
+
+            var html = "<p>" + data.routedCount + " cable" + (data.routedCount === 1 ? " has" : "s have")
+                + " been routed updated using GraphHopper tool. "
+                + "<a href='#' id='bulkGhRefreshLink'>Click here</a> to refresh the whole page.</p>";
+            if (data.failedCount > 0) {
+                html += "<p class='text-danger'>" + data.failedCount + " cable(s) could not be routed: "
+                    + escapeHtml(data.failedIds.join(", ")) + "</p>";
+            }
+            showPopupMessage(GH_POPUP_TITLE, html, false);
+
+            $("#bulkGhRefreshLink").on("click", function(e) {
+                e.preventDefault();
+                window.location.href = getContext() + "/NetworkPhysicalLayer";
+            });
+        },
+        error: function(err) {
+            console.error("Error while finding the routes of the selected cables using GraphHopper:", err);
+            showPopupMessage(GH_POPUP_TITLE, "<p>Routing failed. Please try again.</p>", true);
+        }
+    });
+}
+
 function renumberAuxRows(tableId) {
 
     const $table = $("#" + tableId);

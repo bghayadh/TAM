@@ -8914,9 +8914,30 @@ class='fa fa-minus icon-to-change'></i></a></div></div><div class="modal-body"><
 	      </div>
 	    </div>
 	  </div>
+	</div>
+	
+	<!-- Generic popup used for ALL messages / waiting states / confirmations.
+	     Put it once in the page (same JSP where exportGdbModal lives). Bootstrap 4, same as exportGdbModal. -->
+	<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="popupModalTitle"></h5>
+	      </div>
+	      <div class="modal-body" id="popupModalBody">
+	        <div id="popupModalLoading" class="text-center" style="display:none;">
+	          <div class="spinner-border" role="status"></div>
+	          <p class="mt-2" id="popupModalLoadingText">Please wait...</p>
+	        </div>
+	        <div id="popupModalMessage" style="display:none;"></div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-primary" id="popupModalActionBtn" style="display:none;"></button>
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="popupModalCloseBtn">Close</button>
+	      </div>
+	    </div>
+	  </div>
 	</div>	
-	
-	
 	
 	
 </body>

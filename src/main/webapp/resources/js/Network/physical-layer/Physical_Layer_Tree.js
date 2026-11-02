@@ -2118,6 +2118,7 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
         'items': [
             {
                 'icon': 'paste', 'name': 'Show BoQ ', action: () => {
+					console.log("Welcome to show BoQ right click menu for access layer");
                     $.ajax({
                         type: "GET",
                         contentType: "application/json; charset=utf-8",
@@ -2160,7 +2161,13 @@ function CreateTree_PhysicalLayer(ListProject, ListManhole, ListHandhole, fiberL
                         }
                     });
                 }
-            }
+            },
+			{
+			    'icon': 'route', 'name': 'Find GraphHopper Route', action: () => {
+					console.log("Welcome to find GraphHopper on Access Network Layer for Fiber Cables");
+					findBulkRoutesByGraphHopper(IdNodeSelectedTemp);
+				}
+			}				
         ]
     });
 

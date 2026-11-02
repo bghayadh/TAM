@@ -3,10 +3,14 @@ package com.aliat.alm.physLayer;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,6 +36,7 @@ import com.aliat.alm.services.ItemParameters;
 import com.aliat.alm.services.LoginServices;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.graphhopper.util.DistanceCalcEarth;
 
 @Controller
 public class PathDetails {
@@ -42,6 +47,8 @@ public class PathDetails {
 	private Query query = null;
 	private StringWriter sw;
 	private String exceptionAsString;
+
+	private static final double BULK_GH_UNIT_DIVISOR = 1000.0;
 
 	@Autowired
 	private SidewalkRouteService routeService;
@@ -567,6 +574,143 @@ public class PathDetails {
 				}
 			}
 		}
+		return rtn;
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/findBulkRoutesByGraphHopper", method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> findBulkRoutesByGraphHopper(Locale locale, Model model, HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Map<String, Object> rtn = new LinkedHashMap<>();
+
+		if (LoginServices.checkSession(request, response).equals("redirect:/")) {
+			rtn.put("Login", "redirect:/");
+			return rtn;
+		}
+
+		// "CurrentPhysicalLayer" is the PROJECT_ID of the live physical layer,
+		// otherwise a real project id.
+		String projectId = request.getParameter("projectId");
+		String[] ids = request.getParameterValues("fiberCableIds");
+
+		int routed = 0;
+		List<String> failed = new ArrayList<>();
+
+		if (projectId == null || projectId.trim().isEmpty() || ids == null || ids.length == 0) {
+			rtn.put("routedCount", 0);
+			rtn.put("failedCount", 0);
+			rtn.put("failedIds", failed);
+			return rtn;
+		}
+
+		Set<String> uniqueIds = new LinkedHashSet<>();
+		Collections.addAll(uniqueIds, ids);
+
+		DistanceCalcEarth dc = DistanceCalcEarth.DIST_EARTH;
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+
+		for (String cableId : uniqueIds) {
+			Session session = null;
+			Transaction tx = null;
+			try {
+				session = AlmDbSession.getInstance().getSession();
+				if (session == null || !session.isOpen()) {
+					throw new IllegalStateException("No DB session");
+				}
+
+				// PROJECT_ID in the filter: an id of another project/layer can never be
+				// modified.
+				List<Object[]> rows = session
+						.createNativeQuery(
+								"SELECT SOURCE_LAT, SOURCE_LNG, DESTINATION_LAT, DESTINATION_LNG FROM FIBER_CABLES "
+										+ "WHERE FIBER_CABLE_ID = :id AND PROJECT_ID = :prj")
+						.setParameter("id", cableId).setParameter("prj", projectId).getResultList();
+				if (rows.isEmpty()) {
+					throw new IllegalStateException("Cable not found in " + projectId + ": " + cableId);
+				}
+				Object[] r = rows.get(0);
+				double srcLat = Double.parseDouble(String.valueOf(r[0]).trim());
+				double srcLng = Double.parseDouble(String.valueOf(r[1]).trim());
+				double dstLat = Double.parseDouble(String.valueOf(r[2]).trim());
+				double dstLng = Double.parseDouble(String.valueOf(r[3]).trim());
+
+				// Route first (no DB change yet). Same handling as findRouteByGraphHopper:
+				// first and last points are the source/destination, the rest are auxiliary
+				// points.
+				List<LatLon> pts = routeService.route(new LatLon(srcLat, srcLng), new LatLon(dstLat, dstLng));
+				if (pts.size() < 2) {
+					throw new IllegalStateException("Route has fewer than 2 points: " + cableId);
+				}
+
+				// pts = [source, aux1, aux2, ..., auxN, destination]; the order is the route
+				// order.
+				// segment[i] = line of site distance from pts[i-1] to pts[i] (meters).
+				int n = pts.size();
+				double total = 0;
+				double[] segment = new double[n];
+				for (int i = 1; i < n; i++) {
+					segment[i] = dc.calcDist(pts.get(i - 1).lat, pts.get(i - 1).lon, pts.get(i).lat, pts.get(i).lon);
+					total += segment[i];
+				}
+
+				tx = session.beginTransaction();
+
+				session.createNativeQuery("DELETE FROM FIBER_AUXILIARY_POINTS WHERE FIBER_CABLE_ID = :id")
+						.setParameter("id", cableId).executeUpdate();
+
+				int seq = 1;
+				for (int i = 1; i < n - 1; i++) {
+					// Primary key format: AUXILIARY_PT_YYYY_SEQ (SEQ from AUXILIARY_POINT_SEQ)
+					Number next = (Number) session.createNativeQuery("SELECT AUXILIARY_POINT_SEQ.NEXTVAL FROM DUAL")
+							.getSingleResult();
+					String auxId = "AUXILIARY_PT_" + year + "_" + next.longValue();
+
+					// DISTANCE_FROM_SOURCE = distance from the PREVIOUS point (the source for the
+					// first aux point).
+					// DRIVING_DISTANCE and GEO_DISTANCE = same line of site value.
+					double d = segment[i] / BULK_GH_UNIT_DIVISOR;
+
+					session.createNativeQuery("INSERT INTO FIBER_AUXILIARY_POINTS (AUXILIARY_ID, FIBER_CABLE_ID, LONGITUDE, "
+							+ "LATITUDE, DISTANCE_FROM_SOURCE, SEQ_SORTING, DRIVING_DISTANCE, GEO_DISTANCE, "
+							+ "CREATION_DATE, LAST_MODIFIED_DATE) VALUES (:auxId, :cableId, :lng, :lat, :dist, :seq, "
+							+ ":dist, :dist, SYSTIMESTAMP, SYSTIMESTAMP)").setParameter("auxId", auxId)
+							.setParameter("cableId", cableId).setParameter("lng", String.valueOf(pts.get(i).lon))
+							.setParameter("lat", String.valueOf(pts.get(i).lat)).setParameter("dist", d)
+							.setParameter("seq", seq).executeUpdate();
+					seq++;
+				}
+
+				// Last auxiliary point (or the source if there is none) -> destination.
+				double lastToDest = segment[n - 1] / BULK_GH_UNIT_DIVISOR;
+				double totalUnit = total / BULK_GH_UNIT_DIVISOR;
+
+				session.createNativeQuery("UPDATE FIBER_CABLES SET LAST_AUXILIARY_TO_DESTINATION_DISTANCE = :last, "
+						+ "LAST_AUXILIARY_TO_DESTINATION_DRIVING_DISTANCE = :last, TOTAL_GEO_DISTANCE = :total, "
+						+ "TOTAL_DRIVING_DISTANCE = :total, LENGTH = :total, LAST_MODIFIED_DATE = SYSTIMESTAMP "
+						+ "WHERE FIBER_CABLE_ID = :id").setParameter("last", lastToDest)
+						.setParameter("total", totalUnit).setParameter("id", cableId).executeUpdate();
+
+				tx.commit();
+				routed++;
+
+			} catch (Exception e) {
+				if (tx != null && tx.isActive()) {
+					tx.rollback();
+				}
+				logger.log(Level.SEVERE, "Error in findBulkRoutesByGraphHopper for cable " + cableId, e);
+				failed.add(cableId);
+			} finally {
+				if (session != null && session.isOpen()) {
+					session.close();
+				}
+			}
+		}
+
+		rtn.put("routedCount", routed);
+		rtn.put("failedCount", failed.size());
+		rtn.put("failedIds", failed);
 		return rtn;
 	}
 }
