@@ -65,6 +65,8 @@ function callGenerateReport() {
 }
 
 function handleGenerateSuccess(data) {
+	
+	console.log("Welcome to handleGenerateSuccess");
 
     if (data != null) {
         duct = data.duct;
@@ -140,6 +142,9 @@ function handleGenerateSuccess(data) {
             )
         );
 
+		console.log("Just before calling updateDuctSummary");
+		updateDuctSummary(ReportArrayGlobal, duct);
+/*				
         var totalCables = 0;
         $('#totalCables').val(totalCables);
 
@@ -149,6 +154,7 @@ function handleGenerateSuccess(data) {
 
         var totalGeoDistance = 0;
         $('#geoDistance').val(totalGeoDistance);
+*/		
 
 
         if (allPaths.includes(ductID) == false) {
@@ -618,4 +624,55 @@ function processDuctSrcDstArray(ductID, windowMapPointsNames, duct, windowMapPoi
             parseFloat(duct.srcLong)
         )
     );
+}
+
+/**
+ * Fills #totalCables, #totalStrands and #geoDistance.
+ * Takes the segments as a parameter so it can later be called
+ * with the filtered grid rows instead of the full report.
+ */
+function updateDuctSummary(segments, ductObj) {
+
+    const summary = calculateDuctSummary(segments);
+	
+	console.log("total cables is: ", summary.totalCables);
+
+    $('#totalCables').val(summary.totalCables);
+    $('#totalStrands').val(summary.totalStrands);
+    $('#geoDistance').val(formatGeoDistance(ductObj));
+}
+
+function calculateDuctSummary(segments) {
+
+    // Distinct cables passing through the given segments
+	
+	console.log("Welcome to calculateDuctSummary");
+    const cableIds = new Set();
+
+    (segments || []).forEach(segment => {
+        Object.keys(segment.cables || {}).forEach(id => cableIds.add(id));
+    });
+
+    let totalStrands = 0;
+
+    cableIds.forEach(cableId => {
+        const info = fiberCablesDetails?.[cableId];
+
+        const tubes = Number(info?.numberOfTubes) || 0;
+        const strands = Number(info?.numberOfStrands) || 0;
+
+        totalStrands += tubes * strands;
+    });
+
+    return {
+        totalCables: cableIds.size,
+        totalStrands: totalStrands
+    };
+}
+
+function formatGeoDistance(ductObj) {
+
+    const value = Number(ductObj?.totalGeoDist);
+
+    return isNaN(value) ? '0' : value.toFixed(2);
 }

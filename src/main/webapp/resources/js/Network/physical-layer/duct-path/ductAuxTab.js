@@ -859,27 +859,20 @@ function ductAuxTab() {
 
     $.ajax({
         type: "GET",
-
         url: getContext() + "/findDuctDetails",
-
+		dataType: "json",
         data: {
             ID: selectedDuctContext
         },
-
         beforeSend: function() {
             $("#loaderDivDuct").show();
         },
-
         success: function(data) {
-
             $("#loaderDivDuct").hide();
-
             indexduct = 0;
-
             console.log("Success of the ajax");
-
+			console.log("auxData is: " ,data.auxData);
             if (data && data.auxData) {
-
                 AuxAppendBOQ(
                     data.auxData,
                     "",

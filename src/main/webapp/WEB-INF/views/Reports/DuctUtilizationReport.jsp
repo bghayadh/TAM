@@ -606,7 +606,7 @@ max-width: 100%;
 			<div class="col-lg-4 col-md-6">
 				<div class="form-group">
 					<div class="input-group-prepend">
-						<span class="input-group-text">Geo Distance</span>
+						<span class="input-group-text">Geo Distance (km)</span>
 						<input readonly type="text" id="geoDistance" class="form-control text-input" style="width:100%;" />
 					</div>
 				</div>

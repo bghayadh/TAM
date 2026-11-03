@@ -845,6 +845,7 @@ function trenchAuxTab() {
     $.ajax({
         type: "GET",
         url: getContext() + "/findTrenchDetails",
+		dataType: "json",
         data: {
             ID: selectedTrenchContext
         },
@@ -855,6 +856,7 @@ function trenchAuxTab() {
             $("#loaderDivTrench").hide();
             indextrench = 0;
             console.log("Success of the ajax");
+			console.log("auxData is: " ,data.auxData);
             if (data && data.auxData) {
                 AuxAppendBOQ(
                     data.auxData,
